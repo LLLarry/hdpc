@@ -6,18 +6,17 @@
                 <Slide /><!-- 侧边栏组件 -->
             </el-col>
             <el-col :span="21" class="layout_col_main">
+              <BreadCrumbCon /> <!-- 面包屑导航 -->
               <Main></Main><!-- 内容区域组件 -->
             </el-col>
-         </el-row>
-         
-        
-         
+         </el-row>     
     </div>
 </template>
 
 <script>
 import Slide from './Slide'
 import TopBar from './TopBar'
+import BreadCrumbCon from './BreadCrumbCon'
 import Main from './Main'
 export default {
     data(){
@@ -28,7 +27,8 @@ export default {
     components: {
         Slide,
         TopBar,
-        Main
+        Main,
+        BreadCrumbCon
     }
 }
 </script>

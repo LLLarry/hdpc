@@ -20,6 +20,6 @@
 @import '../../static/style/default.less';
 .main {
     background-color: @colorA;
-    height: inherit;
+    height: calc(100% - 35px);
 }
 </style>

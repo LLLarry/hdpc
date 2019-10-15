@@ -1,6 +1,6 @@
 <template>
     <div class="slide">
-     <SlideLink :list="list" />
+        <SlideLink :list="list" />
     </div>
 </template>
 
@@ -14,7 +14,7 @@ import SlideLink from './SlideLink'
                         title: '数据汇总',
                         link: '/datastatis',
                         index: "0",
-                         children: [
+                        children: [
                             {
                                 title: '数据监控',
                                 link: '/datastatis/index',
@@ -22,7 +22,7 @@ import SlideLink from './SlideLink'
                             },
                             {
                                 title: '数据汇总',
-                                link: '/user/money',
+                                link: '/datastatis/total',
                                 index: '0-1'
                             },
                             {
@@ -32,12 +32,12 @@ import SlideLink from './SlideLink'
                             },
                             {
                                 title: '设备收益',
-                                link: '/user/money',
+                                link: '/datastatis/device',
                                 index: '0-3'
                             },
                             {
                                 title: '商户收益',
-                                link: '/user/num',
+                                link: '/datastatis/mer',
                                 index: '0-4'
                             }
                         ]

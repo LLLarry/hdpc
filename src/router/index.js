@@ -8,25 +8,26 @@ Router.prototype.push = function push(location) {
 Vue.use(Router)
 export default new Router({
   routes: [
-    // {
-    //   path: '*',
-    //   redirect: '/login'
-    // },
     {
       path: '/login',
       component: ()=> import('@/components/Login/Login'),
     },
     {
+      path: '*',
+      redirect: '/login'
+    },
+    //上面这两个是基础的配置，后面的是请求过来的
+    {
       path: '/',
       component: ()=> import('@/components/Layout/layout'),
       children: [
         {
-          path: '/datastatis',
-          component: ()=> import('@/pages/DataStatis/DataStatis')
+          path: '/datastatis/index',
+          component: ()=> import('@/views/DataStatis/DataStatis')
         },
         {
           path: '/datastatis/hisstatis',
-          component: ()=> import('@/pages/DataStatis/Hisstatis')
+          component: ()=> import('@/views/DataStatis/Hisstatis')
         },
         {
           path: '*',
@@ -35,10 +36,5 @@ export default new Router({
       ]
     },
     
-    // {
-    //   path: '/',
-    //   name: 'HelloWorld',
-    //   component: HelloWorld
-    // }
   ]
 })

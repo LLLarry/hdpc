@@ -1,9 +1,5 @@
 <template>
     <div class="slideLink">
-        <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-            <el-radio-button :label="false">展开</el-radio-button>
-            <el-radio-button :label="true">收起</el-radio-button>
-        </el-radio-group> -->
         <el-menu 
         :default-active="activeItem" 
         :default-openeds="openArr" 
@@ -36,6 +32,7 @@
 
 <script>
 import Vue from 'vue'
+import {mapState,mapMutations} from 'vuex'
 import {Menu,Submenu, MenuItem,MenuItemGroup,Button} from 'element-ui';
 Vue.use(Menu)
 Vue.use(Submenu)
@@ -48,9 +45,23 @@ export default {
     data() {
       return {
         isCollapse: false, //控制是否折叠
-        openArr: ["2"],//当前打开的数组
-        activeItem: '2-3' //当前选择的哪一项
+        openArr: [],//当前打开的数组
+        activeItem: '' //当前选择的哪一项
       };
+    },
+    created(){
+        // 去除vuex中的nowMenuLink当前连接的名称，传进去
+        this.handleListToItemInfo(this.$store.state.nowMenuLink)
+    },
+    computed: {
+       ...mapState({nowMenuLink:'nowMenuLink'}),
+    },
+    watch: {
+        //监控获取到的nowMenuLink值改变调用
+        nowMenuLink(newVal,oldVal){ 
+            console.log(this.handleListToItemInfo(newVal))
+            this.activeItem= this.handleListToItemInfo(newVal)
+        }
     },
     methods: {
       handleOpen(key, keyPath) {
@@ -72,12 +83,32 @@ export default {
         
         this.isCollapse= !this.isCollapse
       },
-      //点击跳转连接
+      //点击跳转连接,并传参。获取值的时候，使用this.$route.query来获取
       handleLink(path){
           console.log(path)
-          this.$router.push(path)
-      }
-      
+          this.$router.push({
+              path: path,
+              query: {
+                  name: 'zs',
+                  age: 18
+              }
+          })
+      },
+      //处理传过来的list,是数组扁平化，遍历出每一项
+      handleListToItemInfo(name){ 
+            let index
+            this.list.forEach((item,i)=>{
+                if(item.children && item.children.length>0){
+                   item.children.forEach((jtem,j)=>{
+                        if(jtem.title == name){
+                            index= jtem.index
+                            console.log('sss',name,jtem.index)
+                        }
+                   })
+                }
+            })
+            return index
+      },
     }
     
 }

@@ -35,7 +35,7 @@ const router= new Router({
         {
           path: '*',
           component: ()=> import('@/components/NoFind/NoFind'),
-        },
+        }, 
       ]
     },
     

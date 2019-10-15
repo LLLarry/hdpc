@@ -12,12 +12,12 @@ import SlideLink from './SlideLink'
                 list: [
                     {
                         title: '数据汇总',
-                        link: '/admin',
-                         grade: 1,
+                        link: '/datastatis',
+                        index: "1",
                          children: [
                             {
                                 title: '数据监控',
-                                link: '/user/num',
+                                link: '/datastatis',
                                  grade: 2
                             },
                             {
@@ -27,7 +27,7 @@ import SlideLink from './SlideLink'
                             },
                             {
                                 title: '历史统计',
-                                link: '/user/num',
+                                link: '/datastatis/hisstatis',
                                  grade: 2
                             },
                             {
@@ -44,7 +44,7 @@ import SlideLink from './SlideLink'
                     },
                     {
                         title: '用户管理',
-                         grade: 1,
+                        grade: "2",
                         children: [
                             {
                                 title: '商户信息',
@@ -65,7 +65,7 @@ import SlideLink from './SlideLink'
                     },
                      {
                         title: '交易记录',
-                         grade: 1,
+                        grade: "3",
                         children: [
                             {
                                 title: '交易记录',
@@ -106,7 +106,7 @@ import SlideLink from './SlideLink'
                     },
                     {
                         title: '设备管理',
-                         grade: 1,
+                        grade: "4",
                         children: [
                             {
                                 title: '设备列表',
@@ -132,7 +132,7 @@ import SlideLink from './SlideLink'
                     },
                     {
                         title: 'IC卡管理',
-                         grade: 1,
+                        grade: "5",
                         children: [
                             {
                                 title: '在线卡查询',
@@ -153,7 +153,7 @@ import SlideLink from './SlideLink'
                     },
                     {
                         title: '小区管理',
-                         grade: 1,
+                         grade: "6",
                         children: [
                             {
                                 title: '小区管理',
@@ -164,7 +164,7 @@ import SlideLink from './SlideLink'
                     },
                     {
                         title: '系统设置',
-                        grade: 1,
+                        grade: "7",
                         children: [
                             {
                                 title: '系统设置',
@@ -186,7 +186,9 @@ import SlideLink from './SlideLink'
 <style lang="less" scoped>
     .slide {
         background-color: #001529;
+        //background-color: #f5f7fa;
         height: inherit;
         color: rgba(255,255,255,0.65);
+        overflow-x: hidden;
     }
 </style>

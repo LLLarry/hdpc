@@ -51,7 +51,7 @@ export default {
     },
     created(){
         // 去除vuex中的nowMenuLink当前连接的名称，传进去
-        this.handleListToItemInfo(this.$store.state.nowMenuLink)
+        this.activeItem= this.handleListToItemInfo(this.$store.state.nowMenuLink)
     },
     computed: {
        ...mapState({nowMenuLink:'nowMenuLink'}),

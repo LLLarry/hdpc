@@ -95,14 +95,13 @@ export default {
           })
       },
       //处理传过来的list,是数组扁平化，遍历出每一项
-      handleListToItemInfo(name){ 
+      handleListToItemInfo(name){ //name是vuex取出来的nowMenuLink
             let index
             this.list.forEach((item,i)=>{
                 if(item.children && item.children.length>0){
                    item.children.forEach((jtem,j)=>{
                         if(jtem.title == name){
                             index= jtem.index
-                            console.log('sss',name,jtem.index)
                         }
                    })
                 }

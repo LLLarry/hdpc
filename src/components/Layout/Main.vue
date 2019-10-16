@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <BreadCrumbCon />
+        <!-- <BreadCrumbCon /> -->
         <keep-alive>
         <router-view></router-view>
         </keep-alive>

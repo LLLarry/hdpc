@@ -5,7 +5,7 @@ export default {
         list.forEach((item,i)=>{
             if(item.children && item.children.length>0){
             item.children.forEach((jtem,j)=>{
-                    if(jtem.link == url){
+                    if(url.includes(jtem.link)){
                         title= jtem.title
                     }
             })

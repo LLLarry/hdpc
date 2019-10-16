@@ -17,7 +17,7 @@
 <script>
 import {Tag} from 'element-ui'
 import Vue from 'vue'
-import { mapState } from 'vuex'
+import { mapState,mapMutations} from 'vuex'
 Vue.use(Tag)
 
 export default {
@@ -31,8 +31,24 @@ export default {
       ...mapState({breadList:"breadList"}) //去除vuex中的数据
     },
     methods: {
+      ...mapMutations({removeBreadListItem: 'removeBreadListItem'}), //这个是删除面包屑的某一项
       handleClose(tag) {
-        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+        // this.breadList.splice(this.breadList.indexOf(tag), 1);
+        this.removeBreadListItem(tag.title)
+      },
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+       handleInputConfirm() {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+          this.dynamicTags.push(inputValue);
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
       },
       handleLink(title,link,query){
         this.$store.commit('handleChargeNowMenuLink',title)

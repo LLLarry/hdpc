@@ -70,6 +70,7 @@ export const constantRouterMapSuperAdmin= [
 export const constantRouterMapAdmin= [
     {
     path: '/',
+    redirect:'/datastatis/index',
     component: ()=> import('@/components/Layout/layout'),
     meta: {
         role: ['superAdmin','admin']

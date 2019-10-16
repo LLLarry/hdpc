@@ -49,7 +49,11 @@ export default {
     methods: {
     ...mapActions(['asyHandleLoginAct']),
       submitForm() {
-          this.asyHandleLoginAct()
+          const data= {
+              username:this.phone,
+              password:this.password,
+          }
+          this.asyHandleLoginAct(data)
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();

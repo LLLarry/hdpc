@@ -5,6 +5,7 @@ let obj= {
     ],
     nowMenuLink: '数据监控', //当前菜单名称，是为了做返回的时候，菜单保持对应用的
     userInfo: null,
+    asyRouterMap: [], //router中的异步路由
     list: [
         {
             title: '数据汇总',

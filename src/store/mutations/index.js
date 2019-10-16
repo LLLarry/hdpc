@@ -29,5 +29,9 @@ export default {
         })
         state.breadList= breadList
         sessionStorage.setItem('state',JSON.stringify(state))
+    },
+    storeAsyRouterMap(state,asyRouterMap){ //更新异步路由
+        state.asyRouterMap= asyRouterMap
+        sessionStorage.setItem('state',JSON.stringify(state))
     }
 }

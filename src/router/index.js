@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store' //引入store调用getters方法
-import {constantRouterMapSuperAdmin,constantRouterMapAdmin} from './constantRouterMap'
-// import HelloWorld from '@/components/HelloWorld'
+import {constantRouterMapSuperAdmin,constantRouterMapAdmin} from './constantRouterMap' 
+
 const originalPush = Router.prototype.push
-const classify= store.state.userInfo ? store.state.userInfo.classify : false  //什么权限
+
 
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
@@ -17,32 +17,46 @@ const router= new Router({
     {
       path: '/login',
       component: ()=> import('@/components/Login/Login'),
-    },
-    {
-      path: '*',
-      redirect: '/login'
-    },
+    }
     //上面这两个是基础的配置，后面的是请求过来的
   ]
 })
-var flag= false
-router.afterEach((to, from) => {
-    console.log(to, from)
-    let data= {} //这个是数组，包含title,link,index,是面包屑使用的
-    let title= ''
-    newList.forEach((item,i)=>{
-      if(to.path.includes(item.link)){
-        data.title= item.title
-        data.link= item.link
-        data.index= item.index
-        title= item.title
+//router.addRoutes(constantRouterMapSuperAdmin)
+let routesList= []
+router.beforeEach((to,from,next) => {
+  const userInfo= store.state.userInfo 
+  let routes= store.state.moduleA.asyRouterMap   //获取vuex中的moduleA中存储的路由，moduleA没进行缓存，所以刷新之后会消失
+  if(userInfo){ //vuex中存在用户信息
+    if(routes.length === 0){ //当moduleA中的路由不存在 （也可能当刷新消失）
+      if(userInfo.classify === 'admin'){  //根据权限过滤路由
+        routesList= constantRouterMapAdmin
+      }else if(userInfo.classify === 'superAdmin'){
+        routesList= constantRouterMapSuperAdmin
       }
-     if(!flag){
-      router.addRoutes(constantRouterMapSuperAdmin)
-     }
-      
-      flag= true
-    })
+      router.addRoutes(routesList)  //将过滤出来的路由添加到router中
+      store.commit('storeAsyRouterMap',routesList) //将新添加的路由保存在vuex中 
+      next({...to}) //调往目标路径
+    }else {
+      next()
+    }
+  }else{ //已经存在新路由了
+    if (['/login'].indexOf(to.path) !== -1) { //包含/login  判断目标路径中是否包含/login， 包含就前往这个路径，不包含 就跳转到/login路径中
+        next()
+    } else {  //不包含/login
+        next('/login')
+    }
+  }
+
+  let data= {} //这个是数组，包含title,link,index,是面包屑使用的
+  let title= ''
+  newList.forEach((item,i)=>{
+    if(to.path.includes(item.link)){
+      data.title= item.title
+      data.link= item.link
+      data.index= item.index
+      title= item.title
+    }
+  })
    console.log(title)
    store.commit('handleChargeBreadList',data)
    store.commit('handleChargeNowMenuLink',title)

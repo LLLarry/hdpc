@@ -14,7 +14,7 @@ Vue.use(Button);
 Vue.use(Select);
 Vue.use(Col);
 Vue.use(Row);
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

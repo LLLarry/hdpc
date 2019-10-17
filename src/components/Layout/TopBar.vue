@@ -28,11 +28,14 @@
             }
         },
         methods: {
-            ...mapMutations(['handleLayoutStore']),
+            ...mapMutations(['handleLayoutStore','handleLayoutRemoveAsyRouterMap']),
             handleLayout(){
                 this.handleLayoutStore()
-                this.$router.push('/login')
+                this.handleLayoutRemoveAsyRouterMap()
+                // this.$router.push('/login')
+                window.location.reload() //让页面重新加载，这个是移除router中动态添加的路由，避免再次添加新的路由
             }
+           
         }
     }
 </script>

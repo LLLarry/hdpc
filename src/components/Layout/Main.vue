@@ -27,5 +27,7 @@ import BreadCrumbCon from './BreadCrumbCon'
 .main {
     background-color: @colorB;
     height: calc(100%);
+    width: 100%;
+    overflow: auto;
 }
 </style>

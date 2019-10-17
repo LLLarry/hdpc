@@ -36,6 +36,8 @@ export default {
        .layout_row {
             display: flex;
             height: calc(100% - 80px);
+            width: 100%;
+            overflow: hidden;
             .layout_col_slide {
                 min-width: 180px;
                 height: 100%;

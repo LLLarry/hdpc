@@ -1,0 +1,7 @@
+/*公用的样式*/
+.card_bottom0 .el-card__body {
+  padding-bottom: 0;
+}
+.el-form--inline .form_right25.el-form-item {
+  margin-right: 25px;
+}

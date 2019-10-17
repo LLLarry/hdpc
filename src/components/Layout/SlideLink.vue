@@ -8,10 +8,10 @@
         @close="handleClose" 
         :collapse="isCollapse"
         :collapse-transition="false"
-        background-color="#001529"
+        background-color="#324057"
         text-color="rgba(255,255,255,0.6)"
         >
-            <el-submenu :index="i+''" v-for="(item,i) in list" :key="i">
+            <el-submenu :index="i+''" v-for="(item,i) in menuList" :key="i">
                 <template slot="title">
                 <i class="el-icon-location"></i>
                 <span slot="title">{{item.title}}</span>
@@ -41,7 +41,7 @@ Vue.use(MenuItemGroup)
 Vue.use(Button)
 export default {
     name: 'SlideLink',
-    props: ['list'],
+    props: ['menuList'],
     data() {
       return {
         isCollapse: false, //控制是否折叠
@@ -97,7 +97,7 @@ export default {
       //处理传过来的list,是数组扁平化，遍历出每一项
       handleListToItemInfo(name){ //name是vuex取出来的nowMenuLink
             let index
-            this.list.forEach((item,i)=>{
+            this.menuList.forEach((item,i)=>{
                 if(item.children && item.children.length>0){
                    item.children.forEach((jtem,j)=>{
                         if(jtem.title == name){

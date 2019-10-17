@@ -1,3 +1,4 @@
+/**这里存放的是路由权限设置 */
 // 超级管理员路由
 export const constantRouterMapSuperAdmin= [ 
     {

@@ -5,6 +5,7 @@
                 <el-input 
                 v-model="phone"
                 placeholder="请输入手机号"
+                clearable
                >
                 <i slot="prefix" class="el-input__icon el-icon-phone-outline"></i>
                </el-input>
@@ -15,14 +16,14 @@
                  v-model="password"
                  autocomplete="off"
                  placeholder="请输入密码"
+                 clearable
                 >
                  <i slot="prefix" class="el-input__icon el-icon-lock"></i>
                 </el-input>
             </el-form-item>
            
             <el-form-item>
-                <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                <el-button @click="resetForm('ruleForm')">重置</el-button>
+                <el-button type="primary" @click="submitForm()">登录</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -63,5 +64,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+    .accLogin{
+        .el-form{
+            margin-top: 5px;
+            .el-form-item__content {
+                .el-button {
+                    width: 100%;
+                    border-radius: 40px;
+                }
+            }
+        }  
+    }
+    
 </style>

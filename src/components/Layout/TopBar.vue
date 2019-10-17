@@ -8,7 +8,7 @@
                 </div>
             </el-col>
             <el-col :span="12" class="col_con"><div class="grid-content bg-purple-light">
-               <el-link type="danger">退出登录</el-link>
+               <el-link type="danger" @click="handleLayout">退出登录</el-link>
                 <!-- <span>用户名：张三</span>
                 <span>556</span> -->
             </div></el-col>
@@ -19,6 +19,7 @@
 <script>
     import {Link} from 'element-ui'
     import Vue from 'vue'
+    import { mapMutations } from 'vuex'
     Vue.use(Link)
     export default {
         data(){
@@ -26,7 +27,13 @@
 
             }
         },
-
+        methods: {
+            ...mapMutations(['handleLayoutStore']),
+            handleLayout(){
+                this.handleLayoutStore()
+                this.$router.push('/login')
+            }
+        }
     }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <div class="slide">
-        <SlideLink :menuList="menuList" />
+        <SlideLink :menuList="menuList" :activeItem="activeItem"/>
     </div>
 </template>
 
@@ -11,11 +11,11 @@ import {mapState} from 'vuex'
     export default {
         data(){
             return {
-               
+               activeItem: ''
             }
         },
         computed:{
-            ...mapState(['menuList','userInfo'])
+            ...mapState(['menuList','userInfo','nowMenuLink'])
         },
         created(){
            if(this.userInfo){  //只要用户登陆了，重新加载slide就会请求新的菜单进行渲染
@@ -25,10 +25,35 @@ import {mapState} from 'vuex'
                 }else if(this.userInfo.classify === 'superAdmin'){
                     this.$store.commit('hadnleMenuList',superAdminMenuList)
                 } 
-         }
+            }
+            // 去除vuex中的nowMenuLink当前连接的名称，传进去
+            this.activeItem= this.handleListToItemInfo(this.$store.state.nowMenuLink)
+        },
+        watch:{
+            //监控获取到的nowMenuLink值改变调用
+            nowMenuLink(newVal,oldVal){ 
+                console.log(this.handleListToItemInfo(newVal))
+                this.activeItem= this.handleListToItemInfo(newVal)
+            }
         },
         components: {
             SlideLink
+        },
+        methods: {
+             //处理传过来的list,是数组扁平化，遍历出每一项
+            handleListToItemInfo(name){ //name是vuex取出来的nowMenuLink
+                    let index
+                    this.menuList.forEach((item,i)=>{
+                        if(item.children && item.children.length>0){
+                        item.children.forEach((jtem,j)=>{
+                                if(jtem.title == name){
+                                    index= jtem.index
+                                }
+                        })
+                        }
+                    })
+                    return index
+            },
         }
     }
 </script>

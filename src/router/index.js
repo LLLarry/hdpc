@@ -23,6 +23,7 @@ const router= new Router({
 //router.addRoutes(constantRouterMapSuperAdmin)
 let routesList= []
 router.beforeEach((to,from,next) => {
+  let newList= store.getters.transformList //路由降维数组 （菜单）
   const userInfo= store.state.userInfo 
   let routes= store.state.moduleA.asyRouterMap   //获取vuex中的moduleA中存储的路由，moduleA没进行缓存，所以刷新之后会消失
   console.log('routes',routes)
@@ -47,7 +48,7 @@ router.beforeEach((to,from,next) => {
     }
   }
 
-  let newList= store.getters.transformList //路由降维数组
+ 
   let data= {} //这个是数组，包含title,link,index,是面包屑使用的
   let title= ''
   newList.forEach((item,i)=>{
@@ -63,5 +64,10 @@ router.beforeEach((to,from,next) => {
    store.commit('handleChargeNowMenuLink',title)
    console.timeEnd();
 })
+
+
+
+// next() 表示路由成功，直接进入to路由，不会再次调用router.beforeEach()
+// next('login') 表示路由拦截成功，重定向至login，会再次调用router.beforeEach()
 
 export default router

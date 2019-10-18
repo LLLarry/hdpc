@@ -41,27 +41,27 @@ Vue.use(MenuItemGroup)
 Vue.use(Button)
 export default {
     name: 'SlideLink',
-    props: ['menuList'],
+    props: ['menuList','activeItem'],
     data() {
       return {
         isCollapse: false, //控制是否折叠
         openArr: [],//当前打开的数组
-        activeItem: '' //当前选择的哪一项
+        // activeItem: '' //当前选择的哪一项
       };
     },
     created(){
         // 去除vuex中的nowMenuLink当前连接的名称，传进去
-        this.activeItem= this.handleListToItemInfo(this.$store.state.nowMenuLink)
+        // this.activeItem= this.handleListToItemInfo(this.$store.state.nowMenuLink)
     },
     computed: {
-       ...mapState({nowMenuLink:'nowMenuLink'}),
+    //    ...mapState({nowMenuLink:'nowMenuLink'}),
     },
     watch: {
-        //监控获取到的nowMenuLink值改变调用
-        nowMenuLink(newVal,oldVal){ 
-            console.log(this.handleListToItemInfo(newVal))
-            this.activeItem= this.handleListToItemInfo(newVal)
-        }
+        // //监控获取到的nowMenuLink值改变调用
+        // nowMenuLink(newVal,oldVal){ 
+        //     console.log(this.handleListToItemInfo(newVal))
+        //     this.activeItem= this.handleListToItemInfo(newVal)
+        // }
     },
     methods: {
       handleOpen(key, keyPath) {
@@ -95,20 +95,20 @@ export default {
               }
           })
       },
-      //处理传过来的list,是数组扁平化，遍历出每一项
-      handleListToItemInfo(name){ //name是vuex取出来的nowMenuLink
-            let index
-            this.menuList.forEach((item,i)=>{
-                if(item.children && item.children.length>0){
-                   item.children.forEach((jtem,j)=>{
-                        if(jtem.title == name){
-                            index= jtem.index
-                        }
-                   })
-                }
-            })
-            return index
-      },
+    //   //处理传过来的list,是数组扁平化，遍历出每一项
+    //   handleListToItemInfo(name){ //name是vuex取出来的nowMenuLink
+    //         let index
+    //         this.menuList.forEach((item,i)=>{
+    //             if(item.children && item.children.length>0){
+    //                item.children.forEach((jtem,j)=>{
+    //                     if(jtem.title == name){
+    //                         index= jtem.index
+    //                     }
+    //                })
+    //             }
+    //         })
+    //         return index
+    //   },
     }
     
 }

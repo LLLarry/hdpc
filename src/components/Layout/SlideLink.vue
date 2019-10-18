@@ -65,7 +65,6 @@ export default {
     },
     methods: {
       handleOpen(key, keyPath) {
-        console.log(key, keyPath);
         this.openArr= [key]
       },
       handleClose(key, keyPath) {
@@ -85,7 +84,7 @@ export default {
       },
       //点击跳转连接,并传参。获取值的时候，使用this.$route.query来获取
       handleLink(path){
-          console.time();
+          console.time('testForEach1');
           console.log(path)
           this.$router.push({
               path: path,
@@ -94,6 +93,7 @@ export default {
                   age: 18
               }
           })
+          console.timeEnd('testForEach1');
       },
     //   //处理传过来的list,是数组扁平化，遍历出每一项
     //   handleListToItemInfo(name){ //name是vuex取出来的nowMenuLink

@@ -67,6 +67,7 @@
                             margin-left: 10px;
                             font-family: cursive;
                             font-weight: 700;
+                            color: #c0e5ff;
                         }
                     }
                     &.bg-purple-light {

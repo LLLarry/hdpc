@@ -59,10 +59,8 @@ router.beforeEach((to,from,next) => {
       title= item.title
     }
   })
-   console.log(title)
    store.commit('handleChargeBreadList',data)
-   store.commit('handleChargeNowMenuLink',title)
-   console.timeEnd();
+   store.commit('handleChargeNowMenuLink',title);
 })
 
 

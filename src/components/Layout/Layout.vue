@@ -3,7 +3,7 @@
          <TopBar /> <!-- 头部组件 -->
          <el-row class="layout_row">
             <el-col :span="3"  class="layout_col_slide">
-                <Slide /><!-- 侧边栏组件 -->
+                <Slide />
             </el-col>
             <el-col :span="21" class="layout_col_main">
               <Main></Main><!-- 内容区域组件 -->

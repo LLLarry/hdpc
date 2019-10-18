@@ -85,6 +85,7 @@ export default {
       },
       //点击跳转连接,并传参。获取值的时候，使用this.$route.query来获取
       handleLink(path){
+          console.time();
           console.log(path)
           this.$router.push({
               path: path,

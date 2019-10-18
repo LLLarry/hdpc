@@ -14,6 +14,15 @@ Vue.use(Button);
 Vue.use(Select);
 Vue.use(Col);
 Vue.use(Row);
+
+const wxScriptLength= document.getElementsByClassName('wxLoginClass').length
+      if(wxScriptLength<=0){
+        const script = document.createElement('script')
+        script.type = 'text/javascript'
+        script.setAttribute('class','wxLoginClass ')
+        script.src = 'http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
+        document.body.appendChild(script)
+      }
 // Vue.config.productionTip = false
 
 /* eslint-disable no-new */

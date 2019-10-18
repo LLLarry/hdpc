@@ -1,19 +1,19 @@
 <template>
     <div class="messLogin">
-         <el-form  status-icon ref="ruleForm"  class="demo-ruleForm">
+         <el-form  status-icon ref="ruleForm"  :rules="rules"  class="demo-ruleForm">
             <el-form-item prop="phone" >
                 <el-input 
-                v-model="phone"
+                v-model="ruleForm.phone"
                 placeholder="请输入手机号"
                 clearable
                >
                 <i slot="prefix" class="el-input__icon el-icon-phone-outline"></i>
                </el-input>
             </el-form-item>
-            <el-form-item prop="pass">
+            <el-form-item prop="message">
                 <el-input 
                 placeholder="请输入验证码" 
-                v-model="message"
+                v-model="ruleForm.message"
                 clearable
                 >
                     <i slot="prefix" class="el-input__icon el-icon-message"></i>
@@ -37,9 +37,30 @@ Vue.use(FormItem)
 Vue.use(Input)
 export default {
      data() {
+         var checkPhone = (rule, value, callback) => {
+             console.log(rule, value,)
+                if (!value) {
+                    return callback(new Error('手机号不能为空'));
+                    } else {
+                    const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+                    console.log(reg.test(value));
+                    if (reg.test(value)) {
+                        callback();
+                    } else {
+                        return callback(new Error('请输入正确的手机号'));
+                    }
+                }
+            }
         return {
-            phone: '',
-            message: ''
+            ruleForm: {
+                 phone: '',
+                 message: '',
+            },
+            rules: {
+                phone: [
+                    { validator: checkPhone, trigger: 'blur'}
+                ]
+            }
         }
     },
 }

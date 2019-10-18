@@ -10,8 +10,7 @@ Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 Vue.use(Router)
-let newList= store.getters.transformList //路由降维数组
-console.log(newList)
+
 const router= new Router({
   routes: [
     {
@@ -48,6 +47,7 @@ router.beforeEach((to,from,next) => {
     }
   }
 
+  let newList= store.getters.transformList //路由降维数组
   let data= {} //这个是数组，包含title,link,index,是面包屑使用的
   let title= ''
   newList.forEach((item,i)=>{
@@ -61,6 +61,7 @@ router.beforeEach((to,from,next) => {
    console.log(title)
    store.commit('handleChargeBreadList',data)
    store.commit('handleChargeNowMenuLink',title)
+   console.timeEnd();
 })
 
 export default router

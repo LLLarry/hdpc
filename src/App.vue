@@ -12,6 +12,10 @@ export default {
   computed: {
     ...mapState(['menuList'])
   },
+  created(){
+      
+      
+  },
   watch:{ //监听url的改变，当不改变的时候
     $route(newVal,oldVal){
       let title= util.handleListToItemInfoFormUrl(this.menuList,newVal.path)

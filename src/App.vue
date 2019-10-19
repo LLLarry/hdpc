@@ -17,11 +17,7 @@ export default {
       
   },
   watch:{ //监听url的改变，当不改变的时候
-    $route(newVal,oldVal){
-      // let title= util.handleListToItemInfoFormUrl(this.menuList,newVal.path)
-      // this.$store.commit('handleChargeNowMenuLink',title)
-      // console.log(title,'app')
-    }
+
   }
 }
 </script>

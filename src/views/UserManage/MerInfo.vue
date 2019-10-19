@@ -2,44 +2,31 @@
    <div class="merInfo">
       <el-card class="box-card card_bottom0">
             <el-form :inline="true"  class="demo-form-inline">
-                <el-form-item label="订单数" class="form_right25">
-                     <el-select v-model="value1" clearable placeholder="请选择排序方式"  size="small">
-                        <el-option label="不排序" value="0" ></el-option>
+                <el-form-item label="昵称" class="form_right25">
+                    <el-input v-model="merName" placeholder="请输入商户昵称"  size="small"></el-input>
+                </el-form-item>
+
+                <el-form-item label="姓名" class="form_right25">
+                    <el-input v-model="merName" placeholder="请输入商户姓名"  size="small"></el-input>
+                </el-form-item>
+
+                 <el-form-item label="电话" class="form_right25">
+                    <el-input v-model="merName" placeholder="请输入商户电话"  size="small"></el-input>
+                </el-form-item>
+
+                <el-form-item label="收益" class="form_right25">
+                     <el-select v-model="value1"  placeholder="请选择排序方式"  size="small">
                         <el-option label="从大到小" value="1" ></el-option>
                         <el-option label="从小到大" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="总金额" class="form_right25">
-                     <el-select v-model="value2" clearable placeholder="请选择排序方式"  size="small">
-                        <el-option label="不排序" value="0" ></el-option>
-                        <el-option label="从大到小" value="1" ></el-option>
-                        <el-option label="从小到大" value="2" ></el-option>
+                <el-form-item label="商户类型" class="form_right25">
+                     <el-select v-model="value2"  placeholder="请选择排序方式"  size="small">
+                        <el-option label="有效商户" value="1" ></el-option>
+                        <el-option label="所有商户" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="设备号" class="form_right25">
-                    <el-input v-model="deviceNum" placeholder="请输入设备号"  size="small"></el-input>
-                </el-form-item>
-                 <el-form-item label="商户名" class="form_right25">
-                    <el-input v-model="merName" placeholder="请输入商户名"  size="small"></el-input>
-                </el-form-item>
-                 <el-form-item label="开始时间" class="form_right25">
-                      <el-date-picker
-                        v-model="startTime"
-                        size="small"
-                        type="date"
-                        placeholder="选择开始时间">
-                      </el-date-picker>
-                </el-form-item>
-
-                  <el-form-item label="结束时间" class="form_right25">
-                      <el-date-picker
-                        size="small"
-                        v-model="endTime"
-                        type="date"
-                        placeholder="选择结束时间">
-                      </el-date-picker>
-                 </el-form-item>
-
+            
                 <el-form-item class="form_margin0 content_btn">
                     <el-button type="primary" size="small">查询</el-button>
                 </el-form-item>
@@ -56,88 +43,77 @@
                 >
                 <el-table-column
                 prop="date"
-                label="时间"
+                label="序号"
                 min-width="100"
                 fixed
                 >
                 </el-table-column>
                 <el-table-column
                 prop="name"
-                label="设备号"
+                label="昵称"
                 min-width="100"
                 fixed
                 >
                 </el-table-column>
                 <el-table-column
                 prop="address"
-                label="归属商户"
+                label="电话"
                 min-width="100"
                 >
                 </el-table-column>
 
                  <el-table-column
                 prop="date"
-                label="归属小区"
+                label="总收益"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
                 prop="name"
-                label="总收益"
+                label="未提现"
                 min-width="120">
                 </el-table-column>
                 <el-table-column
                 prop="address"
-                label="总订单"
+                label="欠款金额"
                 min-width="100">
                 </el-table-column>
 
                  <el-table-column
                 prop="date"
-                label="微信收益"
+                label="操作"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
                 prop="name"
-                label="支付宝收益"
+                label="费率"
                 min-width="100">
                 </el-table-column>
                 <el-table-column
                 prop="address"
-                label="支付宝订单"
+                label="对公费率"
                 min-width="120"
                 >
                 </el-table-column>
 
                  <el-table-column
                 prop="date"
-                label="微信退费"
+                label="设备数量"
                 min-width="100">
                 </el-table-column>
                  <el-table-column
                 prop="date"
-                label="微信退费订单"
+                label="在线数量"
                 min-width="100">
                 </el-table-column>
 
                  <el-table-column
                 prop="date"
-                label="支付宝退费"
+                label="银行卡"
                 min-width="100">
                 </el-table-column>
                  <el-table-column
                 prop="date"
-                label="支付宝退费订单"
-                min-width="100">
-                </el-table-column>
-
-                  <el-table-column
-                prop="date"
-                label="投币金额"
-                min-width="100">
-                </el-table-column>
-                 <el-table-column
-                prop="date"
-                label="投币订单"
+                label="注册时间"
                 min-width="100">
                 </el-table-column>
             </el-table>
@@ -218,6 +194,9 @@ export default {
    },
     components: {
        MyPagination 
+    },
+    created(){
+        console.log(this.$route.matched)
     },
     methods: {
         getPage(page){ //分页发改变时，触发回调

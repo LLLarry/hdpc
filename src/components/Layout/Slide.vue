@@ -1,6 +1,6 @@
 <template>
     <div class="slide">
-        <SlideLink :menuList="menuList" :activeItem="activeItem"/>
+        <SlideLink :menuList="menuList"/>
     </div>
 </template>
 
@@ -11,7 +11,7 @@ import {mapState} from 'vuex'
     export default {
         data(){
             return {
-               activeItem: ''
+            //    activeItem: ''
             }
         },
         computed:{
@@ -27,33 +27,33 @@ import {mapState} from 'vuex'
                 } 
             }
             // 去除vuex中的nowMenuLink当前连接的名称，传进去
-            this.activeItem= this.handleListToItemInfo(this.$store.state.nowMenuLink)
+            // this.activeItem= this.handleListToItemInfo(this.$store.state.nowMenuLink)
         },
         watch:{
             //监控获取到的nowMenuLink值改变调用
-            nowMenuLink(newVal,oldVal){ 
-                console.log(this.handleListToItemInfo(newVal))
-                this.activeItem= this.handleListToItemInfo(newVal)
-            }
+            // nowMenuLink(newVal,oldVal){ 
+            //     console.log(this.handleListToItemInfo(newVal))
+            //     this.activeItem= this.handleListToItemInfo(newVal)
+            // }
         },
         components: {
-            SlideLink
+            SlideLink,
         },
         methods: {
              //处理传过来的list,是数组扁平化，遍历出每一项
-            handleListToItemInfo(name){ //name是vuex取出来的nowMenuLink
-                    let index
-                    this.menuList.forEach((item,i)=>{
-                        if(item.children && item.children.length>0){
-                        item.children.forEach((jtem,j)=>{
-                                if(jtem.title == name){
-                                    index= jtem.index
-                                }
-                        })
-                        }
-                    })
-                    return index
-            },
+            // handleListToItemInfo(name){ //name是vuex取出来的nowMenuLink
+            //         let index
+            //         this.menuList.forEach((item,i)=>{
+            //             if(item.children && item.children.length>0){
+            //             item.children.forEach((jtem,j)=>{
+            //                     if(jtem.title == name){
+            //                         index= jtem.index
+            //                     }
+            //             })
+            //             }
+            //         })
+            //         return index
+            // },
         }
     }
 </script>

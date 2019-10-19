@@ -16,10 +16,10 @@
                         <el-option label="从小到大" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="设备号">
+                <el-form-item label="设备号" class="form_right25">
                     <el-input v-model="deviceNum" placeholder="请输入设备号"  size="small"></el-input>
                 </el-form-item>
-                 <el-form-item label="商户名">
+                 <el-form-item label="商户名" class="form_right25">
                     <el-input v-model="merName" placeholder="请输入商户名"  size="small"></el-input>
                 </el-form-item>
                  <el-form-item label="开始时间" class="form_right25">

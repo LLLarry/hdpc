@@ -8,6 +8,8 @@ import store from './store'
 import { Button, Select,Col,Row } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
+import 'default-passive-events'
+import '../static/style/icon.less'
 
 Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.use(Button);

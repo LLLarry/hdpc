@@ -5,6 +5,7 @@ export const superAdminMenuList= [
         title: '数据汇总',
         link: '/datastatis',
         index: "0",
+        icon: 'icon-shujuhuizong',
          children: [
             {
                 title: '数据监控',
@@ -35,11 +36,13 @@ export const superAdminMenuList= [
     },
     {
         title: '用户管理',
+        link: 'usermanage',
         index: '1',
+        icon: 'icon-yonghu',
         children: [
             {
                 title: '商户信息',
-                link: '/user/num',
+                link: '/usermanage/merInfo',
                 index: '1-0'
             },
             {
@@ -57,6 +60,7 @@ export const superAdminMenuList= [
      {
         title: '交易记录',
         index: '2',
+        icon: 'icon-dingdan',
         children: [
             {
                 title: '交易记录',
@@ -98,6 +102,7 @@ export const superAdminMenuList= [
     {
         title: '设备管理',
         index: "3",
+        icon: 'icon-shebei',
         children: [
             {
                 title: '设备列表',
@@ -124,6 +129,7 @@ export const superAdminMenuList= [
     {
         title: 'IC卡管理',
         index: "4",
+        icon: 'icon-qiapian',
         children: [
             {
                 title: '在线卡查询',
@@ -145,6 +151,7 @@ export const superAdminMenuList= [
     {
         title: '小区管理',
          index: "5",
+         icon: 'icon-haofangtuo400iconfont2xiaoqu',
         children: [
             {
                 title: '小区管理',
@@ -156,6 +163,7 @@ export const superAdminMenuList= [
     {
         title: '系统设置',
         index: "6",
+        icon: 'icon-guanli',
         children: [
             {
                 title: '系统设置',
@@ -173,6 +181,7 @@ export const adminMenuList= [
         title: '数据汇总',
         link: '/datastatis',
         index: "0",
+        icon: 'icon-shujuhuizong',
          children: [
             {
                 title: '数据汇总',
@@ -194,10 +203,12 @@ export const adminMenuList= [
     {
         title: '用户管理',
         index: '1',
+        link: '/usermanage',
+        icon: 'icon-yonghu',
         children: [
             {
                 title: '商户信息',
-                link: '/user/num',
+                link: '/usermanage/merInfo',
                 index: '1-0'
             },
             {
@@ -215,6 +226,7 @@ export const adminMenuList= [
      {
         title: '交易记录',
         index: '2',
+        icon: 'icon-dingdan',
         children: [
             {
                 title: '交易记录',
@@ -246,6 +258,7 @@ export const adminMenuList= [
     {
         title: '设备管理',
         index: "3",
+        icon: 'icon-shebei',
         children: [
             {
                 title: '设备列表',
@@ -272,6 +285,7 @@ export const adminMenuList= [
     {
         title: 'IC卡管理',
         index: "4",
+        icon: 'icon-qiapian',
         children: [
             {
                 title: '在线卡查询',
@@ -293,6 +307,7 @@ export const adminMenuList= [
     {
         title: '小区管理',
          index: "5",
+         icon: 'icon-haofangtuo400iconfont2xiaoqu',
         children: [
             {
                 title: '小区管理',

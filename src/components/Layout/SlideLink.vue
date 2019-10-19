@@ -1,32 +1,18 @@
 <template>
     <div class="slideLink">
-        <el-menu 
-        :default-active="activeItem" 
-        :default-openeds="openArr" 
-        class="el-menu-vertical-demo" 
-        @open="handleOpen" 
-        @close="handleClose" 
-        :collapse="isCollapse"
-        :collapse-transition="false"
-        background-color="#324057"
-        text-color="rgba(255,255,255,0.6)"
-        >
-            <el-submenu :index="i+''" v-for="(item,i) in menuList" :key="i">
-                <template slot="title">
-                <i class="el-icon-location"></i>
-                <span slot="title">{{item.title}}</span>
-                </template>
-                <el-menu-item 
-                :index="i+'-'+j" 
-                v-if="item.children && item.children.length>0" 
-                v-for="(jtem,j) in item.children" 
-                :key="j"
-                @click="handleLink(jtem.link)"
-                >{{jtem.title}}</el-menu-item>
-            </el-submenu>
+        <ul class="fUl" v-for="(item,i) in menuList" :key="i">
+            <li @click="handlefLi(i)" :class="listData.obj['fLink'+i] ? 'select' : ''">
+                <i :class="'iconfont '+item.icon"></i>
+                {{item.title}}
+                <span class="el-icon-arrow-right arrowIcon"></span>    
+            </li>
+             <el-collapse-transition v-if="item.children && item.children.length>0"  :index="i">
+                  <ul class="sUl"  v-show="listData.obj['fLink'+i]">
+                    <router-link v-for="(jtem,j) in item.children"  :key="j" :to="jtem.link" tag="li"  >{{jtem.title}}</router-link>
+                  </ul>
+             </el-collapse-transition>
            
-        </el-menu>
-        <div class="toggleSlideLink" @click="handleToggleSlideLink"><span class="el-icon-s-fold"></span></div>
+        </ul>
     </div>
 </template>
 
@@ -41,51 +27,40 @@ Vue.use(MenuItemGroup)
 Vue.use(Button)
 export default {
     name: 'SlideLink',
-    props: ['menuList','activeItem'],
+    props: ['menuList'],
     data() {
+      let tr= { obj:{} } //定义个tr对象，里面包含各obj对象
+      this.menuList.forEach((item,i)=>{
+          tr.obj['fLink'+i]= false
+          if(item.children && item.children.length >0){
+              item.children.forEach((jtem,j)=>{
+                  tr.obj['sLink'+i+'-'+j]= false 
+              })
+          }
+      })
+    //  tr= {"obj":{"fLink0":false,"sLink0-0":false,"sLink0-1":false,"sLink0-2":false,"fLink1":false,"sLink1-0":false,"sLink1-1":false,"sLink1-2":false,"fLink2":false,"sLink2-0":false,"sLink2-1":false,"sLink2-2":false,"sLink2-3":false,"sLink2-4":false,"fLink3":false,"sLink3-0":false,"sLink3-1":false,"sLink3-2":false,"sLink3-3":false,"fLink4":false,"sLink4-0":false,"sLink4-1":false,"sLink4-2":false,"fLink5":false,"sLink5-0":false}}
       return {
-        isCollapse: false, //控制是否折叠
-        openArr: [],//当前打开的数组
-        // activeItem: '' //当前选择的哪一项
+        listData: tr
       };
     },
-    created(){
-        // 去除vuex中的nowMenuLink当前连接的名称，传进去
-        // this.activeItem= this.handleListToItemInfo(this.$store.state.nowMenuLink)
+    mounted(){
+        //当刷新，刚进入页面的时候判断当前地址，并控制一级导航菜单是否下拉
+        this.handlePathToContalfLiIsShow(this.$route.path)
     },
     computed: {
-    //    ...mapState({nowMenuLink:'nowMenuLink'}),
+        
     },
     watch: {
-        // //监控获取到的nowMenuLink值改变调用
-        // nowMenuLink(newVal,oldVal){ 
-        //     console.log(this.handleListToItemInfo(newVal))
-        //     this.activeItem= this.handleListToItemInfo(newVal)
-        // }
+        //每当地址改变的时候判断当前地址，并控制一级导航菜单是否下拉
+         $route(newVal,oldVal){
+            this.handlePathToContalfLiIsShow(newVal.path)
+        }
     },
     methods: {
-      handleOpen(key, keyPath) {
-        this.openArr= [key]
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleToggleSlideLink(){ //处理点击切换菜单栏宽度变化
-        let layout_col_slide= document.getElementsByClassName('layout_col_slide')[0]
-        if(this.isCollapse){
-            layout_col_slide.style.minWidth= '180px'
-            layout_col_slide.style.width= '12.5%'
-        }else{
-            layout_col_slide.style.minWidth= '0'
-            layout_col_slide.style.width= 'auto'
-        }
-        
-        this.isCollapse= !this.isCollapse
-      },
       //点击跳转连接,并传参。获取值的时候，使用this.$route.query来获取
       handleLink(path){
           console.time('testForEach1');
-          console.log(path)
+        //   console.log(path)
           this.$router.push({
               path: path,
               query: {
@@ -95,27 +70,49 @@ export default {
           })
           console.timeEnd('testForEach1');
       },
-    //   //处理传过来的list,是数组扁平化，遍历出每一项
-    //   handleListToItemInfo(name){ //name是vuex取出来的nowMenuLink
-    //         let index
-    //         this.menuList.forEach((item,i)=>{
-    //             if(item.children && item.children.length>0){
-    //                item.children.forEach((jtem,j)=>{
-    //                     if(jtem.title == name){
-    //                         index= jtem.index
-    //                     }
-    //                })
-    //             }
-    //         })
-    //         return index
-    //   },
+      handlefLi(index){ //点击一级菜单，控制对应的导航时候下拉和隐藏
+          let listCopy= this.listData.obj
+          for(let key in listCopy){
+              if(key== 'fLink'+index){
+                  listCopy[key]= !listCopy[key]
+              }else{
+                 listCopy[key]= false 
+              }
+          }
+          this.listData.obj= listCopy
+      },
+      handleMenuGetIndex(path){//根据当前地址获取对应菜单的索引
+            let index= 100
+            this.menuList.forEach((item,i)=>{
+                if(path.includes(item.link)){
+                    index= parseInt(item.index)
+                }
+            })
+            return index
+      },
+      handlePathToContalfLiIsShow(path){ //根据路径判断当前第一导航是否打开
+            let listCopy= this.listData.obj
+            for(let key in listCopy){
+                if(key== 'fLink'+this.handleMenuGetIndex(path)){
+                    listCopy[key]= true
+                }else{
+                    listCopy[key]= false 
+                }
+            }
+            this.listData.obj= listCopy
+      }
     }
     
 }
 </script>
 
 <style lang="less" scoped>
-    .slideLink{
+    .slideLink {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: relative;
+        user-select: none;
         &::-webkit-scrollbar-track-piece {
         background: #d3dce6;
         }
@@ -128,24 +125,6 @@ export default {
         background: #99a9bf;
         border-radius: 20px;
         }
-    }
-   .el-menu {
-       border: none;
-   }
-   .el-submenu .el-menu-item {
-        height: 38px;
-        line-height: 38px;
-        margin: 5px 0;
-   }
-   .el-submenu .el-menu-item.is-active {
-       background-color: #409EFF !important;
-       color: #fff;
-   }
-    .slideLink {
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        position: relative;
         .toggleSlideLink {
             position: absolute;
             bottom: 20px;
@@ -153,6 +132,55 @@ export default {
             font-size: 20px;
             padding: 5px;
             z-index: 99;
+        }
+        .fUl {
+            font-size: 14px;
+            &>li {
+                line-height: 56px;
+                cursor: pointer;
+                padding: 0 20px;
+                position: relative;
+                transition: all 0.5s;
+                i {
+                    margin-right: 10px;
+                    font-size: 14px;
+                }
+                &:hover {
+                    background-color: rgb(40,51,70);
+                }
+                .arrowIcon {
+                    position: absolute;
+                    right: 20px;
+                    top: 50%;
+                    margin-top: -8px;
+                    transition: all 0.5s;
+                }
+                &.select {
+                    color: #fff;
+                    .arrowIcon {
+                        transform: rotate(90deg);
+                    }
+                }
+            }
+            .sUl {
+                padding: 0;
+                li {
+                    height: 38px;
+                    line-height: 38px;
+                    padding: 0 20px 0 45px;
+                    margin-bottom: 5px;
+                    transition: all 0.5s;
+                    cursor: pointer;
+                    &:hover {
+                        background-color: rgb(40,51,70);
+                    }
+                }
+                
+                .router-link-active {
+                    color: #fff;
+                    background-color: #409eff!important;
+                }
+            }
         }
     }
     

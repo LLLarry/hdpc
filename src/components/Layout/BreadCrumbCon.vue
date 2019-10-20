@@ -8,6 +8,7 @@
         :disable-transitions="false"
         @close="handleClose(tag)"
         @click="handleLink(tag.title,tag.link,tag.query)"
+        :effect="$route.path.includes(tag.link) ? 'dark' : 'light'"
         >
         {{tag.title}}
         </el-tag>

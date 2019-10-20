@@ -164,6 +164,7 @@ export default {
             }
             .sUl {
                 padding: 0;
+                background-color: #3d4b63;
                 li {
                     height: 38px;
                     line-height: 38px;

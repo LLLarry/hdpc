@@ -1,15 +1,53 @@
 <template>
     <div class="login">
-        <div class="title">
+            <el-row>
+                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                    <div class="grid-content bg-purple">
+                         <div class="title">
+                            <img src="../../assets/images/logo.png" alt="自助充电平台">
+                            <span>自助充电平台</span>
+                        </div> 
+                    </div>
+                </el-col>
+           </el-row>     
+        <!-- <div class="title">
             <img src="../../assets/images/logo.png" alt="自助充电平台">
             <span>自助充电平台</span>
-        </div> 
-        <div class="login_form">
+        </div>  -->
+        <el-row class="form_row">
+                <el-col :xs="0" :sm="12" :md="12" :lg="12" :xl="14">
+                </el-col>
+                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="10">
+                    <div class="grid-content bg-purple">
+                         <div class="login_form">
+                                <h1>登录后台管理系统</h1>
+                            <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true">
+                                    <el-tab-pane label="扫码登录" name="first">
+                                        <div class="login_item">
+                                            <!-- <h4>请使用微信扫码登录</h4> -->
+                                            <div class="qrCodeCon" id="login_ewm"></div>
+                                        </div>
+                                    </el-tab-pane>
+                                    <el-tab-pane label="账号登录" name="second">
+                                        <div class="login_item">
+                                            <AccLogin />
+                                        </div>
+                                    </el-tab-pane>
+                                    <el-tab-pane label="短信登录" name="third">
+                                        <div class="login_item">
+                                            <MessLogin /> 
+                                        </div>
+                                    </el-tab-pane>
+                                </el-tabs>
+                            </div>
+                    </div>
+                </el-col>
+           </el-row> 
+        <!-- <div class="login_form">
             <h1>登录后台管理系统</h1>
            <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true">
                 <el-tab-pane label="扫码登录" name="first">
                     <div class="login_item">
-                         <!-- <h4>请使用微信扫码登录</h4> -->
                          <div class="qrCodeCon" id="login_ewm">
                             
                          </div>
@@ -26,17 +64,19 @@
                     </div>
                 </el-tab-pane>
             </el-tabs>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script>
-import {TabPane,Tabs} from 'element-ui'
+import {TabPane,Tabs,Row,Col,} from 'element-ui'
 import Vue from 'vue'
 import AccLogin from './AccLogin' //账号登录
 import MessLogin from './MessLogin' //短信登录
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Row)
+Vue.use(Col)
 export default {
     data() {
       return {
@@ -108,9 +148,12 @@ export default {
             border: 1px solid @colorD;
             border-radius: 8px;
             padding: 30px 70px 30px;
-            position: absolute;
-            top: 260px;
-            right: 200px;
+            width: 422px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            // position: absolute;
+            // top: 260px;
+            // right: 200px;
             .login_item {
                 width: 280px;
             }
@@ -130,6 +173,12 @@ export default {
                 margin: 0 auto;
                
             }
+        }
+    }
+    .form_row {
+       margin-top: 6%;
+        .el-col {
+            min-height: 10px;
         }
     }
 </style>

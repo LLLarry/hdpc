@@ -47,7 +47,7 @@ export default {
                 flex: 1;
                 height: 100%;
                 max-width: calc(100% - 180px);
-                padding: 20px;
+                // padding: 20px;
                 // background-color: #f1f5f7;
             }
         }

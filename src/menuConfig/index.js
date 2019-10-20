@@ -47,7 +47,7 @@ export const superAdminMenuList= [
             },
             {
                 title: '用户信息',
-                link: '/user/money',
+                link: '/usermanage/userInfo',
                 index: '1-1'
             },
              {
@@ -213,7 +213,7 @@ export const adminMenuList= [
             },
             {
                 title: '用户信息',
-                link: '/user/money',
+                link: '/usermanage/userInfo',
                 index: '1-1'
             },
              {

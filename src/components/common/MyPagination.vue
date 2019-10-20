@@ -3,7 +3,7 @@
          <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="nowPage"  
-            layout="prev, pager, next, jumper"
+            layout="total, prev, pager, next, jumper"
             :total="totalPage"
             prev-text="上一页"
             next-text="下一页"

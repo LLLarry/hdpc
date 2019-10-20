@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <!-- <BreadCrumbCon /> -->
+        <BreadCrumbCon />
         <keep-alive>
         <router-view></router-view>
         </keep-alive>
@@ -30,8 +30,8 @@ import BreadCrumbCon from './BreadCrumbCon'
 .main {
     //background-color: @colorB;
     height: calc(100%);
-    width: 100%;
     overflow: auto;
+    padding: 0 20px 20px 20px;
      &::-webkit-scrollbar-track-piece {
         background: #d3dce6;
         }

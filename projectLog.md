@@ -16,5 +16,11 @@
 ##### 2019-10-19 14：15
 **1、**  [Violation] 'click' handler took <N>ms 浏览器警告，影响体验，测出卡顿原因，将SlideLink.vue用的element菜单框架删除，自己封装组件，后续删除了Slide.vue中没用的代码，router.js中还没有删除
 
+1.1.1
 ##### 2019-10-21 14：25
 **1、** 写了商户信息页面，并实现部分功能，检验表单，
+**1、** 测试出移动端和IE端打开空白页面的问题，是由于无法对es6全部进行解析，从而无法识别，所以安装了babel-polyfill进行解析，并在 build/webpack.base.conf.js中
+ entry: {
+    app: ["babel-polyfill", "./src/main.js"]
+  },
+  进行配置，解决了这个问题

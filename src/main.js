@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 // import ElementUI from 'element-ui'; 这是加载全部
-import { Button, Select,Col,Row,Progress,MessageBox,Message} from 'element-ui';
+import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import 'default-passive-events'

@@ -77,7 +77,9 @@
                 label="未提现"
                 min-width="120">
                  <template slot-scope="scope">
-                    <el-link type="primary">{{scope.row.feeMoney}}</el-link>
+                     <router-link to="/usermanage/merInfo/merEarnDetail" tag="li">
+                         <el-link type="primary">{{scope.row.feeMoney}}</el-link>
+                     </router-link>
                 </template>
                 </el-table-column>
                 <el-table-column

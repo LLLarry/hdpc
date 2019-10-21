@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 // import ElementUI from 'element-ui'; 这是加载全部
-import { Button, Select,Col,Row,Progress } from 'element-ui';
+import { Button, Select,Col,Row,Progress,MessageBox,Message} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import 'default-passive-events'
@@ -17,6 +17,12 @@ Vue.use(Select);
 Vue.use(Col);
 Vue.use(Row);
 Vue.use(Progress);
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$prompt = MessageBox.prompt;
+Vue.prototype.$notify = Notification;
+Vue.prototype.$message = Message;
 const wxScriptLength= document.getElementsByClassName('wxLoginClass').length
       if(wxScriptLength<=0){
         const script = document.createElement('script')

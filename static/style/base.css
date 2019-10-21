@@ -6,6 +6,7 @@ code, kbd, pre, samp { font-family:couriernew, courier, monospace; }
 small{ font-size:12px; }
 ul, ol , li { list-style:none; }
 a { text-decoration:none; }
+.el-link.el-link--primary {text-decoration:none;}
 a:hover { text-decoration:underline; }
 sup { vertical-align:text-top; }
 sub{ vertical-align:text-bottom; }
@@ -33,4 +34,9 @@ html,body {
  */
 .clearfix {
     *zoom: 1;
+}
+
+/* element Bug样式 */
+body .el-table__fixed-right::before, body  .el-table__fixed::before {
+    height: 1px;
 }

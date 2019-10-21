@@ -38,5 +38,5 @@ html,body {
 
 /* element Bug样式 */
 body .el-table__fixed-right::before, body  .el-table__fixed::before {
-    height: 1px;
+    height: 0px;
 }

@@ -48,10 +48,11 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin','admin']
         }
       },
+       // 用户管理==================>
       {
         path: '/usermanage/merInfo',
         name: '商户信息',
-        component: ()=> import('@/views/UserManage/MerInfo'),
+        component: ()=> import('@/views/UserManage/MerInfo/MerInfo'),
         meta: {
           role: ['superAdmin','admin']
         }
@@ -59,11 +60,12 @@ export const constantRouterMapSuperAdmin= [
       {
         path: '/usermanage/userInfo',
         name: '用户信息',
-        component: ()=> import('@/views/UserManage/userInfo'),
+        component: ()=> import('@/views/UserManage/UserInfo/UserInfo'),
         meta: {
           role: ['superAdmin','admin']
         }
       },
+       // 用户管理 <==================
       {
         path: '/datastatis/merearn/test',
         name: 'Test',
@@ -121,7 +123,7 @@ export const constantRouterMapAdmin= [
       {
         path: '/usermanage/merInfo',
         name: '商户信息',
-        component: ()=> import('@/views/UserManage/MerInfo'),
+        component: ()=> import('@/views/UserManage/MerInfo/MerInfo'),
         meta: {
           role: ['superAdmin','admin']
         }
@@ -129,7 +131,7 @@ export const constantRouterMapAdmin= [
       {
         path: '/usermanage/userInfo',
         name: '用户信息',
-        component: ()=> import('@/views/UserManage/userInfo'),
+        component: ()=> import('@/views/UserManage/UserInfo/UserInfo'),
         meta: {
           role: ['superAdmin','admin']
         }

@@ -214,7 +214,7 @@
 <script>
 import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Radio,RadioGroup,} from 'element-ui'
 import Vue from 'vue'
-import MyPagination from '../../components/common/MyPagination'
+import MyPagination from '@/components/common/MyPagination'
 Vue.use(Card)
 Vue.use(Table)
 Vue.use(TableColumn)
@@ -359,9 +359,11 @@ export default {
 </script>
 
 <style lang="less">
-@import '../../../static/style/default.less';
-@import '../../../static/style/common.less';
+@import '../../../../static/style/default.less';
+@import '../../../../static/style/common.less';
     .deviceEarn {
        
     }
+
+
 </style>

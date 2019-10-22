@@ -18,6 +18,7 @@ export default {
         state.userInfo= null
         state.asyRouterMap= []  //router中的异步路由
         state.menuList= [] //菜单列表
+        state.isShowSlide= null //slide状态
         sessionStorage.removeItem('state')
     },
     [UPDATEUSERINFO](state,data){ //更新用户信息
@@ -48,6 +49,11 @@ export default {
     },
     storeAsyRouterMap(state,asyRouterMap){ //更新异步路由
         state.asyRouterMap= asyRouterMap
+        sessionStorage.setItem('state',JSON.stringify(state))
+    },
+    updateSlideStatus(state,flag){ //更新Slide是否显示
+        // let {isShowSlide}= state
+        state.isShowSlide= flag
         sessionStorage.setItem('state',JSON.stringify(state))
     }
 }

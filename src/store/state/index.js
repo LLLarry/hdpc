@@ -6,7 +6,8 @@ let obj= {
     nowMenuLink: '数据汇总', //当前菜单名称，是为了做返回的时候，菜单保持对应用的
     userInfo: null,
     asyRouterMap: [], //router中的异步路由
-    menuList: [] //菜单列表
+    menuList: [], //菜单列表
+    isShowSlide: true //默认显示菜单
 }
 let state= JSON.parse(sessionStorage.getItem('state') || JSON.stringify(obj))
 export default state

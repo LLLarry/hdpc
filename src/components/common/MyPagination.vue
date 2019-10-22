@@ -4,6 +4,7 @@
             @current-change="handleCurrentChange"
             :current-page.sync="nowPage"  
             layout="total, prev, pager, next, jumper"
+            :pager-count= "5"
             :total="totalPage"
             prev-text="上一页"
             next-text="下一页"

@@ -1,7 +1,7 @@
 <template>
     <div class="merEarnDetail">
-        <el-card class="box-card card_bottom0">
-            <el-form :inline="true"  class="demo-form-inline" :model="merEarnDetailForm">
+        <el-card class="box-card card_bottom0 cardForm">
+            <el-form :inline="true"  class="demo-form-inline" :model="merEarnDetailForm" size="mini">
                 <el-form-item label="订单号" class="form_right25">
                     <el-input v-model="merEarnDetailForm.orderNum" placeholder="请输入订单号"  size="small"></el-input>
                 </el-form-item>
@@ -48,39 +48,68 @@
          </el-card>
 
         <el-card class="box-card">
-            <!-- <el-table
+            <el-table
                 :data="tableData"
                 border
                 style="width: 100%"
-               
                 >
                 <el-table-column
-                prop="serialNum"
+                prop="index"
                 label="序号"
-                min-width="100"
-                fixed
+                min-width="120"
                 >
                 </el-table-column>
-
                 <el-table-column
-                prop="serialNum"
+                prop="orderNum"
                 label="订单号"
-                min-width="100"
-                fixed
-                >
-                <el-table-column
-                prop="serialNum"
-                label="金额"
-                min-width="100"
-                fixed
+                min-width="230"
                 >
                 </el-table-column>
-            </el-table> -->
+                <el-table-column
+                prop="money"
+                label="金额"
+                min-width="120"
+                >
+                    <template slot-scope="scope">
+                        <el-link  type="success" :underline="false" v-if="scope.row.type==1">{{scope.row.money}}</el-link>
+                        <el-link type="danger" :underline="false" v-else>{{scope.row.money}}</el-link>
+                    </template>
+                 </el-table-column>
+                <el-table-column
+                prop="balance"
+                label="余额"
+                min-width="120"
+                >
+                 </el-table-column>
+                <el-table-column
+                prop="payType"
+                label="支付方式"
+                min-width="120"
+                >
+                 </el-table-column>
+                <el-table-column
+                prop="tyle"
+                label="类型"
+                min-width="120"
+                >
+                    <template slot-scope="scope">
+                       <el-link type="success" :underline="false" v-if="scope.row.type==1">收入</el-link>
+                       <el-link type="danger" :underline="false" v-else>支出</el-link>
+                    </template>
+                 </el-table-column>
+                <el-table-column
+                prop="date"
+                label="时间"
+                min-width="180"
+                >
+                </el-table-column>
+            </el-table>
         </el-card>
+        <MyPagination :totalPage="totalPage" @getPage="getPage"/>
     </div>
 </template>
 <script>
-import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Radio,RadioGroup,} from 'element-ui'
+import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link} from 'element-ui'
 import Vue from 'vue'
 import MyPagination from '@/components/common/MyPagination'
 Vue.use(Card)
@@ -96,9 +125,6 @@ Vue.use(DatePicker)
 Vue.use(TimeSelect)
 Vue.use(TimePicker)
 Vue.use(Link)
-Vue.use(Dialog)
-Vue.use(Radio)
-Vue.use(RadioGroup)
 export default {
     data(){
         return {
@@ -108,8 +134,37 @@ export default {
                 type: '',
                 startTime: '',
                 endTime: ''
-            }
+            },
+            tableData: [
+                {
+                    index: 1,
+                    orderNum:'201910221056433970035789',
+                    money: 5,
+                    balance: 11970.0,
+                    payType: '微信',
+                    type: 1, //1收入，2支出
+                    date: '2019-10-22 10:56:54'
+                },
+                {
+                    index: 2,
+                    orderNum:'201910221056433970035789',
+                    money: 2,
+                    balance: 11970.0,
+                    payType: '支付宝',
+                    type: 2, //1收入，2支出
+                    date: '2019-10-22 10:56:54'
+                }
+            ],
+            totalPage: 326,
         }
+    },
+    methods: {
+        getPage(page){
+
+        }
+    },
+    components: {
+        MyPagination
     }
 }
 </script>
@@ -117,5 +172,10 @@ export default {
 <style lang="less">
 @import '../../../../../static/style/default.less';
 @import '../../../../../static/style/common.less';
+.merEarnDetail {
+    .el-link.el-link--success {
+        text-decoration: none;
+    }   
+}
 
 </style>

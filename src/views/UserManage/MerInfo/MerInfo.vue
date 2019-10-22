@@ -1,7 +1,7 @@
 <template>
    <div class="merInfo">
-      <el-card class="box-card card_bottom0">
-            <el-form :inline="true"  class="demo-form-inline">
+      <el-card class="box-card card_bottom0 cardForm">
+            <el-form :inline="true"  class="demo-form-inline" size="mini">
                 <el-form-item label="昵称" class="form_right25">
                     <el-input v-model="merName" placeholder="请输入商户昵称"  size="small"></el-input>
                 </el-form-item>
@@ -361,8 +361,6 @@ export default {
 </script>
 
 <style lang="less">
-@import '../../../../static/style/default.less';
-@import '../../../../static/style/common.less';
     .deviceEarn {
        
     }

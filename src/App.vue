@@ -24,6 +24,8 @@ export default {
 
 <style lang="less">
 @import '../static/style/base.css';
+@import '../static/style/default.less';
+@import '../static/style/common.less';
 #app {
   height: 100%;
 }

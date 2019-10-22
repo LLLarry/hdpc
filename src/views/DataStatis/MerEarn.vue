@@ -1,7 +1,7 @@
 <template>
    <div class="merEarn">
-      <el-card class="box-card card_bottom0">
-            <el-form :inline="true"  class="demo-form-inline">
+      <el-card class="box-card card_bottom0 cardForm">
+            <el-form :inline="true"  class="demo-form-inline" size="mini">
                 <!-- <el-form-item label="订单数" class="form_right25">
                      <el-select v-model="value1" clearable placeholder="请选择排序方式"  size="small">
                         <el-option label="不排序" value="0" ></el-option>
@@ -241,8 +241,6 @@ export default {
 </script>
 
 <style lang="less">
-@import '../../../static/style/default.less';
-@import '../../../static/style/common.less';
     // .deviceEarn {
        
     // }

@@ -8,6 +8,7 @@ import store from './store'
 import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
+import 'element-ui/lib/theme-chalk/display.css';
 import 'default-passive-events'
 import '../static/style/icon.less'
 
@@ -31,6 +32,24 @@ const wxScriptLength= document.getElementsByClassName('wxLoginClass').length
         script.src = 'http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
         document.body.appendChild(script)
       }
+      
+  handleSlide()   
+window.onresize = function() {
+  handleSlide()
+}
+
+function handleSlide(){
+  const isShowSlide= store.state.isShowSlide
+  const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+  if(width> 768 && isShowSlide== false){
+    store.commit('updateSlideStatus',true)
+  }
+  if(width<= 768 && isShowSlide== true){
+    store.commit('updateSlideStatus',false)
+  }
+}
+
+
 // Vue.config.productionTip = false
 
 /* eslint-disable no-new */

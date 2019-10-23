@@ -36,7 +36,7 @@ export const superAdminMenuList= [
     },
     {
         title: '用户管理',
-        link: 'usermanage',
+        link: '/usermanage',
         index: '1',
         icon: 'icon-yonghu',
         children: [
@@ -52,7 +52,7 @@ export const superAdminMenuList= [
             },
              {
                 title: '操作信息',
-                link: '/user/money',
+                link: '/usermanage/userHandleInfo',
                 index: '1-2'
             }
         ]
@@ -60,16 +60,17 @@ export const superAdminMenuList= [
      {
         title: '交易记录',
         index: '2',
+        link: '/tradeRecord',
         icon: 'icon-dingdan',
         children: [
             {
                 title: '交易记录',
-                link: '/user/num',
+                link: '/tradeRecord/tradeRecordCon',
                 index: '2-0'
             },
             {
                 title: '充电记录',
-                link: '/user/money',
+                link: '/tradeRecord/chargeRecord',
                 index: '2-1'
             },
             {
@@ -218,7 +219,7 @@ export const adminMenuList= [
             },
              {
                 title: '操作信息',
-                link: '/user/money',
+                link: '/usermanage/userHandleInfo',
                 index: '1-2'
             }
         ]
@@ -226,16 +227,17 @@ export const adminMenuList= [
      {
         title: '交易记录',
         index: '2',
+        link: '/tradeRecord',
         icon: 'icon-dingdan',
         children: [
             {
                 title: '交易记录',
-                link: '/user/num',
+                link: '/tradeRecord/tradeRecordCon',
                 index: '2-0'
             },
             {
                 title: '充电记录',
-                link: '/user/money',
+                link: '/tradeRecord/chargeRecord',
                 index: '2-1'
             },
             {

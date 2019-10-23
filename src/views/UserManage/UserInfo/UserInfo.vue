@@ -41,6 +41,7 @@
                 :data="tableData"
                 border
                 style="width: 100%"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
                 >
                 <el-table-column
                 prop="index"
@@ -92,7 +93,9 @@
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                     <el-link type="primary" >查看在线卡</el-link>
+                    <router-link tag="li" to="/usermanage/userInfo/userOnlineCardInfo">
+                        <el-link type="primary" >查看在线卡</el-link>
+                    </router-link>
                 </template>
                 </el-table-column>
                 <el-table-column

@@ -81,7 +81,41 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/usermanage/userInfo/userOnlineCardInfo',
+        name: '用户在线卡信息',
+        component: ()=> import('@/views/UserManage/UserInfo/UserOnlineCardInfo/UserOnlineCardInfo'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/usermanage/userHandleInfo',
+        name: '用户操作信息',
+        component: ()=> import('@/views/UserManage/UserHandleInfo/UserHandleInfo'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
        // 用户管理 <==================
+      //  交易记录TradeRecord
+      {
+        path: '/tradeRecord/tradeRecordCon',
+        name: '交易记录',
+        component: ()=> import('@/views/TradeRecord/TradeRecordCon/TradeRecordCon'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/chargeRecord',
+        name: '充电记录',
+        component: ()=> import('@/views/TradeRecord/ChargeRecord/ChargeRecord'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      // 交易记录
       {
         path: '/datastatis/merearn/test',
         name: 'Test',
@@ -169,6 +203,40 @@ export const constantRouterMapAdmin= [
         }
       },
       {
+        path: '/usermanage/userInfo/userOnlineCardInfo',
+        name: '用户在线卡信息',
+        component: ()=> import('@/views/UserManage/UserInfo/UserOnlineCardInfo/UserOnlineCardInfo'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/usermanage/userHandleInfo',
+        name: '用户操作信息',
+        component: ()=> import('@/views/UserManage/UserHandleInfo/UserHandleInfo'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+       //  交易记录TradeRecord
+      {
+        path: '/tradeRecord/tradeRecordCon',
+        name: '交易记录',
+        component: ()=> import('@/views/TradeRecord/TradeRecordCon/TradeRecordCon'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/chargeRecord',
+        name: '充电记录',
+        component: ()=> import('@/views/TradeRecord/ChargeRecord/ChargeRecord'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      // 交易记录
+      {
         path: '/datastatis/merearn/test',
         name: 'Test',
         component: ()=> import('@/views/DataStatis/Test'),
@@ -176,7 +244,6 @@ export const constantRouterMapAdmin= [
           role: ['superAdmin','admin']
         }
       },
-
       {
         path: '*',
         component: ()=> import('@/components/NoFind/NoFind'),

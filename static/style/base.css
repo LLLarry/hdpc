@@ -5,8 +5,8 @@ address, cite, dfn, em, var { font-style:normal; }
 code, kbd, pre, samp { font-family:couriernew, courier, monospace; }
 small{ font-size:12px; }
 ul, ol , li { list-style:none; }
-a { text-decoration:none; }
-.el-link.el-link--primary {text-decoration:none;}
+#app .main a ,a{ text-decoration:none; }
+#app .main .el-link {text-decoration:none;}
 a:hover { text-decoration:underline; }
 sup { vertical-align:text-top; }
 sub{ vertical-align:text-bottom; }

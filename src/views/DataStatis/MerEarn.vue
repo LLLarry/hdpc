@@ -57,6 +57,7 @@
                 style="width: 100%"
                 :summary-method="getSummaries" 
                 :show-summary="true"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
                 >
                 <el-table-column
                 prop="date"

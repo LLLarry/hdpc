@@ -307,7 +307,8 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 inputPlaceholder: '请输入密码',
-                lockScroll: true
+                lockScroll: true,
+                inputType: 'password'
             }).then(({ value }) => {
             this.$message({
                 type: 'success',

@@ -161,7 +161,9 @@
                 min-width="230"
                 >
                     <template slot-scope="scope">
-                        <el-link type="primary">{{scope.row.orderNum}}</el-link>
+                        <router-link to="/tradeRecord/tradeRecordCon/orderDetail">
+                            <el-link type="primary">{{scope.row.orderNum}}</el-link>
+                        </router-link> 
                     </template>
                 </el-table-column>
                 <el-table-column

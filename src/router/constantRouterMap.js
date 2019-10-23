@@ -9,6 +9,10 @@ export const constantRouterMapSuperAdmin= [
         },
     children: [
       {
+        path: '/',
+        redirect: '/datastatis/index'
+      },
+      {
         path: '/datastatis/total',
         name: '数据监控',
         component: ()=> import('@/views/DataStatis/DataTotal'),
@@ -108,6 +112,14 @@ export const constantRouterMapSuperAdmin= [
         }
       },
       {
+        path: '/tradeRecord/tradeRecordCon/orderDetail',
+        name: '订单详情',
+        component: ()=> import('@/views/TradeRecord/TradeRecordCon/OrderDetail/orderDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
         path: '/tradeRecord/chargeRecord',
         name: '充电记录',
         component: ()=> import('@/views/TradeRecord/ChargeRecord/ChargeRecord'),
@@ -140,12 +152,15 @@ export const constantRouterMapSuperAdmin= [
 export const constantRouterMapAdmin= [
     {
     path: '/',
-    redirect:'/datastatis/index',
     component: ()=> import('@/components/Layout/layout'),
     meta: {
         role: ['superAdmin','admin']
         },
     children: [
+      {
+        path: '/',
+        redirect: '/datastatis/index'
+      },
       {
         path: '/datastatis/index',
         name: '数据汇总',
@@ -223,6 +238,14 @@ export const constantRouterMapAdmin= [
         path: '/tradeRecord/tradeRecordCon',
         name: '交易记录',
         component: ()=> import('@/views/TradeRecord/TradeRecordCon/TradeRecordCon'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/tradeRecordCon/orderDetail',
+        name: '订单详情',
+        component: ()=> import('@/views/TradeRecord/TradeRecordCon/OrderDetail/orderDetail'),
         meta: {
           role: ['superAdmin','admin']
         }

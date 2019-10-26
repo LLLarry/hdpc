@@ -75,22 +75,22 @@ export const superAdminMenuList= [
             },
             {
                 title: '离线卡记录',
-                link: '/user/num',
+                link: '/tradeRecord/offlineCardRecord',
                 index: '2-2'
             },
             {
                 title: '投币记录',
-                link: '/user/money',
+                link: '/tradeRecord/coinRecord',
                 index: '2-3'
             },
             {
                 title: '包月记录',
-                link: '/user/num',
+                link: '/tradeRecord/monthlyRecord',
                 index: '2-4'
             },
             {
                 title: '提现管理',
-                link: '/user/money',
+                link: '/tradeRecord/cashManage',
                 index: '2-5'
             },
             {
@@ -242,17 +242,17 @@ export const adminMenuList= [
             },
             {
                 title: '离线卡记录',
-                link: '/user/num',
+                link: '/tradeRecord/offlineCardRecord',
                 index: '2-2'
             },
             {
                 title: '投币记录',
-                link: '/user/money',
+                link: '/tradeRecord/coinRecord',
                 index: '2-3'
             },
             {
                 title: '包月记录',
-                link: '/user/num',
+                link: '/tradeRecord/monthlyRecord',
                 index: '2-4'
             },
         ]

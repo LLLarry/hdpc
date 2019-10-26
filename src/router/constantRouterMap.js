@@ -127,6 +127,38 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/tradeRecord/offlineCardRecord',
+        name: '离线卡记录',
+        component: ()=> import('@/views/TradeRecord/OfflineCardRecord/OfflineCardRecord'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/coinRecord',
+        name: '投币记录',
+        component: ()=> import('@/views/TradeRecord/CoinRecord/CoinRecord'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/monthlyRecord',
+        name: '包月记录',
+        component: ()=> import('@/views/TradeRecord/MonthlyRecord/MonthlyRecord'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/cashManage',
+        name: '提现管理',
+        component: ()=> import('@/views/TradeRecord/CashManage/CashManage'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
       // 交易记录
       {
         path: '/datastatis/merearn/test',
@@ -254,6 +286,30 @@ export const constantRouterMapAdmin= [
         path: '/tradeRecord/chargeRecord',
         name: '充电记录',
         component: ()=> import('@/views/TradeRecord/ChargeRecord/ChargeRecord'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/offlineCardRecord',
+        name: '离线卡记录',
+        component: ()=> import('@/views/TradeRecord/OfflineCardRecord/OfflineCardRecord'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/coinRecord',
+        name: '投币记录',
+        component: ()=> import('@/views/TradeRecord/CoinRecord/CoinRecord'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/monthlyRecord',
+        name: '包月记录',
+        component: ()=> import('@/views/TradeRecord/MonthlyRecord/MonthlyRecord'),
         meta: {
           role: ['superAdmin','admin']
         }

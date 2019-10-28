@@ -19,12 +19,12 @@
 <script>
 import Vue from 'vue'
 import {mapState,mapMutations} from 'vuex'
-import {Menu,Submenu, MenuItem,MenuItemGroup,Button} from 'element-ui';
-Vue.use(Menu)
-Vue.use(Submenu)
-Vue.use(MenuItem)
-Vue.use(MenuItemGroup)
-Vue.use(Button)
+// import {Menu,Submenu, MenuItem,MenuItemGroup,Button} from 'element-ui';
+// Vue.use(Menu)
+// Vue.use(Submenu)
+// Vue.use(MenuItem)
+// Vue.use(MenuItemGroup)
+// Vue.use(Button)
 export default {
     name: 'SlideLink',
     props: ['menuList'],

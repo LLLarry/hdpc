@@ -214,25 +214,25 @@
 </template>
 
 <script>
-import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Radio,RadioGroup,} from 'element-ui'
-import Vue from 'vue'
+// import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Radio,RadioGroup,} from 'element-ui'
+// import Vue from 'vue'
 import MyPagination from '@/components/common/MyPagination'
-Vue.use(Card)
-Vue.use(Table)
-Vue.use(TableColumn)
-Vue.use(Form)
-Vue.use(FormItem)
-Vue.use(Input)
-Vue.use(Select)
-Vue.use(Option)
-Vue.use(OptionGroup)
-Vue.use(DatePicker)
-Vue.use(TimeSelect)
-Vue.use(TimePicker)
-Vue.use(Link)
-Vue.use(Dialog)
-Vue.use(Radio)
-Vue.use(RadioGroup)
+// Vue.use(Card)
+// Vue.use(Table)
+// Vue.use(TableColumn)
+// Vue.use(Form)
+// Vue.use(FormItem)
+// Vue.use(Input)
+// Vue.use(Select)
+// Vue.use(Option)
+// Vue.use(OptionGroup)
+// Vue.use(DatePicker)
+// Vue.use(TimeSelect)
+// Vue.use(TimePicker)
+// Vue.use(Link)
+// Vue.use(Dialog)
+// Vue.use(Radio)
+// Vue.use(RadioGroup)
 export default {
    data(){
        var checkRate= (rule,value,callback)=>{ //核对修改费率的费率是否正确

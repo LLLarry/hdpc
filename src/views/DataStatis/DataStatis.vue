@@ -123,11 +123,11 @@
 </template>
 
 <script>
-import {Card,Table,TableColumn} from 'element-ui'
-import Vue from 'vue'
-Vue.use(Card)
-Vue.use(Table)
-Vue.use(TableColumn)
+// import {Card,Table,TableColumn} from 'element-ui'
+// import Vue from 'vue'
+// Vue.use(Card)
+// Vue.use(Table)
+// Vue.use(TableColumn)
 export default {
     data(){
         return {

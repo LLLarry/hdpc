@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import {Tag} from 'element-ui'
-import Vue from 'vue'
+// import {Tag} from 'element-ui'
+// import Vue from 'vue'
 import { mapState,mapMutations} from 'vuex'
-Vue.use(Tag)
+// Vue.use(Tag)
 
 export default {
      data() {

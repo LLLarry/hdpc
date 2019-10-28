@@ -69,14 +69,14 @@
 </template>
 
 <script>
-import {TabPane,Tabs,Row,Col,} from 'element-ui'
+// import {TabPane,Tabs,Row,Col,} from 'element-ui'
 import Vue from 'vue'
 import AccLogin from './AccLogin' //账号登录
 import MessLogin from './MessLogin' //短信登录
-Vue.use(Tabs)
-Vue.use(TabPane)
-Vue.use(Row)
-Vue.use(Col)
+// Vue.use(Tabs)
+// Vue.use(TabPane)
+// Vue.use(Row)
+// Vue.use(Col)
 export default {
     data() {
       return {

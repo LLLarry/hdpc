@@ -29,12 +29,12 @@
 </template>
 
 <script>
-import { Form,FormItem,Input} from 'element-ui'
+// import { Form,FormItem,Input} from 'element-ui'
 import {asyHandleLoginAct} from '../../require'
 import Vue from 'vue'
-Vue.use(Form)
-Vue.use(FormItem)
-Vue.use(Input)
+// Vue.use(Form)
+// Vue.use(FormItem)
+// Vue.use(Input)
 export default {
      data() {
          var checkPhone = (rule, value, callback) => {

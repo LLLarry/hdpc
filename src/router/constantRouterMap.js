@@ -159,7 +159,26 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin']
         }
       },
+      {
+        path: '/tradeRecord/walletRecord',
+        name: '钱包记录',
+        component: ()=> import('@/views/TradeRecord/WalletRecord/WalletRecord'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
       // 交易记录
+      // 设备管理
+      
+      {
+        path: '/deviceManage/deviceList',
+        name: '设备列表',
+        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceList'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
+      // 设备管理结束
       {
         path: '/datastatis/merearn/test',
         name: 'Test',
@@ -315,6 +334,16 @@ export const constantRouterMapAdmin= [
         }
       },
       // 交易记录
+       // 设备管理
+       {
+        path: '/deviceManage/deviceList',
+        name: '设备列表',
+        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceList'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
+      // 设备管理结束
       {
         path: '/datastatis/merearn/test',
         name: 'Test',

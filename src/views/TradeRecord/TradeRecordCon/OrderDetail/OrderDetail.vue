@@ -67,12 +67,12 @@
 </template>
 
 <script>
-import {Card,Table,TableColumn,Link} from 'element-ui'
-import Vue from 'vue'
-Vue.use(Card)
-Vue.use(Table)
-Vue.use(TableColumn)
-Vue.use(Link)
+// import {Card,Table,TableColumn,Link} from 'element-ui'
+// import Vue from 'vue'
+// Vue.use(Card)
+// Vue.use(Table)
+// Vue.use(TableColumn)
+// Vue.use(Link)
 export default {
     data(){
         return {

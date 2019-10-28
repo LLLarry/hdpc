@@ -53,13 +53,13 @@
 </template>
 
 <script>
-import {Card,Table,TableColumn,Link} from 'element-ui'
-import Vue from 'vue'
+// import {Card,Table,TableColumn,Link} from 'element-ui'
+// import Vue from 'vue'
 import MyPagination from '@/components/common/MyPagination'
-Vue.use(Card)
-Vue.use(Table)
-Vue.use(TableColumn)
-Vue.use(Link)
+// Vue.use(Card)
+// Vue.use(Table)
+// Vue.use(TableColumn)
+// Vue.use(Link)
 export default {
     data(){
         return{

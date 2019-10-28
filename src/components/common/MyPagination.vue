@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import {Pagination} from 'element-ui'
+// import {Pagination} from 'element-ui'
 import Vue from 'vue'
-Vue.use(Pagination)
+// Vue.use(Pagination)
 export default {
     data(){
        return {

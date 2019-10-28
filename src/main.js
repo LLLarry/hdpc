@@ -5,7 +5,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 // import ElementUI from 'element-ui'; 这是加载全部
-import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification} from 'element-ui';
+// import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification,} from 'element-ui';
+import { Button,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import 'element-ui/lib/theme-chalk/display.css';
@@ -18,6 +19,29 @@ Vue.use(Select);
 Vue.use(Col);
 Vue.use(Row);
 Vue.use(Progress);
+
+Vue.use(Tag)
+Vue.use(Card)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Input)
+Vue.use(Option)
+Vue.use(OptionGroup)
+Vue.use(DatePicker)
+Vue.use(TimeSelect)
+Vue.use(TimePicker)
+Vue.use(Link)
+Vue.use(Dialog)
+Vue.use(Menu)
+Vue.use(Submenu)
+Vue.use(MenuItem)
+Vue.use(MenuItemGroup)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Pagination)
+
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;

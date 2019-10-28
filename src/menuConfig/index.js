@@ -95,7 +95,7 @@ export const superAdminMenuList= [
             },
             {
                 title: '钱包记录',
-                link: '/user/num',
+                link: '/tradeRecord/walletRecord',
                 index: '2-6'
             }
         ]
@@ -103,11 +103,12 @@ export const superAdminMenuList= [
     {
         title: '设备管理',
         index: "3",
+        link: '/deviceManage',
         icon: 'icon-shebei',
         children: [
             {
                 title: '设备列表',
-                link: '/user/num',
+                link: '/deviceManage/deviceList',
                 index: '3-0'
             },
             {
@@ -260,11 +261,12 @@ export const adminMenuList= [
     {
         title: '设备管理',
         index: "3",
+        link: '/deviceManage',
         icon: 'icon-shebei',
         children: [
             {
                 title: '设备列表',
-                link: '/user/num',
+                link: '/deviceManage/deviceList',
                 index: '3-0'
             },
             {

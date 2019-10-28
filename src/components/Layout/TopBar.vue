@@ -22,10 +22,10 @@
 </template>
 
 <script>
-    import {Link} from 'element-ui'
+    // import {Link} from 'element-ui'
     import Vue from 'vue'
     import { mapMutations,mapState} from 'vuex'
-    Vue.use(Link)
+    // Vue.use(Link)
     export default {
         data(){
             return {

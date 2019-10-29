@@ -175,10 +175,44 @@ export const constantRouterMapSuperAdmin= [
         name: '设备列表',
         component: ()=> import('@/views/DeviceManage/DeviceList/DeviceList'),
         meta: {
-          role: ['superAdmin']
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/bluetoothList',
+        name: '蓝牙设备',
+        component: ()=> import('@/views/DeviceManage/BluetoothList/BluetoothList'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/deviceLog',
+        name: '设备日志',
+        component: ()=> import('@/views/DeviceManage/DeviceLog/DeviceLog'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/handleLog',
+        name: '操作日志',
+        component: ()=> import('@/views/DeviceManage/HandleLog/HandleLog'),
+        meta: {
+          role: ['superAdmin','admin']
         }
       },
       // 设备管理结束
+      // IC卡管理开始
+      {
+        path: '/iccardManage/onlineCardQuery',
+        name: '在线卡查询',
+        component: ()=> import('@/views/ICCardManage/OnlineCardQuery/OnlineCardQuery'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      // IC卡管理结束
       {
         path: '/datastatis/merearn/test',
         name: 'Test',
@@ -187,7 +221,6 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin','admin']
         }
       },
-
       {
         path: '*',
         component: ()=> import('@/components/NoFind/NoFind'),
@@ -340,10 +373,44 @@ export const constantRouterMapAdmin= [
         name: '设备列表',
         component: ()=> import('@/views/DeviceManage/DeviceList/DeviceList'),
         meta: {
-          role: ['superAdmin']
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/bluetoothList',
+        name: '蓝牙设备',
+        component: ()=> import('@/views/DeviceManage/BluetoothList/BluetoothList'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/deviceLog',
+        name: '设备日志',
+        component: ()=> import('@/views/DeviceManage/DeviceLog/DeviceLog'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/handleLog',
+        name: '操作日志',
+        component: ()=> import('@/views/DeviceManage/HandleLog/HandleLog'),
+        meta: {
+          role: ['superAdmin','admin']
         }
       },
       // 设备管理结束
+      // IC卡管理开始
+       {
+        path: '/iccardManage/onlineCardQuery',
+        name: '在线卡查询',
+        component: ()=> import('@/views/ICCardManage/OnlineCardQuery/OnlineCardQuery'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      // IC卡管理结束
       {
         path: '/datastatis/merearn/test',
         name: 'Test',

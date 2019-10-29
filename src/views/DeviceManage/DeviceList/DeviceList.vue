@@ -82,6 +82,7 @@
                         type="datetime"
                         placeholder="选择开始时间"
                         :picker-options="pickerOptions"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         >
                       </el-date-picker>
                 </el-form-item>
@@ -92,6 +93,7 @@
                         type="datetime"
                         placeholder="选择结束时间"
                         :picker-options="pickerOptions"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         >
                       </el-date-picker>
                 </el-form-item>
@@ -337,6 +339,7 @@ export default {
 <style lang="less">
 .deviceList {
     .dialog {
+        border-radius: 5px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
         .el-dialog__header {
             padding: 0;

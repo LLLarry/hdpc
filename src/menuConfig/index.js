@@ -113,17 +113,17 @@ export const superAdminMenuList= [
             },
             {
                 title: '蓝牙设备',
-                link: '/user/money',
+                link: '/deviceManage/bluetoothList',
                 index: '3-1'
             },
             {
                 title: '设备日志',
-                link: '/user/num',
+                link: '/deviceManage/deviceLog',
                 index: '3-2'
             },
             {
                 title: '操作日志',
-                link: '/user/money',
+                link: '/deviceManage/handleLog',
                 index: '3-3'
             }
         ]
@@ -131,11 +131,12 @@ export const superAdminMenuList= [
     {
         title: 'IC卡管理',
         index: "4",
+        link: '/iccardManage',
         icon: 'icon-qiapian',
         children: [
             {
                 title: '在线卡查询',
-                link: '/user/num',
+                link: '/iccardManage/onlineCardQuery',
                 index: '4-0'
             },
             {
@@ -271,17 +272,17 @@ export const adminMenuList= [
             },
             {
                 title: '蓝牙设备',
-                link: '/user/money',
+                link: '/deviceManage/bluetoothList',
                 index: '3-1'
             },
             {
                 title: '设备日志',
-                link: '/user/num',
+                link: '/deviceManage/deviceLog',
                 index: '3-2'
             },
             {
                 title: '操作日志',
-                link: '/user/money',
+                link: '/deviceManage/handleLog',
                 index: '3-3'
             }
         ]
@@ -289,6 +290,7 @@ export const adminMenuList= [
     {
         title: 'IC卡管理',
         index: "4",
+        link: '/iccardManage',
         icon: 'icon-qiapian',
         children: [
             {
@@ -298,7 +300,7 @@ export const adminMenuList= [
             },
             {
                 title: '在线卡操作',
-                link: '/user/money',
+                link: '/iccardManage/onlineCardQuery',
                 index: '4-1'
             },
             {

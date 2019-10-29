@@ -6,7 +6,9 @@ import router from './router'
 import store from './store'
 // import ElementUI from 'element-ui'; 这是加载全部
 // import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification,} from 'element-ui';
-import { Button,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination} from 'element-ui'
+import { Button,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination,Radio,
+  RadioGroup,
+  RadioButton,} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import 'element-ui/lib/theme-chalk/display.css';
@@ -41,6 +43,9 @@ Vue.use(MenuItemGroup)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Pagination)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(RadioButton)
 
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
@@ -48,6 +53,7 @@ Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
+
 const wxScriptLength= document.getElementsByClassName('wxLoginClass').length
       if(wxScriptLength<=0){
         const script = document.createElement('script')

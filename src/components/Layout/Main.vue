@@ -1,9 +1,10 @@
 <template>
     <div class="main">
         <BreadCrumbCon />
-        <keep-alive>
+        <!-- <keep-alive>
         <router-view></router-view>
-        </keep-alive>
+        </keep-alive> -->
+        <router-view></router-view>
         <div class="bottomBar">
             自助充电平台（www.he360.com.cn）
         </div>

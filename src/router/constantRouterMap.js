@@ -212,7 +212,43 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/iccardManage/onlineCardHandle',
+        name: '在线卡操作',
+        component: ()=> import('@/views/ICCardManage/OnlineCardHandle/OnlineCardHandle'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/iccardManage/onlineCardConsume',
+        name: '在线卡消费',
+        component: ()=> import('@/views/ICCardManage/OnlineCardConsume/OnlineCardConsume'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
       // IC卡管理结束
+      // 小区管理开始
+      {
+        path: '/communManage/communManageCon',
+        name: '小区管理',
+        component: ()=> import('@/views/CommunManage/CommunManageCon/CommunManageCon'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      // 小区管理结束
+       // 系统设置开始
+       {
+        path: '/systemSet/systemTem',
+        name: '系统模板',
+        component: ()=> import('@/views/SystemSet/SystemTem/SystemTem'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      // 系统设置结束
       {
         path: '/datastatis/merearn/test',
         name: 'Test',
@@ -410,7 +446,34 @@ export const constantRouterMapAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/iccardManage/onlineCardHandle',
+        name: '在线卡操作',
+        component: ()=> import('@/views/ICCardManage/OnlineCardHandle/OnlineCardHandle'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/iccardManage/onlineCardConsume',
+        name: '在线卡消费',
+        component: ()=> import('@/views/ICCardManage/OnlineCardConsume/OnlineCardConsume'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
       // IC卡管理结束
+
+      // 小区管理开始
+      {
+        path: '/communManage/communManageCon',
+        name: '小区管理',
+        component: ()=> import('@/views/CommunManage/CommunManageCon/CommunManageCon'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      // 小区管理结束
       {
         path: '/datastatis/merearn/test',
         name: 'Test',

@@ -141,24 +141,25 @@ export const superAdminMenuList= [
             },
             {
                 title: '在线卡操作',
-                link: '/user/money',
+                link: '/iccardManage/onlineCardHandle',
                 index: '4-1'
             },
             {
                 title: '在线卡消费',
-                link: '/user/num',
+                link: '/iccardManage/onlineCardConsume',
                 index: '4-2'
             }
         ]
     },
     {
         title: '小区管理',
-         index: "5",
-         icon: 'icon-haofangtuo400iconfont2xiaoqu',
+        index: "5",
+        link: '/communManage',
+        icon: 'icon-haofangtuo400iconfont2xiaoqu',
         children: [
             {
                 title: '小区管理',
-                link: '/user/num',
+                link: '/communManage/communManageCon',
                 index: '5-0'
             }
         ]
@@ -166,11 +167,12 @@ export const superAdminMenuList= [
     {
         title: '系统设置',
         index: "6",
+        link: '/systemSet',
         icon: 'icon-guanli',
         children: [
             {
                 title: '系统设置',
-                link: '/user/num',
+                link: '/systemSet/systemTem',
                 index: '6-0'
             }
         ]
@@ -295,29 +297,30 @@ export const adminMenuList= [
         children: [
             {
                 title: '在线卡查询',
-                link: '/user/num',
+                link: '/iccardManage/onlineCardQuery',
                 index: '4-0'
             },
             {
                 title: '在线卡操作',
-                link: '/iccardManage/onlineCardQuery',
+                link: '/iccardManage/onlineCardHandle',
                 index: '4-1'
             },
             {
                 title: '在线卡消费',
-                link: '/user/num',
+                link: '/iccardManage/onlineCardConsume',
                 index: '4-2'
             }
         ]
     },
     {
         title: '小区管理',
-         index: "5",
-         icon: 'icon-haofangtuo400iconfont2xiaoqu',
+        index: "5",
+        link: '/communManage',
+        icon: 'icon-haofangtuo400iconfont2xiaoqu',
         children: [
             {
                 title: '小区管理',
-                link: '/user/num',
+                link: '/communManage/communManageCon',
                 index: '5-0'
             }
         ]

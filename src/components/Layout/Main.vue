@@ -31,7 +31,7 @@ import BreadCrumbCon from './BreadCrumbCon'
     //background-color: @colorB;
     height: calc(100%);
     overflow: auto;
-    padding: 0 20px 20px 20px;
+    // padding: 0 20px 20px 20px;
      &::-webkit-scrollbar-track-piece {
         background: #d3dce6;
     }

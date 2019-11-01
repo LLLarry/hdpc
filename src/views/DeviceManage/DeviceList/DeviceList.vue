@@ -214,7 +214,7 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini">详情</el-button>
+                    <el-button type="primary" size="mini" @click="$router.push({path:'/deviceManage/deviceList/deviceDetail'})">详情</el-button>
                 </template>
                 </el-table-column>
                 <el-table-column

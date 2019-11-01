@@ -202,6 +202,22 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/deviceManage/deviceList/deviceDetail',
+        name: '设备详情',
+        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/DeviceDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/deviceList/templateDetail',
+        name: '模板详情',
+        component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
       // 设备管理结束
       // IC卡管理开始
       {
@@ -432,6 +448,22 @@ export const constantRouterMapAdmin= [
         path: '/deviceManage/handleLog',
         name: '操作日志',
         component: ()=> import('@/views/DeviceManage/HandleLog/HandleLog'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/deviceList/deviceDetail',
+        name: '设备详情',
+        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/DeviceDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/deviceList/templateDetail',
+        name: '模板详情',
+        component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
         meta: {
           role: ['superAdmin','admin']
         }

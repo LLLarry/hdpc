@@ -1,5 +1,5 @@
 <template>
-    <div class="template">
+    <div class="templateCoin">
         <el-card :class="['box-card','temTableTitle', (from==3 && item.isSelected==1) ? 'selectedTem' : '']" v-for="(item,i) in arr" :key="i">
            <el-table
                 :data="[{}]"
@@ -20,19 +20,7 @@
                         <span v-if="!item.edit" class="top_span">{{item.name}}</span>
                         <el-input v-else size="mini" v-model="temForm.name" style="width: 70%; display: inline-block" placeholder="请输入模板名称"></el-input>
                     </div>
-                    <div style="margin-top: 15px">
-                        <strong>是否支持退费:  </strong>
-                        <span v-if="!item.edit" :class="['top_span', item.permit ==1 ? 'green' : 'red']">{{item.permit ==1 ? '是' : '否'}}</span><span v-if="!item.edit">
-                            {{item.common2== 1 ? '(退费标准：时间和电量最小)' : item.common2== 2 ? '((退费标准：时间最小)' : item.common2== 3 ? '((退费标准：电量最小)': ''}}
-                        </span>
-                        <el-cascader
-                        v-else
-                        v-model="temForm.permit"
-                        :options="options"
-                        :props="{ expandTrigger: 'hover' }"
-                         size="mini"></el-cascader>
-                       
-                    </div> 
+                    <div style="margin-top: 15px">&nbsp;</div> 
                 </template>
                 </el-table-column>
 
@@ -47,14 +35,7 @@
                         <span v-if="!item.edit" class="top_span">{{item.remark}}</span>
                         <el-input v-else size="mini" v-model="temForm.remark" style="width: 70%; display: inline-block" placeholder="请输入品牌名称"></el-input>
                     </div>
-                    <div style="margin-top: 15px">
-                        <strong>是否钱包强制支付:  </strong>
-                        <span v-if="!item.edit" :class="['top_span', item.walletpay ==1 ? 'green' : 'red']">{{item.walletpay ==1 ? '是' : '否'}}</span>
-                        <el-radio-group v-model="temForm.walletpay"  v-else >
-                            <el-radio :label="1">是</el-radio>
-                            <el-radio :label="2">否</el-radio>
-                        </el-radio-group>
-                    </div> 
+                    <div style="margin-top: 15px">&nbsp;</div> 
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -112,33 +93,23 @@
             </template>
             </el-table-column>
              <el-table-column
+            prop="remark"
+            label="投币个数"
+            min-width="200"
+            >
+            <template slot-scope="scope">
+                <div v-if="scope.row.edit"> <el-input size="mini" v-model="childTemForm.remark" style="width: 85%;margin-right: 10px;" placeholder="请输入投币个数"></el-input>个</div>
+                <span v-else> {{scope.row.remark}}个</span>
+            </template>
+            </el-table-column>
+            <el-table-column
             prop="money"
-            label="充电价格"
+            label="付款金额"
             min-width="200"
             >
             <template slot-scope="scope">
-                <div v-if="scope.row.edit"> <el-input size="mini" v-model="childTemForm.money" style="width: 85%;margin-right: 10px;" placeholder="请输入充电价格"></el-input>元</div>
+               <div v-if="scope.row.edit"> <el-input size="mini" v-model="childTemForm.money" style="width: 85%;margin-right: 10px;" placeholder="请输入付款金额"></el-input>元</div>
                 <span v-else> {{scope.row.money}}元</span>
-            </template>
-            </el-table-column>
-            <el-table-column
-            prop="chargeTime"
-            label="充电时间"
-            min-width="200"
-            >
-            <template slot-scope="scope">
-               <div v-if="scope.row.edit"> <el-input size="mini" v-model="childTemForm.chargeTime" style="width: 85%;margin-right: 10px;" placeholder="请输入充电时间"></el-input>分钟</div>
-                <span v-else> {{scope.row.chargeTime}}分钟</span>
-            </template>
-            </el-table-column>
-            <el-table-column
-            prop="chargeQuantity"
-            label="消耗电量"
-            min-width="200"
-            >
-            <template slot-scope="scope">
-                <div v-if="scope.row.edit"> <el-input size="mini" v-model="childTemForm.chargeQuantity" style="width: 85%;margin-right: 10px;" placeholder="请输入消耗电量"></el-input>度</div>
-                <span v-else> {{scope.row.chargeQuantity}}度</span>
             </template>
             </el-table-column>
             <el-table-column
@@ -158,7 +129,7 @@
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)">添加模板</el-button>
              </div>
               <div style="margin-top: 20px; text-align: center" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '01'}})" style="float:left;margin-left: 30%;">查看更多</el-button>
+                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '03'}})" style="float:left;margin-left: 30%;">查看更多</el-button>
                <!-- <el-button type="primary" size="mini" >此模板复用更多设备</el-button> -->
                <TemMulDevice />
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" style="float:right;margin-right: 30%;">添加模板</el-button>
@@ -239,26 +210,21 @@ export default {
             let newgather
             if(item.id == id){
                 let childTemData= {   
-                                name: '1元1小时',
+                                name: '1元1个币',
                                 money:1.0,
-                                chargeTime: 60,
-                                chargeQuantity: 1,
+                                remark: 1,
                                 temChildId: 25
                                 }
                 if(item.gather.length > 0){
                     let childTemLastData= item.gather[item.gather.length-1] //点击的最后一个子元素
-                    let rate1= Math.round(childTemLastData.chargeTime/childTemLastData.money) //利率是1元多少分钟
-                    let rate2= Math.round(childTemLastData.chargeTime / childTemLastData.chargeQuantity)  //得到的比例是消耗1度电充电多久
-                    let nextMoney= childTemLastData.money+1 
-                    let nextTime= (nextMoney * rate1) % 1 === 0 ? (nextMoney * rate1) : (nextMoney * rate1).toFixed(2)
-                    let nextPower= (nextTime / rate2) % 1 === 0 ? (nextTime / rate2) : (nextTime / rate2).toFixed(2)
-                    let houer= (nextTime / 60) % 1 === 0 ? (nextTime / 60) : (nextTime / 60).toFixed(2)
-                    let nextName= nextMoney+'元'+houer+'小时'
+                    let rate= childTemLastData.money / childTemLastData.remark //利率是1元几个币
+                    let nextRemark= childTemLastData.remark+1 
+                    let nextMoney= nextRemark*rate
+                    let nextName= nextMoney+'元'+nextRemark+'个币'
                     childTemData= {
                        name: nextName,
                        money: nextMoney,
-                       chargeTime: nextTime,
-                       chargeQuantity: nextPower,
+                       remark: nextRemark,
                        temChildId: 23
                     }
                 }
@@ -273,8 +239,8 @@ export default {
                this.$message.warning('请先保存或取消其他的编辑操作！')
                return 
            }
-            let {name,money,chargeTime,chargeQuantity}= row
-            this.childTemForm= {name,money,chargeTime,chargeQuantity}
+            let {name,money,remark}= row
+            this.childTemForm= {name,money,remark}
             Vue.set(row,'edit',true)
             this.isEditingChildTem= true
        },
@@ -282,11 +248,10 @@ export default {
        handleSaveEditChildTem(id,temChildId,row){
            //校验，发送请求
 
-           let {name,money,chargeTime,chargeQuantity}= this.childTemForm
+           let {name,money,remark}= this.childTemForm
            row.name= name
            row.money= money
-           row.chargeTime= chargeTime
-           row.chargeQuantity= chargeQuantity
+           row.remark= remark
            Vue.set(row,'edit',false)
            this.isEditingChildTem= false
        },

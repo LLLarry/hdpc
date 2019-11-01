@@ -12,5 +12,12 @@ export default {
             }
         })
         return title
-    }
+    },
+    getAttr(obj,attr){ //获取元素的css内部的属性值
+		if(obj.currentStyle){
+			return obj.currentStyle[attr]
+		}else{
+			return getComputedStyle(obj,false)[attr]
+		}
+	}
 }

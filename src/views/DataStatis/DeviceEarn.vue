@@ -148,21 +148,8 @@
 </template>
 
 <script>
-// import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker,} from 'element-ui'
-// import Vue from 'vue'
 import MyPagination from '../../components/common/MyPagination'
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(Form)
-// Vue.use(FormItem)
-// Vue.use(Input)
-// Vue.use(Select)
-// Vue.use(Option)
-// Vue.use(OptionGroup)
-// Vue.use(DatePicker)
-// Vue.use(TimeSelect)
-// Vue.use(TimePicker)
+
 export default {
    data(){
        return {
@@ -213,6 +200,11 @@ export default {
             date: '2016-05-04',
             name: '王小虎',
             address: 150
+            },
+            {
+            date: '2016-05-04',
+            name: '王小虎',
+            address: 150
             },],
             totalPage: 500, //共50条数据  
        }
@@ -220,6 +212,7 @@ export default {
     components: {
        MyPagination 
     },
+
     methods: {
         getPage(page){ //分页发改变时，触发回调
             console.log('fu',page)
@@ -234,15 +227,12 @@ export default {
                 }
                 const values = data.map(item => Number(item[column.property])); 
                 if (!values.every(value => isNaN(value))) {
-                    sums[index] = values.reduce((prev, curr) => {
-                    const value = Number(curr);
-                    if (!isNaN(value)) {
-                        return prev + curr;
-                    } else {
-                        return prev;
-                    }
-                    }, 0);
-                    sums[index] += '';
+                    console.log(column)
+                   if(index == 2){
+                       sums[index]= '111'
+                   }else {
+
+                   }
                 } else {
                     sums[index] = 'N/A';
                 }

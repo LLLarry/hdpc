@@ -5,9 +5,9 @@ export default {
     // 登录校验
     async asyHandleLoginAct({ commit, state },data){
         let loginInfo=  await handleLogin(data)
-        console.log(loginInfo)
-        if(loginInfo.code == 200){
-            commit(UPDATEUSERINFO,loginInfo) //存储的时候讲主store中的路由列表存下来了asyRouterMap,副路由moduleA也存下来了，
+        if(loginInfo.userInfo.code == 200){
+            console.log(123)
+            commit(UPDATEUSERINFO,loginInfo.userInfo) //存储的时候讲主store中的路由列表存下来了asyRouterMap,副路由moduleA也存下来了，
             router.push({path: '/datastatis/index'})
         }
       

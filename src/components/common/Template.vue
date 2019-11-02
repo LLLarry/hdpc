@@ -82,13 +82,14 @@
                         <strong>操作</strong>
                     </div>
                     <div style="margin-top: 15px">
-                        <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit">编辑</el-button>
+                        <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit">编辑</el-button>
                         <el-button type="danger" size="mini"  @click="handleDeleteTem(item)" v-if="!item.edit" 
                         :disabled="from == 1 || from == 2 || (from==3 && item.isSelected ==1) " 
                         :plain="from == 1 || from == 2 || (from==3 && item.isSelected ==1)"
+                        icon="el-icon-delete"
                         >删除</el-button>
-                        <el-button type="success" size="mini" @click="handleSaveEditTem(item)" v-if="item.edit">保存</el-button>
-                        <el-button type="warning" size="mini" @click="handleCancelDeleteTem(item)"  v-if="item.edit">取消</el-button>
+                        <el-button type="success" size="mini" @click="handleSaveEditTem(item)" v-if="item.edit" icon="el-icon-folder-checked">保存</el-button>
+                        <el-button type="warning" size="mini" @click="handleCancelDeleteTem(item)"  v-if="item.edit" icon="el-icon-folder-delete">取消</el-button>
                     </div> 
                 </template>
                 </el-table-column>
@@ -147,24 +148,23 @@
             width="200"
             >
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.temChildId,scope.row)" v-if="!scope.row.edit">编辑</el-button>
-                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.temChildId)"  v-if="!scope.row.edit" :disabled="item.isSelected ==1 || from== 2" :plain="item.isSelected ==1 || from== 2">删除</el-button>
-                <el-button type="success" size="mini" @click="handleSaveEditChildTem(item.id,scope.row.temChildId,scope.row)" v-if="scope.row.edit">保存</el-button>
-                <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.temChildId,scope.row)"  v-if="scope.row.edit">取消</el-button>
+                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.temChildId,scope.row)" v-if="!scope.row.edit" icon="el-icon-edit">编辑</el-button>
+                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.temChildId)"  v-if="!scope.row.edit" :disabled="item.isSelected ==1 || from== 2" :plain="item.isSelected ==1 || from== 2" icon="el-icon-delete">删除</el-button>
+                <el-button type="success" size="mini" @click="handleSaveEditChildTem(item.id,scope.row.temChildId,scope.row)" v-if="scope.row.edit" icon="el-icon-folder-checked">保存</el-button>
+                <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.temChildId,scope.row)"  v-if="scope.row.edit" icon="el-icon-folder-delete">取消</el-button>
             </template>
             </el-table-column>
             </el-table>
-             <div style="margin-top: 20px; text-align: center" class="clearfix"  v-if="from==1">
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)">添加模板</el-button>
+             <div style="margin-top: 20px; text-align: center;" class="clearfix"  v-if="from==1">
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
              </div>
-              <div style="margin-top: 20px; text-align: center" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '01'}})" style="float:left;margin-left: 30%;">查看更多</el-button>
-               <!-- <el-button type="primary" size="mini" >此模板复用更多设备</el-button> -->
-               <TemMulDevice />
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" style="float:right;margin-right: 30%;">添加模板</el-button>
+              <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
+                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '01'}})" icon="el-icon-view">查看更多</el-button>
+                <TemMulDevice />
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
              </div>
-             <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" style="float:left;margin-left: 30%;">添加模板</el-button>
+             <div style="margin-top: 20px; text-align: center; " class="clearfix" v-else>
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" style="float:left;margin-left: 30%;" icon="el-icon-plus">添加模板</el-button>
                 <el-link type="success" :underline="false" v-if="item.isSelected ==1"> 默认模板</el-link>
                 <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.isSelected !=1" @click="handleSetDefault(item)">设为默认</el-button>
                 <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.isSelected ==1" disabled plain>设为默认</el-button>

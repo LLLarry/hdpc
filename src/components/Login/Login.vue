@@ -84,16 +84,8 @@ export default {
       };
     },
     mounted () {
-        // 创建一个WxLogin对象，并生成二维码
-        // if(!WxLogin){
-        //     const script = document.createElement('script')
-        //     script.type = 'text/javascript'
-        //     script.setAttribute('class','wxLoginClass ')
-        //     script.src = 'http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
-        //     document.body.appendChild(script)
-        // }
-        setTimeout(()=>{
-            new WxLogin({
+        // 调用微信接口二维码
+        new WxLogin({
             id:"login_ewm", 
             appid: "wx695275de73b7dad4", 
             scope: "snsapi_login", 
@@ -105,8 +97,6 @@ export default {
         const iframe= document.getElementsByTagName('iframe')[0]
         iframe.width="280px;"
         iframe.height="300px;"
-        },100)
-
     },
     components:{
         MessLogin,

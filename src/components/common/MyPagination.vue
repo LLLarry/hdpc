@@ -14,16 +14,14 @@
 </template>
 
 <script>
-// import {Pagination} from 'element-ui'
 import Vue from 'vue'
-// Vue.use(Pagination)
 export default {
     data(){
        return {
-           nowPage: 0, //当前页数
+        //    nowPage: 0, //当前页数
        }
     },
-    props:["totalPage"],
+    props:["totalPage","nowPage"],
     methods: {
         handleCurrentChange(page){
            this.$emit('getPage',page)

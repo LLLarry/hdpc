@@ -1,37 +1,67 @@
 <template>
     <div class="templateDetail">
         <div class="topContent" ref="topContent">
-            <span class="title">充电模板</span>
+            <span class="title">{{$route.query.hw == '03' ? '模拟投币模板' : $route.query.hw == '04' ? '离线卡模板': '充电模板'}}</span>
             <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddTem">添加主模板</el-button>
         </div>
         <Template :from="3" :list="temChargeList" v-if="$route.query.hw == '01' " /> <!--充电模板-->
         <TemplateCoin :from="3" :list="temCoinList" v-else-if="$route.query.hw == '03' " /> <!--脉冲模板-->
         <TemplateOffline :from="3" :list="temOfflineList" v-if="$route.query.hw == '04' "  /> <!--离线卡模板-->
 
-        <el-dialog title="新增充电模板" :visible.sync="visiblesHw01" width="450px" custom-class="dialog_form">
-            <el-form :model="hw01Form" label-position="top" >
-                <el-form-item label="模板名称" label-width="120px">
-                    <el-input v-model="hw01Form.name" autocomplete="off" placeholder="请输入模板名称"></el-input>
+        <el-dialog :title="$route.query.hw == '03' ? '新增模拟投币模板' : $route.query.hw == '04' ? '新增离线卡模板': '新增充电模板'" :visible.sync="visiblesHw01" width="450px" custom-class="dialog_form" validate="handleSubmit1">
+            <el-form :model="hwForm" label-position="top" :rules="rule1" ref="hwForm1">
+                <el-form-item label="模板名称" label-width="120px" prop="name">
+                    <el-input v-model="hwForm.name" autocomplete="off" placeholder="请输入模板名称"></el-input>
                 </el-form-item>
                 <el-form-item label="品牌名称" label-width="120px">
-                    <el-input v-model="hw01Form.name" autocomplete="off" placeholder="请输入品牌名称"></el-input>
+                    <el-input v-model="hwForm.remark" autocomplete="off" placeholder="请输入品牌名称"></el-input>
                 </el-form-item>
                 <el-form-item label="售后电话" label-width="120px">
-                    <el-input v-model="hw01Form.name" autocomplete="off" placeholder="请输入售后电话"></el-input>
+                    <el-input v-model="hwForm.common1" autocomplete="off" placeholder="请输入售后电话"></el-input>
                 </el-form-item>
-                <el-form-item label="是否支持退费" label-width="150px">
-                    <el-switch v-model="hw01Form.delivery"></el-switch>
+                <el-form-item label="是否支持退费" label-width="150px" v-if="$route.query.hw != '04' && $route.query.hw != '03'">
+                    <el-cascader
+                        v-model="hwForm.permitObj"
+                        :options="[{
+                            value: '1',
+                            label: '是',
+                            children: [{
+                                    value: '1',
+                                    label: '时间和电量最小',
+                                },
+                                {
+                                    value: '2',
+                                    label: '时间最小',
+                                },
+                                {
+                                    value: '3',
+                                    label: '电量最小',
+                                }]
+                        },
+                        {
+                            value: '2',
+                            label: '否'
+                        }]"
+                        :props="{ expandTrigger: 'hover' }"
+                        size="mini">
+                    </el-cascader>
                 </el-form-item>
-                <el-form-item label="是否钱包强制支付" label-width="150px">
-                    <el-switch v-model="hw01Form.delivery"></el-switch>
+                <el-form-item label="是否钱包强制支付" label-width="150px"  v-if="$route.query.hw != '04' && $route.query.hw != '03'">
+                    <el-radio-group v-model="hwForm.walletpay">
+                            <el-radio :label="1">是</el-radio>
+                            <el-radio :label="2">否</el-radio>
+                    </el-radio-group>
                 </el-form-item>
-                <el-form-item label="是否创建分等级模板" label-width="150px">
-                    <el-switch v-model="hw01Form.delivery"></el-switch>
+                <el-form-item label="是否创建分等级模板" label-width="150px"  v-if="$route.query.hw != '04' && $route.query.hw != '03'">
+                    <el-radio-group v-model="hwForm.grade" disabled>
+                            <el-radio :label="1">是</el-radio>
+                            <el-radio :label="2">否</el-radio>
+                    </el-radio-group>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="visiblesHw01 = false">取 消</el-button>
-                <el-button type="primary" @click="visiblesHw01 = false">确 定</el-button>
+                <el-button type="primary" @click="handleSubmit1">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -197,7 +227,17 @@ export default {
             ],
             topHeight: 0,//顶部框到顶部固定定位据顶部的距离
             visiblesHw01: false, //版本号为01的模板是否显示
-            hw01Form: {}////版本号为01的模板form表单容器
+            hwForm: {
+                name: '',
+                remark: '',
+                common1: '',
+                permitObj: ["1","1"],
+                walletpay: 2,
+                grade: 2
+            },//版本号为01的模板form表单容器
+            rule1:{
+                name: [{required: true,message: '模板名称不能为空', trigger: 'change'}]
+            }, // 表单1的校验
         }
     },
     components: {
@@ -227,10 +267,44 @@ export default {
         },
         // 添加主模板
         handleAddTem(){
-            if(this.$route.query.hw === '01'){
-                this.visiblesHw01= true
-            }
-        }
+            // if(this.$route.query.hw === '01'){
+            //     this.visiblesHw01= true
+            // }
+            this.visiblesHw01= true
+        },
+        // 提交添主模板hw01
+        handleSubmit1(){
+            this.$refs['hwForm1'].validate((valid)=>{
+                if(valid){
+                    if(this.$route.query.hw === '03' || this.$route.query.hw === '04'){
+                        const {name,remark,common1}= this.hwForm
+                         const data= {
+                            name,
+                            remark,
+                            common1
+                        }
+                        console.log(data)
+                    }else{
+                         const {name,remark,common1,walletpay,grade,permit: permitObj}= this.hwForm
+                        let permit= this.hwForm.permitObj[0]
+                        let common2= ''
+                        if(this.hwForm.permitObj.length == 2){
+                            common2= this.hwForm.permitObj[1]
+                        }
+                        const data= {
+                                name,
+                                remark,
+                                common1,
+                                permit,
+                                common2,
+                                walletpay,
+                                grade
+                            }
+                            console.log(data)
+                    }
+                }
+            })
+        },
     }
 }
 </script>
@@ -238,7 +312,7 @@ export default {
 <style lang="less">
 .templateDetail {
     position: relative;
-    padding-top: 49px;
+    padding: 69px 20px 0 20px;
     .topContent {
         position: fixed;
         left: 180px;

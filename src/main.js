@@ -8,7 +8,7 @@ import store from './store'
 // import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification,} from 'element-ui';
 import { Button,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination,Radio,
   RadioGroup,
-  RadioButton,Cascader,Switch} from 'element-ui'
+  RadioButton,Cascader,Switch,Loading,} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import 'element-ui/lib/theme-chalk/display.css';
@@ -48,6 +48,7 @@ Vue.use(RadioGroup)
 Vue.use(RadioButton)
 Vue.use(Cascader)
 Vue.use(Switch)
+Vue.use(Loading)
 
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
@@ -56,16 +57,18 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 
-const wxScriptLength= document.getElementsByClassName('wxLoginClass').length
-      if(wxScriptLength<=0){
-        const script = document.createElement('script')
-        script.type = 'text/javascript'
-        script.setAttribute('class','wxLoginClass ')
-        script.src = 'http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
-        document.body.appendChild(script)
-      }
-      
-  handleSlide()   
+// const wxScriptLength= document.getElementsByClassName('wxLoginClass').length
+//       if(wxScriptLength<=0){
+//         const script = document.createElement('script')
+//         script.type = 'text/javascript'
+//         script.setAttribute('class','wxLoginClass ')
+//         script.src = 'http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
+//         document.body.appendChild(script)
+//         setTimeout(()=>{
+//           console.log(WxLogin)
+//         })
+
+handleSlide()   
 window.onresize = function() {
   handleSlide()
 }

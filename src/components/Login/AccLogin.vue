@@ -51,10 +51,10 @@ export default {
     ...mapActions(['asyHandleLoginAct']),
       submitForm() {
           const data= {
-              username:this.phone,
-              password:this.password,
-            //   phone:this.phone,
+            //   username:this.phone,
             //   password:this.password,
+              phone:this.phone,
+              password:this.password,
           }
           this.asyHandleLoginAct(data)
       },

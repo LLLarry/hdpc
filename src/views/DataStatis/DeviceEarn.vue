@@ -227,7 +227,6 @@ export default {
                 }
                 const values = data.map(item => Number(item[column.property])); 
                 if (!values.every(value => isNaN(value))) {
-                    console.log(column)
                    if(index == 2){
                        sums[index]= '111'
                    }else {

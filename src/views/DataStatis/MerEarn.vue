@@ -156,8 +156,8 @@ export default {
            loading: false,
            tableData: [], //每条数据
            gatherData: {},//汇总数据
-           totalPage: 0, //共500条数据
-           nowPage: 1 //当前页数  
+           totalPage: 500, //共500条数据
+           nowPage: 5 //当前页数  
        }
    },
     components: {

@@ -1,8 +1,8 @@
 import axios from 'axios'
 const service = axios.create({ // 创建axios实例           
         timeout: 20000, // 请求超时时间
-        //baseURL: 'http://127.0.0.1:8888/manage'  
-        baseURL: 'http://127.0.0.1'                                 
+        baseURL: 'http://127.0.0.1:8888/manage'  
+        // baseURL: 'http://127.0.0.1'                                 
 })
 
 service.interceptors.request.use(config => { //请求拦截器   

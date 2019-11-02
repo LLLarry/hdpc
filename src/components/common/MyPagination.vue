@@ -2,7 +2,7 @@
     <div class="pagination_con">
          <el-pagination
             @current-change="handleCurrentChange"
-            :current-page.sync="nowPage"  
+            :current-page.sync="nowPage1"  
             layout="total, prev, pager, next, jumper"
             :pager-count= "5"
             :total="totalPage"
@@ -18,10 +18,19 @@ import Vue from 'vue'
 export default {
     data(){
        return {
-        //    nowPage: 0, //当前页数
+            nowPage1: 0, //当前页数
        }
     },
     props:["totalPage","nowPage"],
+    computed: {
+      
+    },
+    watch:{
+        nowPage(newValue,oldValue){
+           console.log(newValue,oldValue)
+           this.nowPage1= newValue
+        }
+    },
     methods: {
         handleCurrentChange(page){
            this.$emit('getPage',page)

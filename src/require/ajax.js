@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {messageTip} from '@/utils/ele'
 const service = axios.create({ // 创建axios实例           
         timeout: 20000, // 请求超时时间
         baseURL: 'http://127.0.0.1:8888/manage'  
@@ -18,6 +19,7 @@ service.interceptors.response.use(  //响应拦截器
           return response
         },
         error => {
+          messageTip('error','获取数据失败,请稍后重试！')
           return Promise.reject(error.response)
         }
       )

@@ -157,15 +157,24 @@ export default {
            tableData: [], //每条数据
            gatherData: {},//汇总数据
            totalPage: 500, //共500条数据
-           nowPage: 5 //当前页数  
+           nowPage: 1 //当前页数  
        }
    },
     components: {
        MyPagination 
     },
     created(){
-        this.getMerEarnData()
+        if(JSON.stringify(this.$route.query) != "{}"){
+            this.merEarnForm= {...this.$route.query}
+        }
+        this.getMerEarnData(this.merEarnForm)
+        console.log(this.$route.query)
+        console.log(this.merEarnForm)
     },
+    // activated(){ //keep alive时进入页面触发
+    //     console.log(this.merEarnForm)
+    //      this.getMerEarnData()
+    // },
     methods: {
         getPage(page){ //分页发改变时，触发回调
             console.log('fu',page)
@@ -214,10 +223,11 @@ export default {
                     _this.totalPage= merEarnData.totalRows
                 }
                 catch(err){
-                    
+                     _this.loading= false
                 }
             },
             handleSearch(){ //点击搜索查询
+                this.$router.push({query: this.merEarnForm})
                 this.getMerEarnData(this.merEarnForm)
                 this.nowPage= 1 //搜索完之后将nowPage置为1
             }

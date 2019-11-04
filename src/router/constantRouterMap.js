@@ -1,6 +1,14 @@
 /**这里存放的是路由权限设置 */
 // 超级管理员路由
-export const constantRouterMapSuperAdmin= [ 
+export const constantRouterMapSuperAdmin= [
+  {
+    path: '/datastatis/total',
+    name: '数据监控',
+    component: ()=> import('@/views/DataStatis/DataTotal'),
+    meta: {
+      role: ['superAdmin']
+    }
+  },
     {
     path: '/',
     component: ()=> import('@/components/Layout/layout'),
@@ -12,14 +20,14 @@ export const constantRouterMapSuperAdmin= [
         path: '/',
         redirect: '/datastatis/index'
       },
-      {
-        path: '/datastatis/total',
-        name: '数据监控',
-        component: ()=> import('@/views/DataStatis/DataTotal'),
-        meta: {
-          role: ['superAdmin']
-        }
-      },
+      // {
+      //   path: '/datastatis/total',
+      //   name: '数据监控',
+      //   component: ()=> import('@/views/DataStatis/DataTotal'),
+      //   meta: {
+      //     role: ['superAdmin']
+      //   }
+      // },
       {
         path: '/datastatis/index',
         name: '数据汇总',

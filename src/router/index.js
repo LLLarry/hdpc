@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store' //引入store调用getters方法
+import Util from '@/utils/util'
 import {constantRouterMapSuperAdmin,constantRouterMapAdmin} from './constantRouterMap' 
 
 const originalPush = Router.prototype.push
@@ -24,12 +25,16 @@ const router= new Router({
 let routesList= []
 router.beforeEach((to,from,next) => {
   let newList= store.getters.transformList //路由降维数组 （菜单）
+  let menuList= store.state.menuList //导航菜单 （菜单）
+
+  let asyRouterMapList= store.getters.transformAsyRouterMap //路由降维数组 （异步路由）
+
   const userInfo= store.state.userInfo 
   let routes= store.state.moduleA.asyRouterMap   //获取vuex中的moduleA中存储的路由，moduleA没进行缓存，所以刷新之后会消失
-  console.log('routes',routes)
+  // console.log('routes',routes)
   if(userInfo){ //vuex中存在用户信息
     if(routes.length === 0){ //当moduleA中的路由不存在 （也可能当刷新消失）,刷新会使router中动态提添加的路由消失，所以加上这个
-      if(userInfo.classify === 'admin'){  //根据权限过滤路由
+      if(userInfo.classify === 'Admin'){  //根据权限过滤路由
         routesList= constantRouterMapAdmin
       }else if(userInfo.classify === 'superAdmin'){
         routesList= constantRouterMapSuperAdmin
@@ -48,20 +53,42 @@ router.beforeEach((to,from,next) => {
     }
   }
 
- 
-  let data= {} //这个是数组，包含title,link,index,是面包屑使用的
-  let title= ''
-  newList.forEach((item,i)=>{
-    if(to.path.includes(item.link)){
-      data.title= item.title
-      data.link= item.link
-      data.index= item.index
-      title= item.title
-      store.commit('handleChargeBreadList',data)
-    }
+// 这个是获取面包屑导航list
+let navList=Util.slicePath(to.path).map((ktem,k)=>{
+    asyRouterMapList.forEach((item,i)=>{
+      if(ktem === item.path){
+        ktem= {
+          name: item.name,
+          path: item.path
+        }
+      }else{
+        menuList.forEach((ntem,n)=>{
+          if(ktem == ntem.link){
+            ktem= {
+              name: ntem.title,
+              // path: ntem.link
+            }
+          }
+        }) 
+      }
+    })
+    return ktem
   })
+  store.commit('updataBreadcrumbList',navList)
+
+  // let data= {} //这个是数组，包含title,link,index,是面包屑使用的
+  // let title= ''
+  // newList.forEach((item,i)=>{
+  //   if(to.path.includes(item.link)){
+  //     data.title= item.title
+  //     data.link= item.link
+  //     data.index= item.index
+  //     title= item.title
+  //     store.commit('handleChargeBreadList',data)
+  //   }
+  // })
    
-   store.commit('handleChargeNowMenuLink',title);
+  //  store.commit('handleChargeNowMenuLink',title);
 })
 
 

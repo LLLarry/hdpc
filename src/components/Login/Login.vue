@@ -69,14 +69,10 @@
 </template>
 
 <script>
-// import {TabPane,Tabs,Row,Col,} from 'element-ui'
 import Vue from 'vue'
 import AccLogin from './AccLogin' //账号登录
 import MessLogin from './MessLogin' //短信登录
-// Vue.use(Tabs)
-// Vue.use(TabPane)
-// Vue.use(Row)
-// Vue.use(Col)
+
 export default {
     data() {
       return {
@@ -104,7 +100,7 @@ export default {
     },
     methods: {
       handleClick(tab, event) {
-        console.log(tab, event);
+        // console.log(tab, event);
       }
     }
 }

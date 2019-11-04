@@ -47,7 +47,7 @@
                  </el-form-item>
 
                 <el-form-item class="form_margin0 content_btn">
-                    <el-button type="primary" size="small" @click="handleSearch">查询</el-button>
+                    <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
@@ -75,6 +75,9 @@
                 min-width="120"
                 fixed
                 >
+                <template slot-scope="{row}">
+                    {{row.username && row.username.length > 0 ? row.username : '— —'}}
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="moneytotal"

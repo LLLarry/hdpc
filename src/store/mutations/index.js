@@ -14,6 +14,7 @@ export default {
             {title: '数据汇总',link: '/datastatis/index',query: {name:'li',age: 20}},
             {title: '历史统计',link: '/datastatis/hisstatis',query: {name:'wi',age: 30}}
         ]
+        state.breadcrumbList= [] //面包屑导航
         state.nowMenuLink= '数据汇总' //当前菜单名称，是为了做返回的时候，菜单保持对应用的
         state.userInfo= null
         state.asyRouterMap= []  //router中的异步路由
@@ -54,6 +55,10 @@ export default {
     updateSlideStatus(state,flag){ //更新Slide是否显示
         // let {isShowSlide}= state
         state.isShowSlide= flag
+        sessionStorage.setItem('state',JSON.stringify(state))
+    },
+    updataBreadcrumbList(state,data){ //更新新的面包屑列表 首页/活动管理/活动列表/活动详情
+        state.breadcrumbList= data
         sessionStorage.setItem('state',JSON.stringify(state))
     }
 }

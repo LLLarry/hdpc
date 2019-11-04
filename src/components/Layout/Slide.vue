@@ -20,7 +20,7 @@ import {mapState} from 'vuex'
         created(){
            if(this.userInfo){  //只要用户登陆了，重新加载slide就会请求新的菜单进行渲染
             //用户登录
-                if(this.userInfo.classify === 'admin'){
+                if(this.userInfo.classify === 'Admin'){
                     this.$store.commit('hadnleMenuList',adminMenuList) //更新菜单列表
                 }else if(this.userInfo.classify === 'superAdmin'){
                     this.$store.commit('hadnleMenuList',superAdminMenuList)

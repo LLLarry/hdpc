@@ -19,5 +19,25 @@ export default {
 		}else{
 			return getComputedStyle(obj,false)[attr]
 		}
-	}
+    },
+    slicePath(path){ // 分割路径
+        //如：/deviceManage/deviceList/deviceDetail =》 ['/deviceManage','/deviceManage/deviceList','/deviceManage/deviceList/deviceDetail']
+        let pathArr= []
+        if(typeof path != 'string' || path== ''){
+            return pathArr
+        }
+        let pathList= path.slice(1).split('/')
+        pathList.forEach((item,i)=>{
+            let arr= []
+           for(let j=0; j<= i; j++){
+             arr.push(pathList[j])
+           }
+           pathArr.push(arr)
+        })
+        let retPathList= []
+        pathArr.forEach((ktem,k)=>{
+            retPathList.push('/'+ktem.join('/'))
+        })
+       return retPathList
+    },
 }

@@ -136,7 +136,7 @@
                 <el-table-column
                 prop="port"
                 label="端口号"
-                min-width="100"
+                width="100"
                 >
                 </el-table-column>
                 <el-table-column
@@ -150,13 +150,7 @@
                         </el-link>
                     </template>
                 </el-table-column>
-                <el-table-column
-                prop="free"
-                label="是否空闲"
-                min-width="120"
-                >
-                是
-                </el-table-column>
+               
                 <el-table-column
                 prop="time"
                 label="充电时间（分钟）"
@@ -217,24 +211,85 @@
                         <el-link type="primary">查看</el-link>
                     </template>
                 </el-table-column>
-                <!-- <el-table-column
-                prop="see"
-                label="查看"
-                min-width="120"
+            </el-table>
+         </el-card>
+        <!-- 远程充电 -->
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>远程充电</span>
+            </div>
+            <div class="remoteChargeTit" style="margin-bottom: 15px;">
+                <el-button type="primary" size="mini">查询空闲端口</el-button>
+                <el-button type="primary" size="mini">查询端口状态</el-button>
+            </div>
+            <el-table
+                :data="remoteCharge"
+                border
+                fit
+                style="width: 100%"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                >
+                <el-table-column
+                prop="port"
+                label="端口号"
+                width="100"
+                >
+                </el-table-column>
+                <el-table-column
+                prop="status"
+                label="端口状态"
+                min-width="80"
                 >
                     <template slot-scope="{row}">
-                        <el-button type="primary" size="mini">查看地图</el-button>
+                        <el-link :type="row.status== 1 ? 'success': row.status== 2 ? 'danger': 'default' " size="mini" :underline="false" >
+                            {{row.status== 1 ? '空闲': row.status== 2 ? '使用': '故障'}}
+                        </el-link>
                     </template>
                 </el-table-column>
                 <el-table-column
-                prop="upDate"
-                label="更新经纬度"
+                prop="free"
+                label="是否空闲"
+                min-width="80"
+                >
+                是
+                </el-table-column>
+                <el-table-column
+                prop="time"
+                label="充电时间（分钟）"
                 min-width="120"
                 >
-                     <template slot-scope="{row}">
-                        <el-button type="primary" size="mini">更新经纬度</el-button>
+                <template slot-scope="scope">
+                    <el-input size="small" v-model="scope.row.time"></el-input>
+                </template>
+                </el-table-column>
+                <el-table-column
+                prop="elePower"
+                label="充电电量（度）"
+                min-width="120"
+                >
+                <template slot-scope="scope">
+                    <el-input size="small" v-model="scope.row.elePower"></el-input>
+                </template>
+                </el-table-column>
+
+                <el-table-column
+                prop="handle"
+                label="开始充电"
+                width="150"
+                >
+                    <template slot-scope="{row}">
+                        <el-button type="primary" size="mini" icon="el-icon-open">充电</el-button>
                     </template>
-                </el-table-column> -->
+                </el-table-column>
+                <el-table-column
+                prop="handle"
+                label="远程断电"
+                width="150"
+                >
+                    <template slot-scope="{row}">
+                        <el-button type="danger" size="mini" icon="el-icon-turn-off">断电</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
          </el-card>
     </div>
@@ -363,6 +418,26 @@ export default {
                             ]
                     }
             ],
+            remoteCharge: [ //远程充电
+                {
+                port: '01',
+                status: 1,
+                time: 320,
+                elePower: 137.6
+                },
+                {
+                port: '02',
+                status: 2,
+                time: 320,
+                elePower: 137.6
+                },
+                 {
+                port: '03',
+                status: 3,
+                time: 320,
+                elePower: 137.6
+                },
+            ]
             
         }
     },

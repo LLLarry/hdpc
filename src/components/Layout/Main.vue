@@ -1,6 +1,7 @@
 <template>
     <div class="main">
-        <BreadCrumbCon />
+        <!-- <BreadCrumbCon /> -->
+        <BreadCrumbNav />
         <!-- <keep-alive>
         <router-view></router-view>
         </keep-alive> -->
@@ -13,6 +14,7 @@
 
 <script>
 import BreadCrumbCon from './BreadCrumbCon'
+import BreadCrumbNav from './BreadCrumbNav'
     export default {
         data(){
             return {
@@ -20,7 +22,8 @@ import BreadCrumbCon from './BreadCrumbCon'
             }
         },
         components:{
-            BreadCrumbCon
+            BreadCrumbCon,
+            BreadCrumbNav
         }
 
     }

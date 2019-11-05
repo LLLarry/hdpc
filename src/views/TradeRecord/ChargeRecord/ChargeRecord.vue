@@ -195,7 +195,9 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
+                    <router-link :to="'/tradeRecord/chargeRecord/chargeRecordDetail'" style="color: #fff;margin-right: 10px;">
                     <el-button type="primary" size="mini">详情</el-button>
+                    </router-link>
                     <el-button type="danger" size="mini" v-if="scope.row.status === 0" @click="handleRef(scope)">退款</el-button>
                    <el-button type="danger" size="mini" v-else plain disabled>退款</el-button>
                 </template>

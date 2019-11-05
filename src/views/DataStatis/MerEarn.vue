@@ -10,21 +10,24 @@
                     </el-select>
                 </el-form-item> -->
                 <el-form-item label="订单数" class="form_right25">
-                     <el-select v-model="merEarnForm.sort" clearable placeholder="请选择排序方式"  size="small">
+                     <el-select v-model="merEarnForm.rankorder" clearable placeholder="请选择排序方式"  size="small">
                         <el-option label="全部" value="0" ></el-option>
                         <el-option label="从大到小" value="1" ></el-option>
                         <el-option label="从小到大" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="总金额" class="form_right25">
-                     <el-select v-model="merEarnForm.rank" clearable placeholder="请选择排序方式"  size="small">
+                     <el-select v-model="merEarnForm.rankmoney" clearable placeholder="请选择排序方式"  size="small">
                         <el-option label="全部" value="0" ></el-option>
                         <el-option label="从大到小" value="1" ></el-option>
                         <el-option label="从小到大" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
-                 <el-form-item label="商户名" class="form_right25" >
-                    <el-input v-model="merEarnForm.username" placeholder="请输入商户名"  size="small"></el-input>
+                <el-form-item label="商户名" class="form_right25" >
+                    <el-input v-model="merEarnForm.realname" placeholder="请输入商户名"  size="small"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号" class="form_right25" >
+                    <el-input v-model="merEarnForm.phone" placeholder="请输入手机号"  size="small"></el-input>
                 </el-form-item>
                  <el-form-item label="开始时间" class="form_right25">
                       <el-date-picker
@@ -56,6 +59,7 @@
             <el-table
                 :data="tableData"
                  v-loading="loading"
+                 element-loading-text="加载中"
                 border
                 style="width: 100%"
                 :summary-method="getSummaries" 
@@ -144,22 +148,23 @@
 <script>
 import {handleGetMerEarn} from '@/require'
 import MyPagination from '../../components/common/MyPagination'
-import { async } from 'q'
+// import { async } from 'q'
 
 export default {
    data(){
        return {
            merEarnForm: {
-               sort: '0',
-               rank: '0',
-               username: '',
+               rankorder: '',
+               rankmoney: '',
+               realname: '',
+               phone: '',
                startTime: '',
                endTime: '',
            },
            loading: false,
            tableData: [], //每条数据
            gatherData: {},//汇总数据
-           totalPage: 500, //共500条数据
+           totalPage: 1, //共1条数据
            nowPage: 1 //当前页数  
        }
    },
@@ -171,8 +176,6 @@ export default {
             this.merEarnForm= {...this.$route.query}
         }
         this.getMerEarnData(this.merEarnForm)
-        console.log(this.$route.query)
-        console.log(this.merEarnForm)
     },
     // activated(){ //keep alive时进入页面触发
     //     console.log(this.merEarnForm)
@@ -221,8 +224,8 @@ export default {
                     _this.loading= true
                     let merEarnData= await handleGetMerEarn(data)
                     _this.loading= false
-                    _this.tableData= merEarnData.listMap
-                    _this.gatherData= merEarnData.map
+                    _this.tableData= merEarnData.listdata
+                    _this.gatherData= merEarnData.totaldata
                     _this.totalPage= merEarnData.totalRows
                 }
                 catch(err){

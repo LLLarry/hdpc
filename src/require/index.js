@@ -15,9 +15,9 @@ export const handleLogin= function (data){ //处理login
             //  method: 'post'
          })
 }
-export const handleGetMerEarn= function (data){ //处理login
+export const handleGetMerEarn= function (data){ //处理 商户收益
     return ajax({
-             url: '/dataCollectInfo/agentcollectinfo',
+             url: '/dataCollectInfo/dealerEarningsData',
              data: data
          })
 }

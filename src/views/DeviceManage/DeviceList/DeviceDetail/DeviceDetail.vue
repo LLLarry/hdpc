@@ -292,6 +292,131 @@
                 </el-table-column>
             </el-table>
          </el-card>
+         <el-row>
+             <el-col :xs="24" :sm="12" style="padding: 0 20px;">
+                  <!-- 查看消费总金额 -->
+                 <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>远程充电</span>
+                    </div>
+                    <el-table
+                        :data="scanTotalMoney"
+                        border
+                        fit
+                        style="width: 100%"
+                        :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                        >
+                        <el-table-column
+                        prop="type"
+                        label="类型"
+                        min-width="120"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                        prop="money"
+                        label="金额"
+                        min-width="120"
+                        >
+                        </el-table-column>
+                    </el-table>
+                     <div class="remoteChargeTit" style="margin-top: 15px; text-align:center;">
+                        <el-button type="primary" size="mini">查看消费总金额</el-button>
+                    </div>
+                </el-card>
+             </el-col>
+            <el-col :xs="24" :sm="12" style="padding: 0 20px;">
+                  <!-- 设置IC卡、投币器是否可用 -->
+                 <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>设置IC卡、投币器是否可用</span>
+                    </div>
+                    <el-table
+                        :data="seticCard"
+                        border
+                        fit
+                        style="width: 100%"
+                        :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                        >
+                        <el-table-column
+                        prop="type"
+                        label="类型"
+                        min-width="120"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                        prop="handle"
+                        label="解锁/锁定"
+                        min-width="120"
+                        >
+                        <template slot-scope="scope">
+                            <el-switch
+                                v-model="scope.row.handle"
+                                :active-value="1"
+                                :inactive-value="2"
+                                active-text="解锁"
+                                inactive-text="锁定">
+                            </el-switch>
+                        </template>
+                        </el-table-column>
+                    </el-table>
+                     <div class="remoteChargeTit" style="margin-top: 15px; text-align:center;">
+                        <el-button type="primary" size="mini">设置</el-button>
+                    </div>
+                </el-card>
+             </el-col>
+         </el-row>
+         <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>系统参数表</span>
+                    </div>
+                    <el-table
+                        :data="systemParamer"
+                        border
+                        fit
+                        style="width: 100%"
+                        :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                        >
+                        <el-table-column
+                        prop="type"
+                        label="类型"
+                        min-width="300"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                        prop="val"
+                        label="数值"
+                        min-width="120"
+                        >
+                        <template slot-scope="scope">
+                            <el-input size="small" v-model="scope.row.val"></el-input>
+                        </template>
+                        </el-table-column>
+                        
+                          <el-table-column
+                        prop="unit"
+                        label="单位"
+                        min-width="100"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                        prop="maxVal"
+                        label="最大值"
+                        min-width="120"
+                        >
+                        
+                        </el-table-column>
+                        <el-table-column
+                        prop="minVal"
+                        label="最小值"
+                        min-width="120"
+                        >
+                        </el-table-column>
+                    </el-table>
+                     <div class="remoteChargeTit" style="margin-top: 15px; text-align:center;">
+                        <el-button type="primary" size="mini">查看消费总金额</el-button>
+                    </div>
+                </el-card>
+        
     </div>
 </template>
 
@@ -437,7 +562,26 @@ export default {
                 time: 320,
                 elePower: 137.6
                 },
-            ]
+            ],
+            scanTotalMoney: [ //查看总金额
+                {type: '刷卡总金额',money: ''},
+                {type: '投币总金额	',money: ''}
+            ],
+            seticCard: [ //设置IC卡、投币器是否可用
+                {type: '投币器',handle:1},
+                {type: 'IC卡',handle:2},
+            ],
+             systemParamer: [ //系统参数
+                        {
+                            type: '设置投币充电时间(单位为分钟)', val: 120, unit: '分钟', maxVal: 999, minVal: 0
+                        },
+                        {
+                            type: '设置刷卡充电时间 (单位为分钟)', val: 240, unit: '分钟', maxVal: 999, minVal: 0
+                        },
+                        {
+                            type: '设置单次投币最大用电量(单位为度,KWH)', val: 1.0, unit: '0.1度', maxVal: 15, minVal: 0.1
+                        },
+                    ]
             
         }
     },

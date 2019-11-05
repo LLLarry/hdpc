@@ -136,6 +136,14 @@ export const constantRouterMapSuperAdmin= [
         }
       },
       {
+        path: '/tradeRecord/chargeRecord/chargeRecordDetail',
+        name: '充电详情',
+        component: ()=> import('@/views/TradeRecord/ChargeRecord/ChargeRecordDetail/ChargeRecordDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
         path: '/tradeRecord/offlineCardRecord',
         name: '离线卡记录',
         component: ()=> import('@/views/TradeRecord/OfflineCardRecord/OfflineCardRecord'),
@@ -398,6 +406,14 @@ export const constantRouterMapAdmin= [
         path: '/tradeRecord/chargeRecord',
         name: '充电记录',
         component: ()=> import('@/views/TradeRecord/ChargeRecord/ChargeRecord'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/tradeRecord/chargeRecord/chargeRecordDetail',
+        name: '充电详情',
+        component: ()=> import('@/views/TradeRecord/ChargeRecord/ChargeRecordDetail/ChargeRecordDetail'),
         meta: {
           role: ['superAdmin','admin']
         }

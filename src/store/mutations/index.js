@@ -19,7 +19,8 @@ export default {
         state.userInfo= null
         state.asyRouterMap= []  //router中的异步路由
         state.menuList= [] //菜单列表
-        state.isShowSlide= null //slide状态
+        state.isShowSlide= null, //slide状态
+        state.cancelTokenArr= []
         sessionStorage.removeItem('state')
     },
     [UPDATEUSERINFO](state,data){ //更新用户信息
@@ -59,6 +60,25 @@ export default {
     },
     updataBreadcrumbList(state,data){ //更新新的面包屑列表 首页/活动管理/活动列表/活动详情
         state.breadcrumbList= data
+        sessionStorage.setItem('state',JSON.stringify(state))
+    },
+    pushToken (state, payload) { //添加请求token数组
+        state.cancelTokenArr.push(payload)
+        // sessionStorage.setItem('state',JSON.stringify(state))
+    },
+    clearToken (state) { //取消token数组里的请求，并清空数组
+        try {
+            state.cancelTokenArr.forEach(item => {
+                console.log(item)
+                if(item.cancelToken){
+                    item.cancelToken('路由跳转取消请求')
+                } 
+            })
+        }catch(err){
+            console.log('clearToken',err)
+        }
+       
+        state.cancelTokenArr = []
         sessionStorage.setItem('state',JSON.stringify(state))
     }
 }

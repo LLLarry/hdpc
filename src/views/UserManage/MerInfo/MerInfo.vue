@@ -214,25 +214,8 @@
 </template>
 
 <script>
-// import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Radio,RadioGroup,} from 'element-ui'
-// import Vue from 'vue'
 import MyPagination from '@/components/common/MyPagination'
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(Form)
-// Vue.use(FormItem)
-// Vue.use(Input)
-// Vue.use(Select)
-// Vue.use(Option)
-// Vue.use(OptionGroup)
-// Vue.use(DatePicker)
-// Vue.use(TimeSelect)
-// Vue.use(TimePicker)
-// Vue.use(Link)
-// Vue.use(Dialog)
-// Vue.use(Radio)
-// Vue.use(RadioGroup)
+import { handleMerInfo } from '@/require/userManage'
 export default {
    data(){
        var checkRate= (rule,value,callback)=>{ //核对修改费率的费率是否正确
@@ -322,7 +305,8 @@ export default {
        MyPagination 
     },
     created(){
-        console.log(this.$route.matched)
+        // console.log(this.$route.matched)
+        this.handleMerInfoData()
     },
     methods: {
         getPage(page){ //分页发改变时，触发回调
@@ -337,7 +321,9 @@ export default {
         handleRateClose(){ //处理修改费率关闭界面
             this.dialogRateVisible= false
         },
-        
+        async handleMerInfoData(data){ //请求商户信息
+            let merInfoData= await handleMerInfo(data)
+        },
         handleRateBtn(){ //点击修改费率
              this.$prompt('请输入密码', '提示', {
                 confirmButtonText: '确定',

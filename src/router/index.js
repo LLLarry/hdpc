@@ -52,7 +52,8 @@ router.beforeEach((to,from,next) => {
         next('/login')
     }
   }
-
+// 每次路由跳转的时候，都去取消上一个路由存储的cancelToken,并清空数组
+  store.commit('clearToken') // 取消请求
 // 这个是获取面包屑导航list
 let navList=Util.slicePath(to.path).map((ktem,k)=>{
     asyRouterMapList.forEach((item,i)=>{
@@ -75,7 +76,6 @@ let navList=Util.slicePath(to.path).map((ktem,k)=>{
     return ktem
   })
   store.commit('updataBreadcrumbList',navList)
-
   // let data= {} //这个是数组，包含title,link,index,是面包屑使用的
   // let title= ''
   // newList.forEach((item,i)=>{

@@ -1,5 +1,40 @@
 <template>
     <div class="deviceDetail">
+         <el-card class="box-card">
+            <el-row>
+                <el-col :xs="8" :sm="4" >
+                    <div class="colCon">
+                        绑定状态： <el-link :type="deviceInfo.bindStatus== 1 ? 'success' : 'danger'">{{deviceInfo.bindStatus== 1 ? '已绑定' : '未绑定'}}</el-link>
+                    </div>
+                </el-col>
+                <el-col :xs="8" :sm="4">
+                    <div class="colCon">
+                        <el-button type="danger" size="mini" v-if="deviceInfo.bindStatus== 1" @click="handleTaggleBind(2)">解绑设备</el-button>
+                        <el-button type="primary" size="mini" v-else @click="handleTaggleBind(1)">绑定设备</el-button>
+                    </div>
+                </el-col>
+                <el-col :xs="8" :sm="4">
+                    <div class="colCon">
+                         设备号: {{deviceInfo.code}}
+                    </div>
+                </el-col>
+                <el-col :xs="8" :sm="4">
+                    <div class="colCon">
+                         绑定商户： {{deviceInfo.merName && deviceInfo.merName.length > 0 ? deviceInfo.merName: '— —'}}
+                    </div>
+                </el-col>
+                <el-col :xs="8" :sm="4">
+                    <div class="colCon">
+                         所属小区： {{deviceInfo.areaName && deviceInfo.areaName.length > 0 ? deviceInfo.areaName: '— —'}}
+                    </div>
+                </el-col>
+                <el-col :xs="8" :sm="4">
+                    <div class="colCon">
+                         电话： {{deviceInfo.phone && deviceInfo.phone.length > 0 ? deviceInfo.phone: '— —'}}
+                    </div>
+                </el-col>
+            </el-row>
+         </el-card>
         <!-- 模块信息 -->
         <el-card class="box-card">
             <div slot="header" class="clearfix">
@@ -424,9 +459,17 @@
 import Template from '@/components/common/Template'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
+ import {alertPassword} from '@/utils/ele'
 export default {
     data(){
         return {
+            deviceInfo: {
+                bindStatus: 1,
+                code: '000001',
+                merName: '龙环科技',
+                areaName: '测试小区',
+                phone: '15522323236'
+            },
             moduleInfo: [
                 {
                     code: '000001',
@@ -590,9 +633,24 @@ export default {
         TemplateCoin,
         TemplateOffline
     },
+    methods: {
+         handleTaggleBind(type){ //绑定或解绑设备
+            alertPassword(()=>{
+                // console.log(1)
+                // 发送请求，进行绑定或解绑操作，成功了之后修改原本的状态
+                this.deviceInfo.bindStatus= type
+            })
+        },
+    }
 }
 </script>
 
-<style>
-
+<style lang="less">
+.deviceDetail {
+    .el-card {
+        .colCon {
+            font-size: 14px !important;
+        }
+    }
+}
 </style>

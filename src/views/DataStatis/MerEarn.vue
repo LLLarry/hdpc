@@ -228,8 +228,12 @@ export default {
                     _this.gatherData= merEarnData.totaldata
                     _this.totalPage= merEarnData.totalRows
                 }
-                catch(err){
-                     _this.loading= false
+                catch(error){
+                    if(error == '拦截请求'){ //当访问出错时会error为字符串，当拦截器拦截时error为undefined,当拦截器拦截时继续加载
+                       _this.loading= true
+                       return 
+                   }
+                       _this.loading= false
                 }
             },
             handleSearch(){ //点击搜索查询

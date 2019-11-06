@@ -6,7 +6,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
 const service = axios.create({ // 创建axios实例           
-        timeout: 60000, // 请求超时时间
+        timeout: 120000, // 请求超时时间
         //baseURL: 'http://127.0.0.1:8888/manage'  
         // baseURL: 'http://127.0.0.1',
         baseURL:' http://192.168.3.45',
@@ -15,8 +15,17 @@ const service = axios.create({ // 创建axios实例
 
 service.interceptors.request.use(config => { //请求拦截器   
         NProgress.start()
-       
-        console.log(config) 
+        let cancelTokenArr=  store.state.cancelTokenArr
+        for(let i=0; i < cancelTokenArr.length ; i++){ //在请求之前，拦截、判断前面有没有相同路径正在发送请求，如果有，进行拦截，取消发送
+          if(cancelTokenArr[i].url === config.url){
+            cancelTokenArr[i].cancelToken('多次请求取消')
+          }
+        }
+        config.cancelToken = new axios.CancelToken(function (cancel) { //将请求的cancelToken存到 vuex中的pushToken中
+          //  console.log('config',cancel) 
+          store.commit('pushToken', {cancelToken: cancel,url:config.url})
+        })
+      
         return config
       }, error => {
         Promise.reject(error)
@@ -24,7 +33,6 @@ service.interceptors.request.use(config => { //请求拦截器
 
 service.interceptors.response.use(  //响应拦截器                
         response => {
-          console.log(response)
           if(response.data.code === 100 && response.data.message == "session缓存失效"){ //登录已过期
             store.commit('handleLayoutStore')
             store.commit('handleLayoutRemoveAsyRouterMap')
@@ -34,9 +42,13 @@ service.interceptors.response.use(  //响应拦截器
           return response
         },
         error => {
-          messageTip('error','获取数据失败,请稍后重试！')
           NProgress.done()
-          return Promise.reject(error.response)
+          if(error.message != '路由跳转取消请求' && error.message != '多次请求取消'){ //拦截错误信息，判断是不是
+            messageTip('error','获取数据失败,请稍后重试！') //正常错误抛出异常
+            return Promise.reject(error.response) 
+          }
+            return Promise.reject('拦截请求') //抛出拦截响应错误
+         
         }
       )
       

@@ -84,6 +84,16 @@
                 </template>
                 </el-table-column>
                 <el-table-column
+                prop="phone"
+                label="手机号"
+                min-width="120"
+                fixed
+                >
+                <template slot-scope="{row}">
+                    {{row.phone && row.phone.length > 0 ? row.phone : '— —'}}
+                </template>
+                </el-table-column>
+                <el-table-column
                 prop="moneytotal"
                 label="总收益"
                 min-width="80"
@@ -183,7 +193,6 @@ export default {
     // },
     methods: {
         getPage(page){ //分页发改变时，触发回调
-            console.log('fu',page)
             let obj= {...this.merEarnForm,currentPage:page}
             this.getMerEarnData(obj)
             this.nowPage = page
@@ -199,18 +208,19 @@ export default {
                 const values = data.map(item => Number(item[column.property])); 
                 if (!values.every(value => isNaN(value))) {
                     let keyVal={
-                            2: 'moneytotal',
-                            3: 'ordertotal',
-                            4: 'wechatmoney',
-                            5: 'wechatorder',
-                            6: 'alipaymoney',
-                            7: 'alipayorder',
-                            8: 'wechatretmoney',
-                            9: 'wechatretord',
-                            10: 'alipayretmoney',
-                            11: 'alipayretord'
+                            3: 'moneytotal',
+                            4: 'ordertotal',
+                            5: 'wechatmoney',
+                            6: 'wechatorder',
+                            7: 'alipaymoney',
+                            8: 'alipayorder',
+                            9: 'wechatretmoney',
+                            10: 'wechatretord',
+                            11: 'alipayretmoney',
+                            12: 'alipayretord'
                         }
                     sums[index]= this.gatherData[keyVal[index]]
+                    sums[2]= 'N/A'
                 } else {
                     sums[index] = 'N/A';
                 }

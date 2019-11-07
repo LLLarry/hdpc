@@ -22,6 +22,16 @@ export const handleGetMerEarn= function (data){ //处理 商户收益
          })
 }
 
+/**
+ * 检验密码
+ */
+export const checkPassword= function (data){
+    return ajax({
+        url: '/pcadminiStrator/verification',
+        data: data
+    })
+}
+
 
 // export const handleLogin= function (data){ //处理login
 //     return ajax({

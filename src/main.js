@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import '@/filters'
 // import ElementUI from 'element-ui'; 这是加载全部
 // import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification,} from 'element-ui';
 import { Button,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination,Radio,
@@ -89,7 +90,7 @@ function handleSlide(){
 }
 
 
-// Vue.config.productionTip = false
+ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

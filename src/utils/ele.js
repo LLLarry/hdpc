@@ -1,5 +1,7 @@
 //这里封装element的js插件
 import Vue from 'vue'
+import { checkPassword } from '@/require'
+
 const that= Vue.prototype
 const alertPassword= (scope,callBack)=>{ //弹出密码框，并输入密码，进行校验 ,参数1是传过来的参数，参数2是回调函数
     if(typeof scope == 'function'){
@@ -13,16 +15,17 @@ const alertPassword= (scope,callBack)=>{ //弹出密码框，并输入密码，�
         lockScroll: true,
         inputType: 'password'
     }).then(({ value }) => {
-        that.$message({
-        type: 'success',
-        message: '你的密码是: ' + value
-    });
-    callBack && callBack(scope) //进行回调
+        value= value=== null ? '' : value
+        checkPassword({password:value}).then((res)=>{
+            if(res === 0){
+                callBack && callBack(scope) //进行回调
+            }else{
+                messageTip('warning','密码不正确')
+            }
+        })
+    
     }).catch(() => {
-        that.$message({
-            type: 'info',
-            message: '取消输入'
-        });       
+            
     });
 }
 

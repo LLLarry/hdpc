@@ -46,42 +46,42 @@
                        </tr>
                    </thead>
                    <tbody>
-                       <tr>
-                           <td>订单总数</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.totalorder}}</td>
-                           <td>微信总订单</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.wechatorder}}</td>
-                           <td>支付宝总订单</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.alipayorder}}</td>
-                           <td>微信退费总订单</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refwechatorder}}</td>
-                           <td>支付宝退费总订单</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refalipayorder}}</td>
-                       </tr>
-                       <tr>
-                           <td>资金总额</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.onlinemoney}}</td>
-                           <td>微信支付总额</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.wechatmoney}}</td>
-                           <td>支付宝支付总额</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.alipaymoney}}</td>
-                           <td>微信退费总额</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refwechatmoney}}</td>
-                           <td>支付宝退费总额</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refalipaymoney}}</td>
-                       </tr>
                         <tr>
+                           <td>收益总额</td>
+                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.incomemoney}}</td>
                            <td>累计提现</td>
                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.extractmoney}}</td>
                            <td>累计提现手续费</td>
                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.sumservicecharge}}</td>
-                           <td>待提现金额</td>
-                           <td></td>
                            <td>未提现金额</td>
                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.earningsMoney}}</td>
-                           <td></td>
-                           <td></td>
-                       </tr>
+                           <td>资金总额</td>
+                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.onlinemoney}}</td>
+                        </tr>                     
+                        <tr>
+                            <td>微信收入总额</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.wechatmoney}}</td>
+                            <td>支付宝收入总额</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.alipaymoney}}</td>
+                            <td>微信退费总额</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refwechatmoney}}</td>
+                            <td>支付宝退费总额</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refalipaymoney}}</td>
+                            <td>订单总数</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.totalorder}}</td>
+                        </tr>
+                        <tr>
+                            <td>微信总订单</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.wechatorder}}</td>
+                            <td>支付宝总订单</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.alipayorder}}</td>
+                            <td>微信退费总订单</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refwechatorder}}</td>
+                            <td>支付宝退费总订单</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refalipayorder}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                    </tbody>
 
                    <thead>
@@ -133,7 +133,7 @@ export default {
     },
     created(){
         // console.log(this.$route.query)
-        console.log(this.handleDataStatisInfo())
+       this.handleDataStatisInfo()
     },
     methods:{
         async handleDataStatisInfo(){

@@ -145,8 +145,6 @@ export default {
         if(JSON.stringify(this.$route.query) != "{}"){
             this.merEarnDetailForm= {...this.$route.query}
         }
-        let dealer= this.$route.query.dealer
-        // this.merEarnDetailForm= {...this.merEarnDetailForm,dealer}
         this.asyMerEarnDetail(this.merEarnDetailForm)
     },
     methods: {
@@ -187,8 +185,6 @@ export default {
 </script>
 
 <style lang="less">
-@import '../../../../../static/style/default.less';
-@import '../../../../../static/style/common.less';
 .merEarnDetail {
     .el-link.el-link--success {
         text-decoration: none;

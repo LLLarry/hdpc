@@ -95,6 +95,7 @@
                 <el-table-column
                 prop="feeMoney"
                 label="欠款金额"
+                v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
                 min-width="100">
                     <template slot-scope="scope">
                         <router-link :to="`/usermanage/merInfo/merEarnDetail?merid=${scope.row.id}`">
@@ -103,9 +104,10 @@
                     </template>
                 </el-table-column>
 
-                 <el-table-column
+                <el-table-column
                 prop="handle"
                 label="操作"
+                v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
                 min-width="100">
                   <template slot-scope="scope">
                       <el-button size="mini" icon="el-icon-setting" @click="handleSetButton(scope.row.id)">设置</el-button>
@@ -114,6 +116,7 @@
                 <el-table-column
                 prop="feerate"
                 label="费率"
+                v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
                 min-width="100">
                   <template slot-scope="scope">
                       <el-button size="mini" icon="el-icon-edit" @click="handleRateBtn({row: scope.row,type:1})">{{scope.row.feerate}} ‰</el-button>
@@ -122,6 +125,7 @@
                 <el-table-column
                 prop="rate"
                 label="对公费率"
+                v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
                 min-width="120"
                 >
                  <template slot-scope="scope">
@@ -151,7 +155,9 @@
                 label="银行卡"
                 min-width="100">
                      <template slot-scope="scope">
-                        <el-link type="primary">查看银行卡</el-link>
+                         <router-link :to="`/usermanage/merInfo/merBinkInfo?id=${scope.row.id}`">
+                            <el-link type="primary">查看银行卡</el-link>
+                         </router-link>
                     </template>
                 </el-table-column>
                  <el-table-column
@@ -234,7 +240,7 @@
 import MyPagination from '@/components/common/MyPagination'
 import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate } from '@/require/userManage'
 import { messageTip , alertPassword } from '@/utils/ele'
-
+import { mapState } from 'vuex'
 export default {
    data(){
        var checkRate= (rule,value,callback)=>{ //核对修改费率的费率是否正确
@@ -268,11 +274,17 @@ export default {
     components: {
        MyPagination 
     },
+    beforeCreate(){
+
+    },
     created(){
         if(JSON.stringify(this.$route.query) != "{}"){
             this.merInfoForm= {...this.$route.query}
         }
         this.handleMerInfoData(this.merInfoForm)
+    },
+    computed: {
+        ...mapState(['userInfo'])
     },
     methods: {
         getPage(page){ //分页发改变时，触发回调

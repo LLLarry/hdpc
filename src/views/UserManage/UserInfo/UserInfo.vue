@@ -48,15 +48,18 @@
                 label="序号"
                 min-width="50"
                 >
+                <template slot-scope="scope">
+                    {{scope.$index+1}} 
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="id"
+                prop="numerical"
                 label="ID"
                 min-width="100"
                 >
                 </el-table-column>
                 <el-table-column
-                prop="nickName"
+                prop="username"
                 label="昵称"
                 min-width="120"
                 >
@@ -79,12 +82,12 @@
             
                 </el-table-column>
                  <el-table-column
-                prop="wallet"
+                prop="balance"
                 label="钱包"
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                    <router-link tag="li" to="/usermanage/userInfo/userWalletDetail"><el-link type="primary" >{{scope.row.wallet}}</el-link></router-link>
+                    <router-link tag="li" to="/usermanage/userInfo/userWalletDetail"><el-link type="primary" >{{scope.row.balance}}</el-link></router-link>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -140,15 +143,15 @@
                 width="200"
                 >
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.handle.bindMer == 1" type="primary" size="mini" @click="handleIsBind(1,scope.row.handle.bindMer)">解绑商户</el-button>
+                    <!-- <el-button v-if="scope.row.handle.bindMer == 1" type="primary" size="mini" @click="handleIsBind(1,scope.row.handle.bindMer)">解绑商户</el-button>
                     <el-button v-else type="success" size="mini" @click="handleIsBind(1,scope.row.handle.bindMer)">绑定商户</el-button>
                     <el-button v-if="scope.row.handle.bindVill == 1" type="primary" size="mini" @click="handleIsBind(2,scope.row.handle.bindVill)">解绑小区</el-button>
-                    <el-button v-else type="success" size="mini" @click="handleIsBind(2,scope.row.handle.bindVill)">绑定小区</el-button>
+                    <el-button v-else type="success" size="mini" @click="handleIsBind(2,scope.row.handle.bindVill)">绑定小区</el-button> -->
                 </template>
                 </el-table-column>
              </el-table>    
          </el-card>  
-
+        <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage"/>
         <el-dialog title="包月信息" :visible.sync="dialogMonthly"  width="390px">
             <div class="titleMon">用户名：小清新</div>
             <ul class="dialogMon">
@@ -165,23 +168,8 @@
 </template>
 
 <script>
-// import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog} from 'element-ui'
-// import Vue from 'vue'
 import MyPagination from '@/components/common/MyPagination'
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(Form)
-// Vue.use(FormItem)
-// Vue.use(Input)
-// Vue.use(Select)
-// Vue.use(Option)
-// Vue.use(OptionGroup)
-// Vue.use(DatePicker)
-// Vue.use(TimeSelect)
-// Vue.use(TimePicker)
-// Vue.use(Link)
-// Vue.use(Dialog)
+import { getUserInfo } from '@/require/userManage'
 export default {
     data(){
         return {
@@ -224,10 +212,22 @@ export default {
                     }
                 ],
                 dialogMonthly: false, //包月弹框
-                gridData: []
+                gridData: [],
+                loading: false,
+                totalPage: 1, //共1条数据
+                nowPage: 1, //当前页数   
         }
     },
+    components: {MyPagination},
+    created(){
+        this.asyGetUserInfo()
+    },
     methods: {
+        getPage(page){ //分页发改变时，触发回调
+            // let obj= {...this.merInfoForm,currentPage:page}
+            // this.handleMerInfoData(obj)
+            // this.nowPage = page
+        },
       handleMonthly(row){
         console.log(row)
         this.dialogMonthly= true
@@ -270,7 +270,25 @@ export default {
                  console.log('绑定小区')      
                } 
            }
-        }
+        },
+        async asyGetUserInfo(data){
+            let _this= this
+            try{
+                 _this.loading= true
+                 let userInfo= await getUserInfo(data)
+                 if(userInfo.code === 200){
+                    _this.tableData= userInfo.touristinfo
+                    _this.totalPage =userInfo.totalRows
+                 }
+                  _this.loading= false
+            }catch(error){
+                if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                     _this.loading= false
+            }
+         }
     }
 }
 </script>

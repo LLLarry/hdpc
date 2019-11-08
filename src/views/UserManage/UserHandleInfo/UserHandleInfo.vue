@@ -95,23 +95,9 @@
 </template>
 
 <script>
-// import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link} from 'element-ui'
-// import Vue from 'vue'
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(Form)
-// Vue.use(FormItem)
-// Vue.use(Input)
-// Vue.use(Select)
-// Vue.use(Option)
-// Vue.use(OptionGroup)
-// Vue.use(DatePicker)
-// Vue.use(TimeSelect)
-// Vue.use(TimePicker)
-// Vue.use(Link)
+
 export default {
     data(){
         return {
@@ -122,26 +108,19 @@ export default {
                 startTime: '',
                 endTime: ''
             },
-             pickerOptions: dateTimeJS,
-             tableData: [
-                 {
-                     index: 1,
-                     time: '2019-10-22 00:00:00',
-                     content: 1,
-                     name1: 'Roar Wolf',
-                     name2: '沛公',
-                     remark: ''
-                 },
-                 {
-                     index: 2,
-                     time: '2019-10-22 00:00:00',
-                     content: 1,
-                     name1: 'Roar Wolf',
-                     name2: '沛公',
-                     remark: '20190821164559028342452'
-                 }
-             ]
+            pickerOptions: dateTimeJS,
+            loading: false,
+            tableData: [], //每条数据
+            totalPage: 1, //共1条数据
+            nowPage: 1, //当前页数   
+            dialogSetVisible: false, //set模态框显示隐藏
         }
+    },
+    created(){
+       
+    },
+     methods: {
+         
     }
 }
 </script>

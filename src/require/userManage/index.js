@@ -57,3 +57,25 @@ export const updataRate= function (data){
              data: data
          })
 }
+
+/**
+ * 商户银行卡信息
+ */
+
+export const merBankInfo= function (data){
+    return ajax({
+             url: '/AccountInfo/dealerBankCardData',
+             data: data
+         })
+}
+
+/**
+ * 用户信息
+ */
+
+export const getUserInfo= function (data){
+    return ajax({
+             url: '/AccountInfo/getAccountListInfo',
+             data: data
+         })
+}

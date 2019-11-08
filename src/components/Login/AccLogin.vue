@@ -21,7 +21,9 @@
                  <i slot="prefix" class="el-input__icon el-icon-lock"></i>
                 </el-input>
             </el-form-item>
-           
+            <el-form-item style="margin-top:-18px;margin-bottom:0px;" >
+              <el-checkbox v-model="checked" style="color:#a0a0a0;margin-top:-10px;">记住密码</el-checkbox>
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm()">登录</el-button>
             </el-form-item>
@@ -36,13 +38,14 @@
 import {asyHandleLoginAct} from '../../require'
 import Vue from 'vue'
 import { mapActions } from 'vuex'
+import myCookie from '@/utils/myCookie'
+const coo= new myCookie()
 export default {
     data() {
         // 校验手机号码
         const checkPhone = (rule, value, callback) => {
 		    const phoneReg = /^1[3|4|5|6|7|8][0-9]{9}$/
 		    if (!value) {
-                console.log(value)
 		      return callback(new Error('电话号码不能为空'))
 		    }
 		    setTimeout(() => {
@@ -58,6 +61,7 @@ export default {
 		    }, 100)
 		  };
         return {
+            checked:true,
             accLoginForm: {
                 phone: '',
                 password: ''
@@ -73,8 +77,11 @@ export default {
             }
         }
     },
-    computed:{
-        
+    created(){
+        //创建的时候获取存储的账号密码 
+        const cookieObj= coo.getCookie()
+        let {phone="",password=""}= cookieObj
+        this.accLoginForm= {phone, password} 
     },
     methods: {
     ...mapActions(['asyHandleLoginAct']),
@@ -82,6 +89,12 @@ export default {
 
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
+            
+            if(this.checked){
+              coo.setCookie(this.accLoginForm.phone,this.accLoginForm.password, 7);
+            }else{
+              coo.clearCookie();
+            }
             const data= {
             //   username:this.phone,
             //   password:this.password,

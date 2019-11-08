@@ -9,6 +9,9 @@ const service = axios.create({ // 创建axios实例
         timeout: 120000, // 请求超时时间
         //baseURL: 'http://127.0.0.1:8888/manage'  
         // baseURL: 'http://127.0.0.1',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
         baseURL:' http://192.168.3.45',
         withCredentials : true                         
 })
@@ -33,7 +36,7 @@ service.interceptors.request.use(config => { //请求拦截器
 
 service.interceptors.response.use(  //响应拦截器                
         response => {
-          if(response.data.code === 100 && response.data.message == "session缓存失效"){ //登录已过期
+          if(response.data.code === 901 && response.data.message == "session缓存失效"){ //登录已过期
             store.commit('handleLayoutStore')
             store.commit('handleLayoutRemoveAsyRouterMap')
             window.location.reload() //让页面重新加载，这个是移除router中动态添加的路由，避免再次添加新的路由

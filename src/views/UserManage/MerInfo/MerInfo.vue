@@ -21,9 +21,9 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="商户类型" class="form_right25">
-                     <el-select v-model="merInfoForm.type"  placeholder="请选择排序方式" clearable size="small">
+                     <el-select v-model="merInfoForm.type"  placeholder="所有商户" clearable size="small">
                         <el-option label="有效商户" value="1" ></el-option>
-                        <el-option label="所有商户" value="2" ></el-option>
+                        <el-option label="无效商户" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
             
@@ -98,7 +98,7 @@
                 v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
                 min-width="100">
                     <template slot-scope="scope">
-                        <router-link :to="`/usermanage/merInfo/merEarnDetail?merid=${scope.row.id}`">
+                        <router-link :to="`/usermanage/userInfo?dealer=${scope.row.realname || ''}&mobile=${scope.row.phone_num || ''}`">
                             <el-link type="primary" >查看详情</el-link>
                         </router-link>
                     </template>

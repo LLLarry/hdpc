@@ -26,9 +26,12 @@ export default {
       
     },
     watch:{
-        nowPage(newValue,oldValue){
-           console.log(newValue,oldValue)
-           this.nowPage1= newValue
+        'nowPage':{
+            handler: function(newValue,oldValue){
+            console.log(newValue,oldValue)
+            this.nowPage1= newValue
+            },
+             immediate: true, 
         }
     },
     methods: {

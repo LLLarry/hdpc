@@ -98,23 +98,8 @@
 </template>
 
 <script>
-// import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link} from 'element-ui'
-// import Vue from 'vue'
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(Form)
-// Vue.use(FormItem)
-// Vue.use(Input)
-// Vue.use(Select)
-// Vue.use(Option)
-// Vue.use(OptionGroup)
-// Vue.use(DatePicker)
-// Vue.use(TimeSelect)
-// Vue.use(TimePicker)
-// Vue.use(Link)
 export default {
   data(){
     return {
@@ -145,6 +130,9 @@ export default {
       ],
       totalPage: 12
     }
+  },
+  created(){
+
   },
   methods: {
     getPage(){

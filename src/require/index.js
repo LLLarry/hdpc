@@ -32,10 +32,57 @@ export const checkPassword= function (data){
     })
 }
 
+/**
+ *  
+ * 强制绑定小区或商户时查询对应信息
+ */ 
+ export const getMerOrAreaList= function (data){
+    return ajax({
+        url: '/AccountInfo/bindingInquireData',
+        data: data
+    })
+}
 
-// export const handleLogin= function (data){ //处理login
-//     return ajax({
-//              url: base_url+'',
-//              data: data
-//          })
-// }
+/**
+ *  
+ * 强制用户绑定商户
+ */ 
+export const userBindMer= function (data){
+    return ajax({
+        url: '/AccountInfo/bindingDealer',
+        data: data
+    })
+}
+
+/**
+ *  
+ * 强制用户绑定小区
+ */ 
+export const userBindArea= function (data){
+    return ajax({
+        url: '/AccountInfo/bindingArea',
+        data: data
+    })
+}
+
+/**
+ *  
+ * 强制用户解绑商户
+ */ 
+export const userUnbindMer= function (data){
+    return ajax({
+        url: '/AccountInfo/unbindDealer',
+        data: data
+    })
+}
+
+/**
+ *  
+ * 强制用户解绑小区
+ */ 
+export const userUnbindArea= function (data){
+    return ajax({
+        url: '/AccountInfo/unbindArea',
+        data: data
+    })
+}

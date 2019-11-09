@@ -79,3 +79,14 @@ export const getUserInfo= function (data){
              data: data
          })
 }
+
+/**
+ * 查询包月信息记录
+ */
+
+export const getUserMonthlyInfo= function (data){
+    return ajax({
+             url: '/AccountInfo/inquireMonthlyData',
+             data: data
+         })
+}

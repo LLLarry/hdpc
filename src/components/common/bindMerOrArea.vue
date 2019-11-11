@@ -37,7 +37,7 @@
     </el-dialog>
     <!-- 绑定小区 -->
     <el-dialog title="绑定小区" :visible.sync="bindInfo.show" width="700px" custom-class="bindDialog" :modal="false" v-if="bindInfo.from == 2">
-        <el-table :data="gridData" height="70vh">
+        <el-table :data="gridData" height="70vh"  v-loading="loading">
             <el-table-column property="name" label="小区名称" min-width="150">
                 <template slot-scope="{row}">
                     {{row.name ? row.name : '— —'}}
@@ -86,18 +86,19 @@ export default {
     },
     methods: {
         async asyGetMerOrAreaList(newVal){ //获取需要展示的list
+        let _this= this
             try{
                 let info
-                this.loading= true
+                _this.loading= true
                 if(newVal.from == 1){
                     info= await getMerOrAreaList({source: 1})
                 }else if(newVal.from == 2){
                     info= await getMerOrAreaList({source: 2,merid: newVal.page.merid})
                 }
-                this.loading= false
+                _this.loading= false
                 if(info.code === 200){
-                    this.list= info.listdata 
-                    this.gridData= this.list 
+                    _this.list= info.listdata 
+                    _this.gridData= this.list 
                 } 
             }
             catch(error){

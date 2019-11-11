@@ -12,15 +12,18 @@
                 label="序号"
                 min-width="50"
                 >
+                <template slot-scope="scope">
+                    {{scope.$index+1}} 
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="cardNum"
+                prop="cardID"
                 label="卡号"
                 min-width="100"
                 >
                 <template slot-scope="scope">
                     <router-link to="/datastatis/index">
-                        <el-link type="primary" :underline="false">{{scope.row.cardNum}}</el-link>
+                        <el-link type="primary" :underline="false">{{scope.row.cardID}}</el-link>
                     </router-link>
                 </template>
                 </el-table-column>
@@ -29,6 +32,9 @@
                 label="金额"
                 min-width="100"
                 >
+                 <template slot-scope="scope">
+                    {{scope.row.money.toFixed(2)}} 
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="status"
@@ -42,10 +48,13 @@
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="date"
+                prop="create_time"
                 label="创建时间"
                 min-width="150"
                 >
+                 <template slot-scope="scope">
+                     {{scope.row.create_time | fmtDate}}
+                </template>
                 </el-table-column>
             </el-table>
         </el-card>
@@ -53,39 +62,30 @@
 </template>
 
 <script>
-// import {Card,Table,TableColumn,Link} from 'element-ui'
-// import Vue from 'vue'
-import MyPagination from '@/components/common/MyPagination'
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(Link)
+import { getUserOnlineCardInfo } from '@/require/userManage'
 export default {
     data(){
         return{
-            tableData: [
-                {
-                    index: 1,
-                    cardNum: '42061111',
-                    money: 13.74,
-                    status: 0,
-                    date: '2019-06-21 18:40:20'
-                },
-                {
-                    index: 2,
-                    cardNum: '42061111',
-                    money: 13.74,
-                    status: 1,
-                    date: '2019-06-21 18:40:20'
-                },
-                {
-                    index: 3,
-                    cardNum: '42061111',
-                    money: 13.74,
-                    status: 2,
-                    date: '2019-06-21 18:40:20'
-                },
-            ]
+            tableData: []
+        }
+    },
+    created(){
+        if(JSON.stringify(this.$route.query) != "{}"){
+             this.asyGetUserOnlineCardInfo(this.$route.query)
+        }
+       
+    },
+    methods: {
+        async asyGetUserOnlineCardInfo(data){
+            let _this= this
+            try {
+                let onlineCardInfo = await getUserOnlineCardInfo(data)
+                if(onlineCardInfo.code === 200){
+                    _this.tableData= onlineCardInfo.listdata
+                }
+            }catch(error){
+
+            }
         }
     }
 }

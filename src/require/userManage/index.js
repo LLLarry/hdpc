@@ -90,3 +90,36 @@ export const getUserMonthlyInfo= function (data){
              data: data
          })
 }
+
+/**
+ * 查询用户钱包详情
+ */
+
+export const getUserWalletDetail= function (data){
+    return ajax({
+             url: '/AccountInfo/touristWalletData',
+             data: data
+         })
+}
+
+/**
+ * 查询用户在线卡信息
+ */
+
+export const getUserOnlineCardInfo= function (data){
+    return ajax({
+             url: '/AccountInfo/inquireTouristOnlineData',
+             data: data
+         })
+}
+
+/**
+ * 查询用户管理的操作信息
+ */
+
+export const getUserHandleInfo= function (data){
+    return ajax({
+             url: '/AccountInfo/accountOperateInfo',
+             data: data
+         })
+}

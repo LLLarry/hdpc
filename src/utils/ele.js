@@ -13,6 +13,7 @@ const alertPassword= (scope,callBack)=>{ //弹出密码框，并输入密码，�
         cancelButtonText: '取消',
         inputPlaceholder: '请输入密码',
         lockScroll: true,
+        customClass: 'passTipClass',
         inputType: 'password'
     }).then(({ value }) => {
         value= value=== null ? '' : value
@@ -48,6 +49,7 @@ const messageTip= (type= 'success',message='删除成功')=>{
         message
     });
 }
+
 
 
 

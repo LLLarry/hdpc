@@ -92,8 +92,8 @@
                 label="在线卡"
                 min-width="120"
                 >
-                <template slot-scope="scope">
-                    <router-link tag="li" to="/usermanage/userInfo/userOnlineCardInfo">
+                <template slot-scope="{row}">
+                    <router-link tag="li" :to="`/usermanage/userInfo/userOnlineCardInfo?uid=${row.id}`">
                         <el-link type="primary" >查看在线卡</el-link>
                     </router-link>
                 </template>
@@ -124,7 +124,10 @@
                 min-width="120"
                 >
                 <template slot-scope="{row}">
-                    {{row.muphone_num ? row.muphone_num : '— —'}}
+                    <router-link :to="`/usermanage/merInfo?phone=${row.muphone_num}`" v-if="row.muphone_num">
+                        <el-link type="primary" >{{row.muphone_num}}</el-link>
+                    </router-link>
+                    <span v-else>— —</span>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -156,7 +159,7 @@
         <bindMerOrArea :bindInfo="bindInfo" @backFn="backFn" />
 
         <el-dialog title="包月信息" :visible.sync="dialogMonthly"  width="390px">
-            <div class="titleMon">用户名：小清新</div>
+            <!-- <div class="titleMon">用户名：小清新</div> -->
             <ul class="dialogMon">
                 <li><div class="left">总剩余次数</div><div class="right">{{monthlyList.surpnum ? monthlyList.surpnum : 0}}次</div></li>
                 <li><div class="left">今日剩余次数</div><div class="right">{{monthlyList.todaysurpnum ? monthlyList.todaysurpnum : 0}}次</div></li>

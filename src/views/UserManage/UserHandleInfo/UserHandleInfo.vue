@@ -18,6 +18,7 @@
                       size="small"
                       type="datetime"
                       placeholder="选择开始时间"
+                      value-format="yyyy-MM-dd HH:mm:ss"
                       :picker-options="pickerOptions"
                       >
                     </el-date-picker>
@@ -28,13 +29,14 @@
                       size="small"
                       type="datetime"
                       placeholder="选择结束时间"
+                      value-format="yyyy-MM-dd HH:mm:ss"
                       :picker-options="pickerOptions"
                       >
                     </el-date-picker>
               </el-form-item>
           
               <el-form-item class="form_margin0 content_btn">
-                  <el-button type="primary" size="small">查询</el-button>
+                  <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
               </el-form-item>
           </el-form>
         </el-card>
@@ -42,6 +44,7 @@
             <el-table
                 :data="tableData"
                 border
+                v-loading="loading"
                 style="width: 100%"
                 :header-cell-style="{background:'#f5f7fa',color:'#666'}"
                 >
@@ -91,13 +94,14 @@
                 </el-table-column>
             </el-table>
          </el-card>
+         <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
   </div>
 </template>
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-
+import { getUserHandleInfo } from '@/require/userManage'
 export default {
     data(){
         return {
@@ -116,11 +120,32 @@ export default {
             dialogSetVisible: false, //set模态框显示隐藏
         }
     },
+    components:{MyPagination},
     created(){
        
     },
      methods: {
-         
+        getPage(page){
+
+        },
+        async asyGetUserHandleInfo(data){
+            let _this= this
+            try{
+                _this.loading= true
+                let handleInfo=  await getUserHandleInfo(data)
+                _this.loading= false
+
+            }catch(error){
+                 if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                     _this.loading= false
+            }
+        },
+        handleSearch(){
+            
+        }
     }
 }
 </script>

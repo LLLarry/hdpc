@@ -102,6 +102,14 @@ export const constantRouterMapSuperAdmin= [
         }
       },
       {
+        path: '/usermanage/userInfo/userOrderDetail',
+        name: '用户订单信息',
+        component: ()=> import('@/views/UserManage/UserInfo/UserOrderDetail/UserOrderDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
         path: '/usermanage/userInfo/userOnlineCardInfo',
         name: '用户在线卡信息',
         component: ()=> import('@/views/UserManage/UserInfo/UserOnlineCardInfo/UserOnlineCardInfo'),
@@ -381,6 +389,14 @@ export const constantRouterMapAdmin= [
         path: '/usermanage/userInfo/userWalletDetail',
         name: '用户钱包信息',
         component: ()=> import('@/views/UserManage/UserInfo/UserWalletDetail/UserWalletDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/usermanage/userInfo/userOrderDetail',
+        name: '用户订单信息',
+        component: ()=> import('@/views/UserManage/UserInfo/UserOrderDetail/UserOrderDetail'),
         meta: {
           role: ['superAdmin','admin']
         }

@@ -101,7 +101,7 @@ export default {
         }
     },
     created(){
-         if(JSON.stringify(this.$route.query) != "{}"){
+        if(JSON.stringify(this.$route.query) != "{}"){
            let {id}= this.$route.query
            this.id= id
         }

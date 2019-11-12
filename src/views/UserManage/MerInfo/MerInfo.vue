@@ -44,11 +44,11 @@
                 <el-table-column
                 prop="serialNum"
                 label="序号"
-                min-width="60"
+                min-width="70"
                 fixed
                 >
                 <template slot-scope="scope">
-                      {{scope.$index+1}} 
+                     {{(nowPage-1)*10+scope.$index + 1}}
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -138,7 +138,9 @@
                 label="设备数量"
                 min-width="100">
                     <template slot-scope="scope">
-                        <el-link type="primary">{{scope.row.totalline}}</el-link>
+                        <router-link :to="`/deviceManage/deviceList?phone=${scope.row.phone_num}`">
+                            <el-link type="primary">{{scope.row.totalline}}</el-link>
+                        </router-link>
                     </template>
                 </el-table-column>
                  <el-table-column
@@ -146,7 +148,9 @@
                 label="在线数量"
                 min-width="100">
                     <template slot-scope="scope">
-                        <el-link type="primary">{{scope.row.onlines}}</el-link>
+                        <router-link :to="`/deviceManage/deviceList?phone=${scope.row.phone_num}`">
+                             <el-link type="primary">{{scope.row.onlines}}</el-link>
+                        </router-link>
                     </template>
                 </el-table-column>
 

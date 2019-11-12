@@ -1,15 +1,15 @@
 <template>
   <div class="userHandleInfo">
       <el-card class="box-card card_bottom0 cardForm">
-          <el-form :inline="true"  class="demo-form-inline" :model="userHandleInfo" size="mini">
+          <el-form :inline="true"  class="demo-form-inline" :model="userHandleInfo"  size="mini">
               <el-form-item label="操作人" class="form_right25">
-                  <el-input v-model="userHandleInfo.name1" placeholder="请输入操作人"  size="small"></el-input>
+                  <el-input v-model="userHandleInfo.operator" placeholder="操作人" clearable  size="small"></el-input>
               </el-form-item>
               <el-form-item label="操作对象" class="form_right25">
-                  <el-input v-model="userHandleInfo.name2" placeholder="请输入操作对象"  size="small"></el-input>
+                  <el-input v-model="userHandleInfo.beoperated" placeholder="操作对象" clearable size="small"></el-input>
               </el-form-item>
               <el-form-item label="操作内容" class="form_right25">
-                  <el-input v-model="userHandleInfo.content" placeholder="请输入操作内容"  size="small"></el-input>
+                  <el-input v-model="userHandleInfo.content" placeholder="操作内容" clearable size="small"></el-input>
               </el-form-item>
              
               <el-form-item label="开始时间" class="form_right25 w200">
@@ -20,6 +20,7 @@
                       placeholder="选择开始时间"
                       value-format="yyyy-MM-dd HH:mm:ss"
                       :picker-options="pickerOptions"
+                      clearable
                       >
                     </el-date-picker>
               </el-form-item>
@@ -31,6 +32,7 @@
                       placeholder="选择结束时间"
                       value-format="yyyy-MM-dd HH:mm:ss"
                       :picker-options="pickerOptions"
+                      clearable
                       >
                     </el-date-picker>
               </el-form-item>
@@ -53,34 +55,45 @@
                 label="序号"
                 min-width="80"
                 >
+                <template slot-scope="scope">
+                    {{(nowPage-1)*10+scope.$index + 1}}
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="time"
+                prop="operate_time"
                 label="操作时间"
                 min-width="180"
                 >
                 </el-table-column>
                 <el-table-column
-                prop="content"
+                prop="name"
                 label="操作内容"
                 min-width="140"
                 >
                 <template slot-scope="scope">
-                    <span v-if="scope.row.content===1">解绑商户</span>
-                    <span v-if="scope.row.content===2">虚拟充值钱包</span>
+                    <span v-if="scope.row.name && scope.row.name.length >0 ">{{scope.row.name}}</span>
+                    <span v-else>— —</span>
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="name1"
+                prop="openick"
                 label="操作人"
                 min-width="120"
                 >
+                <template slot-scope="scope">
+                    <span v-if="scope.row.openick && scope.row.openick.length >0 ">{{scope.row.openick}}</span>
+                    <span v-else>— —</span>
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="name2"
+                prop="objnick"
                 label="操作对象"
                 min-width="120"
                 >
+                <template slot-scope="scope">
+                    <span v-if="scope.row.objnick && scope.row.objnick.length >0 ">{{scope.row.objnick}}</span>
+                    <span v-else>— —</span>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="remark"
@@ -88,8 +101,8 @@
                 min-width="220"
                 >
                 <template slot-scope="scope">
-                    <span v-if="scope.row.remark===''">无</span>
-                    <span v-if="scope.row.remark !=''">{{scope.row.remark}}</span>
+                    <span v-if="scope.row.remark && scope.row.remark.length >0 ">{{scope.row.remark}}</span>
+                    <span v-else>无</span>
                 </template>
                 </el-table-column>
             </el-table>
@@ -105,13 +118,7 @@ import { getUserHandleInfo } from '@/require/userManage'
 export default {
     data(){
         return {
-            userHandleInfo: {
-                name1: '',
-                name2: '',
-                content: '',
-                startTime: '',
-                endTime: ''
-            },
+            userHandleInfo: {},
             pickerOptions: dateTimeJS,
             loading: false,
             tableData: [], //每条数据
@@ -122,11 +129,18 @@ export default {
     },
     components:{MyPagination},
     created(){
-       
+       if(JSON.stringify(this.$route.query) != "{}"){
+            this.userHandleInfo= {...this.$route.query}
+            this.nowPage= parseInt(this.userHandleInfo.currentPage) || 1
+        }
+       this.asyGetUserHandleInfo(this.userHandleInfo)
     },
      methods: {
         getPage(page){
-
+            this.userHandleInfo= {...this.userHandleInfo,currentPage:page}
+            this.$router.push({query: this.userHandleInfo})
+            this.asyGetUserHandleInfo(this.userHandleInfo)
+            this.nowPage = page
         },
         async asyGetUserHandleInfo(data){
             let _this= this
@@ -134,7 +148,11 @@ export default {
                 _this.loading= true
                 let handleInfo=  await getUserHandleInfo(data)
                 _this.loading= false
-
+                if(handleInfo.code === 200){
+                   _this.tableData= handleInfo.listdata
+                   _this.totalPage= handleInfo.totalRows
+                }
+                
             }catch(error){
                  if(error == '拦截请求'){ 
                     _this.loading= true
@@ -144,7 +162,9 @@ export default {
             }
         },
         handleSearch(){
-            
+            this.$router.push({query:{... this.userHandleInfo,currentPage: 1}})
+            this.asyGetUserHandleInfo({... this.userHandleInfo,currentPage: 1})
+            this.nowPage= 1 //搜索完之后将nowPage置为1
         }
     }
 }

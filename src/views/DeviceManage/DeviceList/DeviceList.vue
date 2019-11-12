@@ -8,11 +8,11 @@
                 <el-form-item label="所属人" class="form_right25 w120">
                     <el-input v-model="deviceListForm.nick" placeholder="所属人" clearable size="small"></el-input>
                 </el-form-item>
-                <el-form-item label="手机号" class="form_right25 w120" >
+                <el-form-item label="手机号" class="form_right25 w150" >
                     <el-input v-model="deviceListForm.phone" placeholder="手机号" clearable size="small"></el-input>
                 </el-form-item>
                <el-form-item label="IMEI " class="form_right25 ">
-                    <el-input v-model="deviceListForm.iemi" placeholder="请输入IMEI" clearable size="small"></el-input>
+                    <el-input v-model="deviceListForm.imei" placeholder="请输入IMEI" clearable size="small"></el-input>
                 </el-form-item>
                  <el-form-item label="CCID " class="form_right25 w200" >
                     <el-input v-model="deviceListForm.ccid" placeholder="请输入CCID" clearable size="small" ></el-input>
@@ -79,6 +79,11 @@
                 label="设备号"
                 width="80"
                 >
+                <template slot-scope="scope">
+                    <router-link :to="`/deviceManage/handleLog?devicenum=${scope.row.code}`">
+                         <el-link type="primary">{{scope.row.code}}</el-link>
+                    </router-link>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="remark"
@@ -180,7 +185,7 @@
                 min-width="80"
                 >
                 <template slot-scope="scope">
-                   <el-button type="primary" size="mini" :disabled="scope.row.bindtype == 0" :plain="scope.row.bindtype == 0">
+                   <el-button type="success" size="mini" :disabled="scope.row.bindtype == 0" :plain="scope.row.bindtype == 0">
                        <div style="min-width: 37px;" @click="resetHandle(scope.row)">重置{{10-scope.row.several}}</div>
                    </el-button>
                 </template>
@@ -189,11 +194,11 @@
                 <el-table-column
                 prop="handle"
                 label="操作"
-                min-width="80"
+                min-width="90"
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @click="$router.push({path:'/deviceManage/deviceList/deviceDetail'})">详情</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-setting" @click="$router.push({path:'/deviceManage/deviceList/deviceDetail'})">详情</el-button>
                 </template>
                 </el-table-column>
                 <el-table-column

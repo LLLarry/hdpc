@@ -31,3 +31,35 @@ export const resetDeviceTestTime= function (data){
          })
 }
 
+/**
+ * 蓝牙设备信息查询获取
+ */
+export const getBluetoothList= function (data){ 
+    return ajax({
+             url: '/deviceData/getBluetoothDeviceData',
+             data: data
+         })
+}
+
+/**
+ * 查询设备日志
+ */
+export const getDeviceLogInfo= function (data){ 
+    return ajax({
+             url: '/deviceData/inquireDeviceLogData',
+             data: data
+         })
+}
+
+/**
+ * 查询设备操作日志
+ */
+export const getDeviceHandleLogInfo= function (data){ 
+    return ajax({
+             url: '/deviceData/inquireDeviceOperationData',
+             data: data
+         })
+}
+
+
+

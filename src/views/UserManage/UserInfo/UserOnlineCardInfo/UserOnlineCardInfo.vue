@@ -5,6 +5,7 @@
                 :data="tableData"
                 border
                 style="width: 100%"
+                v-loading="loading"
                 :header-cell-style="{background:'#f5f7fa',color:'#666'}"
                 >
                 <el-table-column
@@ -66,7 +67,8 @@ import { getUserOnlineCardInfo } from '@/require/userManage'
 export default {
     data(){
         return{
-            tableData: []
+            tableData: [],
+            loading: false
         }
     },
     created(){
@@ -79,12 +81,18 @@ export default {
         async asyGetUserOnlineCardInfo(data){
             let _this= this
             try {
+                this.loading= true
                 let onlineCardInfo = await getUserOnlineCardInfo(data)
+                 this.loading= false
                 if(onlineCardInfo.code === 200){
                     _this.tableData= onlineCardInfo.listdata
                 }
             }catch(error){
-
+                if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                    _this.loading= false
             }
         }
     }

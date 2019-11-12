@@ -108,7 +108,7 @@ export const getUserWalletDetail= function (data){
 
 export const getUserOnlineCardInfo= function (data){
     return ajax({
-             url: '/AccountInfo/inquireTouristOnlineData',
+             url: '/AccountInfo//inquireTouristOnlineData',
              data: data
          })
 }

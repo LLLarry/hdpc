@@ -39,10 +39,10 @@
                 <el-table-column
                 prop="index"
                 label="序号"
-                min-width="50"
+                min-width="85"
                 >
                 <template slot-scope="scope">
-                    {{scope.$index+1}} 
+                   {{(nowPage-1)*10+scope.$index + 1}}
                 </template>
                 </el-table-column>
                 <el-table-column

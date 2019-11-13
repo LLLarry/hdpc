@@ -10,3 +10,23 @@ export const getTradeRecord= function (data){
              data: data
          })
 }
+
+/**
+ * 获取充电记录信息
+ */
+export const getChargeRecord= function (data){ 
+    return ajax({
+             url: '/orderData/orderChargeRecordData',
+             data: data
+         })
+}
+
+/**
+ * 获取离线卡记录信息
+ */
+export const getOfflineRecord= function (data){ 
+    return ajax({
+             url: '/orderData/orderOfflineRecordData',
+             data: data
+         })
+}

@@ -279,7 +279,9 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini">详情</el-button>
+                    <router-link :to="`/tradeRecord/tradeRecordCon/orderDetail?paysource=${scope.row.paysource}`" tag="div">
+                        <el-button type="primary" size="mini">详情</el-button>
+                    </router-link> 
                 </template>
                 </el-table-column>  
             </el-table>
@@ -319,20 +321,7 @@ export default {
              nowPage: 1,
              loading: false,
              dialogMoneyDetail: false, //合伙人收益弹框
-             gridData: [
-                 {
-                    parNickName: '合伙人A',
-                    parName: '张三三',
-                    parPhone: '15612345678',
-                    parMoney: '12.56'
-                 },
-                 {
-                    parNickName: '合伙人B',
-                    parName: '张三三',
-                    parPhone: '15612345678',
-                    parMoney: '-12.56'
-                 },
-             ]
+             gridData: []
         }
     },
     components: {

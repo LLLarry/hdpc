@@ -3,48 +3,48 @@
         <el-card class="box-card card_bottom0 cardForm">
             <el-form :inline="true"  class="demo-form-inline" :model="offlineCardRecordForm" size="mini">
                 <el-form-item label="订单号" class="form_right25 w220">
-                    <el-input v-model="offlineCardRecordForm.orderNum" placeholder="请输入订单号"  size="small"></el-input>
+                    <el-input v-model="offlineCardRecordForm.ordernum" placeholder="订单号" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="用户昵称" class="form_right25">
-                    <el-input v-model="offlineCardRecordForm.userName" placeholder="请输入用户昵称"  size="small"></el-input>
+                    <el-input v-model="offlineCardRecordForm.usernick" placeholder="用户昵称" clearable size="small"></el-input>
                 </el-form-item>
-                <el-form-item label="商户名" class="form_right25">
-                    <el-input v-model="offlineCardRecordForm.merName" placeholder="请输入商户名"  size="small"></el-input>
+                <el-form-item label="商户昵称" class="form_right25">
+                    <el-input v-model="offlineCardRecordForm.dealer" placeholder="商户昵称" clearable size="small"></el-input>
+                </el-form-item>
+                <el-form-item label="商户电话" class="form_right25">
+                    <el-input v-model="offlineCardRecordForm.mobile" placeholder="商户电话" clearable size="small"></el-input>
                 </el-form-item>
                <el-form-item label="设备号" class="form_right25">
-                    <el-input v-model="offlineCardRecordForm.deviceNum" placeholder="请输入设备号"  size="small"></el-input>
+                    <el-input v-model="offlineCardRecordForm.devicenum" placeholder="设备号" clearable size="small"></el-input>
                 </el-form-item>
-                <el-form-item label="卡号" class="form_right25">
-                    <el-input v-model="offlineCardRecordForm.offlineCard" placeholder="请输入卡号"  size="small"></el-input>
+                <el-form-item label="离线卡号" class="form_right25">
+                    <el-input v-model="offlineCardRecordForm.cardID" placeholder="离线卡号" clearable size="small"></el-input>
                 </el-form-item>
                 
                 <el-form-item label="操作类型" class="form_right25">
-                     <el-select v-model="offlineCardRecordForm.handleType"  placeholder="请选择订单状态"  size="small">
-                        <el-option label="全部" value="" ></el-option>
-                        <el-option label="扣费" value="1" ></el-option>
-                        <el-option label="充值" value="2" ></el-option>
-                        <el-option label="查询" value="3" ></el-option>
+                     <el-select v-model="offlineCardRecordForm.type"  placeholder="操作类型" clearable size="small">
+                        <el-option label="扣费" value="0" ></el-option>
+                        <el-option label="充值" value="1" ></el-option>
+                        <el-option label="查询" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="回复类型" class="form_right25">
-                     <el-select v-model="offlineCardRecordForm.replyType"  placeholder="请选择回复类型"  size="small">
-                        <el-option label="全部" value="" ></el-option>
-                        <el-option label="操作成功" value="1" ></el-option>
-                        <el-option label="余额不足" value="2" ></el-option>
-                        <el-option label="无卡" value="3" ></el-option>
-                        <el-option label="卡号不统一" value="4" ></el-option>
-                        <el-option label="其他错误" value="5" ></el-option>
+                     <el-select v-model="offlineCardRecordForm.recycletype"  placeholder="回复类型" clearable size="small">
+                        <el-option label="操作成功" value="0" ></el-option>
+                        <el-option label="余额不足" value="1" ></el-option>
+                        <el-option label="无卡" value="2" ></el-option>
+                        <el-option label="卡号不统一" value="3" ></el-option>
+                        <el-option label="其他错误" value="4" ></el-option>
                 </el-select>
                 </el-form-item>
                 <el-form-item label="支付类型" class="form_right25">
-                     <el-select v-model="offlineCardRecordForm.payType"  placeholder="请选择支付类型"  size="small">
-                        <el-option label="全部" value="" ></el-option>
+                     <el-select v-model="offlineCardRecordForm.paytype"  placeholder="支付类型" clearable  size="small">
                         <el-option label="微信" value="1" ></el-option>
                         <el-option label="支付宝" value="2" ></el-option>
                         <el-option label="微信退费" value="3" ></el-option>
                         <el-option label="支付宝退费" value="4" ></el-option>
                         <el-option label="钱包" value="5" ></el-option>
-                         <el-option label="钱包退费" value="65" ></el-option>
+                        <el-option label="钱包退费" value="6" ></el-option>
                     </el-select>
                 </el-form-item>
 
@@ -53,8 +53,10 @@
                         v-model="offlineCardRecordForm.startTime"
                         size="small"
                         type="datetime"
-                        placeholder="选择开始时间"
+                        placeholder="开始时间"
                         :picker-options="pickerOptions"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         >
                       </el-date-picker>
                 </el-form-item>
@@ -63,14 +65,16 @@
                         v-model="offlineCardRecordForm.endTime"
                         size="small"
                         type="datetime"
-                        placeholder="选择结束时间"
+                        placeholder="结束时间"
                         :picker-options="pickerOptions"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         >
                       </el-date-picker>
                 </el-form-item>
             
                 <el-form-item class="form_margin0 content_btn">
-                    <el-button type="primary" size="small">查询</el-button>
+                    <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
@@ -80,6 +84,7 @@
                 :data="tableData"
                 border
                 fit
+                v-loading="loading"
                 style="width: 100%"
                 :header-cell-style="{background:'#f5f7fa',color:'#666'}"
                 >
@@ -88,93 +93,134 @@
                 label="序号"
                 min-width="50"
                 >
+                <template slot-scope="scope">
+                     {{ (nowPage-1)*10+scope.$index+1 }}
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="orderNum"
+                prop="ordernum"
                 label="订单号"
                 min-width="220"
                 >
-                    <template slot-scope="scope">
-                        <el-link type="primary">{{scope.row.orderNum}}</el-link>
-                    </template>
+                <template slot-scope="scope">
+                    <el-link type="primary">{{scope.row.ordernum}}</el-link>
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="userName"
+                prop="username"
                 label="姓名"
                 min-width="100"
                 >
+                <template slot-scope="{row}">
+                    {{row.username && row.username.length >0 ? row.username : '— —'}}
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="merName"
+                prop="dealer"
                 label="商户名"
                 min-width="100"
                 >
+                <template slot-scope="{row}">
+                    {{row.dealer && row.dealer.length >0 ? row.dealer : '— —'}}
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="deviceNum"
+                prop="equipmentnum"
                 label="设备号"
                 width="80"
                 >
                 </el-table-column>
                 <el-table-column
-                prop="cardNum"
+                prop="cardID"
                 label="卡号"
                 width="100"
                 >
                 </el-table-column>
                 <el-table-column
-                prop="money"
+                prop="balance"
                 label="余额"
-               
                 >
+                <template slot-scope="{row}">
+                   <el-link type="success" :underline="false"> {{row.balance != null ? row.balance.toFixed(2) : '0.00'}}</el-link>
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="recMoney"
+                prop="chargemoney"
                 label="充值金额"
                
                 >
+                <template slot-scope="{row}">
+                     <el-link type="success" :underline="false">{{row.chargemoney != null ? row.chargemoney.toFixed(2) : '0.00'}}</el-link> 
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="accMoney"
+                prop="accountmoney"
                 label="到账金额"
                
                 >
+                 <template slot-scope="{row}">
+                     <el-link type="success" :underline="false">{{row.accountmoney != null ? row.accountmoney.toFixed(2) : '0.00'}}</el-link>
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="disMoney"
+                prop="discountmoney"
                 label="优惠金额"
                 
                 >
+                <template slot-scope="{row}">
+                    <el-link type="success" :underline="false">{{row.discountmoney != null ? row.discountmoney.toFixed(2) : '0.00'}}</el-link>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="payType"
                 label="支付类型"
-                min-width="100"
+                min-width="80"
                 >
+                <template slot-scope="{row}">
+                    {{row.paytype==1 ? "微信" : row.paytype==2 ? "支付宝" : row.paytype==3 ? "微信退款" : row.paytype==4?"支付宝退款":"— —" }}
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="handleType"
                 label="操作类型"
-                min-width="100"
+                min-width="70"
                 >
+                 <template slot-scope="{row}">
+                     <span v-if="row.handletype == 0">扣费</span>
+                     <span v-else-if="row.handletype == 1">充值</span>
+                     <span v-else-if="row.handletype == 2">查询</span>
+                 </template>
                 </el-table-column>
                 <el-table-column
                 prop="recType"
                 label="回复类型"
                 min-width="100"
                 >
+                <template slot-scope="{row}">
+                     <span v-if="row.handletype == 0">操作成功</span>
+                     <span v-else-if="row.handletype == 1">余额不足</span>
+                     <span v-else-if="row.handletype == 2">无卡</span>
+                     <span v-else-if="row.handletype == 3">卡号不统一</span>
+                     <span v-else-if="row.handletype == 4">其他错误</span>
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="handleTime"
+                prop="begin_time"
                 label="操作时间"
                 min-width="100"
                 >
+                <template slot-scope="{row}">
+                    <span v-html="$fmtDate(row.begin_time)"></span>
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="refTime"
+                prop="refund_time"
                 label="退款时间"
                 min-width="100"
                 >
+                <template slot-scope="{row}">
+                     <span v-html="$fmtDate(row.refund_time)"></span>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="handle"
@@ -183,36 +229,28 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <el-button type="danger" size="mini" plain disabled v-if="scope.row.handle == 1">退款</el-button>
-                    <el-button type="danger" size="mini" v-else @click="handleRefBtn">退款</el-button>
+                    <div v-if="scope.row.handletype == 1">
+                        <el-button type="danger" size="mini" plain disabled v-if="scope.row.paytype == 3 || scope.row.paytype == 4">退款</el-button>
+                        <el-button type="danger" size="mini" v-else @click="handleRefBtn(scope.row)">退款</el-button>
+                    </div>
+                    <div v-else><el-button  size="mini" plain disabled >退款</el-button></div>
+                    
                 </template>
                 </el-table-column>
             </el-table>
         </el-card>
-        <MyPagination :totalPage="totalPage" @getPage="getPage"/>
+        <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
     </div>
 </template>
 
 <script>
-// import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog} from 'element-ui'
-// import Vue from 'vue'
+
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
 import {alertPassword} from '@/utils/ele'
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(Form)
-// Vue.use(FormItem)
-// Vue.use(Input)
-// Vue.use(Select)
-// Vue.use(Option)
-// Vue.use(OptionGroup)
-// Vue.use(DatePicker)
-// Vue.use(TimeSelect)
-// Vue.use(TimePicker)
-// Vue.use(Link)
-// Vue.use(Dialog)
+import { getOfflineRecord } from '@/require/tradeRecord'
+import Util from '@/utils/util'
+
 export default {
     data(){
         return {
@@ -256,20 +294,60 @@ export default {
                   handle: 2
                 }
             ],
-             totalPage: 12,
+             totalPage: 1,
+             nowPage: 1,
+             loading: false
         }
     },
     components: {
         MyPagination
     },
+     created(){
+        if(JSON.stringify(this.$route.query) != "{}"){
+            let [startTime,endTime]= Util.formatTimeArr()
+            this.offlineCardRecordForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
+            this.nowPage= parseInt(this.offlineCardRecordForm.currentPage) || 1
+        }else{ //直接点击进来的
+            let [startTime,endTime]= Util.formatTimeArr()
+            this.offlineCardRecordForm= {startTime,endTime}
+        }
+       this.asyGetOfflineRecord(this.offlineCardRecordForm)
+    },
     methods: {
-        getPage(){
-
+         getPage(page){
+            this.offlineCardRecordForm= {...this.offlineCardRecordForm,currentPage:page}
+            this.$router.push({query: this.offlineCardRecordForm})
+            this.asyGetOfflineRecord(this.offlineCardRecordForm)
+            this.nowPage = page
         },
-        handleRefBtn(){
-            alertPassword(function(){
-                console.log(1)
+         async asyGetOfflineRecord(data){
+            let _this= this
+            try{
+                 _this.loading= true
+                let offlineInfo= await getOfflineRecord(data)
+                 _this.loading= false
+                 if(offlineInfo.code === 200){
+                    _this.tableData = offlineInfo.listdata
+                    _this.totalPage = offlineInfo.totalRows
+                 }
+            }catch(error){
+                if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                    _this.loading= false
+            }
+        },
+        handleRefBtn(row){
+            alertPassword(()=>{
+                row.paytype= 3
+                row.refund_time= new Date()
             })
+        },
+        handleSearch(){
+            this.$router.push({query:{... this.offlineCardRecordForm,currentPage: 1}})
+            this.asyGetOfflineRecord({... this.offlineCardRecordForm,currentPage: 1})
+            this.nowPage= 1 //搜索完之后将nowPage置为1
         }
     }
 }

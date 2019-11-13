@@ -3,32 +3,38 @@
     <el-card class="box-card card_bottom0 cardForm">
             <el-form :inline="true"  class="demo-form-inline" :model="chargeRecordForm" size="mini">
                 <el-form-item label="订单号" class="form_right25 w220">
-                    <el-input v-model="chargeRecordForm.orderNum" placeholder="请输入订单号"  size="small"></el-input>
+                    <el-input v-model="chargeRecordForm.ordernum" placeholder="订单号" clearable size="small"></el-input>
                 </el-form-item>
 
-                <el-form-item label="用户姓名" class="form_right25">
-                    <el-input v-model="chargeRecordForm.userName" placeholder="请输入用户姓名"  size="small"></el-input>
+                <el-form-item label="用户昵称" class="form_right25">
+                    <el-input v-model="chargeRecordForm.usernick" placeholder="用户姓名" clearable size="small"></el-input>
+                </el-form-item>
+                <el-form-item label="商户昵称" class="form_right25">
+                    <el-input v-model="chargeRecordForm.dealer" placeholder="商户昵称" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="商户姓名" class="form_right25">
-                    <el-input v-model="chargeRecordForm.merName" placeholder="请输入商户姓名"  size="small"></el-input>
+                    <el-input v-model="chargeRecordForm.realname" placeholder="商户姓名" clearable size="small"></el-input>
+                </el-form-item>
+                <el-form-item label="商户手机号" class="form_right25">
+                    <el-input v-model="chargeRecordForm.mobile" placeholder="商户手机号" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="设备号" class="form_right25">
-                    <el-input v-model="chargeRecordForm.deviceNum" placeholder="请输入设备号"  size="small"></el-input>
+                    <el-input v-model="chargeRecordForm.devicenum" placeholder="设备号" clearable size="small"></el-input>
                 </el-form-item>
 
                 <el-form-item label="订单状态" class="form_right25">
-                     <el-select v-model="chargeRecordForm.status"  placeholder="请选择订单状态"  size="small">
-                        <el-option label="全部" value="0" ></el-option>
-                        <el-option label="正常" value="1" ></el-option>
-                        <el-option label="退款" value="2" ></el-option>
+                     <el-select v-model="chargeRecordForm.orderstatus"  placeholder="订单状态" clearable size="small">
+                        <el-option label="正常" value="0" ></el-option>
+                        <el-option label="全额退款" value="1" ></el-option>
+                        <el-option label="部分退款" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
-                 <el-form-item label="消费类型" class="form_right25">
-                     <el-select v-model="chargeRecordForm.consumeType"  placeholder="请选择消费类型"  size="small">
-                        <el-option label="全部" value="0" ></el-option>
+                 <el-form-item label="支付方式" class="form_right25">
+                     <el-select v-model="chargeRecordForm.paytype"  placeholder="支付方式" clearable size="small">
                         <el-option label="钱包" value="1" ></el-option>
                         <el-option label="微信" value="2" ></el-option>
                         <el-option label="支付宝" value="3" ></el-option>
+                        <el-option label="包月" value="4" ></el-option>
                     </el-select>
                 </el-form-item>
 
@@ -39,6 +45,8 @@
                         type="datetime"
                         placeholder="选择开始时间"
                          :picker-options="pickerOptions"
+                         value-format="yyyy-MM-dd HH:mm:ss"
+                         clearable
                         >
                       </el-date-picker>
                 </el-form-item>
@@ -49,12 +57,14 @@
                         type="datetime"
                         placeholder="选择结束时间"
                          :picker-options="pickerOptions"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         >
                       </el-date-picker>
                 </el-form-item>
             
                 <el-form-item class="form_margin0 content_btn">
-                    <el-button type="primary" size="small">查询</el-button>
+                    <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
@@ -64,72 +74,88 @@
                 :data="tableData"
                 border
                 fit
+                v-loading="loading"
                 style="width: 100%"
                 :header-cell-style="{background:'#f5f7fa',color:'#666'}"
                 >
                 <el-table-column
                 prop="index"
                 label="序号"
-                min-width="42"
+                min-width="70"
                 >
+                 <template slot-scope="scope">
+                     {{ (nowPage-1)*10+scope.$index+1 }}
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="orderNum"
+                prop="ordernum"
                 label="订单号"
                 min-width="220"
                 >
-                    <template slot-scope="scope">
-                        <el-link type="primary">{{scope.row.orderNum}}</el-link>
-                    </template>
+                <template slot-scope="scope">
+                    <el-link type="primary">{{scope.row.ordernum}}</el-link>
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="userName"
+                prop="username"
                 label="用户名"
                 min-width="80"
                 >
+                <template slot-scope="{row}">
+                    {{row.username && row.username.length > 0 ? row.username : '— —'}}
+                </template>
                 </el-table-column>
+
                  <el-table-column
-                prop="merName"
+                prop="dealer"
                 label="商户名"
                 min-width="80"
                 >
+                <template slot-scope="{row}">
+                    {{row.dealer && row.dealer.length > 0 ? row.dealer : '— —'}}
+                </template>
                 </el-table-column>
+
                  <el-table-column
-                prop="deviceNum"
+                prop="equipmentnum"
                 label="设备号"
                 min-width="80"
                 >
-                <template slot-scope="scope">
-                    <router-link to="">
-                         <el-link type="primary">{{scope.row.deviceNum}}</el-link>
+                <template slot-scope="{row}">
+                    <router-link to="/">
+                        <el-link type="primary">{{row.equipmentnum}}</el-link>
                     </router-link>
                 </template>
                 </el-table-column>
                  <el-table-column
-                prop="devicePort"
+                prop="port"
                 label="端口号"
                 min-width="60"
                 >
+                <template slot-scope="{row}">
+                    <router-link to="/">
+                        <el-link type="primary">{{row.port}}</el-link>
+                    </router-link>
+                </template>
                 </el-table-column>
                  <el-table-column
-                prop="money"
+                prop="expenditure"
                 label="消费额"
                 min-width="60"
                 >
-                <!-- <template slot-scope="scope">
-                    <el-link type="danger" :underline="false" v-if="scope.row.money<0">{{scope.row.money}}</el-link>
-                    <el-link type="success" :underline="false"  v-else>{{scope.row.money}}</el-link>
-                </template> -->
+                <template slot-scope="{row}">
+                    {{row.expenditure != null ? row.expenditure.toFixed(2) : '— —'}}
+                </template>
                 </el-table-column>
-                 <el-table-column
+                
                 <el-table-column
                 prop="status"
                 label="订单状态"
                 min-width="80"
                 >
                  <template slot-scope="scope">
-                    <el-link type="danger" :underline="false" v-if="scope.row.status==1">全额退款</el-link>
-                    <el-link type="warning" :underline="false" v-else-if="scope.row.status==2">部分退款</el-link>
+                    <el-link type="danger" :underline="false" v-if="scope.row.number==1">全额退款</el-link>
+                    <el-link type="warning" :underline="false" v-else-if="scope.row.number==2">部分退款</el-link>
                     <el-link type="success" :underline="false" v-else>正常</el-link>
                 </template>
                 </el-table-column>
@@ -138,6 +164,9 @@
                 label="支付方式"
                 min-width="65"
                 >
+                <template slot-scope="{row}">
+                    {{row.paytype == 1 ? "钱包" : row.paytype == 2 ? "微信" : row.paytype == 3 ? "支付宝": row.paytype == 4 ? "包月" : "— —"}}
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="chargeInfo"
@@ -145,8 +174,8 @@
                 min-width="80"
                 >
                 <template slot-scope="scope">
-                    <div>{{scope.row.chargeInfo.quantity}}度</div>
-                    <div>{{scope.row.chargeInfo.time}}分钟</div>
+                    <div>{{scope.row.consume_quantity/100}}度</div>
+                    <div>{{scope.row.consume_time}}分钟</div>
                 </template>
                 </el-table-column>
                  <el-table-column
@@ -155,37 +184,49 @@
                 min-width="65"
                 >
                 <template slot-scope="scope">
-                    <router-link v-if="scope.row.isConCharge === 1" to="/tradeRecord/chargeRecord">
-                         <el-link type="primary" >是</el-link>
+                    <router-link v-if="scope.row.ifcontinue != null" to="/tradeRecord/chargeRecord">
+                         <el-link type="primary">是</el-link>
                     </router-link>
                     <span v-else>否</span>
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="startDate"
+                prop="begintime"
                 label="开始时间"
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <div v-html="scope.row.startDate"></div>
+                    <div>{{ scope.row.begintime | fmtDate}}</div>
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="endDate"
+                prop="endtime"
                 label="结束时间"
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <div v-html="scope.row.endDate"></div>
+                    <div>{{ scope.row.endtime | fmtDate}}</div>
                 </template>
                 </el-table-column>
+
+                <el-table-column
+                prop="endFrom"
+                label="结束原因"
+                min-width="100"
+                >
+                <template slot-scope="{row}">
+                   {{row.resultinfo==0?"时间或者电量用完":row.resultinfo==1?"手动停止":row.resultinfo==2?"充电满了":
+					    row.resultinfo==3?"超功率自停":row.resultinfo==4?"远程断电":row.resultinfo==11?"被迫停止":row.resultinfo==255?"日志结束":"— —"}}
+                </template>
+                </el-table-column>
+
                 <el-table-column
                 prop="refDate"
                 label="退款时间"
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <div v-html="scope.row.refDate"></div>
+                   <div>{{ scope.row.refund_time | fmtDate}}</div>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -194,147 +235,97 @@
                 min-width="148"
                 fixed="right"
                 >
-                <template slot-scope="scope">
+                <template slot-scope="{row}">
                     <router-link :to="'/tradeRecord/chargeRecord/chargeRecordDetail'" style="color: #fff;margin-right: 10px;">
-                    <el-button type="primary" size="mini">详情</el-button>
+                        <el-button type="primary" size="mini">详情</el-button>
                     </router-link>
-                    <el-button type="danger" size="mini" v-if="scope.row.status === 0" @click="handleRef(scope)">退款</el-button>
-                   <el-button type="danger" size="mini" v-else plain disabled>退款</el-button>
+                    <el-button type="danger" size="mini" v-if="row.number==0" @click="handleRef(row)">退款</el-button>
+                    <el-button type="warning" size="mini" v-else-if="row.number==2"  @click="handleRef(row)">撤回</el-button>
+                    <el-button type="danger" size="mini" plain disabled v-else >退款</el-button>
                 </template>
                 </el-table-column>  
             </el-table>
          </el-card>
-          <MyPagination :totalPage="totalPage" @getPage="getPage"/>
+          <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
   </div>
 </template>
 
 <script>
-// import {Card,Table,Input,TableColumn,Form, FormItem, Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link} from 'element-ui'
-// import Vue from 'vue'
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(Form)
-// Vue.use(FormItem)
-// Vue.use(Input)
-// Vue.use(Select)
-// Vue.use(Option)
-// Vue.use(OptionGroup)
-// Vue.use(DatePicker)
-// Vue.use(TimeSelect)
-// Vue.use(TimePicker)
-// Vue.use(Link)
+import { getChargeRecord } from '@/require/tradeRecord'
+import Util from '@/utils/util'
+import { alertPassword } from '@/utils/ele'
 export default {
     data(){
         return{
             pickerOptions: dateTimeJS, //配置日期快捷项
-            chargeRecordForm:{
-
-            },
-            tableData: [
-                  {
-                    index: 1,
-                    orderNum: '201910231129409050000018',
-                    userName: 'Roar Wolf',
-                    merName: '永夜',
-                    deviceNum: '000001',
-                    devicePort: '10',
-                    money: 5.3,
-                    status: 0,
-                    payType: 1,
-                    chargeInfo: {
-                         quantity: 0.01,
-                         time: 236
-                    },
-                    isConCharge: 0,
-                    startDate: '2019-10-23<br/>11:29:47',
-                    endDate: '2019-10-23<br/>11:36:38',
-                    refDate: '',
-
-                },
-                {
-                    index: 2,
-                    orderNum: '201910231129409050000018',
-                    userName: 'Roar Wolf',
-                    merName: '永夜',
-                    deviceNum: '000001',
-                    devicePort: '10',
-                    money: 5.3,
-                    status: 1,
-                    payType: 1,
-                    chargeInfo: {
-                         quantity: 0.01,
-                         time: 236
-                    },
-                    isConCharge: 1,
-                    startDate: '2019-10-23<br/>11:29:47',
-                    endDate: '2019-10-23<br/>11:36:38',
-                    refDate: '2019-10-23<br/>11:36:38'
-                },
-                {
-                    index: 3,
-                    orderNum: '201910231129409050000018',
-                    userName: 'Roar Wolf',
-                    merName: '永夜',
-                    deviceNum: '000001',
-                    devicePort: '10',
-                    money: 5.3,
-                    status: 2,
-                    payType: 1,
-                    chargeInfo: {
-                         quantity: 0.01,
-                         time: 236
-                    },
-                    isConCharge: 1,
-                    startDate: '2019-10-23<br/>11:29:47',
-                    endDate: '2019-10-23<br/>11:36:38',
-                    refDate: '2019-10-23<br/>11:36:38'
-                },
-            ],
-            totalPage: 12,
+            chargeRecordForm:{},
+            tableData: [],
+            totalPage: 1,
+            nowPage: 1,
+            loading: false,
             
         }
     },
     components: {
         MyPagination
     },
+     created(){
+        if(JSON.stringify(this.$route.query) != "{}"){
+            let [startTime,endTime]= Util.formatTimeArr()
+            this.chargeRecordForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
+            this.nowPage= parseInt(this.chargeRecordForm.currentPage) || 1
+        }else{ //直接点击进来的
+            let [startTime,endTime]= Util.formatTimeArr()
+            this.chargeRecordForm= {startTime,endTime}
+        }
+       this.asyGetChargeRecord(this.chargeRecordForm)
+    },
     methods: {
-        getPage(){
-
+        getPage(page){
+            this.chargeRecordForm= {...this.chargeRecordForm,currentPage:page}
+            this.$router.push({query: this.chargeRecordForm})
+            this.asyGetChargeRecord(this.chargeRecordForm)
+            this.nowPage = page
         },
-        handleRef(scope){ //处理退费
-             this.$prompt('请输入密码', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                inputPlaceholder: '请输入密码',
-                lockScroll: true,
-                inputType: 'password'
-            }).then(({ value }) => {
-            this.$message({
-                type: 'success',
-                message: '你的密码是: ' + value
-            });
-            this.handleRefDetail(scope)
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '取消输入'
-                });       
-            });
+        async asyGetChargeRecord(data){
+            let _this= this
+            try{
+                 _this.loading= true
+                let chargeInfo= await getChargeRecord(data)
+                 _this.loading= false
+                 if(chargeInfo.code === 200){
+                    _this.tableData = chargeInfo.listdata
+                    _this.totalPage = chargeInfo.totalRows
+                 }
+            }catch(error){
+                if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                    _this.loading= false
+            }
         },
-        handleRefDetail(scope){
-            // 发送ajax请求，请求成功之后，修改tableData的值
-            let { tableData }= this //ES6 解构
-            tableData= tableData.map((item,i)=>{
-                if(scope.row.index === item.index){
-                    item.status= 1
-                    // 这里将退费时间也加上去
+        handleRef(row){ //处理退费
+            alertPassword(()=>{
+                if(row.number == 0){ //全额退款
+                    row.number= 1
+                
+                    row.refund_time= new Date()
+                }else if(row.number == 2){ //撤回退款
+                    row.number= 1
+                    row.refund_time= new Date()
+                   
                 }
-                return item
+                console.log(row.number)
             })
-            this.tableData= tableData
+        },
+        
+        handleSearch(){
+            this.$router.push({query:{... this.chargeRecordForm,currentPage: 1}})
+            this.asyGetChargeRecord({... this.chargeRecordForm,currentPage: 1})
+            this.nowPage= 1 //搜索完之后将nowPage置为1
         }
     }
 }

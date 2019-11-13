@@ -40,27 +40,63 @@
             </el-col>
         </el-row>
         <el-card>
-             <div slot="header" class="clearfix">
+             <div slot="header" class="clearfix" style="text-align: center;">
                 <span>充电日志</span>
              </div>
              <el-table
                 :data="tableData"
-                :height="clientHeight"
+                :max-height="clientHeight"
                 border
                 style="width: 100%">
                 <el-table-column
-                prop="date"
-                label="日期"
-                width="180">
+                prop="index"
+                label="序号"
+                min-width="100">
                 </el-table-column>
                 <el-table-column
-                prop="name"
-                label="姓名"
-                width="180">
+                prop="devicenum"
+                label="设备号"
+                min-width="100">
                 </el-table-column>
                 <el-table-column
-                prop="address"
-                label="地址">
+                prop="port"
+                label="端口号"
+                 min-width="100"
+                >
+                </el-table-column>
+            
+                <el-table-column
+                prop="port"
+                label="端口号"
+                 min-width="100"
+                >
+                </el-table-column>
+
+                 <el-table-column
+                prop="time"
+                label="剩余时间(min)"
+                 min-width="120"
+                >
+                </el-table-column>
+                <el-table-column
+                prop="power"
+                label="剩余电量(kW·h)"
+                 min-width="120"
+                >
+                </el-table-column>
+
+                <el-table-column
+                prop="nowtime"
+                label="实时功率(W)"
+                 min-width="120"
+                >
+                </el-table-column>
+
+                 <el-table-column
+                prop="recordTime"
+                label="记录时间"
+                 min-width="150"
+                >
                 </el-table-column>
             </el-table>
         </el-card>

@@ -5,14 +5,19 @@ import store from '@/store'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
+let baseURL
+if (process.env.NODE_ENV === "development"){ //开发环境
+  baseURL= 'http://localhost'
+}else { //生产环境
+  baseURL= 'http://www.tengfuchong.com.cn'
+}
+
 const service = axios.create({ // 创建axios实例           
         timeout: 120000, // 请求超时时间
-        //baseURL: 'http://127.0.0.1:8888/manage'  
-        // baseURL: 'http://127.0.0.1',
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         },
-        baseURL:' http://192.168.3.45',
+        baseURL,
         withCredentials : true                         
 })
 

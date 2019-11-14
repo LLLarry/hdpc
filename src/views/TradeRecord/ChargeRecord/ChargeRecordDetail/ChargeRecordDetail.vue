@@ -52,9 +52,12 @@
                 prop="index"
                 label="序号"
                 min-width="100">
+                <template slot-scope="scope">
+                   {{ scope.$index+1 }}
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="devicenum"
+                prop="code"
                 label="设备号"
                 min-width="100">
                 </el-table-column>
@@ -64,39 +67,38 @@
                  min-width="100"
                 >
                 </el-table-column>
-            
-                <el-table-column
-                prop="port"
-                label="端口号"
-                 min-width="100"
-                >
-                </el-table-column>
 
                  <el-table-column
-                prop="time"
+                prop="chargetime"
                 label="剩余时间(min)"
                  min-width="120"
                 >
                 </el-table-column>
                 <el-table-column
-                prop="power"
+                prop="surpluselec"
                 label="剩余电量(kW·h)"
                  min-width="120"
                 >
+                <template slot-scope="{row}">
+                    {{ row.surpluselec/100}}
+                </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="nowtime"
+                prop="power"
                 label="实时功率(W)"
                  min-width="120"
                 >
                 </el-table-column>
 
                  <el-table-column
-                prop="recordTime"
+                prop="createtime"
                 label="记录时间"
                  min-width="150"
                 >
+                <template slot-scope="{row}">
+                   <div v-html="row.createtime && row.createtime.length > 0 ? ($fmtDate(row.createtime).replace('</br>',' ')) : '— —'"></div>
+                </template>
                 </el-table-column>
             </el-table>
         </el-card>
@@ -108,99 +110,36 @@ const echarts= require('echarts/lib/echarts')
 require("echarts/lib/chart/line");
 require('echarts/lib/component/tooltip');
 require('echarts/lib/component/title');
+import { getpowerLineInfo } from '@/require/tradeRecord'
 export default {
     data(){
         return {
             clientHeight: 700,//屏幕高度
             chargeInfo: [
-                {type: '订单号',content: '201910291727353820000013'},
-                {type: '付款金额',content: '2.0元'},
-                {type: '使用时间',content: '360分钟'},
-                {type: '使用电量',content: '2.0度'},
-                {type: '最大功率',content: '0瓦'},
-                {type: '设备号',content: '000001'},
-                {type: '端口号',content: '3'},
-                {type: '开始时间',content: '2019-10-29 17:27:43'},
-                {type: '结束时间',content: '2019-10-30 11:11:29'},
+                {type: '订单号',content:'' },
+                {type: '付款金额',content: ''},
+                {type: '使用时间',content: ''},
+                {type: '使用电量',content: ''},
+                {type: '最大功率',content: ''},
+                {type: '设备号',content: ''},
+                {type: '端口号',content: ''},
+                {type: '开始时间',content: ''},
+                {type: '结束时间',content: ''},
             ],
-             tableData: [{
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-08',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-06',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-07',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                },
-                {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-08',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-06',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-07',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                },
-                {
-                date: '2016-05-08',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-06',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                date: '2016-05-07',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-                },
-                ]
-            }
+             tableData: [],
+             orderid: 0, //请求的订单id
+             myChart: null,
+        }
+    },
+    created(){
+         this.orderid= this.$route.query.orderid || 0
+        this.asyGetpowerLineInfo({orderid: this.orderid})
     },
     beforeMount(){
         // 获取屏幕高度
         let h= document.documentElement.clientHeight || document.body.clientHeight
         this.clientHeight= (h-180)*0.85
+
     },
     mounted(){
         var myChart = echarts.init(document.getElementById('echartCon'));
@@ -216,7 +155,7 @@ export default {
                                 axisTick:{
                                         lineStyle:{color:'#666'}    // x轴刻度的颜色
                                         },
-                                data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+                                //  data:_this.timeList
                             },
                             yAxis: {
                                 name: '功率（W）',
@@ -261,10 +200,56 @@ export default {
                                     ])
                                 }
                             }, 
-                            data: [5, 20, 36, 10, 10, 20]
+                            // data: _this.powerList
                         }]
             });
-        
+        this.myChart= myChart
+    },
+    methods: {
+        async asyGetpowerLineInfo(data){
+            let _this=  this
+            try{
+                let powerInfo= await getpowerLineInfo(data)
+                if(powerInfo.code === 200){
+                    let timeList= []
+                    let powerList= []
+                    for (const iterator of powerInfo.listpower) {
+                        timeList.push(iterator.minuteTime)
+                        powerList.push(iterator.power)
+                    }
+                    this.timeList= timeList
+                    this.powerList= powerList
+                    this.myChart.setOption({
+                            xAxis: {
+                                data: timeList
+                            },
+                            series: [
+                                {
+                                    name: '功率',
+                                    type:'line',
+                                    data: powerList
+                                    
+                                }
+                            ]
+                        });
+                    this.chargeInfo= [
+                        {type: '订单号',content: powerInfo.ordernum},
+                        {type: '付款金额',content: `${powerInfo.paymoney}元`},
+                        {type: '使用时间',content: `${powerInfo.usetime}分钟`},
+                        {type: '使用电量',content: `${powerInfo.useelec/100}度`},
+                        {type: '最大功率',content: `${powerInfo.mapdata.maxpower}瓦`},
+                        {type: '设备号',content:  powerInfo.devicenum},
+                        {type: '端口号',content: powerInfo.port},
+                        {type: '开始时间',content: this.$fmtDate(powerInfo.begintime).replace('</br>',' ')},
+                        {type: '结束时间',content: this.$fmtDate(powerInfo.endtime).replace('</br>',' ')},
+                    ]
+                    this.tableData= powerInfo.listdata
+                    
+                }
+            }catch(error){
+                
+            }
+        }
     }
 }
 </script>

@@ -227,10 +227,10 @@
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <div v-if="scope.row.manmoney == 0"><el-button icon="el-icon-view" size="mini" type="primary" plain disabled style="width: 60px;padding: 7px 0;" >0</el-button></div>
+                    <div v-if="scope.row.manmoney == 0"><el-button icon="el-icon-view" size="mini"  plain disabled style="width: 60px;padding: 7px 0;" >0</el-button></div>
                     <div v-else>
-                        <el-button icon="el-icon-view" size="mini" type="danger" plain v-if="scope.row.status == 1" style="width: 60px;padding: 7px 0;" >{{scope.row.manmoney}}</el-button>
-                        <el-button icon="el-icon-view" size="mini" type="success" plain v-if="scope.row.status == 2"  style="width: 60px;padding: 7px 0;" @click="handlePartner">{{scope.row.manmoney}}</el-button>
+                        <el-button icon="el-icon-view" size="mini" type="success" plain v-if="scope.row.status == 1" style="width: 60px;padding: 7px 0;" @click="handlePartner(scope.row)">{{scope.row.manmoney}}</el-button>
+                        <el-button icon="el-icon-view" size="mini" type="danger" plain v-if="scope.row.status == 2"  style="width: 60px;padding: 7px 0;" @click="handlePartner(scope.row)">{{scope.row.manmoney}}</el-button>
                     </div>
                 </template>
                 </el-table-column>
@@ -279,7 +279,7 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <router-link :to="`/tradeRecord/tradeRecordCon/orderDetail?paysource=${scope.row.paysource}`" tag="div">
+                    <router-link :to="`/tradeRecord/tradeRecordCon/orderDetail?paysource=${scope.row.paysource}&orderId=${scope.row.id}`" tag="div">
                         <el-button type="primary" size="mini">详情</el-button>
                     </router-link> 
                 </template>
@@ -289,15 +289,27 @@
          <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
 
          <el-dialog title="合伙人金额明细" :visible.sync="dialogMoneyDetail" width="550px">
-             <div class="orderNum">订单号： 201910081015163790000013</div>
+             <div class="orderNum">订单号：{{diaOrderNum}}</div>
             <el-table :data="gridData" border :header-cell-style="{background:'#f5f7fa',color:'#666'}">
-                <el-table-column property="parNickName" label="合伙人昵称" min-width="120"></el-table-column>
-                <el-table-column property="parName" label="合伙人姓名" min-width="120"></el-table-column>
-                <el-table-column property="parPhone" label="合伙人电话" min-width="120"></el-table-column>
-                <el-table-column property="parMoney" label="合伙人金额" min-width="120">
+                <el-table-column property="nickname" label="合伙人昵称" min-width="120">
+                     <template slot-scope="{row}">
+                        {{row.nickname && row.nickname.length > 0 ? row.nickname : '— —'}}
+                    </template>
+                </el-table-column>
+                <el-table-column property="realname" label="合伙人姓名" min-width="120">
+                     <template slot-scope="{row}">
+                        {{row.realname && row.realname.length > 0 ? row.realname : '— —'}}
+                    </template>
+                </el-table-column>
+                <el-table-column property="phone" label="合伙人电话" min-width="120">
+                     <template slot-scope="{row}">
+                        {{row.phone && row.phone.length > 0 ? row.phone : '— —'}}
+                    </template>
+                </el-table-column>
+                <el-table-column property="partmoney" label="合伙人金额" min-width="120">
                     <template slot-scope="scope">
-                        <el-link :underline="false" type="danger"  v-if="scope.row.parMoney<0">{{scope.row.parMoney}}</el-link>
-                         <el-link :underline="false" type="success" v-else>{{scope.row.parMoney}}</el-link>
+                        <el-link :underline="false" type="danger"  v-if="scope.row.partmoney<0">{{scope.row.partmoney}}</el-link>
+                         <el-link :underline="false" type="success" v-else>{{scope.row.partmoney}}</el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -308,12 +320,13 @@
 <script>
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-import { getTradeRecord } from '@/require/tradeRecord'
+import { getTradeRecord,getPartnerIncomeDetail } from '@/require/tradeRecord'
 import Util from '@/utils/util'
 export default {
     data(){
         return {
             tradeRecordConForm: {},
+            diaOrderNum: '',
             pickerOptions: dateTimeJS,
             tableData: [],
             totalData: [],
@@ -345,7 +358,13 @@ export default {
             this.asyGetTradeRecord(this.tradeRecordConForm)
             this.nowPage = page
         },
-        handlePartner(){//处理点击合伙人分成金额
+        handlePartner(row){//处理点击合伙人分成金额
+            getPartnerIncomeDetail({orderid: row.id}).then(res=>{
+                if(res.code == 200){
+                    this.gridData= res.listdata
+                    this.diaOrderNum= res.ordernum
+                }
+            }).catch(error=>{})
             this.dialogMoneyDetail= true
         },
         async asyGetTradeRecord(data){

@@ -236,7 +236,7 @@
                 fixed="right"
                 >
                 <template slot-scope="{row}">
-                    <router-link :to="'/tradeRecord/chargeRecord/chargeRecordDetail'" style="color: #fff;margin-right: 10px;">
+                    <router-link :to="`/tradeRecord/chargeRecord/chargeRecordDetail?orderid=${row.id}`"  style="color: #fff;margin-right: 10px;">
                         <el-button type="primary" size="mini">详情</el-button>
                     </router-link>
                     <el-button type="danger" size="mini" v-if="row.number==0" @click="handleRef(row)">退款</el-button>

@@ -256,44 +256,7 @@ export default {
         return {
             offlineCardRecordForm: {},
             pickerOptions: dateTimeJS,
-            tableData: [
-                {
-                  index: 1,
-                  orderNum: '20191026091752648002291',
-                  userName: '',
-                  merName: '小区智能充电桩15319778450',
-                  deviceNum: '002291',
-                  cardNum: 'cc61a021',
-                  money: 50.7,
-                  recMoney: 50.0,
-                  accMoney: 50.0,
-                  disMoney: 0.0,
-                  payType: 1,
-                  handleType: 1,
-                  recType: 2,
-                  handleTime: '2019-10-26 09:17:52',
-                  refTime: '',
-                  handle: 1
-                },
-                {
-                  index: 1,
-                  orderNum: '20191026091752648002291',
-                  userName: '',
-                  merName: '小区智能',
-                  deviceNum: '002291',
-                  cardNum: 'cc61a021',
-                  money: 50.7,
-                  recMoney: 50.0,
-                  accMoney: 50.0,
-                  disMoney: 0.0,
-                  payType: 1,
-                  handleType: 1,
-                  recType: 2,
-                  handleTime: '2019-10-26 09:17:52',
-                  refTime: '',
-                  handle: 2
-                }
-            ],
+            tableData: [],
              totalPage: 1,
              nowPage: 1,
              loading: false

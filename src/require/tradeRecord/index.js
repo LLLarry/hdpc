@@ -43,11 +43,21 @@ export const getOfflineRecord= function (data){
 }
 
 /**
- * 获取交易订单详情
+ * 获取交易订单详情 （从交易记录中进）
  */
 export const getOrderTradeDataDetail= function (data){ 
     return ajax({
              url: '/orderData/orderTradeDataDetail',
+             data: data
+         })
+}
+
+/**
+ * 获取交易订单详情 （从其他记录中进）
+ */
+export const getOtherOrderTradeDataDetail= function (data){ 
+    return ajax({
+             url: '/orderData/orderDataDetail',
              data: data
          })
 }
@@ -89,6 +99,16 @@ export const getMonthRecordInfo= function (data){
 export const getWithDrawRecord= function (data){ 
     return ajax({
              url: '/orderData/orderWithdrawRecordData',
+             data: data
+         })
+}
+
+/**
+ * 获取钱包记录
+ */
+export const getWalletRecord= function (data){ 
+    return ajax({
+             url: '/orderData/orderWalletRecordData',
              data: data
          })
 }

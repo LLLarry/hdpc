@@ -166,9 +166,30 @@
                 min-width="230"
                 >
                     <template slot-scope="scope">
-                        <router-link to="/tradeRecord/tradeRecordCon/orderDetail">
+                        <!-- 充电记录 -->
+                        <router-link :to="`/tradeRecord/chargeRecord?ordernum=${scope.row.ordernum}`" v-if="scope.row.paysource == 1"> 
                             <el-link type="primary">{{scope.row.ordernum}}</el-link>
-                        </router-link> 
+                        </router-link>
+                        <!-- 投币记录 -->
+                        <router-link :to="`/tradeRecord/coinRecord?ordernum=${scope.row.ordernum}`" v-if="scope.row.paysource == 2">
+                            <el-link type="primary">{{scope.row.ordernum}}</el-link>
+                        </router-link>
+                        <!-- 离线卡记录 -->
+                        <router-link :to="`/tradeRecord/offlineCardRecord?ordernum=${scope.row.ordernum}`" v-if="scope.row.paysource == 3">
+                            <el-link type="primary">{{scope.row.ordernum}}</el-link>
+                        </router-link>
+                         <!-- 钱包记录 -->
+                        <router-link :to="`/tradeRecord/walletRecord?ordernum=${scope.row.ordernum}`" v-if="scope.row.paysource == 4">
+                            <el-link type="primary">{{scope.row.ordernum}}</el-link>
+                        </router-link>
+                         <!-- 在线卡消费记录 -->
+                        <router-link :to="`/iccardManage/onlineCardConsume?ordernum=${scope.row.ordernum}`" v-if="scope.row.paysource == 5">
+                            <el-link type="primary">{{scope.row.ordernum}}</el-link>
+                        </router-link>
+                         <!-- 包月记录 -->
+                        <router-link :to="`/tradeRecord/monthlyRecord?ordernum=${scope.row.ordernum}`" v-if="scope.row.paysource == 6">
+                            <el-link type="primary">{{scope.row.ordernum}}</el-link>
+                        </router-link>
                     </template>
                 </el-table-column>
                 <el-table-column

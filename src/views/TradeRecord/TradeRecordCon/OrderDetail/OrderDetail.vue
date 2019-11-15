@@ -238,7 +238,7 @@
 </template>
 
 <script>
-import { getOrderTradeDataDetail } from '@/require/tradeRecord'
+import { getOrderTradeDataDetail,getOtherOrderTradeDataDetail } from '@/require/tradeRecord'
 import { messageTip } from '@/utils/ele'
 export default {
     data(){
@@ -246,21 +246,49 @@ export default {
             tableData: [],
             loading: false,
             paysource: 1,
-            orderId: 0
+            orderId: 0,
+            status: undefined,
+            orderNum: undefined
         }
     },
     created(){
-        let {paysource,orderId}=  this.$route.query
+        let {paysource,orderId,status,orderNum}=  this.$route.query
         this.paysource= paysource
         this.orderId= orderId
-        this.asyGetOrderTradeDataDetail({orderid: this.orderId})
+        this.status= status
+        this.orderNum= orderNum
+        if(typeof this.status == 'undefined'){ //从交易记录中进去
+            this.asyGetOrderTradeDataDetail({orderid: this.orderId,paysource: 1})
+        }else{ //从其他地方中进去
+            this.asyGetOtherOrderTradeDataDetail({orderid: this.orderId,paysource: this.paysource, status : this.status,ordernum: this.orderNum})
+        }
+        
     },
     methods: {
-        async asyGetOrderTradeDataDetail(data){
+        async asyGetOrderTradeDataDetail(data){ 
             let _this= this
             try {
                  _this.loading= true
                 let tradeDataDetail= await getOrderTradeDataDetail(data)
+                 _this.loading= false
+                 if(tradeDataDetail.code == 200){
+                     _this.handleData(tradeDataDetail.order,tradeDataDetail.ordertrade)
+                 }
+
+            }catch(error){
+                console.log(error)
+                if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                    _this.loading= false
+            }
+        },
+         async asyGetOtherOrderTradeDataDetail(data){  //从其他记录中进去
+            let _this= this
+            try {
+                 _this.loading= true
+                let tradeDataDetail= await getOtherOrderTradeDataDetail(data)
                  _this.loading= false
                  if(tradeDataDetail.code == 200){
                      _this.handleData(tradeDataDetail.order,tradeDataDetail.ordertrade)
@@ -280,7 +308,6 @@ export default {
             if(this.paysource == 1){
                 let {ordernum,number,durationtime,quantity,paytype,begintime,expenditure,refundMoney } = order
                 obj.orderNum= ordernum
-                console.log(expenditure)
                 expenditure= expenditure== null ? 0 : expenditure
                 obj.payMoney= [1,2].includes(number) ? (0-expenditure).toFixed(2) : expenditure.toFixed(2) 
                 obj.chargeTime= durationtime
@@ -293,7 +320,6 @@ export default {
                 this.tableData= [obj]
             }else if(this.paysource == 2){
                 let {ordernum,money,status,handletype,beginTime,coinNum} = order
-                let {status:parstatus}= ordertrade
 
                 obj.payMoney= status == 1 ? money.toFixed(2) : status == 2 ? (0-money).toFixed(2) : '— —'
                 obj.orderNum= ordernum

@@ -3,35 +3,33 @@
         <el-card class="box-card card_bottom0 cardForm">
             <el-form :inline="true"  class="demo-form-inline" :model="cashManageForm" size="mini">
                 <el-form-item label="单号" class="form_right25 w220">
-                    <el-input v-model="cashManageForm.orderNum" placeholder="请输入单号"  size="small"></el-input>
+                    <el-input v-model="cashManageForm.ordernum" placeholder="请输入单号" clearable  size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="申请人" class="form_right25">
-                    <el-input v-model="cashManageForm.name" placeholder="请输入姓名"  size="small"></el-input>
+                    <el-input v-model="cashManageForm.realname" placeholder="请输入姓名" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号" class="form_right25">
-                    <el-input v-model="cashManageForm.phone" placeholder="请输入手机号"  size="small"></el-input>
+                    <el-input v-model="cashManageForm.phone" placeholder="请输入手机号" clearable size="small"></el-input>
                 </el-form-item>
                <el-form-item label="银行卡号 " class="form_right25 w220">
-                    <el-input v-model="cashManageForm.bankNum" placeholder="请输入银行卡号"  size="small"></el-input>
+                    <el-input v-model="cashManageForm.bankcardnum" placeholder="请输入银行卡号" clearable size="small"></el-input>
                 </el-form-item>
                  <el-form-item label="银行名称 " class="form_right25 w220">
-                    <el-input v-model="cashManageForm.bankName" placeholder="请输入银行名称"  size="small"></el-input>
+                    <el-input v-model="cashManageForm.bankname" placeholder="请输入银行名称" clearable size="small"></el-input>
                 </el-form-item>
-                <el-form-item label="类型" class="form_right25">
-                     <el-select v-model="cashManageForm.type"  placeholder="请选择类型"  size="small">
-                        <el-option label="全部" value="" ></el-option>
+                <el-form-item label="提现类型" class="form_right25">
+                     <el-select v-model="cashManageForm.status"  placeholder="提现类型" clearable size="small">
                         <el-option label="个人银行卡" value="1" ></el-option>
                         <el-option label="对公账户" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
                
-                <el-form-item label="状态" class="form_right25">
-                     <el-select v-model="cashManageForm.conType"  placeholder="请选择状态"  size="small">
-                        <el-option label="全部" value="" ></el-option>
-                        <el-option label="提现待处理" value="1" ></el-option>
-                        <el-option label="提现已到账" value="2" ></el-option>
-                        <el-option label="提现被拒绝" value="3" ></el-option>
-                        <el-option label="提现到零钱" value="4" ></el-option>
+                <el-form-item label="提现状态" class="form_right25">
+                     <el-select v-model="cashManageForm.type"  placeholder="提现状态" clearable size="small">
+                        <el-option label="提现待处理" value="0" ></el-option>
+                        <el-option label="提现已到账" value="1" ></el-option>
+                        <el-option label="提现被拒绝" value="2" ></el-option>
+                        <el-option label="提现到零钱" value="3" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="开始时间" class="form_right25 w200">
@@ -41,6 +39,8 @@
                         type="datetime"
                         placeholder="选择开始时间"
                         :picker-options="pickerOptions"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         >
                       </el-date-picker>
                 </el-form-item>
@@ -51,12 +51,14 @@
                         type="datetime"
                         placeholder="选择结束时间"
                         :picker-options="pickerOptions"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         >
                       </el-date-picker>
                 </el-form-item>
             
                 <el-form-item class="form_margin0 content_btn">
-                    <el-button type="primary" size="small">查询</el-button>
+                    <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
@@ -66,41 +68,55 @@
                 :data="tableData"
                 border
                 fit
+                v-loading="loading"
                 style="width: 100%"
                 :header-cell-style="{background:'#f5f7fa',color:'#666'}"
                 >
                 <el-table-column
                 prop="index"
                 label="序号"
-                min-width="50"
+                min-width="65"
                 >
+                <template slot-scope="scope">
+                     {{ (nowPage-1)*10+scope.$index+1 }}
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="orderNum"
+                prop="withdrawnum"
                 label="提现单号"
-                min-width="230"
+                min-width="200"
                 >
                 </el-table-column>
                 <el-table-column
-                prop="name"
+                prop="realname"
                 label="申请人"
-                min-width="80"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="phone"
-                label="手机号"
                 min-width="100"
                 >
+                <template slot-scope="{row}">
+                    {{ row.realname && row.realname.length > 0 ? row.realname : '— —' }}
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="bankInfo"
-                label="账户与开户行"
-                min-width="150"
+                prop="phone_num"
+                label="手机号"
+                min-width="120"
                 >
-                    <template slot-scope="scope">
-                        <div>银行名称:{{scope.row.bankInfo.bankName}}</div>
-                        <div>银行账号:{{scope.row.bankInfo.bankNum}}</div>
+                 <template slot-scope="{row}">
+                    <router-link :to="`/usermanage/merInfo?phone=${row.phone_num}`">
+                        <el-link type="primary">{{row.phone_num}}</el-link>
+                    </router-link>
+                </template>
+                </el-table-column>
+                <el-table-column
+                prop="bankname"
+                label="账户与开户行"
+                min-width="180"
+                >
+                    <template slot-scope="{row}">
+                        <div v-if="row.company != null">公司名称：{{`  ${row.company}` }}</div>
+                        <div v-if="row.bankcardnum != 0">银行名称:{{row.bankname && row.bankname.length > 0 ? `  ${row.bankname}` : `  — —`}}</div>
+                        <div v-else>微信零钱</div>
+                        <div v-if="row.bankcardnum != 0">银行账号:{{row.bankcardnum && row.bankcardnum.length > 0 ? `  ${row.bankcardnum}` : `  — —`}}</div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -109,20 +125,19 @@
                 width="70"
                 >
                     <template slot-scope="scope">   
-                        <span v-if="scope.row.type==1">个人</span>
-                        <span v-else>对公</span>
+                        <span v-if="scope.row.type==2" >对公</span>
+                        <span v-else>个人</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                prop="nowMoney"
+                prop="user_money"
                 label="现有金额"
                
                 >
                 </el-table-column>
                 <el-table-column
-                prop="cashMoney"
+                prop="money"
                 label="提现金额"
-               
                 >
                 </el-table-column>
                 <el-table-column
@@ -131,21 +146,26 @@
                 min-width="80"
                 >
                 <template slot-scope="scope">
-                    <el-link type="success" :underline="false">{{scope.row.amoMoney}}</el-link>
+                    <el-link type="success" :underline="false">
+                        {{  scope.row.money - scope.row.servicecharge }}
+                    </el-link>
                 </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="fee"
+                prop="servicecharge"
                 label="手续费"
                 min-width="60"
                 >
                 </el-table-column>
                 <el-table-column
-                prop="handleTime"
+                prop="create_time"
                 label="申请时间"
                 min-width="135"
                 >
+                <template slot-scope="{row}">
+                    <div v-html="$fmtDate(row.create_time)"></div>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="status"
@@ -153,8 +173,10 @@
                 min-width="80"
                 >
                 <template slot-scope="scope">
-                     <el-link type="success" :underline="false" v-if="scope.row.status === 1">提现已到账</el-link>
-                    <el-link type="info" :underline="false" v-else>提现待处理</el-link>
+                    <el-link type="info" :underline="false" v-if="scope.row.status === 0">提现待处理</el-link>
+                    <el-link type="success" :underline="false" v-else-if="scope.row.status === 1 || scope.row.status === 3">提现已到账</el-link>
+                    <el-link type="warning" :underline="false" v-else-if="scope.row.status === 4">待开发票</el-link>
+                    <el-link type="danger" :underline="false" v-else>提现被拒绝</el-link>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -164,19 +186,19 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <div v-if="scope.row.handle === 2"> 
-                        <el-button type="primary" size="mini" >通过</el-button>
-                        <el-button type="danger" size="mini" @click="handleRefBtn">拒绝</el-button>
-                    </div>
-                     <div v-else> 
+                    <div v-if="scope.row.status != 0 && scope.row.status != 4"> 
                         <el-button type="primary" size="mini" plain disabled>通过</el-button>
                         <el-button type="danger" size="mini" plain disabled>拒绝</el-button>
+                    </div>
+                    <div v-else> 
+                        <el-button type="primary" size="mini" @click="handleRefBtn(row,1)">通过</el-button>
+                        <el-button type="danger" size="mini" @click="handleRefBtn(row,2)">拒绝</el-button>
                     </div>
                 </template>
                 </el-table-column>
             </el-table>
         </el-card>
-        <MyPagination :totalPage="totalPage" @getPage="getPage"/>
+        <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
     </div>
 </template>
 
@@ -185,77 +207,67 @@
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
 import {alertPassword} from '@/utils/ele'
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(Form)
-// Vue.use(FormItem)
-// Vue.use(Input)
-// Vue.use(Select)
-// Vue.use(Option)
-// Vue.use(OptionGroup)
-// Vue.use(DatePicker)
-// Vue.use(TimeSelect)
-// Vue.use(TimePicker)
-// Vue.use(Link)
-// Vue.use(Dialog)
+import { getWithDrawRecord } from '@/require/tradeRecord'
+import Util from '@/utils/util'
 export default {
     data(){
         return {
             cashManageForm: {},
             pickerOptions: dateTimeJS,
-            tableData: [
-                 {
-                  index: 1,
-                  orderNum: '4252019102600402660620254',
-                  name: '刘明远',
-                  phone: '17761602930',
-                  bankInfo: {
-                      bankName: '黑龙江省大庆市。建设银行。',
-                      bankNum: '6217001020005863361'
-                  },
-                  type: 1,
-                  nowMoney: 135.0,
-                  cashMoney: 135.0,
-                  amoMoney: 134.19,
-                  fee: 0.81,
-                  handleTime: '2019-10-26 12:38:55',
-                  status: 1,
-                  handle: 1
-              },
-                {
-                  index: 1,
-                  orderNum: '4252019102600402660620254',
-                  name: '刘明远',
-                  phone: '17761602930',
-                  bankInfo: {
-                      bankName: '黑龙江省大庆市。建设银行。',
-                      bankNum: '6217001020005863361'
-                  },
-                  type: 1,
-                  nowMoney: 135.0,
-                  cashMoney: 135.0,
-                  amoMoney: 134.19,
-                  fee: 0.81,
-                  handleTime: '2019-10-26 12:38:55',
-                  status: 2,
-                  handle: 2
-              },
-            ],
-             totalPage: 12,
+            tableData: [],
+             totalPage: 1,
+             nowPage: 1,
+             loading: false
         }
     },
     components: {
         MyPagination
     },
+    created(){
+        if(JSON.stringify(this.$route.query) != "{}"){
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',30)
+            this.cashManageForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
+            this.nowPage= parseInt(this.cashManageForm.currentPage) || 1
+        }else{ //直接点击进来的
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',30)
+            this.cashManageForm= {startTime,endTime}
+        }
+       this.asyGetWithDrawRecord(this.cashManageForm)
+    },
     methods: {
-        getPage(){
-
+        getPage(page){
+            this.cashManageForm= {...this.cashManageForm,currentPage:page}
+            this.$router.push({query: this.cashManageForm})
+            this.asyGetWithDrawRecord(this.cashManageForm)
+            this.nowPage = page
+        },
+        async asyGetWithDrawRecord(data){
+            let _this= this
+            try{
+                 _this.loading= true
+                let drawRecordInfo= await getWithDrawRecord(data)
+                 _this.loading= false
+                 if(drawRecordInfo.code === 200){
+                    _this.tableData = drawRecordInfo.listdata
+                    _this.totalPage = drawRecordInfo.totalRows
+                 }
+            }catch(error){
+                if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                    _this.loading= false
+            }
         },
         handleRefBtn(){
             alertPassword(function(){
                 console.log(1)
             })
+        },
+        handleSearch(){
+            this.$router.push({query:{... this.cashManageForm,currentPage: 1}})
+            this.asyGetWithDrawRecord({... this.cashManageForm,currentPage: 1})
+            this.nowPage= 1 //搜索完之后将nowPage置为1
         }
     }
 }

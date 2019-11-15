@@ -45,8 +45,8 @@ export default {
     formatTime(date,type="YYYY-MM-DD HH:mm:ss"){ //格式化时间字符串
         return moment(date).format(type)
     },
-    formatTimeArr(type="YYYY-MM-DD HH:mm:ss"){ //格式化时间字符串,转化为最近7天的数组
-      return [moment(new Date-7*24*60*60*1000).format(type),moment(new Date).format(type)]  //[ "2019-11-05 11:30:15","2019-11-12 11:30:15"]
+    formatTimeArr(type="YYYY-MM-DD HH:mm:ss",day=7){ //格式化时间字符串,转化为最近7天的数组 type输出的的格式 ，day往前推移的天数
+      return [moment(new Date-day*24*60*60*1000).format(type),moment(new Date).format(type)]  //[ "2019-11-05 11:30:15","2019-11-12 11:30:15"]
     },
     checkKeyOnlyObj(attr,obj){ //检查某个键是属性的唯一值
       let flag

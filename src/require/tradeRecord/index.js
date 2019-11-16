@@ -113,3 +113,34 @@ export const getWalletRecord= function (data){
          })
 }
 
+/**
+ * 交易退费入口
+ */
+export const tradeRefEntrance= function (options){ 
+    return ajax({
+             url: options.url,
+             data: options.data
+         })
+}
+
+/**
+ * 充电记录撤回退款
+ */
+export const withdrawEntrance= function (data){ 
+    return ajax({
+             url: '/wxpay/withdrawWalletRefund',
+             data: data
+         })
+}
+
+/**
+ *商户提现拒绝通过
+ */
+export const merWithdrawResolve= function (data){ 
+    return ajax({
+             url: '/orderData/withdrawResolve',
+             data: data
+         })
+}
+
+

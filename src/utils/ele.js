@@ -30,6 +30,18 @@ const alertPassword= (scope,callBack)=>{ //弹出密码框，并输入密码，�
     });
 }
 
+const alertConfim= (title,callBack)=>{ //确认提示框
+    that.$confirm(title, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        callBack && callBack() //进行回调
+      }).catch(() => {
+            
+      });
+}
+
 const confirDelete= (title,callBack)=>{
     that.$confirm(title, '提示', {
         confirmButtonText: '确定',
@@ -57,5 +69,6 @@ const messageTip= (type= 'success',message='删除成功')=>{
 export {
     alertPassword,
     confirDelete,
-    messageTip
+    messageTip,
+    alertConfim
 }

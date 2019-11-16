@@ -249,15 +249,37 @@
             </el-table>
          </el-card>
           <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
+
+           <el-dialog
+            title="请输入右边的验证码"
+            :visible.sync="dialogVisible"
+            width="400px"
+            :before-close="handleClose">
+            <el-row>
+                <el-col :span="16">
+                     <el-input placeholder="请输入验证码" v-model="userVerifiCode"></el-input>
+                </el-col>
+                <el-col :span="7" :offset="1" >
+                    <VerifiCode @backCode= "backCode" ref="verifi"/>
+                </el-col>
+            </el-row>
+            <p style="color: red; margin-top: 5px;" v-show="tipText">验证码不正确</p>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false;userVerifiCode= '';tipText= false; $refs.verifi.initCode()" size="small">取 消</el-button>
+                <el-button type="primary" @click="confirmVerifiCode" size="small">确 定</el-button>
+            </span>
+        </el-dialog>
   </div>
 </template>
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-import { getChargeRecord } from '@/require/tradeRecord'
+import { getChargeRecord,withdrawEntrance,tradeRefEntrance } from '@/require/tradeRecord'
 import Util from '@/utils/util'
-import { alertPassword } from '@/utils/ele'
+import VerifiCode from '@/components/common/VerifiCode'
+import { alertPassword,messageTip } from '@/utils/ele'
+import { mapState } from 'vuex'
 export default {
     data(){
         return{
@@ -267,11 +289,19 @@ export default {
             totalPage: 1,
             nowPage: 1,
             loading: false,
-            
+            dialogVisible: false,
+            verifiCode: '', //验证码
+            userVerifiCode: '', //用户输入的验证码
+            tipText: false,
+            row: {} //这里是点击退费/撤回所存的订单一列信息，为了退费的时候使用他
         }
     },
     components: {
-        MyPagination
+        MyPagination,
+        VerifiCode
+    },
+    computed: {
+        ...mapState(['userInfo'])
     },
      created(){
         if(JSON.stringify(this.$route.query) != "{}"){
@@ -310,20 +340,73 @@ export default {
             }
         },
         handleRef(row){ //处理退费
-            alertPassword(()=>{
-                if(row.number == 0){ //全额退款
-                    row.number= 1
-                
-                    row.refund_time= new Date()
-                }else if(row.number == 2){ //撤回退款
-                    row.number= 1
-                    row.refund_time= new Date()
-                   
-                }
-                console.log(row.number)
-            })
+            this.row= row
+            if(this.userInfo.classify === 'superAdmin' ){ //超级管理员
+                alertPassword(()=>{
+                    this.handleRefAndWidth(3)
+                })
+            }else{ //普通管理员
+                let utype= 2 //普通管理员
+                 this.dialogVisible = true
+            }
+
+            
         },
-        
+        handleClose(){ //点击管理验证码框
+            this.userVerifiCode= ''
+            this.dialogVisible = false
+            this.$refs.verifi.initCode()
+        },
+        backCode(verifiCode){ //普通管理员验证码回调
+            this.verifiCode= verifiCode
+        },
+        confirmVerifiCode(){ //点击提交，验证验证码
+            let userVerifiCode=  this.userVerifiCode.toLowerCase()
+            let verifiCode=  this.verifiCode.toLowerCase()
+            if(userVerifiCode != verifiCode){
+                this.tipText= true
+            }else{
+                this.tipText= false
+                this.dialogVisible= false
+                // 发送请求请求
+                this.handleRefAndWidth(2)
+                this.userVerifiCode= ''
+            }
+            this.$refs.verifi.initCode()
+        },
+        handleRefAndWidth(utype){ //处理退费或 撤回 逻辑
+            //utype= 3超级管理员  2普通管理员
+                    if(this.row.number == 0){ //全额退款
+                        let url =  this.row.paytype == 1 ? '/wxpay/doWalletReturn' : this.row.paytype == 2 ? '/wxpay/doRefund' : this.row.paytype == 3 ? '/alipay/aliDoRefund' : ''
+                        let data= {
+                            id: this.row.id,
+                            refundState : 1,
+                            pwd: '',
+                            utype: utype
+                        }
+                        tradeRefEntrance({url,data}).then(res=>{
+                            if(res.ok== 'ok'){
+                                messageTip('success','退款成功')
+                                this.asyGetChargeRecord(this.chargeRecordForm)
+                            }else{
+                                res.message= res.message || '退款失败'
+                                messageTip('error',res.message)
+                            }
+                        }).catch(error=>{})
+                    
+                    }else if(this.row.number == 2){ //撤回退款
+                        withdrawEntrance({id: this.row.id}).then(res=>{
+                            if(res.ok === 'ok'){
+                                messageTip('success','撤回成功')
+                                this.asyGetChargeRecord(this.chargeRecordForm)
+                            }else{
+                                res.message= res.message || '撤回失败'
+                                messageTip('error',res.message)
+                            }
+                        }).catch(error=>{})
+                    
+                    }
+        },
         handleSearch(){
             this.$router.push({query:{... this.chargeRecordForm,currentPage: 1}})
             this.asyGetChargeRecord({... this.chargeRecordForm,currentPage: 1})
@@ -333,8 +416,3 @@ export default {
 }
 </script>
 
-<style lang="less">
-    .chargeRecord table{
-        
-    }
-</style>

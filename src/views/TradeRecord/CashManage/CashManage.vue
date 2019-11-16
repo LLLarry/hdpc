@@ -18,18 +18,19 @@
                     <el-input v-model="cashManageForm.bankname" placeholder="请输入银行名称" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="提现类型" class="form_right25">
-                     <el-select v-model="cashManageForm.status"  placeholder="提现类型" clearable size="small">
+                     <el-select v-model="cashManageForm.type"  placeholder="提现类型" clearable size="small">
                         <el-option label="个人银行卡" value="1" ></el-option>
                         <el-option label="对公账户" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
                
                 <el-form-item label="提现状态" class="form_right25">
-                     <el-select v-model="cashManageForm.type"  placeholder="提现状态" clearable size="small">
+                     <el-select v-model="cashManageForm.status"  placeholder="提现状态" clearable size="small">
                         <el-option label="提现待处理" value="0" ></el-option>
                         <el-option label="提现已到账" value="1" ></el-option>
                         <el-option label="提现被拒绝" value="2" ></el-option>
                         <el-option label="提现到零钱" value="3" ></el-option>
+                        <el-option label="代开发票" value="4" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="开始时间" class="form_right25 w200">
@@ -191,8 +192,8 @@
                         <el-button type="danger" size="mini" plain disabled>拒绝</el-button>
                     </div>
                     <div v-else> 
-                        <el-button type="primary" size="mini" @click="handleRefBtn(row,1)">通过</el-button>
-                        <el-button type="danger" size="mini" @click="handleRefBtn(row,2)">拒绝</el-button>
+                        <el-button type="primary" size="mini" @click="handleRefBtn(scope.row,1)">通过</el-button>
+                        <el-button type="danger" size="mini" @click="handleRefBtn(scope.row,2)">拒绝</el-button>
                     </div>
                 </template>
                 </el-table-column>
@@ -206,8 +207,8 @@
 
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-import {alertPassword} from '@/utils/ele'
-import { getWithDrawRecord } from '@/require/tradeRecord'
+import {alertConfim,messageTip} from '@/utils/ele'
+import { getWithDrawRecord,merWithdrawResolve } from '@/require/tradeRecord'
 import Util from '@/utils/util'
 export default {
     data(){
@@ -217,7 +218,8 @@ export default {
             tableData: [],
              totalPage: 1,
              nowPage: 1,
-             loading: false
+             loading: false,
+             row: {}
         }
     },
     components: {
@@ -259,9 +261,23 @@ export default {
                     _this.loading= false
             }
         },
-        handleRefBtn(){
-            alertPassword(function(){
-                console.log(1)
+        handleRefBtn(row,status){
+            this.row= row
+            let title= status == 1 ? '确认通过提现吗？' : '确认拒绝提现吗？'
+            let data= {}
+            alertConfim(title,()=>{
+                merWithdrawResolve({id: this.row.id, status:status}).then(res=>{
+                    if(res.code == 200 ){
+                        if(status == 1){
+                            messageTip('success','提现已通过')
+                        }else{
+                             messageTip('success','提现已拒绝')
+                        }
+                         this.asyGetWithDrawRecord(this.cashManageForm)
+                    }else{
+                        messageTip('error','错误')
+                    }
+                }).catch(error=>{})
             })
         },
         handleSearch(){

@@ -153,13 +153,32 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <el-button type="danger" size="mini" v-if="[0,1,7].includes(scope.row.paytype)" @click="handleRefBtn(row)">退款</el-button>
+                    <el-button type="danger" size="mini" v-if="[0,1,7].includes(scope.row.paytype)" @click="handleRefBtn(scope.row)">退款</el-button>
                     <el-button type="danger" size="mini" v-else plain disabled>退款</el-button>
                 </template>
                 </el-table-column>
             </el-table>
         </el-card>
         <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
+         <el-dialog
+            title="请输入右边的验证码"
+            :visible.sync="dialogVisible"
+            width="400px"
+            :before-close="handleClose">
+            <el-row>
+                <el-col :span="16">
+                     <el-input placeholder="请输入验证码" v-model="userVerifiCode"></el-input>
+                </el-col>
+                <el-col :span="7" :offset="1" >
+                    <VerifiCode @backCode= "backCode" ref="verifi"/>
+                </el-col>
+            </el-row>
+            <p style="color: red; margin-top: 5px;" v-show="tipText">验证码不正确</p>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false;userVerifiCode= '';tipText= false; $refs.verifi.initCode()" size="small">取 消</el-button>
+                <el-button type="primary" @click="confirmVerifiCode" size="small">确 定</el-button>
+            </span>
+        </el-dialog>
   </div>
 </template>
 
@@ -167,9 +186,11 @@
 
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-import {alertPassword} from '@/utils/ele'
-import { getWalletRecord } from '@/require/tradeRecord'
+import {alertPassword,messageTip} from '@/utils/ele'
+import { getWalletRecord , tradeRefEntrance} from '@/require/tradeRecord'
+import VerifiCode from '@/components/common/VerifiCode'
 import Util from '@/utils/util'
+import { mapState } from 'vuex'
 export default {
     data(){
         return {
@@ -178,11 +199,17 @@ export default {
             tableData: [],  
              totalPage: 1,
              nowPage: 1,
-             loading:  false
+             loading:  false,
+            dialogVisible: false,
+            verifiCode: '', //验证码
+            userVerifiCode: '', //用户输入的验证码
+            tipText: false,
+            row: {} //这里是点击退费/撤回所存的订单一列信息，为了退费的时候使用他
         }
     },
     components: {
-        MyPagination
+        MyPagination,
+        VerifiCode
     },
     created(){
         if(JSON.stringify(this.$route.query) != "{}"){
@@ -194,6 +221,9 @@ export default {
             this.walletRecordForm= {startTime,endTime}
         }
        this.asyGetWalletRecord(this.walletRecordForm)
+    },
+    computed: {
+        ...mapState(['userInfo'])
     },
     methods: {
         getPage(page){
@@ -220,10 +250,75 @@ export default {
                     _this.loading= false
             }
         },
-        handleRefBtn(){
-            alertPassword(function(){
-                console.log(1)
-            })
+         handleRefBtn(row){
+            this.row= row
+            if(this.userInfo.classify === 'superAdmin' ){ //超级管理员
+                alertPassword(()=>{
+                    this.handleRef(3)
+                })
+            }else{ //普通管理员
+                let utype= 2 //普通管理员
+                 this.dialogVisible = true
+            }
+        },
+        handleClose(){ //点击管理验证码框
+            this.userVerifiCode= ''
+            this.dialogVisible = false
+            this.$refs.verifi.initCode()
+        },
+         backCode(verifiCode){ //普通管理员验证码回调
+            this.verifiCode= verifiCode
+        },
+        confirmVerifiCode(){ //点击提交，验证验证码
+            let userVerifiCode=  this.userVerifiCode.toLowerCase()
+            let verifiCode=  this.verifiCode.toLowerCase()
+            if(userVerifiCode != verifiCode){
+                this.tipText= true
+            }else{
+                this.tipText= false
+                this.dialogVisible= false
+                // 发送请求请求
+                this.handleRef(2)
+                this.userVerifiCode= ''
+            }
+            this.$refs.verifi.initCode()
+        },
+         handleRef(utype){ //处理退费 逻辑
+            //utype= 3超级管理员  2普通管理员       
+            let url = ''
+            let data= {}
+            console.log(this.row)
+            if(this.row.paytype == 0){
+                url = "/wxpay/doRefund";
+		        data ={id : this.row.id,refundState: 4,pwd : '',utype :utype}
+            }else if(this.row.paytype == 1){
+                url = "/wxpay/mercVirtualReturn";
+		        data ={id : this.row.id,type: 1}
+            }else if(this.row.paytype == 7){
+                url = "/alipay/alipayRefund";
+		        data ={id : this.row.id,refundState : 4,pwd : '',utype : utype}
+            }
+            tradeRefEntrance({url,data}).then(res=>{
+                if(res.ok== 'ok'){
+                    messageTip('success','退款成功')
+                    this.asyGetWalletRecord(this.walletRecordForm)
+                }else if(res.ok== 'error'){
+                    res.message= '退款失败'
+                    messageTip('error',res.message)
+                }else if(res.ok== 'pwderror'){
+                    res.message='退款失败'
+                    messageTip('error','退款密码错误')
+                }else if(res.ok== 'usererror'){
+                    res.message='退款失败'
+                    messageTip('error','用户金额不足')
+                }else if(res.ok== 'moneyerror'){
+                    res.message='退款失败'
+                    messageTip('error','商户或合伙人金额不足')
+                }else{
+                    messageTip('error','退款异常失败');
+                }
+                
+            }).catch(error=>{})        
         },
         handleSearch(){
             this.$router.push({query:{... this.walletRecordForm,currentPage: 1}})

@@ -20,3 +20,14 @@ export const getOrderOnlineOperateData= function (data){
              data: data
          })
 }
+
+
+/**
+ * 获取在线卡消费记录
+ */
+export const getOorderOnlineCardData= function (data){ 
+    return ajax({
+             url: '/orderData/orderOnlineCardData',
+             data: data
+         })
+}

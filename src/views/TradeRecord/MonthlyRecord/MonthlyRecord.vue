@@ -63,7 +63,7 @@
                 min-width="220"
                 > 
                 <template slot-scope="scope">
-                    <router-link to="/">
+                    <router-link :to="`/tradeRecord/tradeRecordCon/orderDetail?paysource=6&orderId=${scope.row.id}&status=${scope.row.status}&orderNum=${scope.row.ordernum}`">
                         <el-link type="primary" ::underline="false">
                             {{ scope.row.ordernum }}
                         </el-link>

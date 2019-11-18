@@ -3,28 +3,31 @@
         <el-card class="box-card card_bottom0 cardForm">
             <el-form :inline="true"  class="demo-form-inline" :model="onlineCardConsumeForm" size="mini">
                <el-form-item label="订单号" class="form_right25 w220" >
-                    <el-input v-model="onlineCardConsumeForm.order" placeholder="订单号"  size="small"></el-input>
+                    <el-input v-model="onlineCardConsumeForm.ordernum" placeholder="订单号" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="持卡人" class="form_right25 w120" >
-                    <el-input v-model="onlineCardConsumeForm.userName" placeholder="持卡人"  size="small"></el-input>
+                    <el-input v-model="onlineCardConsumeForm.usernick" placeholder="持卡人" clearable  size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="原始卡号" class="form_right25 w120">
-                    <el-input v-model="onlineCardConsumeForm.cardNum" placeholder="卡号"  size="small"></el-input>
+                    <el-input v-model="onlineCardConsumeForm.cardnumber" placeholder="卡号" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="商户名" class="form_right25 w120" >
-                    <el-input v-model="onlineCardConsumeForm.merName" placeholder="商户名"  size="small"></el-input>
+                    <el-input v-model="onlineCardConsumeForm.dealer" placeholder="商户名" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="设备号" class="form_right25 w120" >
-                    <el-input v-model="onlineCardConsumeForm.code" placeholder="设备号"  size="small"></el-input>
+                    <el-input v-model="onlineCardConsumeForm.devicenum" placeholder="设备号" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="类型" class="form_right25 w120">
-                     <el-select v-model="onlineCardConsumeForm.type"  placeholder="类型"  size="small">
-                        <el-option label="全部" value="" ></el-option>
+                     <el-select v-model="onlineCardConsumeForm.type"  placeholder="类型" clearable size="small">
                         <el-option label="消费" value="1" ></el-option>
                         <el-option label="余额回收" value="2" ></el-option>
                         <el-option label="微信充值" value="3" ></el-option>
-                        <el-option label="退费" value="4" ></el-option>
-                        <el-option label="支付宝充值" value="5" ></el-option>
+                        <el-option label="卡操作" value="4" ></el-option>
+                        <el-option label="微信退款" value="5" ></el-option>
+                        <el-option label="支付宝充值" value="6" ></el-option>
+                        <el-option label="支付宝退费" value="7" ></el-option>
+                        <el-option label="虚拟充值" value="8" ></el-option>
+                        <el-option label="虚拟退款" value="9" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="开始时间" class="form_right25 w200">
@@ -35,6 +38,7 @@
                         placeholder="选择开始时间"
                         :picker-options="pickerOptions"
                         value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         >
                       </el-date-picker>
                 </el-form-item>
@@ -46,12 +50,13 @@
                         placeholder="选择结束时间"
                         :picker-options="pickerOptions"
                         value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         >
                       </el-date-picker>
                 </el-form-item>
             
                 <el-form-item class="form_margin0 content_btn w80">
-                    <el-button type="primary" size="small">查询</el-button>
+                    <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
@@ -62,6 +67,7 @@
                 border
                 fit
                 style="width: 100%"
+                v-loading="loading"
                 :header-cell-style="{background:'#f5f7fa',color:'#666'}"
                 >
                 <el-table-column
@@ -69,53 +75,67 @@
                 label="序号"
                 width="80"
                 >
-                </el-table-column>
-
-                <el-table-column
-                prop="order"
-                label="单号"
-                width="220"
-                >
-                 <template slot-scope="scope">
-                    <el-link type="primary">{{scope.row.order}}</el-link>
+                <template slot-scope="{$index}">
+                    {{ (nowPage-1)*10+$index+1 }}
                 </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="userName"
+                prop="ordernum"
+                label="单号"
+                width="220"
+                >
+                 <template slot-scope="scope">
+                    <router-link :to="`/tradeRecord/tradeRecordCon/orderDetail?paysource=5&orderId=${scope.row.id}&status=${scope.row.status}&orderNum=${scope.row.ordernum}`">
+                        <el-link type="primary" ::underline="false">
+                            {{ scope.row.ordernum }}
+                        </el-link>
+                    </router-link>
+                </template>
+                </el-table-column>
+                <el-table-column
+                prop="nickname"
                 label="用户名"
                 min-width="120"
                 >
+                <template slot-scope="{row}">
+                   {{ row.nickname && row.nickname.length > 0 ?  row.nickname : '— —'}}
+                </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="cardNum"
+                prop="cardID"
                 label="卡号"
                 min-width="120"
                 >
                 </el-table-column>
 
                 <el-table-column
-                prop="merName"
+                prop="dealer"
                 label="商户名"
                 min-width="120"
                 >
+                 <template slot-scope="{row}">
+                   {{ row.dealer && row.dealer.length > 0 ?  row.dealer : '— —'}}
+                </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="handleMoney"
+                prop="money"
                 label="操作金额"
                 min-width="100"
                 >
                 </el-table-column>
 
                 <el-table-column
-                prop="accMoney"
+                prop="accountmoney"
                 label="到账金额"
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <el-link :type="scope.row.accMoney>=0 ? 'success': 'danger'" :underline="false">{{scope.row.accMoney}}</el-link>
+                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.accountmoney}}</el-link>
+                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.accountmoney}}</el-link>
+                    <el-link v-else :underline="false" type="info">{{scope.row.accountmoney}}</el-link>
                 </template>
                 </el-table-column>
 
@@ -132,8 +152,14 @@
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                     <el-link type="success"  :underline="false">{{scope.row.type}}</el-link>
-                </template>
+                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">
+                        {{scope.row.type == 1 ? "消费" : scope.row.type == 5 ? "微信退费": scope.row.type == 7 ? "支付宝退费" :  scope.row.type == 9 ? "虚拟退费" : "— —" }}
+                    </el-link>
+                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">
+                        {{ scope.row.type == 2 ? "余额回收" : scope.row.type == 3 ? "微信充值": scope.row.type == 6 ? "支付宝充值" :  scope.row.type == 8 ? "虚拟充值"  : "— —" }}
+                    </el-link>
+                    <el-link v-else :underline="false" type="info">卡操作</el-link>
+                 </template>
                 </el-table-column>
 
                 <el-table-column
@@ -147,54 +173,76 @@
                  </template>
                 </el-table-column>
                  <el-table-column
-                prop="createTime"
+                prop="create_time"
                 label="创建时间"
                 min-width="150"
                 >
                  <template slot-scope="scope">
-                    <span>{{scope.row.createTime}}</span>
+                    <span>{{ scope.row.create_time | fmtDate }}</span>
                  </template>
                 </el-table-column>
                 
             </el-table>
         </el-card>
-        <MyPagination :totalPage="totalPage" @getPage="getPage"/>
+        <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
     </div>
 </template>
 
 <script>
  import MyPagination from '@/components/common/MyPagination'
  import dateTimeJS from '@/utils/dateTime'
+ import { getOrderOnlineCardRecordData } from '@/require/icCardManage'
 export default {
     data(){
         return {
             onlineCardConsumeForm: {},
             pickerOptions: dateTimeJS,
-            tableData: [
-                {
-                  index: 1,
-                  order: '20190924182328750084670',
-                  userName: '永夜',
-                  cardNum: '4BEC2C24',
-                  merName: '永夜',
-                  handleMoney: '1.0',
-                  accMoney: -2,
-                  balance: 6.0,
-                  type: 1,
-                  code: '',
-                  createTime: '2019-09-24 19:15:46' 
-              }
-            ],
-             totalPage: 12,
+            tableData: [],
+            totalPage: 1,
+            loading: false,
+            nowPage: 1
         }
     },
     components: {
         MyPagination
     },
+    created(){
+        if(JSON.stringify(this.$route.query) != "{}"){
+            this.onlineCardConsumeForm= {...this.$route.query} //将endTime放在这里是查询实时的订单
+            this.nowPage= parseInt(this.onlineCardConsumeForm.currentPage) || 1
+        }
+       this.asyGetOrderOnlineCardRecordData(this.onlineCardConsumeForm)
+    },
     methods: {
-        getPage(){
-
+       getPage(page){
+            this.onlineCardConsumeForm= {...this.onlineCardConsumeForm,currentPage:page}
+            this.$router.push({query: this.onlineCardConsumeForm})
+            this.asyGetOrderOnlineCardRecordData(this.onlineCardConsumeForm)
+            this.nowPage = page
         },
+         async asyGetOrderOnlineCardRecordData(data){
+            let _this= this
+            try{
+                 _this.loading= true
+                let onlineConsumeInfo= await getOrderOnlineCardRecordData(data)
+                 _this.loading= false
+                 if(onlineConsumeInfo.code === 200){
+                    _this.tableData = onlineConsumeInfo.listdata
+                    _this.totalPage = onlineConsumeInfo.totalRows
+                 }
+            }catch(error){
+                if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                    _this.loading= false
+            }
+        },
+        handleSearch(){
+            this.$router.push({query:{... this.onlineCardConsumeForm,currentPage: 1}})
+            this.asyGetOrderOnlineCardRecordData({... this.onlineCardConsumeForm,currentPage: 1})
+            this.nowPage= 1 //搜索完之后将nowPage置为1
+        }
     }
 }
 </script>

@@ -6,11 +6,23 @@
             </div>
             <Template :from="1" :list="temChargeList"/>
         </el-card>
+         <el-card class="box-card card_content">
+            <div slot="header" class="clearfix">
+                <span>电轿款系统模板</span>
+            </div>
+            <Template :from="1" :list="temelectriccar"/>
+        </el-card>
         <el-card class="box-card card_content">
             <div slot="header" class="clearfix">
                 <span>模拟投币系统模板</span>
             </div>
             <TemplateCoin :from="1" :list="temCoinList"/>
+        </el-card>
+        <el-card class="box-card card_content">
+            <div slot="header" class="clearfix">
+                <span>在线卡系统模板</span>
+            </div>
+            <TemplateOffline :from="1" :list="temOnlineList"/>
         </el-card>
         <el-card class="box-card card_content">
             <div slot="header" class="clearfix">
@@ -24,6 +36,7 @@
             </div>
             <TemplateWallet :from="1" :list="temWalletList"/>
         </el-card>
+        
     </div>
 </template>
 
@@ -32,6 +45,7 @@ import Template from '@/components/common/Template'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateWallet from '@/components/common/TemplateWallet'
+import { getSystemSetInfo } from '@/require/systemSet'
 export default {
     data(){
         return {
@@ -62,6 +76,7 @@ export default {
                             ]
                     }
             ],
+            temelectriccar: [], //电轿款系统模板
             temCoinList: [ //模拟投币数据
                     {   
                         id: 1,
@@ -88,7 +103,7 @@ export default {
                     }
             ],
              temOfflineList: [ //离线卡数据
-                    {   
+                    /*{   
                         id: 1,
                         name: '充电系统默认模板',
                         remark: '和动充电站',
@@ -110,10 +125,10 @@ export default {
                                     temChildId: 12,
                                 }
                             ]
-                    }
+                    }*/
             ],
             temWalletList: [ //钱包数据
-                    {   
+                   /* {   
                         id: 1,
                         name: '充电系统默认模板',
                         remark: '和动充电站',
@@ -135,8 +150,9 @@ export default {
                                     temChildId: 12,
                                 }
                             ]
-                    }
+                    }*/
             ],
+            temOnlineList: [] //在线卡模板
         }
     },
     components: {
@@ -145,8 +161,60 @@ export default {
         TemplateOffline,
         TemplateWallet
     },
+    created(){
+        this.sayGetSystemSetInfo()
+    },
     methods: {
-        
+        async sayGetSystemSetInfo(){
+            let _this= this
+            try{
+                let systemTemInfo= await getSystemSetInfo()
+                if(systemTemInfo.code === 200) {
+                    // _this.temChargeList= systemTemInfo.chargesontem
+                   
+                    {    
+                        // 电轿款
+                         let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.temelectriccar
+                        _this.temelectriccar= [{id,name,remark,common1,permit,walletpay,common2,gather}]
+
+                    }
+                   
+                    {
+                        // 模拟投币
+                        let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.temincoins
+                        _this.temCoinList= [{id,name,remark,common1,permit,walletpay,common2,gather}]
+                    }
+
+                    {
+                         // 离线卡系统模板
+                        let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.temoffline
+                        _this.temOfflineList= [{id,name,remark,common1,permit,walletpay,common2,gather}]
+                        
+                    }
+
+                    {
+                         //钱包系统模板
+                        let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.temwallet
+                        _this.temWalletList= [{id,name,remark,common1,permit,walletpay,common2,gather}]
+                        
+                    }
+                     
+                    {
+                        // 在线卡模板
+                         let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.temonline
+                        _this.temOnlineList=[{id,name,remark,common1,permit,walletpay,common2,gather}]
+                    }
+
+                }
+
+            }catch(error){
+                if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                    _this.loading= false
+            }
+        }
     }
 }
 </script>

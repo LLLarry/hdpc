@@ -7,7 +7,7 @@ import store from './store'
 import '@/filters'
 // import ElementUI from 'element-ui'; 这是加载全部
 // import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification,} from 'element-ui';
-import { Button,Checkbox,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination,Radio,
+import { Button,Checkbox,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,InputNumber,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination,Radio,
   RadioGroup,
   RadioButton,Cascader,Switch,Loading,Breadcrumb,
   BreadcrumbItem,} from 'element-ui'
@@ -33,6 +33,7 @@ Vue.use(TableColumn)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
+Vue.use(InputNumber)
 Vue.use(Option)
 Vue.use(OptionGroup)
 Vue.use(DatePicker)

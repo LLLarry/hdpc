@@ -3,23 +3,23 @@
         <el-card class="box-card card_bottom0 cardForm">
             <el-form :inline="true"  class="demo-form-inline" :model="communManageConForm" size="mini">
                <el-form-item label="小区名称" class="form_right25 w120" >
-                    <el-input v-model="communManageConForm.communName" placeholder="小区名称"  size="small"></el-input>
+                    <el-input v-model="communManageConForm.areaname" placeholder="小区名称"  clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="地址" class="form_right25 w220" >
-                    <el-input v-model="communManageConForm.communAddress" placeholder="地址"  size="small"></el-input>
+                    <el-input v-model="communManageConForm.address" placeholder="地址" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="商户名" class="form_right25 w120">
-                    <el-input v-model="communManageConForm.merName" placeholder="商户名"  size="small"></el-input>
+                    <el-input v-model="communManageConForm.realname" placeholder="商户名" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="商户电话" class="form_right25 w120" >
-                    <el-input v-model="communManageConForm.merPhone" placeholder="商户电话"  size="small"></el-input>
+                    <el-input v-model="communManageConForm.phone" placeholder="商户电话" clearable size="small"></el-input>
                 </el-form-item>
-                <el-form-item label="合伙人" class="form_right25 w120" >
+                <!-- <el-form-item label="合伙人" class="form_right25 w120" >
                     <el-input v-model="communManageConForm.partent" placeholder="设备号"  size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="合伙人电话" class="form_right25 w120" >
                     <el-input v-model="communManageConForm.partentPhone" placeholder="合伙人电话"  size="small"></el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="开始时间" class="form_right25 w200">
                      <el-date-picker
                         v-model="communManageConForm.startTime"
@@ -28,6 +28,7 @@
                         placeholder="选择开始时间"
                         :picker-options="pickerOptions"
                         value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         >
                       </el-date-picker>
                 </el-form-item>
@@ -39,12 +40,13 @@
                         placeholder="选择结束时间"
                         :picker-options="pickerOptions"
                         value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         >
                       </el-date-picker>
                 </el-form-item>
             
                 <el-form-item class="form_margin0 content_btn w80">
-                    <el-button type="primary" size="small">查询</el-button>
+                    <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
@@ -52,6 +54,7 @@
             <el-table
                 :data="tableData"
                 border
+                v-loading="loading"
                 fit
                 style="width: 100%"
                 :header-cell-style="{background:'#f5f7fa',color:'#666'}"
@@ -61,99 +64,124 @@
                 label="序号"
                 width="80"
                 >
+                <template slot-scope="{$index}">
+                    {{ (nowPage-1)*10+$index+1 }}
+                </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="communName"
+                prop="name"
                 label="小区名称"
                 min-width="120"
                 >
+                <template slot-scope="{row}">
+                   {{ row.name && row.name.length > 0 ?  row.name : '— —'}}
+                </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="communAddress"
+                prop="address"
                 label="地址"
                 min-width="220"
                 >
+                <template slot-scope="{row}">
+                   {{ row.address && row.address.length > 0 ?  row.address : '— —'}}
+                </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="deviceNum"
+                prop="countdevice"
                 label="设备数量"
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <el-link :type="scope.row.deviceNum>0 ? 'primary': 'default'" :underline="scope.row.deviceNum>0">{{scope.row.deviceNum}}</el-link>
+                    <span v-if="scope.row.countonlin == null">0</span>
+                    <router-link :to="`/deviceManage/deviceList?phone=${scope.row.uphonenum}`">
+                        <el-link type="primary" :underline="true">{{scope.row.countdevice}}</el-link>
+                    </router-link>
                 </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="onlineCardNum"
+                prop="countonlin"
                 label="在线卡数量"
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <el-link :type="scope.row.onlineCardNum>0 ? 'primary': 'default'" :underline="scope.row.onlineCardNum>0">{{scope.row.onlineCardNum}}</el-link>
+                    <span v-if="scope.row.countonlin == null">0</span>
+                    <router-link :to="`/iccardManage/onlineCardQuery?phone=${scope.row.uphonenum}`" v-else>
+                        <el-link type="primary" :underline="true">{{scope.row.countonlin}}</el-link>
+                    </router-link>
                 </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="merName"
+                prop="dealer"
                 label="商户名"
                 min-width="120"
                 >
+                <template slot-scope="{row}">
+                   {{ row.dealer && row.dealer.length > 0 ?  row.dealer : '— —'}}
+                </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="merPhone"
+                prop="uphonenum"
                 label="商户电话"
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                    <el-link type="primary" >{{scope.row.merPhone}}</el-link>
+                    <span v-if="scope.row.uphonenum == null">— —</span>
+                    <router-link :to="`/usermanage/merInfo?phone=${scope.row.uphonenum}`"  v-else>
+                        <el-link type="primary">{{scope.row.uphonenum}}</el-link>
+                    </router-link>
+                    
                 </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="partent"
+                prop="manarealname"
                 label="合伙人"
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                    <span v-if="scope.row.partent && scope.row.partent.length > 0">{{scope.row.partent}}</span>
+                    <span v-if="scope.row.manarealname && scope.row.manarealname.length > 0">{{scope.row.manarealname}}</span>
                     <span v-else>— —</span>
                 </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="partentPhone"
+                prop="manaphonenum"
                 label="合伙人电话"
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                     <el-link type="primary" v-if="scope.row.partentPhone && scope.row.partentPhone.length>0">{{scope.row.partentPhone}}</el-link>
-                     <span v-else>— —</span>
+                    <span v-if="scope.row.manaphonenum == null">— —</span>
+                    <router-link to="/"  v-else>
+                        <el-link type="primary">{{scope.row.manaphonenum}}</el-link>
+                    </router-link>
                 </template>
                 </el-table-column>
                  <el-table-column
-                prop="createTime"
+                prop="create_time"
                 label="创建时间"
                 min-width="150"
                 >
                  <template slot-scope="scope">
-                    <span>{{scope.row.createTime}}</span>
+                    {{scope.row.create_time | fmtDate}}
                  </template>
                 </el-table-column>
                 
             </el-table>
         </el-card>
-        <MyPagination :totalPage="totalPage" @getPage="getPage"/>
+        <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
     </div>
 </template>
 
 <script>
  import MyPagination from '@/components/common/MyPagination'
  import dateTimeJS from '@/utils/dateTime'
+ import { getCommunInfo } from '@/require/communManage'
 export default {
     data(){
         return {
@@ -173,16 +201,51 @@ export default {
                   createTime: '2019-08-07 14:06:00'
               }
             ],
-             totalPage: 12,
+            totalPage: 1,
+            loading: false,
+            nowPage: 1
         }
     },
     components: {
         MyPagination
     },
+     created(){
+        if(JSON.stringify(this.$route.query) != "{}"){
+            this.communManageConForm= {...this.$route.query} //将endTime放在这里是查询实时的订单
+            this.nowPage= parseInt(this.communManageConForm.currentPage) || 1
+        }
+       this.asyGetCommunInfo(this.communManageConForm)
+    },
     methods: {
-        getPage(){
-
+       getPage(page){
+            this.communManageConForm= {...this.communManageConForm,currentPage:page}
+            this.$router.push({query: this.communManageConForm})
+            this.asyGetCommunInfo(this.communManageConForm)
+            this.nowPage = page
         },
+         async asyGetCommunInfo(data){
+            let _this= this
+            try{
+                 _this.loading= true
+                let communInfo= await getCommunInfo(data)
+                 _this.loading= false
+                 if(communInfo.code === 200){
+                    _this.tableData = communInfo.listdata
+                    _this.totalPage = communInfo.totalRows
+                 }
+            }catch(error){
+                if(error == '拦截请求'){ 
+                    _this.loading= true
+                    return 
+                   }
+                    _this.loading= false
+            }
+        },
+        handleSearch(){
+            this.$router.push({query:{... this.communManageConForm,currentPage: 1}})
+            this.asyGetCommunInfo({... this.communManageConForm,currentPage: 1})
+            this.nowPage= 1 //搜索完之后将nowPage置为1
+        }
     }
 }
 </script>

@@ -162,44 +162,10 @@ export default {
         return {
             onlineCardHandleForm: {},
             pickerOptions: dateTimeJS,
-            tableData: [
-                {
-                  index: 1,
-                  handleTime: '2019-09-24 17:15:42',
-                  order: '20190924171542410330525',
-                  userName: '永夜',
-                  cardNum: '4BEC2C24',
-                  handlePer: '',
-                  balance: 2.3,
-                  status: 1,
-                  remarks: ''
-              },
-                {
-                  index: 1,
-                  handleTime: '2019-09-24 17:15:42',
-                  order: '20190924171542410330525',
-                  userName: '永夜',
-                  cardNum: '4BEC2C24',
-                  handlePer: '',
-                  balance: 2.3,
-                  status: 2,
-                  remarks: ''
-              },
-                {
-                  index: 1,
-                  handleTime: '2019-09-24 17:15:42',
-                  order: '20190924171542410330525',
-                  userName: '永夜',
-                  cardNum: '4BEC2C24',
-                  handlePer: '',
-                  balance: 2.3,
-                  status: 3,
-                  remarks: ''
-              }
-            ],
-             totalPage: 1,
-             loading: false,
-             nowPage: 1
+            tableData: [],
+            totalPage: 1,
+            loading: false,
+            nowPage: 1
         }
     },
     components: {

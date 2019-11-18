@@ -99,7 +99,7 @@
             min-width="200"
             >
             <template slot-scope="scope">
-                <div v-if="scope.row.edit"> <el-input size="mini" v-model="childTemForm.money" style="width: 85%;margin-right: 10px;" placeholder="请输入付款金额"></el-input>元</div>
+                <div v-if="scope.row.edit"> <el-input-number size="mini" :precision="1" v-model="childTemForm.money" style="width: 85%;margin-right: 10px;" placeholder="请输入付款金额"></el-input-number>元</div>
                 <span v-else> {{scope.row.money}}元</span>
             </template>
             </el-table-column>
@@ -109,7 +109,7 @@
             min-width="200"
             >
             <template slot-scope="scope">
-               <div v-if="scope.row.edit"> <el-input size="mini" v-model="childTemForm.remark" style="width: 85%;margin-right: 10px;" placeholder="请输入充卡金额"></el-input>元</div>
+               <div v-if="scope.row.edit"> <el-input-number size="mini" :precision="1" v-model="childTemForm.remark" style="width: 85%;margin-right: 10px;" placeholder="请输入充卡金额"></el-input-number>元</div>
                 <span v-else> {{scope.row.remark}}元</span>
             </template>
             </el-table-column>
@@ -119,10 +119,10 @@
             width="200"
             >
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.temChildId,scope.row)" v-if="!scope.row.edit"  icon="el-icon-edit">编辑</el-button>
-                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.temChildId)"  v-if="!scope.row.edit" :disabled="item.isSelected ==1 || from== 2" :plain="item.isSelected ==1 || from== 2" icon="el-icon-delete">删除</el-button>
-                <el-button type="success" size="mini" @click="handleSaveEditChildTem(item.id,scope.row.temChildId,scope.row)" v-if="scope.row.edit" icon="el-icon-folder-checked">保存</el-button>
-                <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.temChildId,scope.row)"  v-if="scope.row.edit" icon="el-icon-folder-delete">取消</el-button>
+                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit"  icon="el-icon-edit">编辑</el-button>
+                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.isSelected ==1 || from== 2" :plain="item.isSelected ==1 || from== 2" icon="el-icon-delete">删除</el-button>
+                <el-button type="success" size="mini" @click="handleSaveEditChildTem(scope.row.id,scope.row)" v-if="scope.row.edit" icon="el-icon-folder-checked">保存</el-button>
+                <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.id,scope.row)"  v-if="scope.row.edit" icon="el-icon-folder-delete">取消</el-button>
             </template>
             </el-table-column>
             </el-table>
@@ -150,6 +150,7 @@
 import Vue from 'vue'
 import {confirDelete,messageTip} from '@/utils/ele'
 import TemMulDevice from '@/components/common/TemMulDevice'
+import { addTemplateChild,deleteTemplateChild,editTemplateChild} from '@/require/template'
 export default {
     data(){
         return {
@@ -178,7 +179,7 @@ export default {
                             value: '2',
                             label: '否'
                         }],
-                        arr: this.list
+                        // arr: this.list
             
         }
     },
@@ -186,59 +187,76 @@ export default {
         TemMulDevice
     },
     props: ['from','list'],
+    computed: {
+        arr(){
+            return this.list
+        }
+    },
     methods: {
         // 删除子模板
        handleDeleteChildTem(id,temChildId){  //主模板id,子模板id
         //发送请求，成功之后删除子模板
-         confirDelete('确认删除主模板吗？',function(){
-            this.arr.filter((item,i)=>{
-                let newgather
-                if(item.id == id){
-                    newgather= item.gather.filter((jtem,j)=>{
-                        return jtem.temChildId != temChildId
+        confirDelete('确认删除子模板吗？',()=>{
+             deleteTemplateChild({id: temChildId}).then(res=>{
+                 if(res.code== 200){
+                      this.arr.filter((item,i)=>{
+                        let newgather
+                        if(item.id == id){
+                            newgather= item.gather.filter((jtem,j)=>{
+                                return jtem.id != temChildId
+                            })
+                        item.gather= newgather
+                        }
+                        return item
                     })
-                item.gather= newgather
-                }
-                return item
-            })
-            messageTip() //删除成功提示信息
-        }.bind(this))
+                    messageTip('success','删除成功') //删除成功提示信息
+                 }else{
+                     messageTip('warning',res.message)
+                 }
+             })
+        })
        },
         // 添加子模板
        handleAddChildTem(id){ //主模板id
         //发送请求，成功之后添加子模板
         this.arr.filter((item,i)=>{
-            let newgather
-            if(item.id == id){
-                let childTemData= {   
+            let childTemData= {   
                                 name: '30元送1元',
                                 money:30,
                                 remark: 31,
-                                temChildId: 25
-                                }
-                if(item.gather.length > 0){
-                    let childTemLastData= item.gather[item.gather.length-1] //点击的最后一个子元素
-                    let rate= childTemLastData.money / childTemLastData.remark //利率是1元几个币
-                    let nextMoney= childTemLastData.money*2 
-                    let nextRemark= childTemLastData.remark*2
-                    let sendParse= nextRemark- nextMoney
-                    let nextName
-                    if(sendParse == 0){
-                        nextName= nextMoney+'元'
-                    }else{
-                        nextName= nextMoney+'元送'+sendParse+'元'
-                    }
-                    
-                    childTemData= {
-                       name: nextName,
-                       money: nextMoney,
-                       remark: nextRemark,
-                       temChildId: 23
-                    }
+                            }
+            if(item.gather.length > 0){
+                let childTemLastData= item.gather[item.gather.length-1] //点击的最后一个子元素
+                let rate= childTemLastData.money / childTemLastData.remark //利率是1元几个币
+                let nextMoney= childTemLastData.money*2 
+                let nextRemark= childTemLastData.remark*2
+                let sendParse= nextRemark- nextMoney
+                let nextName
+                if(sendParse == 0){
+                    nextName= nextMoney+'元'
+                }else{
+                    nextName= nextMoney+'元送'+sendParse+'元'
                 }
-               item.gather.push(childTemData)
+                
+                childTemData= {
+                    name: nextName,
+                    money: nextMoney,
+                    remark: nextRemark,
+                }
             }
-            return item
+              // 发送请求，添加子模板
+            addTemplateChild({tempid: id,...childTemData}).then(res=>{
+                console.log(res)
+                if(res.code == 200){
+                    if(item.id == id){ //找到对应的主模板
+                        let {id,money,remark,name} = res.tempson
+                        item.gather.push({id,money,remark,name})
+                    }
+                    messageTip('success','添加成功')
+                }else{
+                    messageTip('warning',res.message)
+                }
+            }).catch(error=>{})
         })
        },
        //编辑子模板
@@ -253,15 +271,21 @@ export default {
             this.isEditingChildTem= true
        },
        //提交编辑的子模板
-       handleSaveEditChildTem(id,temChildId,row){
+       handleSaveEditChildTem(temChildId,row){
            //校验，发送请求
-
            let {name,money,remark}= this.childTemForm
-           row.name= name
-           row.money= money
-           row.remark= remark
-           Vue.set(row,'edit',false)
-           this.isEditingChildTem= false
+           editTemplateChild({id: temChildId,name,money,remark}).then(res=>{
+                if(res.code == 200){
+                    row.name= name
+                    row.money= money
+                    row.remark= remark
+                    Vue.set(row,'edit',false)
+                    this.isEditingChildTem= false
+                    messageTip('success','子模板修改成功')
+                }else{
+                    messageTip('warning',res.message)
+                }
+            })
        },
        //取消编辑的子模板
        handleCancelDeleteChildTem(id,temChildId,row){

@@ -63,7 +63,9 @@
                         <strong>操作</strong>
                     </div>
                     <div style="margin-top: 15px">
-                        <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit">编辑</el-button>
+                        <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit"
+                        :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" 
+                        >编辑</el-button>
                         <el-button type="danger" size="mini"  @click="handleDeleteTem(item)" v-if="!item.edit" 
                         :disabled="from == 1 || from == 2 || (from==3 && item.isSelected ==1) " 
                         :plain="from == 1 || from == 2 || (from==3 && item.isSelected ==1)"
@@ -119,7 +121,7 @@
             width="200"
             >
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit"  icon="el-icon-edit">编辑</el-button>
+                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit"  icon="el-icon-edit" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >编辑</el-button>
                 <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.isSelected ==1 || from== 2" :plain="item.isSelected ==1 || from== 2" icon="el-icon-delete">删除</el-button>
                 <el-button type="success" size="mini" @click="handleSaveEditChildTem(scope.row.id,scope.row)" v-if="scope.row.edit" icon="el-icon-folder-checked">保存</el-button>
                 <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.id,scope.row)"  v-if="scope.row.edit" icon="el-icon-folder-delete">取消</el-button>
@@ -132,8 +134,8 @@
               <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
                 <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '04'}})" icon="el-icon-view">查看更多</el-button>
                <!-- <el-button type="primary" size="mini" >此模板复用更多设备</el-button> -->
-               <TemMulDevice />
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
+               <TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))" />
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
              </div>
              <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" style="float:left;margin-left: 30%;" icon="el-icon-plus">添加模板</el-button>
@@ -150,7 +152,7 @@
 import Vue from 'vue'
 import {confirDelete,messageTip} from '@/utils/ele'
 import TemMulDevice from '@/components/common/TemMulDevice'
-import { addTemplateChild,deleteTemplateChild,editTemplateChild} from '@/require/template'
+import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate} from '@/require/template'
 export default {
     data(){
         return {
@@ -324,15 +326,19 @@ export default {
        //保存编辑主模板
        handleSaveEditTem(item){
            //校验，发送请求
-           item.name=  this.temForm.name
-           item.remark=  this.temForm.remark
-           item.common1=  this.temForm.common1
-
-           item.walletpay=  this.temForm.walletpay
-           item.permit=  this.temForm.permit[0]
-           item.common2= this.temForm.permit.length >= 2 ? this.temForm.permit[1] : ''
-           Vue.set(item,'edit',false)
-           this.isEditingTem= false
+           let{name,remark,common1}= this.temForm
+            updateTemplate({id: item.id,status: 1, name,remark,common1}).then(res=>{  //投币 status为2
+               if(res.code === 200){
+                     item.name=  this.temForm.name
+                    item.remark=  this.temForm.remark
+                    item.common1=  this.temForm.common1
+                    Vue.set(item,'edit',false)
+                    this.isEditingTem= false
+                    messageTip('success','主模板修改成功')
+               }else{
+                   messageTip('warning',res.message)
+               }
+           }).catch(error=>{})
        },
         //取消编辑的主模板
        handleCancelDeleteTem(item){

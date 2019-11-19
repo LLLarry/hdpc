@@ -150,7 +150,7 @@
 import Vue from 'vue'
 import {confirDelete,messageTip} from '@/utils/ele'
 import TemMulDevice from '@/components/common/TemMulDevice'
-import { addTemplateChild,deleteTemplateChild,editTemplateChild } from '@/require/template'
+import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate } from '@/require/template'
 export default {
     data(){
         return {
@@ -324,15 +324,19 @@ export default {
        //保存编辑主模板
        handleSaveEditTem(item){
            //校验，发送请求
-           item.name=  this.temForm.name
-           item.remark=  this.temForm.remark
-           item.common1=  this.temForm.common1
-
-           item.walletpay=  this.temForm.walletpay
-           item.permit=  this.temForm.permit[0]
-           item.common2= this.temForm.permit.length >= 2 ? this.temForm.permit[1] : ''
-           Vue.set(item,'edit',false)
-           this.isEditingTem= false
+           let{name,remark,common1}= this.temForm
+            updateTemplate({id: item.id,status: 3, name,remark,common1}).then(res=>{  //投币 status为3
+               if(res.code === 200){
+                     item.name=  this.temForm.name
+                    item.remark=  this.temForm.remark
+                    item.common1=  this.temForm.common1
+                    Vue.set(item,'edit',false)
+                    this.isEditingTem= false
+                    messageTip('success','主模板修改成功')
+               }else{
+                   messageTip('warning',res.message)
+               }
+           }).catch(error=>{})
        },
         //取消编辑的主模板
        handleCancelDeleteTem(item){

@@ -1,7 +1,7 @@
 <template>
     <div class="template">
         <el-card :class="['box-card','temTableTitle', (from==3 && item.isSelected==1) ? 'selectedTem' : '']" v-for="(item,i) in arr" :key="i">
-            {{JSON.stringify(item)}}
+            <h1 v-if="[1,2,3].includes(grade)" style="text-align: center; color: #666; padding-bottom: 10px;">{{grade == 1 ? "等级一" : grade == 2 ? "等级二" : grade == 3 ? "等级三" : ''  }}</h1>
            <el-table
                 :data="[{}]"
                 border
@@ -83,7 +83,9 @@
                         <strong>操作</strong>
                     </div>
                     <div style="margin-top: 15px">
-                        <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit">编辑</el-button>
+                        <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit"
+                        :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)"  
+                        >编辑</el-button>
                         <el-button type="danger" size="mini"  @click="handleDeleteTem(item)" v-if="!item.edit" 
                         :disabled="from == 1 || from == 2 || (from==3 && item.isSelected ==1) " 
                         :plain="from == 1 || from == 2 || (from==3 && item.isSelected ==1)"
@@ -149,7 +151,7 @@
             width="200"
             >
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit" icon="el-icon-edit">编辑</el-button>
+                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit" icon="el-icon-edit" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >编辑</el-button>
                 <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.isSelected ==1 || from== 2" :plain="item.isSelected ==1 || from== 2" icon="el-icon-delete">删除</el-button>
                 <el-button type="success" size="mini" @click="handleSaveEditChildTem(scope.row.id,scope.row)" v-if="scope.row.edit" icon="el-icon-folder-checked">保存</el-button>
                 <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.id,scope.row)"  v-if="scope.row.edit" icon="el-icon-folder-delete">取消</el-button>
@@ -160,9 +162,10 @@
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
              </div>
               <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '01'}})" icon="el-icon-view">查看更多</el-button>
-                <TemMulDevice />
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
+                <el-button v-if="[1,2].includes(grade)" style="visibility: hidden;" icon="el-icon-view" size="mini">查看更多</el-button> <!--加这个标签的目的是为了让现实的“查看更多相对于其他的对齐” -->
+                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '01'}})" icon="el-icon-view" v-if="!([1,2].includes(grade))">查看更多</el-button>
+                <div v-if="!([1,2,3].includes(grade))"><TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))" /></div>
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
              </div>
              <div style="margin-top: 20px; text-align: center; " class="clearfix" v-else>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" style="float:left;margin-left: 30%;" icon="el-icon-plus">添加模板</el-button>
@@ -215,7 +218,7 @@ export default {
     components:{
         TemMulDevice
     },
-    props: ['from','list'],
+    props: ['from','list','grade'], //grade是只有设备详情中的分等级模板才会传进来
     computed:{
         arr(){ //监听 传过来的list变化，如果变化则直接赋值给arr
             return this.list

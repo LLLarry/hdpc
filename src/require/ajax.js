@@ -5,12 +5,12 @@ import store from '@/store'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-let baseURL
-if (process.env.NODE_ENV === "development"){ //开发环境
-  baseURL= 'http://localhost'
-}else { //生产环境
-  baseURL= 'http://www.tengfuchong.com.cn'
-}
+let baseURL= 'http://localhost'
+// if (process.env.NODE_ENV === "development"){ //开发环境
+//   baseURL= 'http://localhost'
+// }else { //生产环境
+//   baseURL= 'http://www.tengfuchong.com.cn'
+// }
 
 const service = axios.create({ // 创建axios实例           
         timeout: 120000, // 请求超时时间

@@ -50,57 +50,57 @@ export default {
     data(){
         return {
             temChargeList: [
-                    {   
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '1元 4小时',
-                                    money:1.0,
-                                    chargeTime: 240,
-                                    chargeQuantity: 1,
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '8元 8小时',
-                                    money:2.0,
-                                    chargeTime: 480,
-                                    chargeQuantity: 2,
-                                    temChildId: 12,
-                                }
-                            ]
-                    }
+                    // {   
+                    //     id: 1,
+                    //     name: '充电系统默认模板',
+                    //     remark: '和动充电站',
+                    //     common1: '1569365326',
+                    //     permit: 1, //是否支持退费 1是 2否
+                    //     walletpay: 2, //是否钱包支付 1是 2否
+                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
+                    //     gather: [
+                    //             {
+                    //                 name: '1元 4小时',
+                    //                 money:1.0,
+                    //                 chargeTime: 240,
+                    //                 chargeQuantity: 1,
+                    //                 temChildId: 11,
+                    //             },
+                    //             {
+                    //                 name: '8元 8小时',
+                    //                 money:2.0,
+                    //                 chargeTime: 480,
+                    //                 chargeQuantity: 2,
+                    //                 temChildId: 12,
+                    //             }
+                    //         ]
+                    // }
             ],
             temelectriccar: [], //电轿款系统模板
             temCoinList: [ //模拟投币数据
-                    {   
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '1元 1个币',
-                                    remark: 1,
-                                    money:1, //付款金额
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '4元 2个币',
-                                    remark: 2,
-                                    money:4, //付款金额
-                                    temChildId: 12,
-                                }
-                            ]
-                    }
+                    // {   
+                    //     id: 1,
+                    //     name: '充电系统默认模板',
+                    //     remark: '和动充电站',
+                    //     common1: '1569365326',
+                    //     permit: 1, //是否支持退费 1是 2否
+                    //     walletpay: 2, //是否钱包支付 1是 2否
+                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
+                    //     gather: [
+                    //             {
+                    //                 name: '1元 1个币',
+                    //                 remark: 1,
+                    //                 money:1, //付款金额
+                    //                 temChildId: 11,
+                    //             },
+                    //             {
+                    //                 name: '4元 2个币',
+                    //                 remark: 2,
+                    //                 money:4, //付款金额
+                    //                 temChildId: 12,
+                    //             }
+                    //         ]
+                    // }
             ],
              temOfflineList: [ //离线卡数据
                     /*{   
@@ -171,10 +171,17 @@ export default {
                 let systemTemInfo= await getSystemSetInfo()
                 if(systemTemInfo.code === 200) {
                     // _this.temChargeList= systemTemInfo.chargesontem
+                    {
+                        //十路智慧款
+                        let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.tempcharge
+                         common2= common2 == null ? 1 : common2
+                        _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather}]
+                    }
                    
                     {    
                         // 电轿款
                          let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.temelectriccar
+                         common2= common2 == null ? 1 : common2
                         _this.temelectriccar= [{id,name,remark,common1,permit,walletpay,common2,gather}]
 
                     }

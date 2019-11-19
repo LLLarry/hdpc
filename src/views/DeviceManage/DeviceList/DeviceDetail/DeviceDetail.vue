@@ -4,33 +4,39 @@
             <el-row>
                 <el-col :xs="8" :sm="4" >
                     <div class="colCon">
-                        绑定状态： <el-link :type="deviceInfo.bindStatus== 1 ? 'success' : 'danger'">{{deviceInfo.bindStatus== 1 ? '已绑定' : '未绑定'}}</el-link>
+                        绑定状态： <el-link :type="username != 0 ? 'success' : 'danger'">{{username != 0 ? '已绑定' : '未绑定'}}</el-link>
                     </div>
                 </el-col>
                 <el-col :xs="8" :sm="4">
                     <div class="colCon">
-                        <el-button type="danger" size="mini" v-if="deviceInfo.bindStatus== 1" @click="handleTaggleBind(2)">解绑设备</el-button>
+                        <el-button type="danger" size="mini" v-if="username != 0" @click="handleTaggleBind(2)">解绑设备</el-button>
                         <el-button type="primary" size="mini" v-else @click="handleTaggleBind(1)">绑定设备</el-button>
                     </div>
                 </el-col>
                 <el-col :xs="8" :sm="4">
                     <div class="colCon">
-                         设备号: {{deviceInfo.code}}
+                         设备号: <router-link :to="`/deviceManage/deviceList?devicenum=${code}`"><el-link type="primary">{{code}}</el-link></router-link>
                     </div>
                 </el-col>
                 <el-col :xs="8" :sm="4">
                     <div class="colCon">
-                         绑定商户： {{deviceInfo.merName && deviceInfo.merName.length > 0 ? deviceInfo.merName: '— —'}}
+                         绑定商户：
+                         <router-link :to="`/usermanage/merInfo?nick=${username}`" v-if="username != 0"><el-link type="primary">{{username}}</el-link></router-link>
+                         <span v-else>— —</span> 
                     </div>
                 </el-col>
                 <el-col :xs="8" :sm="4">
                     <div class="colCon">
-                         所属小区： {{deviceInfo.areaName && deviceInfo.areaName.length > 0 ? deviceInfo.areaName: '— —'}}
+                        <!-- <router-link to="/" v-if="deviceInfo.areaName && deviceInfo.areaName.length > 0">
+                        
+                        </router-link> -->
+                        
+                         所属小区： {{ '— —'}}
                     </div>
                 </el-col>
                 <el-col :xs="8" :sm="4">
                     <div class="colCon">
-                         电话： {{deviceInfo.phone && deviceInfo.phone.length > 0 ? deviceInfo.phone: '— —'}}
+                         电话： {{ '— —'}}
                     </div>
                 </el-col>
             </el-row>
@@ -122,7 +128,7 @@
                 min-width="120"
                 >
                     <template slot-scope="{row}">
-                        <el-button type="primary" size="mini" icon="el-icon-view">查看地图</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-view" @click="handleScanMap">查看地图</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -138,11 +144,24 @@
 
         </el-card>
 
-        <el-card class="box-card">
+        <el-card class="box-card temCard">
             <div slot="header" class="clearfix">
-                <span>000001设备使用的模板</span>
+                <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : '充电模板'}}）</span>
             </div>
-            <Template :from="2" :list="temChargeList" />
+            <!-- 十路智慧款 -->
+            <div v-if=" hwVerson != '03' && hwVerson != '04'" >
+                <!-- 正常模板 -->
+                 <Template :from="2" :list="temChargeList" v-if="!isGrade" /> 
+                 <!-- 分等级模板 -->
+                 <GradeTemplate :from="2" :list="temChargeList" v-else />
+            </div>
+            <div v-else-if="hwVerson == '03'">
+                <TemplateCoin :from="2" :list="temChargeList" />
+            </div>
+            <div v-else-if="hwVerson == '04'">
+                <TemplateCoin :from="2" :list="temChargeList" />
+            </div>
+           
         </el-card>
         <!-- <el-card class="box-card">
             <div slot="header" class="clearfix">
@@ -447,10 +466,26 @@
                         >
                         </el-table-column>
                     </el-table>
-                     <div class="remoteChargeTit" style="margin-top: 15px; text-align:center;">
-                        <el-button type="primary" size="mini">查看消费总金额</el-button>
+                     <div class="remoteChargeTit" style="margin-top: 15px ; overflow: hidden; ">
+                        <el-button type="primary" size="mini" style="float: left; margin-left: 30%;">读取系统参数</el-button>
+                        <el-button type="success" size="mini" style="float: right; margin-right: 30%;">保存系统参数</el-button>
                     </div>
                 </el-card>
+                <!-- 地图弹框 -->
+                <el-dialog
+                    title="提示"
+                    :visible.sync="dialogVisible"
+                    custom-class="mapDialog"
+                    >
+                    <!-- <el-amap :vid="'amap-vue'" ref="tt"></el-amap> -->
+                    <el-amap vid="amapDemo" >
+                        <el-amap-marker
+                         v-for="(marker,i) in [{position: [116.481181,39.989792]},{position: [116.481181,35.989792]}]" 
+                         :position="marker.position" 
+                         :title="`这是坐标`"
+                         :key="i"></el-amap-marker>
+                    </el-amap>
+                </el-dialog>
         
     </div>
 </template>
@@ -459,10 +494,19 @@
 import Template from '@/components/common/Template'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
- import {alertPassword} from '@/utils/ele'
+import GradeTemplate from '@/components/common/GradeTemplate'
+import {alertPassword} from '@/utils/ele'
+import { getDeviceDetailInfo } from '@/require/deviceManage'
+import Vue from 'vue'
+import VueAMap from 'vue-amap';
+import { lazyAMapApiLoaderInstance } from 'vue-amap';
 export default {
     data(){
         return {
+            code: '', //设备号
+            username: '0' , //username默认是0，0代表设备未绑定，非0代表设备已绑定
+            hwVerson:'01',//硬件版本
+            dialogVisible: false, //地图默认隐藏
             deviceInfo: {
                 bindStatus: 1,
                 code: '000001',
@@ -471,17 +515,18 @@ export default {
                 phone: '15522323236'
             },
             moduleInfo: [
-                {
-                    code: '000001',
-                    CCID: '89860433161871471648',
-                    IMEI: '868994034714761',
-                    hwVerson: '04',
-                    hwVersonNum: '00',
-                    sfVerson: '03',
-                    single: 31
-                }
+                // {
+                //     code: '000001',
+                //     CCID: '89860433161871471648',
+                //     IMEI: '868994034714761',
+                //     hwVerson: '04',
+                //     hwVersonNum: '00',
+                //     sfVerson: '03',
+                //     single: 31
+                // }
             ],
-            mapInfo: [{longitude: '116.4811810',latitude: '39.9897920'}],
+            // mapInfo: [{longitude: '116.4811810',latitude: '39.9897920'}],
+            mapInfo: [],
             portStatus: [
                 {
                 port: '01',
@@ -508,33 +553,34 @@ export default {
                 recMoney: 2.36,
                 },
             ],
+            isGrade: false, //默认分等级模板为false,当为分等级模板的时候 isGrade= true
             temChargeList: [
-                    {   
-                        isSelected: 1,//被选中的模板
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '1元 4小时',
-                                    money:1.0,
-                                    chargeTime: 240,
-                                    chargeQuantity: 1,
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '8元 8小时',
-                                    money:2.0,
-                                    chargeTime: 480,
-                                    chargeQuantity: 2,
-                                    temChildId: 12,
-                                }
-                            ]
-                    }
+                    // {   
+                    //     isSelected: 1,//被选中的模板
+                    //     id: 1,
+                    //     name: '充电系统默认模板',
+                    //     remark: '和动充电站',
+                    //     common1: '1569365326',
+                    //     permit: 1, //是否支持退费 1是 2否
+                    //     walletpay: 2, //是否钱包支付 1是 2否
+                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
+                    //     gather: [
+                    //             {
+                    //                 name: '1元 4小时',
+                    //                 money:1.0,
+                    //                 chargeTime: 240,
+                    //                 chargeQuantity: 1,
+                    //                 temChildId: 11,
+                    //             },
+                    //             {
+                    //                 name: '8元 8小时',
+                    //                 money:2.0,
+                    //                 chargeTime: 480,
+                    //                 chargeQuantity: 2,
+                    //                 temChildId: 12,
+                    //             }
+                    //         ]
+                    // }
             ], 
              temCoinList: [ //模拟投币数据
                     {   
@@ -624,6 +670,50 @@ export default {
                         {
                             type: '设置单次投币最大用电量(单位为度,KWH)', val: 1.0, unit: '0.1度', maxVal: 15, minVal: 0.1
                         },
+                        {
+                            type: '设置单次刷卡最大用电量(单位为度,KWH)', val: 1.0, unit: '0.1度', maxVal: 15, minVal: 0.1
+                        },
+                        {
+                            type: '设置刷卡扣费金额(单位为元)', val: 1.0, unit: '角', maxVal: 15, minVal: 0.1
+                        },
+                        {
+                            type: '设置第一档最大充电功率（最大功率以机器支持为准）', val: 200, unit: '瓦', maxVal: 3500, minVal: 50
+                        },
+                        {
+                            type: '设置第二档最大充电功率（最大功率以机器支持为准）', val: 144, unit: '瓦', maxVal: 3500, minVal: 50
+                        },
+                        {
+                            type: '设置第三档最大充电功率（最大功率以机器支持为准）', val: 88, unit: '瓦', maxVal: 3500, minVal: 50
+                        },
+                        {
+                            type: '设置第四档最大充电功率（最大功率以机器支持为准）', val: 50, unit: '瓦', maxVal: 3500, minVal: 50
+                        },
+
+                        {
+                            type: '设置第二档充电时间百分比', val: 75, unit: '%', maxVal: 100, minVal: 1
+                        },
+                        {
+                            type: '设置第三档充电时间百分比', val: 50, unit: '%', maxVal: 100, minVal: 1
+                        },
+                        {
+                            type: '设置第四档充电时间百分比', val: 25, unit: '%', maxVal: 100, minVal: 1
+                        },
+                        {
+                            type: '是否支持余额回收（1为支持 0为不支持)', val: 1, unit: '无', maxVal: 1, minVal: 0
+                        },
+                        {
+                            type: '是否支持断电自停（1为支持 0为不支持)', val: 0, unit: '无', maxVal: 1, minVal: 0
+                        },
+
+                        {
+                            type: '设置充电器最大浮充功率 （功率为瓦，当充电器功率低于这个值的话，可视为充电器已充满)', val: 30, unit: '瓦', maxVal: 200, minVal: 0
+                        },
+                        {
+                            type: '设置浮充时间 （充电器充满变绿灯之后的，继续浮充时间，单位为分钟）', val: 120, unit: '分钟', maxVal: 240, minVal: 30
+                        },
+                        {
+                            type: '是否初始显示电量 （此功能是否支持和设备相关）', val: 255, unit: '无', maxVal: 1, minVal: 0
+                        },
                     ]
             
         }
@@ -631,7 +721,25 @@ export default {
     components: {
         Template,
         TemplateCoin,
-        TemplateOffline
+        TemplateOffline,
+        GradeTemplate
+    },
+    created(){
+        this.code= this.$route.query.code
+        this.asyGetDeviceDetailInfo({code: this.code})
+        Vue.use(VueAMap);
+        VueAMap.initAMapApiLoader({
+        key: '2c85f8508cc8c9c37829d4609cd8cad1',
+        // plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType'],
+        plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
+        v: '1.4.4',
+        });
+        lazyAMapApiLoaderInstance.load().then(() => {
+        // your code ...
+        this.map = new AMap.Map('tt', {
+            center: new AMap.LngLat(121.59996, 31.197646)
+        });
+        });
     },
     methods: {
          handleTaggleBind(type){ //绑定或解绑设备
@@ -641,16 +749,88 @@ export default {
                 this.deviceInfo.bindStatus= type
             })
         },
+        async asyGetDeviceDetailInfo(data){
+            let _this= this
+            try{
+                let deviceInfo= await getDeviceDetailInfo(data)
+                _this.username= deviceInfo.username
+                let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude }= deviceInfo.equipment
+                _this.moduleInfo= [{code,CCID,IMEI,hwVerson,hwVersonNum,sfVerson,single}] //设备信息
+                _this.mapInfo= [{longitude,latitude}] //经纬度信息
+                _this.hwVerson= hwVerson
+                if(hwVerson != '03' && hwVerson != '04'){
+                    if(deviceInfo.temp != null){ //temp存在，说明此模板不是分等级模板
+                        //十路智慧款
+                        let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid}= deviceInfo.temp //merchantid是模板所属商户的id，可以通过它来判断是否是系统模板
+                            common2= common2 == null ? 1 : common2
+                            console.log(id,name,remark,common1,permit,walletpay,common2,gather)
+                        _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid}]
+                
+                    }else{ //分等级模板
+                        _this.isGrade= true  //将分等级设为true
+                         _this.temChargeList= deviceInfo.templist
+                    }
+                }else{ //其他模板
+                     let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid}= deviceInfo.temp
+                     _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid}]
+                }
+                
+                
+    
+            }
+            catch(error){
+
+            }
+        },
+        handleScanMap(){ //点击查看地图
+            this.dialogVisible= true
+        }
     }
 }
 </script>
 
 <style lang="less">
 .deviceDetail {
+    background-color: #F8F8F9;
+    .el-card.is-always-shadow {
+        box-shadow: none;
+        margin-bottom: 0px;
+        margin-bottom: 40px;
+        &:hover {
+            -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+        }
+        &.temCard {
+            .el-card.is-always-shadow {
+                margin-bottom: 0;
+                padding: 20px;
+                 &:hover {
+                        -webkit-box-shadow: none;
+                        box-shadow: none;
+                    }
+            }
+            .el-card__body {
+                padding: 0;
+            }   
+        }
+    }
+   
     .el-card {
         .colCon {
             font-size: 14px !important;
         }
+    }
+    .mapDialog {
+        width: 80vw;
+        height: 85vh;
+        margin-top: 9vh !important;
+        .el-dialog__body{
+            height: calc(100% - 120px);
+        }
+    }
+    .amap-wrapper {
+        width: 500px;
+        height: 500px;
     }
 }
 </style>

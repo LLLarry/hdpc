@@ -40,3 +40,5 @@ html,body {
 body .el-table__fixed-right::before, body  .el-table__fixed::before {
     height: 0px;
 }
+
+* { touch-action: pan-y; }

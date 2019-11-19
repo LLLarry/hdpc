@@ -61,5 +61,16 @@ export const getDeviceHandleLogInfo= function (data){
          })
 }
 
+/**
+ * 获取设备详情信息
+ */
+export const getDeviceDetailInfo= function (data){ 
+    return ajax({
+             url: '/deviceData/inquireDeviceDetail',
+             data: data
+         })
+}
+
+
 
 

@@ -2,11 +2,11 @@
   <div class="bindMerOrArea">
     <el-dialog title="绑定商户" :visible.sync="bindInfo.show" width="700px" custom-class="bindDialog" :modal="false" v-if="bindInfo.from == 1" >
         <el-form :inline="true"  class="demo-form-inline" :model="bindMerOrAreaForm" size="mini">
-                <el-form-item label="手机号" class="form_right25" style="width: 210px;">
-                    <el-input v-model="bindMerOrAreaForm.phone" clearable placeholder="手机号"  size="small" style="width: 150px;"></el-input>
-                </el-form-item>
                 <el-form-item label="昵称" class="form_right25" style="width: 210px;">
                     <el-input v-model="bindMerOrAreaForm.nick" clearable placeholder="商户昵称"  size="small" style="width: 150px;"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号" class="form_right25" style="width: 210px;">
+                    <el-input v-model="bindMerOrAreaForm.phone" clearable placeholder="手机号"  size="small" style="width: 150px;"></el-input>
                 </el-form-item>
                 <el-form-item label class="form_right25" style="width: 140px;">
                      <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { getMerOrAreaList,userBindMer,userBindArea } from '@/require'
+import { getMerOrAreaList,userBindMer,userBindArea,bindDevice } from '@/require'
 import { messageTip } from '@/utils/ele'
 export default {
     data(){
@@ -71,8 +71,8 @@ export default {
             loading: false
         }
     },
-    props: ['bindInfo'], //{ show: true/false, from: 1/2, id }  1、来自用户信息，2来自设备管理
-
+    props: ['bindInfo'], //{ show: true/false, from: 1/2, id }  1、商户，2来自设备
+    /* 设备绑定商户信息框 用户页面传的信息{show: true,from: 1,page: {id: 125}}  page里是用户的信息，包含id等，设备详情传的信息{show: true,from: 1,page: {code: '000001'}}*/
     watch:{
         'bindInfo': {
             handler: function(newValue,oldValue){
@@ -91,9 +91,9 @@ export default {
                 let info
                 _this.loading= true
                 if(newVal.from == 1){
-                    info= await getMerOrAreaList({source: 1})
+                    info= await getMerOrAreaList({source: 1}) //获取商户
                 }else if(newVal.from == 2){
-                    info= await getMerOrAreaList({source: 2,merid: newVal.page.merid})
+                    info= await getMerOrAreaList({source: 2,merid: newVal.page.merid}) //获取小区
                 }
                 _this.loading= false
                 if(info.code === 200){
@@ -106,21 +106,24 @@ export default {
             }
         },
         handleSearch(){
-            let {phone,nick} = this.bindMerOrAreaForm
+            let {phone='',nick=''} = this.bindMerOrAreaForm
+            console.log(phone,nick)
             let newList= this.list.filter((item,i)=>{
+                item.phoneNum= item.phoneNum== null ? '' : item.phoneNum
+    
                 if(phone){
                     if(nick){
-                        if(item.phoneNum == phone && item.username == nick){
+                        if(item.phoneNum.includes(phone.trim()) && item.username.includes(nick.trim())){
                             return item
                         }
                     }else{
-                        if(item.phoneNum == phone){
+                        if(item.phoneNum.includes(phone.trim())){
                             return item
                         }    
                     }
                 }else{
                     if(nick){
-                        if(item.username == nick){
+                        if(item.username.includes(nick.trim())){
                             return item
                         }
                     }else{
@@ -130,11 +133,10 @@ export default {
                     
             })
             this.gridData= newList
-            console.log(newList)
         },
         handleBindMer(merid){ //绑定商户
             this.bindInfo.show= false
-            if(this.bindInfo.page.id){ //来自用户页面的绑定
+            if(this.bindInfo.page && this.bindInfo.page.id){ //来自用户页面的绑定
                 let data= userBindMer({id:this.bindInfo.page.id,merid})
                 data.then(res=>{
                     if(res.code== 200){
@@ -146,6 +148,17 @@ export default {
                 }).catch(error=>{
                     
                 })
+            }else if(this.bindInfo.page && this.bindInfo.page.code){ //设备绑定页面
+                let data= bindDevice({dealid: merid, devicenum: this.bindInfo.page.code})
+                data.then(res=>{
+                    if(res.code== 200){
+                        messageTip('success','绑定成功')
+                        this.$emit('backFn',{from: 1,merid})
+                    }else{
+                        messageTip('success','绑定失败')
+                    }
+                }).catch(err=>{})
+                
             }
         },
         handleBindArea(areaid){

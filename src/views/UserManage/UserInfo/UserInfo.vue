@@ -288,8 +288,6 @@ export default {
 </script>
 
 <style lang="less">
-// @import '../../../../static/style/default.less';
-// @import '../../../../static/style/common.less';
 .userInfo {
     .titleMon {
         padding-bottom: 15px;

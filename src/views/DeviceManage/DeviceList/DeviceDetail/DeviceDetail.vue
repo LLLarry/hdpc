@@ -151,15 +151,15 @@
             <!-- 十路智慧款 -->
             <div v-if=" hwVerson != '03' && hwVerson != '04'" >
                 <!-- 正常模板 -->
-                 <Template :from="2" :list="temChargeList" v-if="!isGrade" /> 
+                 <Template :from="2" :list="temChargeList" v-if="!isGrade" :deviceInfo="{code:this.code,merid: this.merid}" /> 
                  <!-- 分等级模板 -->
-                 <GradeTemplate :from="2" :list="temChargeList" v-else />
+                 <GradeTemplate :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid}" v-else />
             </div>
             <div v-else-if="hwVerson == '03'">
-                <TemplateCoin :from="2" :list="temChargeList" />
+                <TemplateCoin :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid}" />
             </div>
             <div v-else-if="hwVerson == '04'">
-                <TemplateCoin :from="2" :list="temChargeList" />
+                <TemplateCoin :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid}" />
             </div>
            
         </el-card>
@@ -229,6 +229,13 @@
                 min-width="120"
                 >
                 </el-table-column>
+                <el-table-column
+                prop="updateTime"
+                label="更新时间"
+                min-width="120"
+                >
+                </el-table-column>
+
                 <el-table-column
                 prop="update"
                 label="实时更新"
@@ -441,8 +448,16 @@
                         label="数值"
                         min-width="120"
                         >
-                        <template slot-scope="scope">
-                            <el-input size="small" v-model="scope.row.val"></el-input>
+                        <template slot-scope="{row}">
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val" :step="20" v-if="['coinMin','cardMin'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val" :precision="1" :step="1" v-if="['coinElec','cardElec'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val" :precision="1" :step="1" v-if="['cst'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="50" v-if="['powerMax1','power_max_2','power_max_3','power_max_4'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="5" v-if="['power_2_tim','power_3_tim','power_4_tim'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="1" :step-strictly="true" v-if="['spRecMon','spFullEmpty'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="10" v-if="['fullPowerMin'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="10" v-if="['fullChargeTime'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="1" :step-strictly="true" v-if="['elecTimeFirst1'].includes(row.type_key)"></el-input-number>
                         </template>
                         </el-table-column>
                         
@@ -467,8 +482,8 @@
                         </el-table-column>
                     </el-table>
                      <div class="remoteChargeTit" style="margin-top: 15px ; overflow: hidden; ">
-                        <el-button type="primary" size="mini" style="float: left; margin-left: 30%;">读取系统参数</el-button>
-                        <el-button type="success" size="mini" style="float: right; margin-right: 30%;">保存系统参数</el-button>
+                        <el-button type="primary" size="mini" style="float: left; margin-left: 30%;" @click="getDeviceSysParam">读取系统参数</el-button>
+                        <el-button type="success" size="mini" style="float: right; margin-right: 30%;" @click="saveDeviceSysParam">保存系统参数</el-button>
                     </div>
                 </el-card>
                 <!-- 地图弹框 -->
@@ -486,7 +501,8 @@
                          :key="i"></el-amap-marker>
                     </el-amap>
                 </el-dialog>
-        
+                <!-- 设备绑定商户信息框 用户页面传的信息{show: true,from: 1,page: {id: 125}}  page里是用户的信息，包含id等，设备详情传的信息{show: true,from: 1,page: {code: '000001'}}--> 
+            <bindMerOrArea :bindInfo="bindInfo" @backFn="backFn"/>  
     </div>
 </template>
 
@@ -495,8 +511,11 @@ import Template from '@/components/common/Template'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import GradeTemplate from '@/components/common/GradeTemplate'
-import {alertPassword} from '@/utils/ele'
-import { getDeviceDetailInfo } from '@/require/deviceManage'
+import bindMerOrArea from '@/components/common/bindMerOrArea'
+import {Loading} from 'element-ui'
+import {alertPassword,messageTip} from '@/utils/ele'
+import { getDeviceDetailInfo,getsystemParma,savesystemParma } from '@/require/deviceManage'
+import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
@@ -504,9 +523,11 @@ export default {
     data(){
         return {
             code: '', //设备号
+            merid: 0, //默认是 0 绑定了就有值
             username: '0' , //username默认是0，0代表设备未绑定，非0代表设备已绑定
             hwVerson:'01',//硬件版本
             dialogVisible: false, //地图默认隐藏
+            bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
             deviceInfo: {
                 bindStatus: 1,
                 code: '000001',
@@ -660,59 +681,60 @@ export default {
                 {type: '投币器',handle:1},
                 {type: 'IC卡',handle:2},
             ],
-             systemParamer: [ //系统参数
+            elecTimeFirst: 0,//这个是设置系统参数的时候另外传的值
+            systemParamer: [ //系统参数
                         {
-                            type: '设置投币充电时间(单位为分钟)', val: 120, unit: '分钟', maxVal: 999, minVal: 0
+                           type_key: 'coinMin', type: '设置投币充电时间(单位为分钟)', val: 120, unit: '分钟', maxVal: 999, minVal: 0
                         },
                         {
-                            type: '设置刷卡充电时间 (单位为分钟)', val: 240, unit: '分钟', maxVal: 999, minVal: 0
+                           type_key: 'cardMin', type: '设置刷卡充电时间 (单位为分钟)', val: 240, unit: '分钟', maxVal: 999, minVal: 0
                         },
                         {
-                            type: '设置单次投币最大用电量(单位为度,KWH)', val: 1.0, unit: '0.1度', maxVal: 15, minVal: 0.1
+                           type_key: 'coinElec', type: '设置单次投币最大用电量(单位为度,KWH)', val: 1.0, unit: '0.1度', maxVal: 15, minVal: 0.1
                         },
                         {
-                            type: '设置单次刷卡最大用电量(单位为度,KWH)', val: 1.0, unit: '0.1度', maxVal: 15, minVal: 0.1
+                           type_key: 'cardElec', type: '设置单次刷卡最大用电量(单位为度,KWH)', val: 1.0, unit: '0.1度', maxVal: 15, minVal: 0.1
                         },
                         {
-                            type: '设置刷卡扣费金额(单位为元)', val: 1.0, unit: '角', maxVal: 15, minVal: 0.1
+                           type_key: 'cst', type: '设置刷卡扣费金额(单位为元)', val: 1.0, unit: '角', maxVal: 15, minVal: 0.1
                         },
                         {
-                            type: '设置第一档最大充电功率（最大功率以机器支持为准）', val: 200, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'powerMax1', type: '设置第一档最大充电功率（最大功率以机器支持为准）', val: 200, unit: '瓦', maxVal: 3500, minVal: 50
                         },
                         {
-                            type: '设置第二档最大充电功率（最大功率以机器支持为准）', val: 144, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'power_max_2', type: '设置第二档最大充电功率（最大功率以机器支持为准）', val: 144, unit: '瓦', maxVal: 3500, minVal: 50
                         },
                         {
-                            type: '设置第三档最大充电功率（最大功率以机器支持为准）', val: 88, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'power_max_3', type: '设置第三档最大充电功率（最大功率以机器支持为准）', val: 88, unit: '瓦', maxVal: 3500, minVal: 50
                         },
                         {
-                            type: '设置第四档最大充电功率（最大功率以机器支持为准）', val: 50, unit: '瓦', maxVal: 3500, minVal: 50
-                        },
-
-                        {
-                            type: '设置第二档充电时间百分比', val: 75, unit: '%', maxVal: 100, minVal: 1
-                        },
-                        {
-                            type: '设置第三档充电时间百分比', val: 50, unit: '%', maxVal: 100, minVal: 1
-                        },
-                        {
-                            type: '设置第四档充电时间百分比', val: 25, unit: '%', maxVal: 100, minVal: 1
-                        },
-                        {
-                            type: '是否支持余额回收（1为支持 0为不支持)', val: 1, unit: '无', maxVal: 1, minVal: 0
-                        },
-                        {
-                            type: '是否支持断电自停（1为支持 0为不支持)', val: 0, unit: '无', maxVal: 1, minVal: 0
+                           type_key: 'power_max_4', type: '设置第四档最大充电功率（最大功率以机器支持为准）', val: 50, unit: '瓦', maxVal: 3500, minVal: 50
                         },
 
                         {
-                            type: '设置充电器最大浮充功率 （功率为瓦，当充电器功率低于这个值的话，可视为充电器已充满)', val: 30, unit: '瓦', maxVal: 200, minVal: 0
+                           type_key: 'power_2_tim', type: '设置第二档充电时间百分比', val: 75, unit: '%', maxVal: 100, minVal: 1
                         },
                         {
-                            type: '设置浮充时间 （充电器充满变绿灯之后的，继续浮充时间，单位为分钟）', val: 120, unit: '分钟', maxVal: 240, minVal: 30
+                           type_key: 'power_3_tim', type: '设置第三档充电时间百分比', val: 50, unit: '%', maxVal: 100, minVal: 1
                         },
                         {
-                            type: '是否初始显示电量 （此功能是否支持和设备相关）', val: 255, unit: '无', maxVal: 1, minVal: 0
+                           type_key: 'power_4_tim', type: '设置第四档充电时间百分比', val: 25, unit: '%', maxVal: 100, minVal: 1
+                        },
+                        {
+                           type_key: 'spRecMon', type: '是否支持余额回收（1为支持 0为不支持)', val: 1, unit: '无', maxVal: 1, minVal: 0
+                        },
+                        {
+                           type_key: 'spFullEmpty', type: '是否支持断电自停（1为支持 0为不支持)', val: 0, unit: '无', maxVal: 1, minVal: 0
+                        },
+
+                        {
+                           type_key: 'fullPowerMin', type: '设置充电器最大浮充功率 （功率为瓦，当充电器功率低于这个值的话，可视为充电器已充满)', val: 30, unit: '瓦', maxVal: 200, minVal: 0
+                        },
+                        {
+                           type_key: 'fullChargeTime', type: '设置浮充时间 （充电器充满变绿灯之后的，继续浮充时间，单位为分钟）', val: 120, unit: '分钟', maxVal: 240, minVal: 30
+                        },
+                        {
+                           type_key: 'elecTimeFirst1', type: '是否初始显示电量 （此功能是否支持和设备相关）', val: 255, unit: '无', maxVal: 1, minVal: 0
                         },
                     ]
             
@@ -722,7 +744,8 @@ export default {
         Template,
         TemplateCoin,
         TemplateOffline,
-        GradeTemplate
+        GradeTemplate,
+        bindMerOrArea
     },
     created(){
         this.code= this.$route.query.code
@@ -741,19 +764,36 @@ export default {
         });
         });
     },
+    
     methods: {
          handleTaggleBind(type){ //绑定或解绑设备
             alertPassword(()=>{
-                // console.log(1)
                 // 发送请求，进行绑定或解绑操作，成功了之后修改原本的状态
-                this.deviceInfo.bindStatus= type
+                console.log(type)
+                if(type== 1){ //绑定设备
+                    this.bindInfo= {show: true,from: 1,page: {code: this.code}}
+                }else{ //解绑设备
+                    unbindDevice({devicenum: this.code}).then(res=>{
+                        if(res.code == 200){
+                            messageTip('success','解绑成功')
+                            this.asyGetDeviceDetailInfo({code: this.code})       
+                        }else{
+                            messageTip('success','解绑失败')
+                        }
+                    }).catch(err=>{})
+                }
+                
             })
+        },
+        backFn(bindInfo){ //绑定成功之后的回调
+           this.asyGetDeviceDetailInfo({code: this.code}) 
         },
         async asyGetDeviceDetailInfo(data){
             let _this= this
             try{
                 let deviceInfo= await getDeviceDetailInfo(data)
                 _this.username= deviceInfo.username
+                _this.merid= deviceInfo.merid
                 let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude }= deviceInfo.equipment
                 _this.moduleInfo= [{code,CCID,IMEI,hwVerson,hwVersonNum,sfVerson,single}] //设备信息
                 _this.mapInfo= [{longitude,latitude}] //经纬度信息
@@ -775,7 +815,14 @@ export default {
                      _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid}]
                 }
                 
-                
+                // 系统参数
+                let sysparam= deviceInfo.sysparam
+                let systemParamer=  _this.systemParamer
+                thi.elecTimeFirst= sysparam && sysparam.elecTimeFirst ? sysparam.elecTimeFirst : 0 //设置参数需要传递的值
+                _this.systemParamer= systemParamer.map((item,i)=>{
+                    item.val= sysparam[item.type_key]== null ? item.val : sysparam[item.type_key]
+                    return item
+                })
     
             }
             catch(error){
@@ -784,6 +831,49 @@ export default {
         },
         handleScanMap(){ //点击查看地图
             this.dialogVisible= true
+        },
+        getDeviceSysParam(){ //获取设备的系统参数信息
+            let loading= Loading.service({
+                        lock: true,
+                        text: '加载中',
+                        spinner: 'el-icon-loading',
+                        customClass: "loadClass"
+                    });
+            getsystemParma({code:this.code}).then(res=>{
+                loading.close()
+                if(res.status == '0'){
+                    messageTip('error','系统参数获取失败')
+                    return
+                    let systemParamer=  _this.systemParamer
+                    _this.systemParamer= systemParamer.map((item,i)=>{
+                        item.val= res['param'+(i+1)]
+                        return item
+                    })
+                }
+
+            }).catch(err=>{ loading.close() })
+        },
+        saveDeviceSysParam(){ //保存系统参数
+            let loading= Loading.service({
+                        lock: true,
+                        text: '设置中',
+                        spinner: 'el-icon-loading',
+                        customClass: "loadClass"
+                    });
+            let systemParamer=  this.systemParamer
+            let parmas= {}
+            for (const iterator of systemParamer) {
+                parmas[iterator.type_key]= iterator.val
+            }
+            savesystemParma({code: this.code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
+                loading.close()
+                if (res.status == "0") {
+                     messageTip('success','系统参数设置成功')
+                     return
+                }
+                messageTip('error','系统参数设置失败')
+            
+            }).catch(err=>{  loading.close() })
         }
     }
 }

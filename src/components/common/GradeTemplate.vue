@@ -1,8 +1,10 @@
 <template>
     <div class="gradeTemplate">
-        <div v-for="(item,i) in list" :key="i">
-            <Template :from="2" :list="[item]" :grade="item.rank" />
-        </div>
+        <el-card :class="['box-card','temTableTitle', (from==3 && pitchon==1) ? 'selectedTem' : '']">
+             <div v-for="(item,i) in list" :key="i">
+                <Template :from="from" :list="[item]" :grade="item.rank" :gradeId="list[0].id" :gradePitchon="pitchon" :source="source" :arecode="arecode" />
+            </div>
+        </el-card>
     </div>
 </template>
 
@@ -11,6 +13,7 @@ import Template from './Template'
 export default {
     data(){
         return{
+            pitchon: null, //pitchon为1的时候，分等级模板默认被选中
             gradeList: [
                 {
                     id: 1,
@@ -96,7 +99,18 @@ export default {
     components: {
         Template
     },
-    props: ['list']
+    props: ['list','from','source','arecode'],
+    watch: {
+       'list':{
+            handler: function(newValue,oldValue){
+               if(newValue.length > 0){
+                   this.pitchon= newValue[0].pitchon
+               }
+                
+            },
+             immediate: true, 
+        }
+    }
 }
 </script>
 

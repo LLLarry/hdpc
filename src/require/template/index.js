@@ -40,3 +40,33 @@ export const updateTemplate= function (data){
              data: data
          })
 }
+
+/**
+ * 获取设备详情主模板信息
+ */
+export const getDeviceDetailTemInfo= function (data){  
+    return ajax({
+             url: '/deviceData/inquireDeviceTemplateData',
+             data: data
+         })
+}
+
+/**
+ * 设置选中模板
+ */
+export const setSelectTem= function (data){  //?
+    return ajax({
+             url: '/wctemplate/templatechoice',
+             data: data
+         })
+}
+
+/**
+ * 删除主模板
+ */
+export const deleteTem= function (data){  //?
+    return ajax({
+             url: '/deviceData/deleteTemplateData',
+             data: data
+         })
+}

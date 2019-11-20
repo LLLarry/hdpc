@@ -1,6 +1,6 @@
 <template>
     <div class="templateCoin">
-        <el-card :class="['box-card','temTableTitle', (from==3 && item.isSelected==1) ? 'selectedTem' : '']" v-for="(item,i) in arr" :key="i">
+        <el-card :class="['box-card','temTableTitle', (from==3 && item.pitchon==1) ? 'selectedTem' : '']" v-for="(item,i) in arr" :key="i">
            <el-table
                 :data="[{}]"
                 border
@@ -67,8 +67,8 @@
                         :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" 
                         >编辑</el-button>
                         <el-button type="danger" size="mini"  @click="handleDeleteTem(item)" v-if="!item.edit" 
-                        :disabled="from == 1 || from == 2 || (from==3 && item.isSelected ==1) " 
-                        :plain="from == 1 || from == 2 || (from==3 && item.isSelected ==1)"
+                        :disabled="from == 1 || from == 2 || (from==3 && item.pitchon ==1) " 
+                        :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1)"
                         icon="el-icon-delete"
                         >删除</el-button>
                         <el-button type="success" size="mini" @click="handleSaveEditTem(item)" v-if="item.edit" icon="el-icon-folder-checked">保存</el-button>
@@ -122,7 +122,7 @@
             >
             <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit"  icon="el-icon-edit" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >编辑</el-button>
-                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.isSelected ==1 || from== 2" :plain="item.isSelected ==1 || from== 2" icon="el-icon-delete">删除</el-button>
+                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.pitchon ==1 || from== 2" :plain="item.pitchon ==1 || from== 2" icon="el-icon-delete">删除</el-button>
                 <el-button type="success" size="mini" @click="handleSaveEditChildTem(scope.row.id,scope.row)" v-if="scope.row.edit" icon="el-icon-folder-checked">保存</el-button>
                 <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.id,scope.row)"  v-if="scope.row.edit" icon="el-icon-folder-delete">取消</el-button>
             </template>
@@ -139,9 +139,9 @@
              </div>
              <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" style="float:left;margin-left: 30%;" icon="el-icon-plus">添加模板</el-button>
-                <el-link type="success" :underline="false" v-if="item.isSelected ==1"> 默认模板</el-link>
-                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.isSelected !=1" @click="handleSetDefault(item)">设为默认</el-button>
-                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.isSelected ==1" disabled plain>设为默认</el-button>
+                <el-link type="success" :underline="false" v-if="item.pitchon ==1"> 默认模板</el-link>
+                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon !=1" @click="handleSetDefault(item)">设为默认</el-button>
+                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon ==1" disabled plain>设为默认</el-button>
              </div>
              
         </el-card>
@@ -347,9 +347,9 @@ export default {
         //  发送请求，成功了执行下面的
         let newArr= this.arr.filter((jtem,j)=>{
                         if(jtem.id == item.id){
-                            jtem.isSelected= 1
+                            jtem.pitchon= 1
                         }else{
-                            jtem.isSelected= undefined
+                            jtem.pitchon= undefined
                         }
                         return jtem
                     })

@@ -70,7 +70,24 @@ export const getDeviceDetailInfo= function (data){
              data: data
          })
 }
+/**
+ * 获取设备的系统参数
+ */
+export const getsystemParma= function (data){ 
+    return ajax({
+             url: '/readsysteminfo',
+             data: data
+         })
+}
 
-
+/**
+ * 保存设备的系统参数
+ */
+export const savesystemParma= function (data){ 
+    return ajax({
+             url: '/equipment/setSysPara',
+             data: data
+         })
+}
 
 

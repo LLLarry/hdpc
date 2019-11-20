@@ -86,3 +86,24 @@ export const userUnbindArea= function (data){
         data: data
     })
 }
+
+/**
+ *  绑定设备
+ */ 
+export const bindDevice= function (data){
+    return ajax({
+        url: '/deviceData/bindingDevice',
+        data: data
+    })
+}
+
+/**
+ *  解绑设备
+ */ 
+export const unbindDevice= function (data){
+    return ajax({
+        url: '/deviceData/disbindingDevice',
+        data: data
+    })
+}
+

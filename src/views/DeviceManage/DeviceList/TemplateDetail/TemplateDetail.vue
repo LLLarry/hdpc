@@ -4,10 +4,10 @@
             <span class="title">{{$route.query.hw == '03' ? '模拟投币模板' : $route.query.hw == '04' ? '离线卡模板': '充电模板'}}</span>
             <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddTem">添加主模板</el-button>
         </div>
-        <Template :from="3" :list="temChargeList" v-if="$route.query.hw == '01' " /> <!--充电模板-->
-        <TemplateCoin :from="3" :list="temCoinList" v-else-if="$route.query.hw == '03' " /> <!--脉冲模板-->
-        <TemplateOffline :from="3" :list="temOfflineList" v-if="$route.query.hw == '04' "  /> <!--离线卡模板-->
-
+        <Template :from="3" :list="temChargeList" v-if="$route.query.hw == '01' " :source="source" :arecode="arecode" /> <!--充电模板-->
+        <TemplateCoin :from="3" :list="temCoinList" v-else-if="$route.query.hw == '03' " :source="source" :arecode="arecode" /> <!--脉冲模板-->
+        <TemplateOffline :from="3" :list="temOfflineList" v-if="$route.query.hw == '04' "  :source="source" :arecode="arecode" /> <!--离线卡模板-->
+        <GradeTemplate :from="3" :list="tempgather" v-if="$route.query.hw == '01' " :source="source" :arecode="arecode" />
         <el-dialog :title="$route.query.hw == '03' ? '新增模拟投币模板' : $route.query.hw == '04' ? '新增离线卡模板': '新增充电模板'" :visible.sync="visiblesHw01" width="450px" custom-class="dialog_form" validate="handleSubmit1">
             <el-form :model="hwForm" label-position="top" :rules="rule1" ref="hwForm1">
                 <el-form-item label="模板名称" label-width="120px" prop="name">
@@ -71,64 +71,20 @@
 import Template from '@/components/common/Template'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateCoin from '@/components/common/TemplateCoin'
+import GradeTemplate from '@/components/common/GradeTemplate'
 import Util from '@/utils/util'
-
+import { getDeviceDetailTemInfo } from '@/require/template'
+import {messageTip} from '@/utils/ele'
 export default {
     data(){
         return{
-            temChargeList: [
-                    {   
-                        isSelected: 1,//被选中的模板
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '1元 4小时',
-                                    money:1.0,
-                                    chargeTime: 240,
-                                    chargeQuantity: 1,
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '8元 8小时',
-                                    money:2.0,
-                                    chargeTime: 480,
-                                    chargeQuantity: 2,
-                                    temChildId: 12,
-                                }
-                            ]
-                    },
-                    {   
-                        id: 2,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1,
-                        walletpay: 2,
-                        common2: 2, //退费标准
-                        gather: [
-                                {   
-                                    name: '1元 4小时',
-                                    money:1.0,
-                                    chargeTime: 240,
-                                    chargeQuantity: 1,
-                                    temChildId: 21,
-                                },
-                                {
-                                    name: '8元 8小时',
-                                    money:2.0,
-                                    chargeTime: 480,
-                                    chargeQuantity: 2,
-                                    temChildId: 22,
-                                }
-                            ]
-                    }
-            ], 
+            code: '',
+            merid: '',
+            hw: '01',
+            source: 1,
+            arecode:'',
+            temChargeList: [], 
+            tempgather: [], //分等级模板
             temCoinList: [ //模拟投币数据
                     {   
                         id: 1,
@@ -243,10 +199,19 @@ export default {
     components: {
         Template,
         TemplateCoin,
-        TemplateOffline
+        TemplateOffline,
+        GradeTemplate
+    },
+    created(){
+        let {code,merid,hw}= this.$route.query
+        this.code= code
+        this.merid= merid
+        this.hw= hw
+        this.asyGetDeviceDetailTemInfo({devicenum: this.code,merid})
     },
     mounted(){
         // 获取topContent距顶部的距离，滚动让其定位，离开组件时销毁
+       
         this.topHeight= parseFloat(Util.getAttr(this.$refs.topContent,'top'))
         document.getElementsByClassName('main')[0].addEventListener('scroll',this.handleTopTitle)
     },
@@ -254,6 +219,29 @@ export default {
        document.getElementsByClassName('main')[0].removeEventListener('scroll',this.handleTopTitle)
     },
     methods: {
+        async asyGetDeviceDetailTemInfo(data){
+            let _this= this
+            try{
+                let temListInfo= await getDeviceDetailTemInfo(data)
+                if(temListInfo.code == 200){
+                    this.source= temListInfo.source
+                    this.arecode= temListInfo.arecode
+                    if(this.hw == '03'){
+                        // this.temChargeList= temListInfo.templatelist
+                        this.temCoinList= temListInfo.templatelist
+                    }else if(this.hw == '04'){
+                        this.temOfflineList= temListInfo.templatelist
+                    }else{
+                        this.temChargeList= temListInfo.templatelist
+                        this.tempgather= temListInfo.tempgather || []
+                    }
+                }else{
+                    messageTip('danger','获取主模板失败')
+                }
+            }catch(error){
+
+            }
+        },
         handleTopTitle(e){
             e= e || window.event
             let target= e.target || e.srcElement

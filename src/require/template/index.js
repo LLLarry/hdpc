@@ -70,3 +70,15 @@ export const deleteTem= function (data){  //?
              data: data
          })
 }
+
+/**
+ * 添加主模板
+ */
+export const addTemplate= function (data){  
+    return ajax({
+             url: '/deviceData/insertFirstTemplateData',
+             data: data
+         })
+}
+
+

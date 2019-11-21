@@ -2,7 +2,7 @@
     <div class="gradeTemplate">
         <el-card :class="['box-card','temTableTitle', (from==3 && pitchon==1) ? 'selectedTem' : '']">
              <div v-for="(item,i) in list" :key="i">
-                <Template :from="from" :list="[item]" :grade="item.rank" :gradeId="list[0].id" :gradePitchon="pitchon" :source="source" :arecode="arecode" />
+                <Template :from="from" :list="[item]" :deviceInfo="deviceInfo" :grade="item.rank" :gradeId="list[0].id" :gradePitchon="pitchon" :source="source" :arecode="arecode" />
             </div>
         </el-card>
     </div>
@@ -10,6 +10,7 @@
 
 <script>
 import Template from './Template'
+import { mapState } from 'vuex'
 export default {
     data(){
         return{
@@ -99,7 +100,10 @@ export default {
     components: {
         Template
     },
-    props: ['list','from','source','arecode'],
+    computed:{
+       ...mapState(['gradePitchon'])
+    },
+    props: ['list','from','deviceInfo','source','arecode'],
     watch: {
        'list':{
             handler: function(newValue,oldValue){
@@ -109,6 +113,13 @@ export default {
                 
             },
              immediate: true, 
+        },
+        'gradePitchon': {
+            handler: function(newValue,oldValue){
+                console.log('newValue',newValue)
+                this.pitchon= newValue
+            },
+
         }
     }
 }

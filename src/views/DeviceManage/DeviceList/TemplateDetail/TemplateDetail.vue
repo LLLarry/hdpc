@@ -53,7 +53,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="是否创建分等级模板" label-width="150px"  v-if="$route.query.hw != '04' && $route.query.hw != '03'">
-                    <el-radio-group v-model="hwForm.grade" disabled>
+                    <el-radio-group v-model="hwForm.grade" :disabled="tempgather.length > 0">
                             <el-radio :label="1">是</el-radio>
                             <el-radio :label="2">否</el-radio>
                     </el-radio-group>
@@ -73,8 +73,9 @@ import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import GradeTemplate from '@/components/common/GradeTemplate'
 import Util from '@/utils/util'
-import { getDeviceDetailTemInfo } from '@/require/template'
+import { getDeviceDetailTemInfo,addTemplate } from '@/require/template'
 import {messageTip} from '@/utils/ele'
+import { mapState } from 'vuex'
 export default {
     data(){
         return{
@@ -86,100 +87,100 @@ export default {
             temChargeList: [], 
             tempgather: [], //分等级模板
             temCoinList: [ //模拟投币数据
-                    {   
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '1元 1个币',
-                                    remark: 1,
-                                    money:1, //付款金额
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '4元 2个币',
-                                    remark: 2,
-                                    money:4, //付款金额
-                                    temChildId: 12,
-                                }
-                            ]
-                    },
-                    {   
-                        id: 2,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '1元 1个币',
-                                    remark: 1,
-                                    money:1, //付款金额
-                                    temChildId: 21,
-                                },
-                                {
-                                    name: '4元 2个币',
-                                    remark: 2,
-                                    money:4, //付款金额
-                                    temChildId: 22,
-                                }
-                            ]
-                    }
+                    // {   
+                    //     id: 1,
+                    //     name: '充电系统默认模板',
+                    //     remark: '和动充电站',
+                    //     common1: '1569365326',
+                    //     permit: 1, //是否支持退费 1是 2否
+                    //     walletpay: 2, //是否钱包支付 1是 2否
+                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
+                    //     gather: [
+                    //             {
+                    //                 name: '1元 1个币',
+                    //                 remark: 1,
+                    //                 money:1, //付款金额
+                    //                 temChildId: 11,
+                    //             },
+                    //             {
+                    //                 name: '4元 2个币',
+                    //                 remark: 2,
+                    //                 money:4, //付款金额
+                    //                 temChildId: 12,
+                    //             }
+                    //         ]
+                    // },
+                    // {   
+                    //     id: 2,
+                    //     name: '充电系统默认模板',
+                    //     remark: '和动充电站',
+                    //     common1: '1569365326',
+                    //     permit: 1, //是否支持退费 1是 2否
+                    //     walletpay: 2, //是否钱包支付 1是 2否
+                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
+                    //     gather: [
+                    //             {
+                    //                 name: '1元 1个币',
+                    //                 remark: 1,
+                    //                 money:1, //付款金额
+                    //                 temChildId: 21,
+                    //             },
+                    //             {
+                    //                 name: '4元 2个币',
+                    //                 remark: 2,
+                    //                 money:4, //付款金额
+                    //                 temChildId: 22,
+                    //             }
+                    //         ]
+                    // }
             ],
              temOfflineList: [ //离线卡数据
-                    {   
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '10元',
-                                    remark: 10,
-                                    money:10, //付款金额
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '20元送5元',
-                                    remark: 25,
-                                    money:20, //付款金额
-                                    temChildId: 12,
-                                }
-                            ]
-                    },
-                     {   
-                        id: 2,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '10元',
-                                    remark: 10,
-                                    money:10, //付款金额
-                                    temChildId: 21,
-                                },
-                                {
-                                    name: '20元送5元',
-                                    remark: 25,
-                                    money:20, //付款金额
-                                    temChildId: 22,
-                                }
-                            ]
-                    }
+                    // {   
+                    //     id: 1,
+                    //     name: '充电系统默认模板',
+                    //     remark: '和动充电站',
+                    //     common1: '1569365326',
+                    //     permit: 1, //是否支持退费 1是 2否
+                    //     walletpay: 2, //是否钱包支付 1是 2否
+                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
+                    //     gather: [
+                    //             {
+                    //                 name: '10元',
+                    //                 remark: 10,
+                    //                 money:10, //付款金额
+                    //                 temChildId: 11,
+                    //             },
+                    //             {
+                    //                 name: '20元送5元',
+                    //                 remark: 25,
+                    //                 money:20, //付款金额
+                    //                 temChildId: 12,
+                    //             }
+                    //         ]
+                    // },
+                    //  {   
+                    //     id: 2,
+                    //     name: '充电系统默认模板',
+                    //     remark: '和动充电站',
+                    //     common1: '1569365326',
+                    //     permit: 1, //是否支持退费 1是 2否
+                    //     walletpay: 2, //是否钱包支付 1是 2否
+                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
+                    //     gather: [
+                    //             {
+                    //                 name: '10元',
+                    //                 remark: 10,
+                    //                 money:10, //付款金额
+                    //                 temChildId: 21,
+                    //             },
+                    //             {
+                    //                 name: '20元送5元',
+                    //                 remark: 25,
+                    //                 money:20, //付款金额
+                    //                 temChildId: 22,
+                    //             }
+                    //         ]
+                    // }
             ],
             topHeight: 0,//顶部框到顶部固定定位据顶部的距离
             visiblesHw01: false, //版本号为01的模板是否显示
@@ -207,7 +208,8 @@ export default {
         this.code= code
         this.merid= merid
         this.hw= hw
-        this.asyGetDeviceDetailTemInfo({devicenum: this.code,merid})
+        // this.asyGetDeviceDetailTemInfo({devicenum: this.code,merid})
+        this.$store.dispatch('asyGetDeviceDetailTemInfo',{devicenum: this.code,merid})
     },
     mounted(){
         // 获取topContent距顶部的距离，滚动让其定位，离开组件时销毁
@@ -218,12 +220,12 @@ export default {
     beforeDestroy(){
        document.getElementsByClassName('main')[0].removeEventListener('scroll',this.handleTopTitle)
     },
-    methods: {
-        async asyGetDeviceDetailTemInfo(data){
-            let _this= this
-            try{
-                let temListInfo= await getDeviceDetailTemInfo(data)
-                if(temListInfo.code == 200){
+    computed: {
+        ...mapState(['temDetail'])
+    },
+    watch: {
+        temDetail(temListInfo,oldVal){
+            if(temListInfo.code == 200){
                     this.source= temListInfo.source
                     this.arecode= temListInfo.arecode
                     if(this.hw == '03'){
@@ -236,12 +238,34 @@ export default {
                         this.tempgather= temListInfo.tempgather || []
                     }
                 }else{
-                    messageTip('danger','获取主模板失败')
-                }
-            }catch(error){
-
+                    messageTip('error','获取主模板失败')
             }
-        },
+        }
+    },
+    methods: {
+        // async asyGetDeviceDetailTemInfo(data){
+        //     let _this= this
+        //     try{
+        //         let temListInfo= await getDeviceDetailTemInfo(data)
+        //         if(temListInfo.code == 200){
+        //             this.source= temListInfo.source
+        //             this.arecode= temListInfo.arecode
+        //             if(this.hw == '03'){
+        //                 // this.temChargeList= temListInfo.templatelist
+        //                 this.temCoinList= temListInfo.templatelist
+        //             }else if(this.hw == '04'){
+        //                 this.temOfflineList= temListInfo.templatelist
+        //             }else{
+        //                 this.temChargeList= temListInfo.templatelist
+        //                 this.tempgather= temListInfo.tempgather || []
+        //             }
+        //         }else{
+        //             messageTip('error','获取主模板失败')
+        //         }
+        //     }catch(error){
+
+        //     }
+        // },
         handleTopTitle(e){
             e= e || window.event
             let target= e.target || e.srcElement
@@ -255,24 +279,35 @@ export default {
         },
         // 添加主模板
         handleAddTem(){
-            // if(this.$route.query.hw === '01'){
-            //     this.visiblesHw01= true
-            // }
             this.visiblesHw01= true
         },
         // 提交添主模板hw01
         handleSubmit1(){
             this.$refs['hwForm1'].validate((valid)=>{
+                let status= 0
                 if(valid){
                     if(this.$route.query.hw === '03' || this.$route.query.hw === '04'){
                         const {name,remark,common1}= this.hwForm
+                        status= this.$route.query.hw === '03' ? 2 : 1
                          const data= {
                             name,
                             remark,
-                            common1
+                            common1,
+                            status,
+                            merid: this.merid
                         }
-                        console.log(data)
+                        addTemplate(data).then(res=>{
+                                if(res.code === 200){
+                                    if(this.$route.query.hw === '03'){ //脉冲模板
+                                        this.temCoinList.push(res.data[0])
+                                    }else{ //离线充值机模板
+                                        this.temOfflineList.push(res.data[0])
+                                    }   
+                                }
+                            }).catch(error=>{})
+
                     }else{
+                        status= 0
                          const {name,remark,common1,walletpay,grade,permit: permitObj}= this.hwForm
                         let permit= this.hwForm.permitObj[0]
                         let common2= ''
@@ -286,11 +321,23 @@ export default {
                                 permit,
                                 common2,
                                 walletpay,
-                                grade
+                                grade,
+                                status, //0充电模板
+                                merid: this.merid
                             }
-                            console.log(data)
+                            addTemplate(data).then(res=>{
+                                if(res.code === 200){
+                                    if(grade == 2){ //添加的普通模板
+                                        this.temChargeList.push(res.data[0])
+                                    }else if(grade == 1){ //添加分等级模板
+                                        // this.tempgather.push(res.data[0])
+                                        this.$store.dispatch('asyGetDeviceDetailTemInfo',{devicenum: this.code,merid})
+                                    }   
+                                }
+                            }).catch(error=>{})
                     }
                 }
+                this.visiblesHw01= false
             })
         },
     }

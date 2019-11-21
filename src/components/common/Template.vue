@@ -88,7 +88,7 @@
                         >编辑</el-button>
                         <el-button type="danger" size="mini"  @click="handleDeleteTem(item,i)" v-if="!item.edit" 
                         :disabled="from == 1 || from == 2 || (from==3 && item.pitchon ==1) " 
-                        :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1)"
+                        :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1) || (from==3 && [2,3].includes(grade))"
                         icon="el-icon-delete"
                         >删除</el-button>
                         <el-button type="success" size="mini" @click="handleSaveEditTem(item)" v-if="item.edit" icon="el-icon-folder-checked">保存</el-button>
@@ -159,19 +159,19 @@
             </el-table-column>
             </el-table>
              <div style="margin-top: 20px; text-align: center;" class="clearfix"  v-if="from==1">
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus">添加模板</el-button>
              </div>
               <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
                 <el-button v-if="[1,2].includes(grade)" style="visibility: hidden;" icon="el-icon-view" size="mini">查看更多</el-button> <!--加这个标签的目的是为了让现实的“查看更多相对于其他的对齐” -->
                 <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '01',code: deviceInfo.code,merid: deviceInfo.merid }})" icon="el-icon-view" v-if="!([1,2].includes(grade))" 
                 :disabled="deviceInfo.merid== 0 || deviceInfo.merid== undefined || deviceInfo.merid == null"
                 >查看更多</el-button>
-                <div v-if="!([1,2,3].includes(grade))"><TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))" /></div>
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
+                <div v-if="!([1,2,3].includes(grade))"><TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))" :deviceInfo="deviceInfo" :tempid="item.id"/></div>
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
              </div>
              <div style="margin-top: 20px; text-align: center; " class="clearfix" v-else>
                 <el-button type="primary" size="mini" style="float:left;margin-left: 30%;" icon="el-icon-plus" @click="handleAddChildTem(item)" >添加模板</el-button>
-                <el-link type="success" :underline="false" v-if="item.pitchon ==1 || (gradePitchon == 1 && ![1,2].includes(grade))"> {{source == 0 ? '默认模板' : '选中模板'}}</el-link>
+                <el-link type="success" :underline="false" v-if="(item.pitchon ==1 && ![1,2,3].includes(grade)) || (item.pitchon ==1 && grade== 3) || (gradePitchon == 1 && ![1,2].includes(grade))"> {{source == 0 ? '默认模板' : '选中模板'}}</el-link>
                 
                 <!-- <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="source == 0 && ![1,2].includes(grade)" :disabled="item.pitchon ==1" :plain="item.pitchon ==1" @click="handleSetDefault(item,gradeId)" >设为默认</el-button> -->
                 <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="source != 0 && ![1,2].includes(grade)" :disabled="item.pitchon ==1 || gradePitchon == 1" :plain="item.pitchon ==1"   @click="handleSetSelect(item,gradeId)">选中模板</el-button>
@@ -260,7 +260,7 @@ export default {
                                 chargeTime: 60,
                                 chargeQuantity: 100,
                             }
-            if(item.gather.length > 0){
+            if(item.gather && item.gather.length > 0){
                         let childTemLastData= item.gather[item.gather.length-1] //点击的最后一个子元素
                         let rate1= childTemLastData.chargeTime/childTemLastData.money //利率是1元多少分钟
                         let rate2= childTemLastData.chargeTime / childTemLastData.chargeQuantity //得到的比例是消耗1度电充电多久
@@ -405,7 +405,6 @@ export default {
             if(typeof gradeId != 'undefined'){ //说明点击的是普通模板，有值则点击的是分等级模板
                 temid= gradeId
             }
-            console.log(temid)
            setSelectTem({source:this.source,obj: this.arecode,temid: temid}).then(res=>{
             if(res == 1){
                 for (const iterator of this.arr) {
@@ -415,8 +414,12 @@ export default {
                         iterator.pitchon= undefined
                     }
                 }
-                messageTip('success','选中成功')
-                window.location.reload()
+                this.$store.dispatch('asyGetDeviceDetailTemInfo',{devicenum: this.$route.query.code,merid: this.$route.query.merid}) //添加之后重新请求数据
+                if(typeof gradeId == 'undefined'){ //普通模板设置后，自动滚动到顶部
+                    document.getElementsByClassName('main')[0].scrollTop= '0px'
+                }
+                messageTip('success','选中成功（注： 选中成功会自动至于第一位）')
+
             }else{
                 messageTip('warning','选中失败')
             }

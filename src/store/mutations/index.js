@@ -21,6 +21,7 @@ export default {
         state.menuList= [] //菜单列表
         state.isShowSlide= null, //slide状态
         state.cancelTokenArr= []
+        state.temDetail= {}
         sessionStorage.removeItem('state')
     },
     [UPDATEUSERINFO](state,data){ //更新用户信息
@@ -79,6 +80,10 @@ export default {
         }
        
         state.cancelTokenArr = []
+        sessionStorage.setItem('state',JSON.stringify(state))
+    },
+    updateTemDetail(state,data){
+        state.temDetail=data
         sessionStorage.setItem('state',JSON.stringify(state))
     }
 }

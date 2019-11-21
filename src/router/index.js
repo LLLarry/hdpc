@@ -21,11 +21,13 @@ const router= new Router({
       component: ()=> import('@/components/Login/Login'),
     }
     //上面这两个是基础的配置，后面的是请求过来的
-  ]
+  ],
+
 })
 //router.addRoutes(constantRouterMapSuperAdmin)
 let routesList= []
 router.beforeEach((to,from,next) => {
+ 
   let newList= store.getters.transformList //路由降维数组 （菜单）
   let menuList= store.state.menuList //导航菜单 （菜单）
 
@@ -77,6 +79,7 @@ let navList=Util.slicePath(to.path).map((ktem,k)=>{
     })
     return ktem
   })
+  
   store.commit('updataBreadcrumbList',navList)
   // let data= {} //这个是数组，包含title,link,index,是面包屑使用的
   // let title= ''

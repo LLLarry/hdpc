@@ -66,7 +66,7 @@
                         <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit"
                         :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" 
                         >编辑</el-button>
-                        <el-button type="danger" size="mini"  @click="handleDeleteTem(item)" v-if="!item.edit" 
+                        <el-button type="danger" size="mini"  @click="handleDeleteTem(item,i)" v-if="!item.edit" 
                         :disabled="from == 1 || from == 2 || (from==3 && item.pitchon ==1) " 
                         :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1)"
                         icon="el-icon-delete"
@@ -129,19 +129,19 @@
             </el-table-column>
             </el-table>
              <div style="margin-top: 20px; text-align: center" class="clearfix"  v-if="from==1">
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus">添加模板</el-button>
              </div>
               <div style="margin-top: 20px; text-align: center ;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '03'}})" icon="el-icon-view">查看更多</el-button>
+                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '03',code: deviceInfo.code,merid: deviceInfo.merid }})" icon="el-icon-view">查看更多</el-button>
                <!-- <el-button type="primary" size="mini" >此模板复用更多设备</el-button> -->
-               <TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))"  />
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
+               <TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))" :deviceInfo="deviceInfo" :tempid="item.id" />
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
              </div>
              <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" style="float:left;margin-left: 30%;" icon="el-icon-plus">添加模板</el-button>
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item)" style="float:left;margin-left: 30%;" icon="el-icon-plus">添加模板</el-button>
                 <el-link type="success" :underline="false" v-if="item.pitchon ==1"> 默认模板</el-link>
-                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon !=1" @click="handleSetDefault(item)">设为默认</el-button>
-                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon ==1" disabled plain>设为默认</el-button>
+                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon !=1" @click="handleSetSelect(item)">选中模板</el-button>
+                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon ==1" disabled plain>选中模板</el-button>
              </div>
              
         </el-card>
@@ -152,7 +152,7 @@
 import Vue from 'vue'
 import {confirDelete,messageTip} from '@/utils/ele'
 import TemMulDevice from '@/components/common/TemMulDevice'
-import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate } from '@/require/template'
+import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate,deleteTem,setSelectTem } from '@/require/template'
 export default {
     data(){
         return {
@@ -188,7 +188,7 @@ export default {
     components:{
         TemMulDevice
     },
-    props: ['from','list'],
+    props: ['from','list','deviceInfo','source','arecode'],
     computed: {
         arr(){
             return this.list
@@ -219,17 +219,16 @@ export default {
         })
        },
         // 添加子模板
-       handleAddChildTem(id){ //主模板id
+       handleAddChildTem(item){ //主模板id
         //发送请求，成功之后添加子模板
-        this.arr.filter((item,i)=>{
-
-            let childTemData= {   
+            let { id }= item
+              let childTemData= {   
                             name: '1元1个币',
                             money:1.0,
                             remark: 1,
                             // temChildId: 25
                             }
-            if(item.gather.length > 0){
+            if(item.gather && item.gather.length > 0){
                 let childTemLastData= item.gather[item.gather.length-1] //点击的最后一个子元素
                 let rate= childTemLastData.money / childTemLastData.remark //利率是1元几个币
                 let nextRemark= childTemLastData.remark+1 
@@ -255,7 +254,6 @@ export default {
                     messageTip('warning',res.message)
                 }
             }).catch(error=>{})
-        })
        },
        //编辑子模板
        handleEditChildTem(id,temChildId,row){
@@ -292,15 +290,18 @@ export default {
            this.isEditingChildTem= false
        },
      //删除主模板   
-      handleDeleteTem(item){
+       handleDeleteTem(item,i){
         //   发送请求，成功之后删除模板
-        confirDelete('确认删除主模板吗？',function(){
-            let newArr= this.arr.filter((ktem,k)=>{
-            return ktem.id != item.id
-            })
-            this.arr= newArr
-            messageTip() //删除成功提示信息
-        }.bind(this))
+        confirDelete('确认删除主模板吗？',()=>{
+            deleteTem({id:item.id}).then(res=>{
+                if(res.code == 200){
+                     this.arr.splice(i,1)
+                    messageTip('success','删除成功')
+                }else{
+                    messageTip('warning',res.message)
+                }
+            }).catch(error=>{})
+        })
         
       },
        //点击编辑主模板
@@ -343,18 +344,25 @@ export default {
            this.isEditingTem= false
        },
         // type=3的时候的设为默认
-       handleSetDefault(item){
-        //  发送请求，成功了执行下面的
-        let newArr= this.arr.filter((jtem,j)=>{
-                        if(jtem.id == item.id){
-                            jtem.pitchon= 1
-                        }else{
-                            jtem.pitchon= undefined
-                        }
-                        return jtem
-                    })
-        this.arr= newArr
-       }   
+       handleSetSelect(item){
+         let temid= item.id
+        setSelectTem({source:this.source,obj: this.arecode,temid: temid}).then(res=>{
+           
+            if(res == 1){
+                for (const iterator of this.arr) {
+                    if(iterator.id == item.id){
+                        iterator.pitchon= 1
+                    }else{
+                        iterator.pitchon= undefined
+                    }
+                }
+                messageTip('success','选中成功（注： 选中成功会自动至于第一位）')
+            }else{
+                messageTip('warning','选中失败')
+            }
+           }).catch(err=>{})
+       }
+
     }
 }
 </script>

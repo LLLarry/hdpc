@@ -151,15 +151,15 @@
             <!-- 十路智慧款 -->
             <div v-if=" hwVerson != '03' && hwVerson != '04'" >
                 <!-- 正常模板 -->
-                 <Template :from="2" :list="temChargeList" v-if="!isGrade" :deviceInfo="{code:this.code,merid: this.merid}" /> 
+                 <Template :from="2" :list="temChargeList" v-if="!isGrade" :deviceInfo="{code:this.code,merid: this.merid, hwVerson: hwVerson}" /> 
                  <!-- 分等级模板 -->
-                 <GradeTemplate :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid}" v-else />
+                 <GradeTemplate :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" v-else />
             </div>
             <div v-else-if="hwVerson == '03'">
-                <TemplateCoin :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid}" />
+                <TemplateCoin :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
             <div v-else-if="hwVerson == '04'">
-                <TemplateCoin :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid}" />
+                <TemplateOffline :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
            
         </el-card>
@@ -181,7 +181,7 @@
                 <span>端口状态</span>
             </div>
             <el-table
-                :data="portStatus"
+                :data="portStatusList"
                 border
                 fit
                 style="width: 100%"
@@ -194,13 +194,14 @@
                 >
                 </el-table-column>
                 <el-table-column
-                prop="status"
+                prop="portStatus"
                 label="端口状态"
-                min-width="120"
+                width="120"
                 >
                     <template slot-scope="{row}">
-                        <el-link :type="row.status== 1 ? 'success': row.status== 2 ? 'danger': 'default' " size="mini" :underline="false" >
-                            {{row.status== 1 ? '空闲': row.status== 2 ? '使用': '故障'}}
+                        <el-link :type="row.portStatus== 1 ? 'success': row.portStatus== 2 ? 'danger': 'default' " size="mini" :underline="false" >
+                            {{row.portStatus== 1 ? '空闲': row.portStatus== 2 ? '使用':  row.portStatus== 3 ? '锁定' : '故障'}}
+                            <!-- 自己设置的  portStatus 等于3时为锁定-->
                         </el-link>
                     </template>
                 </el-table-column>
@@ -208,23 +209,26 @@
                 <el-table-column
                 prop="time"
                 label="充电时间（分钟）"
-                min-width="120"
+                width="150"
                 >
                 </el-table-column>
                 <el-table-column
                 prop="power"
                 label="充电功率（W）"
-                min-width="120"
+                width="150"
                 >
                 </el-table-column>
                 <el-table-column
-                prop="surEle"
+                prop="elec"
                 label="剩余电量（度）"
                 min-width="120"
                 >
+                <template slot-scope="{row}">
+                    {{ row.elec/100 }}
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="recMoney"
+                prop="surp"
                 label="可回收余额"
                 min-width="120"
                 >
@@ -232,8 +236,11 @@
                 <el-table-column
                 prop="updateTime"
                 label="更新时间"
-                min-width="120"
+                min-width="140"
                 >
+                 <template slot-scope="{row}">
+                    {{ row.updateTime | fmtDate }}
+                </template>
                 </el-table-column>
 
                 <el-table-column
@@ -242,7 +249,7 @@
                 min-width="100"
                 >
                     <template slot-scope="{row}">
-                        <el-button type="primary" size="mini" icon="el-icon-refresh-left">更新</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-refresh-left" @click="handleGetPortStatus(row)">更新</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -251,7 +258,7 @@
                 min-width="120"
                 >
                     <template slot-scope="{row}">
-                        <el-button type="danger" size="mini" plain icon="el-icon-lock">锁定</el-button>
+                        <el-button type="danger" size="mini" plain icon="el-icon-lock" @click="handleLockPort(row)">锁定</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -260,7 +267,7 @@
                 min-width="120"
                 >
                     <template slot-scope="{row}">
-                        <el-button type="success" size="mini" icon="el-icon-unlock">解锁</el-button>
+                        <el-button type="success" size="mini" icon="el-icon-unlock" @click="handleDebloack(row)">解锁</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -269,7 +276,9 @@
                 min-width="120"
                 >
                     <template slot-scope="{row}">
-                        <el-link type="primary">查看</el-link>
+                        <router-link :to="`/deviceManage/deviceLog?startTime=&endTime=&devicenum=${code}&port=${row.port}`">
+                            <el-link type="primary">查看</el-link>
+                        </router-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -514,7 +523,7 @@ import GradeTemplate from '@/components/common/GradeTemplate'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
 import {Loading} from 'element-ui'
 import {alertPassword,messageTip} from '@/utils/ele'
-import { getDeviceDetailInfo,getsystemParma,savesystemParma } from '@/require/deviceManage'
+import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort } from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
@@ -548,31 +557,31 @@ export default {
             ],
             // mapInfo: [{longitude: '116.4811810',latitude: '39.9897920'}],
             mapInfo: [],
-            portStatus: [
-                {
-                port: '01',
-                status: 1,
-                time: 320,
-                power: 137.6,
-                surEle: 1.53,
-                recMoney: 2.36,
-                },
-                {
-                port: '01',
-                status: 2,
-                time: 320,
-                power: 137.6,
-                surEle: 1.53,
-                recMoney: 2.36,
-                },
-                 {
-                port: '01',
-                status: 3,
-                time: 320,
-                power: 137.6,
-                surEle: 1.53,
-                recMoney: 2.36,
-                },
+            portStatusList: [
+                // {
+                // port: '01',
+                // status: 1,
+                // time: 320,
+                // power: 137.6,
+                // surEle: 1.53,
+                // recMoney: 2.36,
+                // },
+                // {
+                // port: '01',
+                // status: 2,
+                // time: 320,
+                // power: 137.6,
+                // surEle: 1.53,
+                // recMoney: 2.36,
+                // },
+                //  {
+                // port: '01',
+                // status: 3,
+                // time: 320,
+                // power: 137.6,
+                // surEle: 1.53,
+                // recMoney: 2.36,
+                // },
             ],
             isGrade: false, //默认分等级模板为false,当为分等级模板的时候 isGrade= true
             temChargeList: [
@@ -604,54 +613,54 @@ export default {
                     // }
             ], 
              temCoinList: [ //模拟投币数据
-                    {   
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '1元 1个币',
-                                    remark: 1,
-                                    money:1, //付款金额
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '4元 2个币',
-                                    remark: 2,
-                                    money:4, //付款金额
-                                    temChildId: 12,
-                                }
-                            ]
-                    }
+                    // {   
+                    //     id: 1,
+                    //     name: '充电系统默认模板',
+                    //     remark: '和动充电站',
+                    //     common1: '1569365326',
+                    //     permit: 1, //是否支持退费 1是 2否
+                    //     walletpay: 2, //是否钱包支付 1是 2否
+                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
+                    //     gather: [
+                    //             {
+                    //                 name: '1元 1个币',
+                    //                 remark: 1,
+                    //                 money:1, //付款金额
+                    //                 temChildId: 11,
+                    //             },
+                    //             {
+                    //                 name: '4元 2个币',
+                    //                 remark: 2,
+                    //                 money:4, //付款金额
+                    //                 temChildId: 12,
+                    //             }
+                    //         ]
+                    // }
             ],
              temOfflineList: [ //离线卡数据
-                    {   
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '10元',
-                                    remark: 10,
-                                    money:10, //付款金额
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '20元送5元',
-                                    remark: 25,
-                                    money:20, //付款金额
-                                    temChildId: 12,
-                                }
-                            ]
-                    }
+                    // {   
+                    //     id: 1,
+                    //     name: '充电系统默认模板',
+                    //     remark: '和动充电站',
+                    //     common1: '1569365326',
+                    //     permit: 1, //是否支持退费 1是 2否
+                    //     walletpay: 2, //是否钱包支付 1是 2否
+                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
+                    //     gather: [
+                    //             {
+                    //                 name: '10元',
+                    //                 remark: 10,
+                    //                 money:10, //付款金额
+                    //                 temChildId: 11,
+                    //             },
+                    //             {
+                    //                 name: '20元送5元',
+                    //                 remark: 25,
+                    //                 money:20, //付款金额
+                    //                 temChildId: 12,
+                    //             }
+                    //         ]
+                    // }
             ],
             remoteCharge: [ //远程充电
                 {
@@ -764,6 +773,9 @@ export default {
         });
         });
     },
+    mounted(){
+        document.getElementsByClassName('main')[0].scrollTop= '0px'
+    },
     
     methods: {
          handleTaggleBind(type){ //绑定或解绑设备
@@ -778,7 +790,7 @@ export default {
                             messageTip('success','解绑成功')
                             this.asyGetDeviceDetailInfo({code: this.code})       
                         }else{
-                            messageTip('success','解绑失败')
+                            messageTip('error','解绑失败')
                         }
                     }).catch(err=>{})
                 }
@@ -803,19 +815,19 @@ export default {
                         //十路智慧款
                         let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid}= deviceInfo.temp //merchantid是模板所属商户的id，可以通过它来判断是否是系统模板
                             common2= common2 == null ? 1 : common2
-                            console.log(id,name,remark,common1,permit,walletpay,common2,gather)
+                            // console.log(id,name,remark,common1,permit,walletpay,common2,gather)
                         _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid}]
                 
                     }else{ //分等级模板
                         _this.isGrade= true  //将分等级设为true
-                         _this.temChargeList= deviceInfo.templist
+                         _this.temChargeList= deviceInfo.templist || []
                     }
                 }else{ //其他模板
                      let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid}= deviceInfo.temp
                      _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid}]
                 }
-                
                 // 系统参数
+                 _this.portStatusList= deviceInfo.allPortStatusList || []
                 let sysparam= deviceInfo.sysparam
                 let systemParamer=  _this.systemParamer
                 thi.elecTimeFirst= sysparam && sysparam.elecTimeFirst ? sysparam.elecTimeFirst : 0 //设置参数需要传递的值
@@ -823,7 +835,7 @@ export default {
                     item.val= sysparam[item.type_key]== null ? item.val : sysparam[item.type_key]
                     return item
                 })
-    
+            
             }
             catch(error){
 
@@ -831,6 +843,80 @@ export default {
         },
         handleScanMap(){ //点击查看地图
             this.dialogVisible= true
+        },
+        handleGetPortStatus(row){ //更新端口状态
+        let loading= Loading.service({
+                        lock: true,
+                        text: '加载中',
+                        spinner: 'el-icon-loading',
+                        customClass: "loadClass"
+                    });
+            getDeviceStatus({port: row.port,code: this.code}).then(res=>{
+                loading.close()
+                if (res.err == "0") {
+                    messageTip('error','获取端口状态失败')
+                    return
+				}
+                row= {...data}
+            }).catch(err=>{ 
+                loading.close()
+            })
+        },
+        handleLockPort(row){ //锁定端口
+        let loading= Loading.service({
+                        lock: true,
+                        text: '锁定中',
+                        spinner: 'el-icon-loading',
+                        customClass: "loadClass"
+                    });
+            lockDevicePort({port: row.port,status: 0,code: this.code}).then(res=>{
+                loading.close()
+                if (res.err == "0") {
+                    messageTip('error',res.errinfo)
+                    return
+                }
+                if (res.err == "1") {
+                    messageTip('error',res.errinfo)
+                    return
+                }
+                let portStatus
+                if(res.status == 0){ //当返回的status为0时，portStatus改为3（锁定）
+                    portStatus= 3
+                }else if(row.portStatus == 3){ //当portStatus为3（锁定）是，设置portStatus为1，为1是空闲
+                    portStatus= 1
+                }
+                row.portStatus= portStatus
+            }).catch(err=>{ 
+                loading.close()
+            })
+        },
+        handleDebloack(row){ //更新端口
+            let loading= Loading.service({
+                        lock: true,
+                        text: '解锁中',
+                        spinner: 'el-icon-loading',
+                        customClass: "loadClass"
+                    });
+            lockDevicePort({port: row.port,status: 1,code: this.code}).then(res=>{
+                loading.close()
+                if (res.err == "0") {
+                    messageTip('error',res.errinfo)
+                    return
+                }
+                if (res.err == "1") {
+                    messageTip('error',res.errinfo)
+                    return
+                }
+                let portStatus
+                if(res.status == 1){ //当返回的status为0时，portStatus改为3（锁定）
+                    portStatus= 1
+                }else if(row.portStatus == 3){ //当portStatus为3（锁定）是，设置portStatus为1，为1是空闲
+                    portStatus= 1
+                }
+                row.portStatus= portStatus
+            }).catch(err=>{ 
+                loading.close()
+            })
         },
         getDeviceSysParam(){ //获取设备的系统参数信息
             let loading= Loading.service({

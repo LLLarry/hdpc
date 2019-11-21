@@ -1,4 +1,5 @@
 import {handleLogin} from '../../require'
+import { getDeviceDetailTemInfo } from '@/require/template'
 import {UPDATEUSERINFO} from '../mutation-types'
 import router from '../../router';
 export default {
@@ -11,6 +12,13 @@ export default {
         }
         return loginInfo
       
-    }
+    },
+    async asyGetDeviceDetailTemInfo({commit,state},data){
+        let temListInfo= await getDeviceDetailTemInfo(data)
+        if(temListInfo.code == 200){
+            commit('updateTemDetail',temListInfo) 
+        }
+    } 
+    
  
 }

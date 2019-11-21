@@ -9,7 +9,8 @@ let obj= {
     asyRouterMap: [], //router中的异步路由
     menuList: [], //菜单列表
     isShowSlide: true, //默认显示菜单
-    cancelTokenArr: [] // 取消请求token数组
+    cancelTokenArr: [], // 取消请求token数组
+    temDetail: {}
 }
 let state= JSON.parse(sessionStorage.getItem('state') || JSON.stringify(obj))
 export default state

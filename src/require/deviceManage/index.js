@@ -90,4 +90,46 @@ export const savesystemParma= function (data){
          })
 }
 
+/**
+ * 更新端口状态
+ */
+export const getDeviceStatus= function (data){ 
+    return ajax({
+             url: '/querystate',
+             data: data
+         })
+}
+
+/**
+ * 锁定端口
+ */
+export const lockDevicePort= function (data){ 
+    return ajax({
+             url: '/lock',
+             data: data
+         })
+}
+
+/**
+ * 查询同类型设备
+ */
+export const getSimilarDevice= function (data){ 
+    return ajax({
+             url: '/deviceData/inquireDeviceData',
+             data: data
+         })
+}
+
+/**
+ * 设备复用模板
+ */
+export const setDeviceMulDevice= function (data){ 
+    return ajax({
+             url: '/deviceData/updateDeviceTemplate',
+             data: data
+         })
+}
+
+
+
 

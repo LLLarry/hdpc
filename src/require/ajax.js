@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {messageTip} from '@/utils/ele'
 import store from '@/store'
+import qs from 'qs'
 // 加载进度条插件及样式
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -15,7 +16,8 @@ let baseURL= 'http://localhost'
 const service = axios.create({ // 创建axios实例           
         timeout: 120000, // 请求超时时间
         headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
+          // 'Content-Type': 'application/json;charset=UTF-8'
+          'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
         },
         baseURL,
         withCredentials : true                         
@@ -80,6 +82,7 @@ export default function (obj){
                     })
                 })
                }else{
+                 data=  qs.stringify(data) //post请求，转化格式
                 return  new Promise((resolve,reject)=>{
                      service.post(url,data).then(res=>{
                         if(res.status == 200){

@@ -137,7 +137,7 @@
                 min-width="120"
                 >
                      <template slot-scope="{row}">
-                        <el-button type="primary" size="mini" icon="el-icon-position">更新经纬度</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-position" @click="upDatePosition">更新经纬度</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -155,9 +155,11 @@
                  <!-- 分等级模板 -->
                  <GradeTemplate :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" v-else />
             </div>
+            <!-- 脉冲模板 -->
             <div v-else-if="hwVerson == '03'">
                 <TemplateCoin :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
+            <!-- 离线充值机模板 -->
             <div v-else-if="hwVerson == '04'">
                 <TemplateOffline :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
@@ -310,26 +312,31 @@
                 label="端口状态"
                 min-width="80"
                 >
-                    <template slot-scope="{row}">
-                        <el-link :type="row.status== 1 ? 'success': row.status== 2 ? 'danger': 'default' " size="mini" :underline="false" >
-                            {{row.status== 1 ? '空闲': row.status== 2 ? '使用': '故障'}}
-                        </el-link>
-                    </template>
+                <template slot-scope="{row}">
+                    <el-link :type="row.portStatus== 1 ? 'success': row.portStatus== 2 ? 'danger': 'default' " size="mini" :underline="false" >
+                        {{row.portStatus== 1 ? '空闲': row.portStatus== 2 ? '使用':  row.portStatus== 3 ? '锁定' : '故障'}}
+                        <!-- 自己设置的  portStatus 等于3时为锁定-->
+                    </el-link>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="free"
                 label="是否空闲"
                 min-width="80"
                 >
-                是
+               <template slot-scope="{row}">
+                    <el-link :type="row.portStatus== 1 ? 'success': 'danger' " size="mini" :underline="false" >
+                        {{row.portStatus== 1 ? '是': '否'}}
+                    </el-link>
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="time"
+                prop="chargeTime"
                 label="充电时间（分钟）"
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                    <el-input size="small" v-model="scope.row.time"></el-input>
+                    <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="1500" :min="0" v-model="scope.row.chargeTime" :step="20"></el-input-number>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -338,7 +345,7 @@
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                    <el-input size="small" v-model="scope.row.elePower"></el-input>
+                    <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="20" :min="0" :precision="2" v-model="scope.row.elePower" :step="1"></el-input-number>
                 </template>
                 </el-table-column>
 
@@ -348,7 +355,7 @@
                 width="150"
                 >
                     <template slot-scope="{row}">
-                        <el-button type="primary" size="mini" icon="el-icon-open">充电</el-button>
+                        <el-button type="primary" size="mini" :icon="row.loading ? 'el-icon-loading' : 'el-icon-open'" @click="handleRemoteCharge(row)">充电</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -357,7 +364,7 @@
                 width="150"
                 >
                     <template slot-scope="{row}">
-                        <el-button type="danger" size="mini" icon="el-icon-turn-off">断电</el-button>
+                        <el-button type="danger" size="mini" icon="el-icon-turn-off" @click="handleRemoteBreakOff(row)">断电</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -497,17 +504,27 @@
                 </el-card>
                 <!-- 地图弹框 -->
                 <el-dialog
-                    title="提示"
+                    :title="`${code}设备地图位置`"
                     :visible.sync="dialogVisible"
                     custom-class="mapDialog"
                     >
                     <!-- <el-amap :vid="'amap-vue'" ref="tt"></el-amap> -->
                     <el-amap vid="amapDemo" >
                         <el-amap-marker
-                         v-for="(marker,i) in [{position: [116.481181,39.989792]},{position: [116.481181,35.989792]}]" 
+                         v-for="(marker,i) in [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]" 
                          :position="marker.position" 
                          :title="`这是坐标`"
-                         :key="i"></el-amap-marker>
+                         :key="i">
+                         </el-amap-marker>
+                         <el-amap-info-window
+                             v-for="(marker,i) in [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]" 
+                             :key="marker.position[0]"
+                            :position="marker.position"
+                            :content="`<div>设备:000001<div><p>地址：河南省郑州市金水区紫金小区<p>`"
+                            :visible="true"
+                            :offset="[0,-28]"
+                            >
+                         </el-amap-info-window>
                     </el-amap>
                 </el-dialog>
                 <!-- 设备绑定商户信息框 用户页面传的信息{show: true,from: 1,page: {id: 125}}  page里是用户的信息，包含id等，设备详情传的信息{show: true,from: 1,page: {code: '000001'}}--> 
@@ -523,7 +540,7 @@ import GradeTemplate from '@/components/common/GradeTemplate'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
 import {Loading} from 'element-ui'
 import {alertPassword,messageTip} from '@/utils/ele'
-import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort } from '@/require/deviceManage'
+import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,remoteChargeBreakOff,updateMapPosition } from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
@@ -540,9 +557,9 @@ export default {
             deviceInfo: {
                 bindStatus: 1,
                 code: '000001',
-                merName: '龙环科技',
-                areaName: '测试小区',
-                phone: '15522323236'
+                merName: '',
+                areaName: '',
+                phone: ''
             },
             moduleInfo: [
                 // {
@@ -557,131 +574,13 @@ export default {
             ],
             // mapInfo: [{longitude: '116.4811810',latitude: '39.9897920'}],
             mapInfo: [],
-            portStatusList: [
-                // {
-                // port: '01',
-                // status: 1,
-                // time: 320,
-                // power: 137.6,
-                // surEle: 1.53,
-                // recMoney: 2.36,
-                // },
-                // {
-                // port: '01',
-                // status: 2,
-                // time: 320,
-                // power: 137.6,
-                // surEle: 1.53,
-                // recMoney: 2.36,
-                // },
-                //  {
-                // port: '01',
-                // status: 3,
-                // time: 320,
-                // power: 137.6,
-                // surEle: 1.53,
-                // recMoney: 2.36,
-                // },
-            ],
+            portStatusList: [],
             isGrade: false, //默认分等级模板为false,当为分等级模板的时候 isGrade= true
-            temChargeList: [
-                    // {   
-                    //     isSelected: 1,//被选中的模板
-                    //     id: 1,
-                    //     name: '充电系统默认模板',
-                    //     remark: '和动充电站',
-                    //     common1: '1569365326',
-                    //     permit: 1, //是否支持退费 1是 2否
-                    //     walletpay: 2, //是否钱包支付 1是 2否
-                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
-                    //     gather: [
-                    //             {
-                    //                 name: '1元 4小时',
-                    //                 money:1.0,
-                    //                 chargeTime: 240,
-                    //                 chargeQuantity: 1,
-                    //                 temChildId: 11,
-                    //             },
-                    //             {
-                    //                 name: '8元 8小时',
-                    //                 money:2.0,
-                    //                 chargeTime: 480,
-                    //                 chargeQuantity: 2,
-                    //                 temChildId: 12,
-                    //             }
-                    //         ]
-                    // }
-            ], 
-             temCoinList: [ //模拟投币数据
-                    // {   
-                    //     id: 1,
-                    //     name: '充电系统默认模板',
-                    //     remark: '和动充电站',
-                    //     common1: '1569365326',
-                    //     permit: 1, //是否支持退费 1是 2否
-                    //     walletpay: 2, //是否钱包支付 1是 2否
-                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
-                    //     gather: [
-                    //             {
-                    //                 name: '1元 1个币',
-                    //                 remark: 1,
-                    //                 money:1, //付款金额
-                    //                 temChildId: 11,
-                    //             },
-                    //             {
-                    //                 name: '4元 2个币',
-                    //                 remark: 2,
-                    //                 money:4, //付款金额
-                    //                 temChildId: 12,
-                    //             }
-                    //         ]
-                    // }
-            ],
-             temOfflineList: [ //离线卡数据
-                    // {   
-                    //     id: 1,
-                    //     name: '充电系统默认模板',
-                    //     remark: '和动充电站',
-                    //     common1: '1569365326',
-                    //     permit: 1, //是否支持退费 1是 2否
-                    //     walletpay: 2, //是否钱包支付 1是 2否
-                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
-                    //     gather: [
-                    //             {
-                    //                 name: '10元',
-                    //                 remark: 10,
-                    //                 money:10, //付款金额
-                    //                 temChildId: 11,
-                    //             },
-                    //             {
-                    //                 name: '20元送5元',
-                    //                 remark: 25,
-                    //                 money:20, //付款金额
-                    //                 temChildId: 12,
-                    //             }
-                    //         ]
-                    // }
-            ],
-            remoteCharge: [ //远程充电
-                {
-                port: '01',
-                status: 1,
-                time: 320,
-                elePower: 137.6
-                },
-                {
-                port: '02',
-                status: 2,
-                time: 320,
-                elePower: 137.6
-                },
-                 {
-                port: '03',
-                status: 3,
-                time: 320,
-                elePower: 137.6
-                },
-            ],
+            temChargeList: [], 
+             temCoinList: [], //模拟投币数据
+             temOfflineList: [], //离线卡数据
+           
+            remoteCharge: [], //远程充电
             scanTotalMoney: [ //查看总金额
                 {type: '刷卡总金额',money: ''},
                 {type: '投币总金额	',money: ''}
@@ -828,6 +727,12 @@ export default {
                 }
                 // 系统参数
                  _this.portStatusList= deviceInfo.allPortStatusList || []
+                 _this.remoteCharge= deviceInfo.allPortStatusList || []
+                 _this.remoteCharge= _this.remoteCharge.map((item,i)=>{ //给remoteCharge的键赋值
+                      item.chargeTime= 240
+                      item.elePower= 1.0
+                      return item
+                })
                 let sysparam= deviceInfo.sysparam
                 let systemParamer=  _this.systemParamer
                 thi.elecTimeFirst= sysparam && sysparam.elecTimeFirst ? sysparam.elecTimeFirst : 0 //设置参数需要传递的值
@@ -843,6 +748,9 @@ export default {
         },
         handleScanMap(){ //点击查看地图
             this.dialogVisible= true
+        },
+        upDatePosition(){ //更新地图信息
+            
         },
         handleGetPortStatus(row){ //更新端口状态
         let loading= Loading.service({
@@ -917,6 +825,35 @@ export default {
             }).catch(err=>{ 
                 loading.close()
             })
+        },
+        handleRemoteCharge(row){ //远程充电
+            let {port:payport,chargeTime:time,elePower:elec }= row
+            Vue.set(row,'loading',true)
+            remoteChargeByPort({payport,time,elec,code: this.code}).then(res=>{
+                Vue.set(row,'loading',false)
+                if(res.wolfcode == '1000'){
+                    messageTip('success',`端口${port}，远程充电设置成功`)
+                }else{
+                     messageTip('error',`端口${port}，远程充电设置失败`)
+                }
+            }).catch(err=>{
+                  Vue.set(row,'loading',false)
+            })
+        },
+        handleRemoteBreakOff(row){ //远程断电
+            let {port}= row
+             Vue.set(row,'loading',true)
+            remoteChargeBreakOff({port,code: this.code}).then(res=>{
+                 Vue.set(row,'loading',false)
+                if(res.wolfcode == '1000'){
+                    messageTip('success',`端口${port}，远程充电设置成功`)
+                }else{
+                     messageTip('error',`端口${port}，远程充电设置失败`)
+                }
+            }).catch(err=>{
+                 Vue.set(row,'loading',false)
+            })
+            
         },
         getDeviceSysParam(){ //获取设备的系统参数信息
             let loading= Loading.service({

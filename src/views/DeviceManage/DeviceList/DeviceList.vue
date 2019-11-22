@@ -183,6 +183,7 @@
                 prop="bindtype"
                 label="测试状态"
                 min-width="80"
+                v-if="userInfo.classify== 'superAdmin'"
                 >
                 <template slot-scope="scope">
                    <el-button type="success" size="mini" :disabled="scope.row.bindtype == 0" :plain="scope.row.bindtype == 0">
@@ -196,6 +197,7 @@
                 label="操作"
                 min-width="90"
                 fixed="right"
+                v-if="userInfo.classify== 'superAdmin'"
                 >
                 <template slot-scope="scope">
                     <el-button type="primary" size="mini" icon="el-icon-setting" @click="$router.push({path:'/deviceManage/deviceList/deviceDetail',query:{code: scope.row.code}})">详情</el-button>
@@ -266,6 +268,7 @@
  import {alertPassword,messageTip} from '@/utils/ele'
  import QRCode from '@/components/common/QRCode'
  import { getDeviceList,setHardversion,resetDeviceTestTime } from '@/require/deviceManage'
+ import { mapState } from 'vuex'
 export default {
     data(){
         return {
@@ -284,6 +287,9 @@ export default {
     components: {
         MyPagination,
         QRCode
+    },
+    computed: {
+        ...mapState(['userInfo'])
     },
     created(){
         if(JSON.stringify(this.$route.query) != "{}"){

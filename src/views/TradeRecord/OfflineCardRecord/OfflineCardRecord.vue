@@ -94,7 +94,7 @@
                 min-width="50"
                 >
                 <template slot-scope="scope">
-                     {{ (nowPage-1)*10+scope.$index+1 }}
+                     {{(nowPage-1)*10+scope.$index+1 }}
                 </template>
                 </el-table-column>
                 <el-table-column

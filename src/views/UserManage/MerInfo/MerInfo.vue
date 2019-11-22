@@ -148,7 +148,7 @@
                 label="在线数量"
                 min-width="100">
                     <template slot-scope="scope">
-                        <router-link :to="`/deviceManage/deviceList?phone=${scope.row.phone_num}`">
+                        <router-link :to="`/deviceManage/deviceList?phone=${scope.row.phone_num}&line=1`">
                              <el-link type="primary">{{scope.row.onlines}}</el-link>
                         </router-link>
                     </template>

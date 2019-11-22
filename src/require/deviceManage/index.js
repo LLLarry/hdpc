@@ -96,7 +96,8 @@ export const savesystemParma= function (data){
 export const getDeviceStatus= function (data){ 
     return ajax({
              url: '/querystate',
-             data: data
+             data: data,
+             method:'post'
          })
 }
 
@@ -106,7 +107,8 @@ export const getDeviceStatus= function (data){
 export const lockDevicePort= function (data){ 
     return ajax({
              url: '/lock',
-             data: data
+             data: data,
+             method:'post'
          })
 }
 
@@ -129,6 +131,41 @@ export const setDeviceMulDevice= function (data){
              data: data
          })
 }
+
+/**
+ * 端口远程充电
+ */
+export const remoteChargeByPort= function (data){ 
+    return ajax({
+             url: '/testpaytoport',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * 端口远程断电
+ */
+export const remoteChargeBreakOff= function (data){ 
+    return ajax({
+             url: '/stopRechargeByPort',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * 更新地图位置信息
+ */
+export const updateMapPosition= function (data){ 
+    return ajax({
+             url: '/getLocationBySendData',
+             data: data,
+             method: 'post'
+         })
+}
+
+
 
 
 

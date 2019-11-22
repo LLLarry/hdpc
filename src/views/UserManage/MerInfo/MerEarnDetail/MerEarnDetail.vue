@@ -69,6 +69,12 @@
                 label="订单号"
                 min-width="230"
                 >
+                <template slot-scope="{row}">
+                    <router-link :to="`/usermanage/merInfo/merOrderEarnDetail?ordernum=${row.ordernum}&paysource=${row.paysource}&type=${row.status}`" v-if="row.paysource != 0">
+                        <el-link type="primary">{{row.ordernum}}</el-link>
+                    </router-link>
+                    <span v-else> {{ row.ordernum }}</span>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="money"

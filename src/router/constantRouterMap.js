@@ -78,6 +78,15 @@ export const constantRouterMapSuperAdmin= [
         }
       },
       {
+        path: '/usermanage/merInfo/merOrderEarnDetail',
+        name: '商户订单收益信息',
+        component: ()=> import('@/views/UserManage/MerInfo/MerOrderEarnDetail/MerOrderEarnDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      
+      {
         path: '/usermanage/merInfo/merBinkInfo',
         name: '商户银行卡信息',
         component: ()=> import('@/views/UserManage/MerInfo/MerBinkInfo/MerBinkInfo'),
@@ -370,6 +379,14 @@ export const constantRouterMapAdmin= [
         }
       },
       {
+        path: '/usermanage/merInfo/merOrderEarnDetail',
+        name: '商户订单收益信息',
+        component: ()=> import('@/views/UserManage/MerInfo/MerOrderEarnDetail/MerOrderEarnDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
         path: '/usermanage/merInfo/merBinkInfo',
         name: '商户银行卡信息',
         component: ()=> import('@/views/UserManage/MerInfo/MerBinkInfo/MerBinkInfo'),
@@ -474,6 +491,14 @@ export const constantRouterMapAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/tradeRecord/walletRecord',
+        name: '钱包记录',
+        component: ()=> import('@/views/TradeRecord/WalletRecord/WalletRecord'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
       // 交易记录
        // 设备管理
        {
@@ -508,22 +533,22 @@ export const constantRouterMapAdmin= [
           role: ['superAdmin','admin']
         }
       },
-      {
-        path: '/deviceManage/deviceList/deviceDetail',
-        name: '设备详情',
-        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/DeviceDetail'),
-        meta: {
-          role: ['superAdmin','admin']
-        }
-      },
-      {
-        path: '/deviceManage/deviceList/templateDetail',
-        name: '模板详情',
-        component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
-        meta: {
-          role: ['superAdmin','admin']
-        }
-      },
+      // {
+      //   path: '/deviceManage/deviceList/deviceDetail',
+      //   name: '设备详情',
+      //   component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/DeviceDetail'),
+      //   meta: {
+      //     role: ['superAdmin','admin']
+      //   }
+      // },
+      // {
+      //   path: '/deviceManage/deviceList/templateDetail',
+      //   name: '模板详情',
+      //   component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
+      //   meta: {
+      //     role: ['superAdmin','admin']
+      //   }
+      // },
       // 设备管理结束
       // IC卡管理开始
        {

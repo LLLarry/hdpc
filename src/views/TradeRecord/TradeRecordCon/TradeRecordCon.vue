@@ -402,9 +402,9 @@ export default {
                     _this.totalData= [
                          {
                             earnName: '收益：',
-                            earn: totalmoney,
+                            earn: incomemoney,
                             earnMoneyName: '收入：',
-                            earnMoney: incomemoney,
+                            earnMoney: totalmoney,
                             expendName: '支出：',
                             expend: reftotalmoney,
                             walletName: '钱包消费：',

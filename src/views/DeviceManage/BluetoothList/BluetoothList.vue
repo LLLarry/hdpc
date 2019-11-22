@@ -140,6 +140,7 @@
                 prop="testStatus"
                 label="测试状态"
                 min-width="100"
+                v-if="userInfo.classify== 'superAdmin'"
                 >
                 <template slot-scope="scope">
                    <el-button type="primary" size="mini" :disabled="scope.row.bindtype == 0" :plain="scope.row.bindtype == 0">
@@ -209,6 +210,7 @@ import MyPagination from '@/components/common/MyPagination'
 import QRCode from '@/components/common/QRCode'
 import {alertPassword,messageTip} from '@/utils/ele'
 import { getBluetoothList,setHardversion,resetDeviceTestTime } from '@/require/deviceManage'
+import { mapState } from 'vuex'
 export default {
     data(){
         return {
@@ -222,6 +224,9 @@ export default {
             dialogVisible: false,
             alertDeviceCode: 0 //当前选中的二维码
         }
+    },
+    computed: {
+        ...mapState(['userInfo'])
     },
     created(){
          if(JSON.stringify(this.$route.query) != "{}"){

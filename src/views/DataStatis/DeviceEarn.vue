@@ -74,7 +74,9 @@
                 fixed
                 >
                 <template slot-scope="scope">
-                     <el-link type="primary">{{scope.row.code}}</el-link>
+                    <router-link :to="`/deviceManage/deviceList?devicenum=${scope.row.code}`">
+                        <el-link type="primary" >{{scope.row.code}}</el-link>
+                    </router-link>
                 </template>
                
                 </el-table-column>
@@ -92,6 +94,11 @@
                 label="手机号"
                 min-width="120"
                 >
+                 <template slot-scope="scope">
+                    <router-link :to="`/usermanage/merInfo?phone=${scope.row.phone}`">
+                        <el-link type="primary" >{{scope.row.phone}}</el-link>
+                    </router-link>
+                </template>
                 </el-table-column>
 
                  <el-table-column

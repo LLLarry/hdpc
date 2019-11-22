@@ -124,7 +124,7 @@
                 min-width="80"
                 >
                 <template slot-scope="{row}">
-                    <router-link to="/">
+                    <router-link :to="`/deviceManage/deviceList?devicenum=${row.equipmentnum}`">
                         <el-link type="primary">{{row.equipmentnum}}</el-link>
                     </router-link>
                 </template>
@@ -134,11 +134,11 @@
                 label="端口号"
                 min-width="60"
                 >
-                <template slot-scope="{row}">
+                <!-- <template slot-scope="{row}">
                     <router-link to="/">
                         <el-link type="primary">{{row.port}}</el-link>
                     </router-link>
-                </template>
+                </template> -->
                 </el-table-column>
                  <el-table-column
                 prop="expenditure"

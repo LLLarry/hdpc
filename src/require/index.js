@@ -12,7 +12,7 @@ export const handleLogin= function (data){ //处理login
     return ajax({
              url: '/webenter/accountEnter',
              data: data,
-            //  method: 'post'
+             method: 'post'
          })
 }
 export const handleGetMerEarn= function (data){ //处理 商户收益

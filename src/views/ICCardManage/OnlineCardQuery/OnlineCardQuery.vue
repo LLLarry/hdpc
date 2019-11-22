@@ -90,7 +90,9 @@
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                    <el-link type="primary">{{scope.row.cardID}}</el-link>
+                    <router-link :to="`/iccardManage/onlineCardHandle?cardnumber=${scope.row.cardID}`">
+                        <el-link type="primary">{{scope.row.cardID}}</el-link>
+                    </router-link>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -117,7 +119,7 @@
                     <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${scope.row.uid}`" v-if="scope.row.relevawalt == 1">
                         <el-link type="primary">{{scope.row.touristbalance}}</el-link>
                     </router-link>
-                     <router-link :to="`/iccardManage/onlineCardConsume?cardID=${scope.row.cardID}`" v-if="scope.row.relevawalt == 2">
+                     <router-link :to="`/iccardManage/onlineCardConsume?cardnumber=${scope.row.cardID}`" v-if="scope.row.relevawalt == 2">
                         <el-link type="primary">{{scope.row.money}}</el-link>
                     </router-link>
                 </template>
@@ -168,7 +170,7 @@
                 </el-table-column>
                  <el-table-column
                 prop="create_time"
-                label="备注"
+                label="创建时间"
                 min-width="150"
                 >
                  <template slot-scope="scope">

@@ -233,7 +233,7 @@ export default {
                 let data= await fn({id})
                 if(data.code == 200){
                     messageTip('success','解绑成功')
-                     window.location.reload()
+                     this.asyGetUserInfo(this.userInfoDetailForm)
                     
                 }else{
                     messageTip('success','解绑失败')
@@ -281,7 +281,7 @@ export default {
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },
         backFn(data){ //绑定商户或小区回调，修改自己的值
-           window.location.reload()
+           this.asyGetUserInfo(this.userInfoDetailForm)
         }
     }
 }

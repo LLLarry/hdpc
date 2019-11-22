@@ -123,3 +123,14 @@ export const getUserHandleInfo= function (data){
              data: data
          })
 }
+
+/**
+ * 商户订单收益明细
+ */
+
+export const getDealerEarningsOrderDetail= function (data){
+    return ajax({
+             url: '/AccountInfo/dealerEarningsOrderDetail',
+             data: data
+         })
+}

@@ -27,7 +27,8 @@ const router= new Router({
 //router.addRoutes(constantRouterMapSuperAdmin)
 let routesList= []
 router.beforeEach((to,from,next) => {
- 
+  console.log(to.path.includes('wx'))
+  
   let newList= store.getters.transformList //路由降维数组 （菜单）
   let menuList= store.state.menuList //导航菜单 （菜单）
 
@@ -35,7 +36,6 @@ router.beforeEach((to,from,next) => {
 
   const userInfo= store.state.userInfo 
   let routes= store.state.moduleA.asyRouterMap   //获取vuex中的moduleA中存储的路由，moduleA没进行缓存，所以刷新之后会消失
-  // console.log('routes',routes)
   if(userInfo){ //vuex中存在用户信息
     if(routes.length === 0){ //当moduleA中的路由不存在 （也可能当刷新消失）,刷新会使router中动态提添加的路由消失，所以加上这个
       if(userInfo.classify === 'Admin'){  //根据权限过滤路由

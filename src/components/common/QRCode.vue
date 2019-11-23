@@ -19,10 +19,11 @@ export default {
     },
     methods: {
         qrcode() {
+        let origin= window.location.origin || 'http://www.he360.com.cn'
         let qrcode = new QRCode('qrcode', {
             width: 260,  
             height: 250,
-            text: 'http://www.he360.com.cn/oauth2Portpay?codeAndPort='+this.alertDeviceCode, // 二维码地址
+            text: `${origin}/equipment/allChargePort?equcode=${this.alertDeviceCode}`, // 二维码地址
             colorDark : "#000",
             colorLight : "#fff",
         })

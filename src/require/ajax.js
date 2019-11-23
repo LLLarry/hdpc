@@ -6,12 +6,10 @@ import qs from 'qs'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-let baseURL= 'http://localhost'
-// if (process.env.NODE_ENV === "development"){ //开发环境
-//   baseURL= 'http://localhost'
-// }else { //生产环境
-//   baseURL= 'http://www.tengfuchong.com.cn'
-// }
+let baseURL= window.location.origin || 'http://www.he360.com.cn'
+if (process.env.NODE_ENV === "development"){ //开发环境
+  baseURL= 'http://localhost'
+}
 
 const service = axios.create({ // 创建axios实例           
         timeout: 120000, // 请求超时时间
@@ -32,7 +30,6 @@ service.interceptors.request.use(config => { //请求拦截器
           }
         }
         config.cancelToken = new axios.CancelToken(function (cancel) { //将请求的cancelToken存到 vuex中的pushToken中
-          //  console.log('config',cancel) 
           store.commit('pushToken', {cancelToken: cancel,url:config.url})
         })
       

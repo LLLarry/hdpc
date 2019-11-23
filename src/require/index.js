@@ -15,6 +15,33 @@ export const handleLogin= function (data){ //处理login
              method: 'post'
          })
 }
+
+export const handleMessageLogin= function (data){ //获取短信登录验证码
+    return ajax({
+             url: '/basicsInfo/getCaptchaData',
+             data: data,
+             method: 'post'
+         })
+}
+
+export const handleCaptcha= function (data){ //处理短信登录
+    return ajax({
+             url: '/webenter/captchaEnter',
+             data: data,
+             method: 'post'
+         })
+}
+
+export const handleWXQRcode= function (data){ //将扫描二维码微信回调的数据，发送后台
+    return ajax({
+             url: '/webenter/wechatEnter',
+             data: data,
+             method: 'post'
+         })
+}
+
+
+
 export const handleGetMerEarn= function (data){ //处理 商户收益
     return ajax({
              url: '/dataCollectInfo/dealerEarningsData',

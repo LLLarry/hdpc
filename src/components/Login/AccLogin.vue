@@ -96,14 +96,11 @@ export default {
               coo.clearCookie();
             }
             const data= {
-            //   username:this.phone,
-            //   password:this.password,
               phone:this.accLoginForm.phone,
               password:this.accLoginForm.password,
             }
             const loginInfo= this.asyHandleLoginAct(data)
             loginInfo.then((res)=>{
-                console.log(res)
                 this.loginInfo= {
                      status: res.userInfo.code,
                      message: res.userInfo.message

@@ -2,18 +2,18 @@
     <div class="deviceDetail">
          <el-card class="box-card">
             <el-row>
-                <el-col :xs="8" :sm="4" >
+                <el-col :xs="8" :sm="4" :md="3">
                     <div class="colCon">
                         绑定状态： <el-link :type="username != 0 ? 'success' : 'danger'">{{username != 0 ? '已绑定' : '未绑定'}}</el-link>
                     </div>
                 </el-col>
-                <el-col :xs="8" :sm="4">
+                <el-col :xs="8" :sm="3" :md="3">
                     <div class="colCon">
                         <el-button type="danger" size="mini" v-if="username != 0" @click="handleTaggleBind(2)">解绑设备</el-button>
                         <el-button type="primary" size="mini" v-else @click="handleTaggleBind(1)">绑定设备</el-button>
                     </div>
                 </el-col>
-                <el-col :xs="8" :sm="4">
+                <el-col :xs="8" :sm="4" :md="3">
                     <div class="colCon">
                          设备号: <router-link :to="`/deviceManage/deviceList?devicenum=${code}`"><el-link type="primary">{{code}}</el-link></router-link>
                     </div>
@@ -165,20 +165,9 @@
             </div>
            
         </el-card>
-        <!-- <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <span>模拟投币系统模板</span>
-            </div>
-            <TemplateCoin :from="2" :list="temCoinList" />
-        </el-card>
-        <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <span>离线卡系统模板</span>
-            </div>
-            <TemplateOffline :from="2" :list="temOfflineList" />
-        </el-card> -->
+       
         <!-- 端口状态 -->
-         <el-card class="box-card">
+         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)">
             <div slot="header" class="clearfix">
                 <span>端口状态</span>
             </div>
@@ -286,7 +275,7 @@
             </el-table>
          </el-card>
         <!-- 远程充电 -->
-        <el-card class="box-card">
+        <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)">
             <div slot="header" class="clearfix">
                 <span>远程充电</span>
             </div>
@@ -369,12 +358,12 @@
                 </el-table-column>
             </el-table>
          </el-card>
-         <el-row>
+         <el-row v-if="!['03','04'].includes(hwVerson)">
              <el-col :xs="24" :sm="12" style="padding: 0 20px;">
                   <!-- 查看消费总金额 -->
                  <el-card class="box-card">
                     <div slot="header" class="clearfix">
-                        <span>远程充电</span>
+                        <span> 查看消费总金额</span>
                     </div>
                     <el-table
                         :data="scanTotalMoney"
@@ -442,7 +431,7 @@
                 </el-card>
              </el-col>
          </el-row>
-         <el-card class="box-card">
+         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)">
                     <div slot="header" class="clearfix">
                         <span>系统参数表</span>
                     </div>
@@ -508,19 +497,19 @@
                     :visible.sync="dialogVisible"
                     custom-class="mapDialog"
                     >
+                     <!-- [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}] -->
                     <!-- <el-amap :vid="'amap-vue'" ref="tt"></el-amap> -->
                     <el-amap vid="amapDemo" >
                         <el-amap-marker
-                         v-for="(marker,i) in [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]" 
+                         v-for="(marker) in mapList" 
                          :position="marker.position" 
-                         :title="`这是坐标`"
-                         :key="i">
+                         :key="marker.position[0]">
                          </el-amap-marker>
                          <el-amap-info-window
-                             v-for="(marker,i) in [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]" 
-                             :key="marker.position[0]"
+                            v-for="(marker) in mapList" 
                             :position="marker.position"
-                            :content="`<div>设备:000001<div><p>地址：河南省郑州市金水区紫金小区<p>`"
+                            :key="marker.position[1]"
+                            :content="marker.content"
                             :visible="true"
                             :offset="[0,-28]"
                             >
@@ -572,7 +561,7 @@ export default {
                 //     single: 31
                 // }
             ],
-            // mapInfo: [{longitude: '116.4811810',latitude: '39.9897920'}],
+            mapList: [],
             mapInfo: [],
             portStatusList: [],
             isGrade: false, //默认分等级模板为false,当为分等级模板的时候 isGrade= true
@@ -747,10 +736,27 @@ export default {
             }
         },
         handleScanMap(){ //点击查看地图
+        // [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]
+            let {longitude,latitude}= this.mapInfo[0]
+            this.mapList= [
+                {
+                    position: [longitude,latitude],
+                    content: `<div>设备:${this.code}<div><p>地址：<p>`
+                    }
+                ]
+                console.log(this.mapList)
             this.dialogVisible= true
         },
         upDatePosition(){ //更新地图信息
-            
+            updateMapPosition({code: this.code}).then(res=>{
+                if(res == 1){
+                     messageTip('success','更新位置成功')
+                }else{
+                    messageTip('error','更新位置失败')
+                }
+            }).catch(err=>{
+               
+            })
         },
         handleGetPortStatus(row){ //更新端口状态
         let loading= Loading.service({

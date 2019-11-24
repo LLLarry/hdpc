@@ -22,6 +22,7 @@
                                         <div class="login_item">
                                             <!-- <h4>请使用微信扫码登录</h4> -->
                                             <div class="qrCodeCon" id="login_ewm"></div>
+                                            <router-view></router-view>
                                         </div>
                                     </el-tab-pane>
                                     <el-tab-pane label="账号登录" name="second">
@@ -46,7 +47,7 @@
 import Vue from 'vue'
 import AccLogin from './AccLogin' //账号登录
 import MessLogin from './MessLogin' //短信登录
-
+import QRCodeRedict1 from '@/components/Login/QRCodeRedict1'
 export default {
     data() {
       return {
@@ -63,6 +64,14 @@ export default {
     components:{
         MessLogin,
         AccLogin,
+        QRCodeRedict1
+    },
+    created(){
+        if(this.$route.path== '/login/qrCodeRedict'){
+            this.activeName= 'first'
+        }else{
+            this.activeName= 'second'
+        }
     },
     methods: {
       handleClick(tab, event) {

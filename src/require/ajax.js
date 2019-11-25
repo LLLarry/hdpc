@@ -2,7 +2,7 @@
 import {messageTip} from '@/utils/ele'
 import store from '@/store'
 import qs from 'qs'
-import axios from 'axios'
+import axios  from 'axios'
 // 加载进度条插件及样式
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'

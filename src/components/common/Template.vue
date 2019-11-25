@@ -2,6 +2,7 @@
     <div class="template">
         <el-card :class="['box-card','temTableTitle', (from==3 && item.pitchon==1 && ![1,2,3].includes(grade)) ? 'selectedTem' : '']" v-for="(item,i) in arr" :key="i">
             <h1 v-if="[1,2,3].includes(grade)" style="text-align: center; color: #666; padding-bottom: 10px;">{{grade == 1 ? "等级一" : grade == 2 ? "等级二" : grade == 3 ? "等级三" : ''  }}</h1>
+            {{JSON.stringify(arr)}}
            <el-table
                 :data="[{}]"
                 border

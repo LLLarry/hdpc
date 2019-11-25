@@ -87,100 +87,8 @@ export default {
             temChargeList: [], 
             tempgather: [], //分等级模板
             temCoinList: [ //模拟投币数据
-                    // {   
-                    //     id: 1,
-                    //     name: '充电系统默认模板',
-                    //     remark: '和动充电站',
-                    //     common1: '1569365326',
-                    //     permit: 1, //是否支持退费 1是 2否
-                    //     walletpay: 2, //是否钱包支付 1是 2否
-                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
-                    //     gather: [
-                    //             {
-                    //                 name: '1元 1个币',
-                    //                 remark: 1,
-                    //                 money:1, //付款金额
-                    //                 temChildId: 11,
-                    //             },
-                    //             {
-                    //                 name: '4元 2个币',
-                    //                 remark: 2,
-                    //                 money:4, //付款金额
-                    //                 temChildId: 12,
-                    //             }
-                    //         ]
-                    // },
-                    // {   
-                    //     id: 2,
-                    //     name: '充电系统默认模板',
-                    //     remark: '和动充电站',
-                    //     common1: '1569365326',
-                    //     permit: 1, //是否支持退费 1是 2否
-                    //     walletpay: 2, //是否钱包支付 1是 2否
-                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
-                    //     gather: [
-                    //             {
-                    //                 name: '1元 1个币',
-                    //                 remark: 1,
-                    //                 money:1, //付款金额
-                    //                 temChildId: 21,
-                    //             },
-                    //             {
-                    //                 name: '4元 2个币',
-                    //                 remark: 2,
-                    //                 money:4, //付款金额
-                    //                 temChildId: 22,
-                    //             }
-                    //         ]
-                    // }
             ],
              temOfflineList: [ //离线卡数据
-                    // {   
-                    //     id: 1,
-                    //     name: '充电系统默认模板',
-                    //     remark: '和动充电站',
-                    //     common1: '1569365326',
-                    //     permit: 1, //是否支持退费 1是 2否
-                    //     walletpay: 2, //是否钱包支付 1是 2否
-                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
-                    //     gather: [
-                    //             {
-                    //                 name: '10元',
-                    //                 remark: 10,
-                    //                 money:10, //付款金额
-                    //                 temChildId: 11,
-                    //             },
-                    //             {
-                    //                 name: '20元送5元',
-                    //                 remark: 25,
-                    //                 money:20, //付款金额
-                    //                 temChildId: 12,
-                    //             }
-                    //         ]
-                    // },
-                    //  {   
-                    //     id: 2,
-                    //     name: '充电系统默认模板',
-                    //     remark: '和动充电站',
-                    //     common1: '1569365326',
-                    //     permit: 1, //是否支持退费 1是 2否
-                    //     walletpay: 2, //是否钱包支付 1是 2否
-                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
-                    //     gather: [
-                    //             {
-                    //                 name: '10元',
-                    //                 remark: 10,
-                    //                 money:10, //付款金额
-                    //                 temChildId: 21,
-                    //             },
-                    //             {
-                    //                 name: '20元送5元',
-                    //                 remark: 25,
-                    //                 money:20, //付款金额
-                    //                 temChildId: 22,
-                    //             }
-                    //         ]
-                    // }
             ],
             topHeight: 0,//顶部框到顶部固定定位据顶部的距离
             visiblesHw01: false, //版本号为01的模板是否显示
@@ -243,35 +151,11 @@ export default {
         }
     },
     methods: {
-        // async asyGetDeviceDetailTemInfo(data){
-        //     let _this= this
-        //     try{
-        //         let temListInfo= await getDeviceDetailTemInfo(data)
-        //         if(temListInfo.code == 200){
-        //             this.source= temListInfo.source
-        //             this.arecode= temListInfo.arecode
-        //             if(this.hw == '03'){
-        //                 // this.temChargeList= temListInfo.templatelist
-        //                 this.temCoinList= temListInfo.templatelist
-        //             }else if(this.hw == '04'){
-        //                 this.temOfflineList= temListInfo.templatelist
-        //             }else{
-        //                 this.temChargeList= temListInfo.templatelist
-        //                 this.tempgather= temListInfo.tempgather || []
-        //             }
-        //         }else{
-        //             messageTip('error','获取主模板失败')
-        //         }
-        //     }catch(error){
-
-        //     }
-        // },
         handleTopTitle(e){
             e= e || window.event
             let target= e.target || e.srcElement
             let scrollTop= target.scrollTop
             if(this.topHeight-scrollTop > 80){
-                 console.log(this.$refs.topContent)
                 this.$refs.topContent.style.top= (this.topHeight-scrollTop)+'px'
             }else{
                 this.$refs.topContent.style.top= '80px'

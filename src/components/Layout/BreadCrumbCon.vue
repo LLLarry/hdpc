@@ -17,7 +17,7 @@
 
 <script>
 // import {Tag} from 'element-ui'
-// import Vue from 'vue'
+import Vue from 'vue'
 import { mapState,mapMutations} from 'vuex'
 // Vue.use(Tag)
 

@@ -70,7 +70,7 @@ export default {
     clearToken (state) { //取消token数组里的请求，并清空数组
         try {
             state.cancelTokenArr.forEach(item => {
-                console.log(item)
+                // console.log(item)
                 if(item.cancelToken){
                     item.cancelToken('路由跳转取消请求')
                 } 

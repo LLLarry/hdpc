@@ -1,6 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
+import Vue from 'vue' //cdn模式
 import App from './App'
 import router from './router'
 import store from './store'
@@ -16,7 +16,6 @@ import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import 'element-ui/lib/theme-chalk/display.css';
 import 'default-passive-events'
 import '../static/style/icon.less'
-
 
 Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.use(Button);
@@ -64,16 +63,10 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 
-// const wxScriptLength= document.getElementsByClassName('wxLoginClass').length
-//       if(wxScriptLength<=0){
-//         const script = document.createElement('script')
-//         script.type = 'text/javascript'
-//         script.setAttribute('class','wxLoginClass ')
-//         script.src = 'http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
-//         document.body.appendChild(script)
-//         setTimeout(()=>{
-//           console.log(WxLogin)
-//         })
+// 移除加载动画
+const body= document.getElementsByTagName('body')[0]
+const index_loading= document.getElementsByClassName('index_loading')[0]
+body.removeChild(index_loading)
 
 handleSlide()   
 window.onresize = function() {

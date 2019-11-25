@@ -23,7 +23,7 @@ export default {
         let qrcode = new QRCode('qrcode', {
             width: 260,  
             height: 250,
-            text: `${origin}/equipment/allChargePort?equcode=${this.alertDeviceCode}`, // 二维码地址
+            text: `${origin}/oauth2pay?code=${this.alertDeviceCode}`, // 二维码地址
             colorDark : "#000",
             colorLight : "#fff",
         })

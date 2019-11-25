@@ -128,12 +128,16 @@ import { handleDataStatis } from '@/require/datastatis'
 export default {
     data(){
         return {
-            dataStatisInfo: {}
+            dataStatisInfo: {},
+            loading: null
         }
     },
     created(){
         // console.log(this.$route.query)
        this.handleDataStatisInfo()
+    },
+    beforeDestroy(){ //退出之间，将未关闭的Loading关闭
+        this.loading && this.loading.close()
     },
     methods:{
         async handleDataStatisInfo(){
@@ -143,6 +147,7 @@ export default {
                         spinner: 'el-icon-loading',
                         customClass: "loadClass"
                     });
+            this.loading= loading
             try{
                 let dataStatisInfo= await handleDataStatis()
                 this.dataStatisInfo= dataStatisInfo

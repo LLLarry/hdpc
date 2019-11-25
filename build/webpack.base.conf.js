@@ -14,7 +14,16 @@ module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
     // app: './src/main.js'
-    app: ["babel-polyfill", "./src/main.js"]
+    app: ["babel-polyfill", "./src/main.js"] //这个是通过babel-polyfill将代码转化为IE9以上和手机支持的格式
+  },
+  //webpack打包时忽略的包 
+  externals: {
+    // 'vue': 'Vue',
+    // 'vue-router': 'VueRouter',
+    // 'vuex': 'Vuex',
+    // 'axios': 'axios',
+    // "moment": "moment",
+    // "echarts": "echarts",
   },
   output: {
     path: config.build.assetsRoot,

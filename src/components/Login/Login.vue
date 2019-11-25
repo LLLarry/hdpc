@@ -47,7 +47,6 @@
 import Vue from 'vue'
 import AccLogin from './AccLogin' //账号登录
 import MessLogin from './MessLogin' //短信登录
-import QRCodeRedict1 from '@/components/Login/QRCodeRedict1'
 export default {
     data() {
       return {
@@ -63,8 +62,7 @@ export default {
     },
     components:{
         MessLogin,
-        AccLogin,
-        QRCodeRedict1
+        AccLogin
     },
     created(){
         if(this.$route.path== '/login/qrCodeRedict'){
@@ -86,8 +84,8 @@ export default {
           let wxLogin=new WxLogin({
                 id:"login_ewm", 
                 appid: "wx695275de73b7dad4", 
-                scope: "snsapi_login", 
-                redirect_uri:"http%3A%2F%2Fwww.tengfuchong.com.cn%2FqrCodeRedict",
+                scope: "snsapi_login",
+                redirect_uri:"http%3A%2F%2Fwww.tengfuchong.com.cn%2Flogin%2FqrCodeRedict",
                 state: "2",
                 style: "black",
                 href: "data:text/css;base64,LmltcG93ZXJCb3ggLnFyY29kZSB7d2lkdGg6IDI0MHB4OyBkaXNwbGF5OiBibG9jazsgbWFyZ2luOiAwIGF1dG87fQ0KLmltcG93ZXJCb3ggLnRpdGxlIHtkaXNwbGF5OiBub25lO30NCi5pbXBvd2VyQm94IC5pbmZvIHt3aWR0aDogMjAwcHg7fQ0KLnN0YXR1c19pY29uIHtkaXNwbGF5OiBub25lfQ0KLmltcG93ZXJCb3ggLnN0YXR1cyB7dGV4dC1hbGlnbjogY2VudGVyO30g"

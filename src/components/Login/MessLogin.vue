@@ -141,7 +141,7 @@ export default {
         handleLogin(){
             this.$refs['ruleForm'].validate((valid) => {
             if (valid) {
-                this.asyHandleCaptcha({phone: this.ruleForm.phone, captcha: this.verifiInfo.captcha,authcode: this.ruleForm.message,time:this.verifiInfo.sendtime,type:1})
+                this.asyHandleCaptcha({phone: this.ruleForm.phone, captcha: this.verifiInfo.captcha,authcode: this.ruleForm.message,sendtime:this.verifiInfo.sendtime,type:1})
             } else {
                 return false;
             }

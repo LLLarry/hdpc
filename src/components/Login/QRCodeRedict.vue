@@ -1,9 +1,8 @@
 <template>
   <div class="qrCodeRedict">
      <div class="logining">
-       <div class="cont">
-         正在登录{{dot}}
-       </div>
+       正在登录
+       <i class="el-icon-loading"></i>
      </div>
   </div>
 </template>
@@ -14,25 +13,23 @@ import { mapActions } from 'vuex'
 export default {
     data(){
       return {
-        dot: '.'
+        
       }
     },
     created(){
-      setInterval(()=>{
-        let length= this.dot.length
-        this.dot= length== 1 ? '..' : length== 2 ? '...' : '.'
-      },300)
-      let {code="",state=""}= this.$route.query
-      let loginInfo= this.asyHandleCaptcha({code,state})
-      if(loginInfo.code != 200){ //登录失败
-        messageTip('error',loginInfo.message)
-        setTimeout(()=>{
-          this.$router.push('/login')
-        },3000)
-      }
+      let {code,state}= this.$route.query
+      this.asyHandleWXQRcode({code,state}).then(res=>{
+        if(res.code !== 200){
+          messageTip('error',res.message)
+          this.$router.push({path: '/login'})
+        }
+      }).catch(err=>{
+         this.$router.push({path: '/login'})
+      })
+     
     },
-    methods: {
-        ...mapActions(['asyHandleCaptcha']),
+    methods:{
+      ...mapActions(['asyHandleWXQRcode'])
     }
 }
 </script>
@@ -40,20 +37,18 @@ export default {
 <style lang="less">
 .qrCodeRedict {
   overflow: hidden;
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(#71AF9C, #B8D0A4);
+   position: absolute;
+    left:0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255,255,255,.95);
+    z-index: 99;
   .logining {
-    margin: 20% auto;
+    z-index: 99;
+    color: #1989fa;
     text-align: center;
-    font-size: 30px;
-    font-family: cursive;
-    color: #fff;
-    .cont {
-      display: inline-block;
-      width: 200px;
-      text-align: left;
-    }
+    margin-top: 40%;
   }
 }
 

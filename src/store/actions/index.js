@@ -37,6 +37,7 @@ export default {
         if(temListInfo.code == 200){
             commit('updateTemDetail',temListInfo) 
         }
+        return temListInfo
     } 
     
  

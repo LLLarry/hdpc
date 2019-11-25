@@ -537,6 +537,7 @@ import { lazyAMapApiLoaderInstance } from 'vue-amap';
 export default {
     data(){
         return {
+            Loading: null ,//Loading加载实例
             code: '', //设备号
             merid: 0, //默认是 0 绑定了就有值
             username: '0' , //username默认是0，0代表设备未绑定，非0代表设备已绑定
@@ -650,7 +651,6 @@ export default {
         Vue.use(VueAMap);
         VueAMap.initAMapApiLoader({
         key: '2c85f8508cc8c9c37829d4609cd8cad1',
-        // plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType'],
         plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
         v: '1.4.4',
         });
@@ -664,7 +664,9 @@ export default {
     mounted(){
         document.getElementsByClassName('main')[0].scrollTop= '0px'
     },
-    
+    beforeDestroy(){
+        this.Loading && this.Loading.close()
+    },
     methods: {
          handleTaggleBind(type){ //绑定或解绑设备
             alertPassword(()=>{
@@ -690,6 +692,13 @@ export default {
         },
         async asyGetDeviceDetailInfo(data){
             let _this= this
+            let loading= Loading.service({
+                        lock: true,
+                        text: '加载中',
+                        spinner: 'el-icon-loading',
+                        customClass: "loadClass"
+                    });
+            this.Loading= loading
             try{
                 let deviceInfo= await getDeviceDetailInfo(data)
                 _this.username= deviceInfo.username
@@ -729,10 +738,10 @@ export default {
                     item.val= sysparam[item.type_key]== null ? item.val : sysparam[item.type_key]
                     return item
                 })
-            
+                loading.close()
             }
             catch(error){
-
+                 loading.close()
             }
         },
         handleScanMap(){ //点击查看地图
@@ -759,12 +768,13 @@ export default {
             })
         },
         handleGetPortStatus(row){ //更新端口状态
-        let loading= Loading.service({
+            let loading= Loading.service({
                         lock: true,
                         text: '加载中',
                         spinner: 'el-icon-loading',
                         customClass: "loadClass"
                     });
+            this.Loading= loading
             getDeviceStatus({port: row.port,code: this.code}).then(res=>{
                 loading.close()
                 if (res.err == "0") {
@@ -777,12 +787,13 @@ export default {
             })
         },
         handleLockPort(row){ //锁定端口
-        let loading= Loading.service({
+            let loading= Loading.service({
                         lock: true,
                         text: '锁定中',
                         spinner: 'el-icon-loading',
                         customClass: "loadClass"
                     });
+            this.Loading= loading
             lockDevicePort({port: row.port,status: 0,code: this.code}).then(res=>{
                 loading.close()
                 if (res.err == "0") {
@@ -811,6 +822,7 @@ export default {
                         spinner: 'el-icon-loading',
                         customClass: "loadClass"
                     });
+            this.Loading= loading
             lockDevicePort({port: row.port,status: 1,code: this.code}).then(res=>{
                 loading.close()
                 if (res.err == "0") {
@@ -868,6 +880,7 @@ export default {
                         spinner: 'el-icon-loading',
                         customClass: "loadClass"
                     });
+            this.Loading= loading
             getsystemParma({code:this.code}).then(res=>{
                 loading.close()
                 if(res.status == '0'){
@@ -889,6 +902,7 @@ export default {
                         spinner: 'el-icon-loading',
                         customClass: "loadClass"
                     });
+            this.Loading= loading
             let systemParamer=  this.systemParamer
             let parmas= {}
             for (const iterator of systemParamer) {

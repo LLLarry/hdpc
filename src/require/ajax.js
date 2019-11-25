@@ -1,11 +1,13 @@
-import axios from 'axios'
+// import axios from 'axios'
 import {messageTip} from '@/utils/ele'
 import store from '@/store'
 import qs from 'qs'
+import axios from 'axios'
 // 加载进度条插件及样式
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
+// let baseURL= 'http://192.168.3.45'
 let baseURL= window.location.origin || 'http://www.he360.com.cn'
 if (process.env.NODE_ENV === "development"){ //开发环境
   baseURL= 'http://localhost'

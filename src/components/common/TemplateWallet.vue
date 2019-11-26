@@ -138,8 +138,8 @@
              <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
                 <el-link type="success" :underline="false" v-if="item.isSelected ==1"> 默认模板</el-link>
-                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.isSelected !=1" @click="handleSetDefault(item)">设为默认</el-button>
-                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.isSelected ==1" disabled plain>设为默认</el-button>
+                <el-button type="danger" size="mini" style="float:right;margin-right: 30%;" v-if="item.isSelected !=1" @click="handleSetDefault(item)">设为默认</el-button>
+                <el-button type="primary" size="mini" icon="el-icon-check" style="float:right;margin-right: 30%;" v-if="item.isSelected ==1" disabled plain>设为默认</el-button>
              </div>
              
         </el-card>

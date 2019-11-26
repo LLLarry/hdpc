@@ -140,8 +140,8 @@
              <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item)" style="float:left;margin-left: 30%;" icon="el-icon-plus">添加模板</el-button>
                 <el-link type="success" :underline="false" v-if="item.pitchon ==1"> 默认模板</el-link>
-                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon !=1" @click="handleSetSelect(item)">选中模板</el-button>
-                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon ==1" disabled plain>选中模板</el-button>
+                <el-button type="danger" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon !=1" @click="handleSetSelect(item)">选中模板</el-button>
+                <el-button type="primary" size="mini" icon="el-icon-check" style="float:right;margin-right: 30%;" v-if="item.pitchon ==1" disabled plain>选中模板</el-button>
              </div>
              
         </el-card>

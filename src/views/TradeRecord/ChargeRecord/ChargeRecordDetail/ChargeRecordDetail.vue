@@ -106,10 +106,10 @@
 </template>
 
 <script>
-const echarts= require('echarts/lib/echarts')
-require("echarts/lib/chart/line");
-require('echarts/lib/component/tooltip');
-require('echarts/lib/component/title');
+// const echarts= require('echarts/lib/echarts')
+// require("echarts/lib/chart/line");
+// require('echarts/lib/component/tooltip');
+// require('echarts/lib/component/title');
 import { getpowerLineInfo } from '@/require/tradeRecord'
 export default {
     data(){

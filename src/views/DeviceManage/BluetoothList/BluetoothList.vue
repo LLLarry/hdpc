@@ -121,7 +121,8 @@
                 min-width="80"
                 >
                  <template slot-scope="{row}">
-                    <el-button icon="el-icon-edit" type="primary" size="mini" @click="handleHwVerBtn(row)" plain>{{row.hardversion}}</el-button>
+                    <el-button icon="el-icon-edit" type="primary" size="mini" @click="handleHwVerBtn(row)" plain v-if="userInfo.classify=='superAdmin'">{{row.hardversion}}</el-button>
+                    <span v-else>{{row.hardversion}}</span>
                 </template>
                </el-table-column>
                <el-table-column
@@ -169,7 +170,7 @@
         custom-class="dialog"
        >
         <div class="qeCodeContent">
-            <QRCode :alertDeviceCode="alertDeviceCode" />
+            <QRCode :alertDeviceCode="alertDeviceCode" v-if="dialogVisible" />
         </div>
         </el-dialog>
 

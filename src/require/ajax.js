@@ -1,8 +1,9 @@
 // import axios from 'axios'
 import {messageTip} from '@/utils/ele'
 import store from '@/store'
-import qs from 'qs'
-import axios  from 'axios'
+//console.log(Qs) 
+// import qs from 'qs'  //cdn引入后是Qs
+// import axios  from 'axios'
 // 加载进度条插件及样式
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -81,7 +82,7 @@ export default function (obj){
                     })
                 })
                }else{
-                 data=  qs.stringify(data) //post请求，转化格式
+                 data=  Qs.stringify(data) //post请求，转化格式
                 return  new Promise((resolve,reject)=>{
                      service.post(url,data).then(res=>{
                         if(res.status == 200){

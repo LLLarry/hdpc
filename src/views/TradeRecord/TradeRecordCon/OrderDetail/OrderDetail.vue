@@ -90,9 +90,6 @@
                 min-width="120"
                  v-if="['2','3','4'].includes(paysource)"
                 >
-                <template slot-scope="scope">
-                    微信
-                </template>
                 </el-table-column>
 
                 <el-table-column
@@ -356,7 +353,8 @@ export default {
                 obj.payMoney= status == 1 ? money.toFixed(2) : status == 2 ? (0-money).toFixed(2) : '— —'
                 obj.orderNum= ordernum
                 obj.num= coinNum
-                obj.payType= [1,4].includes(handletype) ? '微信' : [2,5].includes(handletype) ? '虚拟操作' : [3].includes(handletype) ? '投币' : [6,7].includes(handletype) ? '钱包': [8,9].includes(handletype) ? '微信小程序' : [10,11].includes(handletype) ? '支付宝小程序' : '— —'
+                console.log(handletype)
+                obj.payType= [1,4].includes(handletype) ? '微信' : [2,5].includes(handletype) ? '支付宝' : [3].includes(handletype) ? '投币' : [6,7].includes(handletype) ? '钱包': [8,9].includes(handletype) ? '微信小程序' : [10,11].includes(handletype) ? '支付宝小程序' : '— —'
                 obj.handleTime= beginTime
                 obj.status= [1,2,3,6,8,10].includes(handletype) ? '正常' : [4].includes(handletype) ? '微信已退费' :  [5].includes(handletype) ? '支付宝已退费' : [7].includes(handletype) ? '已退款到钱包' : [9].includes(handletype) ? '微信小程序已退费' : [11].includes(handletype) ? '支付宝小程序已退费' : '— —'
                 obj.handletype= handletype

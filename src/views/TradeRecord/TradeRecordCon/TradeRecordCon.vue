@@ -384,8 +384,12 @@ export default {
                 if(res.code == 200){
                     this.gridData= res.listdata
                     this.diaOrderNum= res.ordernum
+                }else{
+                    this.gridData= []
                 }
-            }).catch(error=>{})
+            }).catch(error=>{
+                 this.gridData= []
+            })
             this.dialogMoneyDetail= true
         },
         async asyGetTradeRecord(data){
@@ -398,7 +402,6 @@ export default {
                     _this.tableData = tradeInfo.listdata
                     _this.totalPage = tradeInfo.totalRows
                     let {totalmoney=0,incomemoney=0,reftotalmoney=0,walletmoney=0,refwalletmoney=0}= tradeInfo.mapdata
-                    console.log('totalmoney',totalmoney)
                     _this.totalData= [
                          {
                             earnName: '收益：',

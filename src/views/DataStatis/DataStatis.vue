@@ -124,7 +124,8 @@
 
 <script>
 import {Loading} from 'element-ui'
-import { handleDataStatis } from '@/require/datastatis'
+import { handleDataStatis,handleDataStatisAdmin } from '@/require/datastatis'
+import { mapState } from 'vuex'
 export default {
     data(){
         return {
@@ -132,9 +133,11 @@ export default {
             loading: null
         }
     },
+    computed: {
+        ...mapState(['userInfo'])
+    },
     created(){
-        // console.log(this.$route.query)
-       this.handleDataStatisInfo()
+        this.handleDataStatisInfo()
     },
     beforeDestroy(){ //退出之间，将未关闭的Loading关闭
         this.loading && this.loading.close()
@@ -148,8 +151,9 @@ export default {
                         customClass: "loadClass"
                     });
             this.loading= loading
+            let handleDataStatisFn= this.userInfo.classify=='superAdmin' ? handleDataStatis : handleDataStatisAdmin
             try{
-                let dataStatisInfo= await handleDataStatis()
+                let dataStatisInfo= await handleDataStatisFn()
                 this.dataStatisInfo= dataStatisInfo
                 loading.close()
             }catch(error){

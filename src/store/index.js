@@ -1,5 +1,5 @@
 import Vue from 'vue'  //cdn模式
-import Vuex from 'vuex' // cdn模式
+// import Vuex from 'vuex' // cdn模式
 import mutations from './mutations'
 import actions from './actions'
 import getters from './getters'

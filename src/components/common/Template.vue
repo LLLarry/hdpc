@@ -2,7 +2,6 @@
     <div class="template">
         <el-card :class="['box-card','temTableTitle', (from==3 && item.pitchon==1 && ![1,2,3].includes(grade)) ? 'selectedTem' : '']" v-for="(item,i) in arr" :key="i">
             <h1 v-if="[1,2,3].includes(grade)" style="text-align: center; color: #666; padding-bottom: 10px;">{{grade == 1 ? "等级一" : grade == 2 ? "等级二" : grade == 3 ? "等级三" : ''  }}</h1>
-            {{JSON.stringify(arr)}}
            <el-table
                 :data="[{}]"
                 border
@@ -25,7 +24,7 @@
                     <div style="margin-top: 15px">
                         <strong>是否支持退费:  </strong>
                         <span v-if="!item.edit" :class="['top_span', item.permit ==1 ? 'green' : 'red']">{{item.permit ==1 ? '是' : '否'}}</span><span v-if="!item.edit">
-                            {{item.common2== 1 ? '(退费标准：时间和电量最小)' : item.common2== 2 ? '((退费标准：时间最小)' : item.common2== 3 ? '((退费标准：电量最小)': ''}}
+                            {{item.common2== 1 ? '(退费标准：时间和电量最小)' : item.common2== 2 ? '(退费标准：时间最小)' : item.common2== 3 ? '((退费标准：电量最小)': ''}}
                         </span>
                         <el-cascader
                         v-else
@@ -172,10 +171,10 @@
              </div>
              <div style="margin-top: 20px; text-align: center; " class="clearfix" v-else>
                 <el-button type="primary" size="mini" style="float:left;margin-left: 30%;" icon="el-icon-plus" @click="handleAddChildTem(item)" >添加模板</el-button>
-                <el-link type="success" :underline="false" v-if="(item.pitchon ==1 && ![1,2,3].includes(grade)) || (item.pitchon ==1 && grade== 3) || (gradePitchon == 1 && ![1,2].includes(grade))"> {{source == 0 ? '默认模板' : '选中模板'}}</el-link>
+                <el-link type="danger" :underline="false" v-if="(item.pitchon ==1 && ![1,2,3].includes(grade)) || (item.pitchon ==1 && grade== 3) || (gradePitchon == 1 && ![1,2].includes(grade))"> {{source == 0 ? '默认模板' : '选中模板'}}</el-link>
                 
                 <!-- <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="source == 0 && ![1,2].includes(grade)" :disabled="item.pitchon ==1" :plain="item.pitchon ==1" @click="handleSetDefault(item,gradeId)" >设为默认</el-button> -->
-                <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="source != 0 && ![1,2].includes(grade)" :disabled="item.pitchon ==1 || gradePitchon == 1" :plain="item.pitchon ==1"   @click="handleSetSelect(item,gradeId)">选中模板</el-button>
+                <el-button type="primary" icon="el-icon-check" size="mini" style="float:right;margin-right: 30%;" v-if="source != 0 && ![1,2].includes(grade)" :disabled="item.pitchon ==1 || gradePitchon == 1" :plain="item.pitchon ==1"   @click="handleSetSelect(item,gradeId)">选中模板</el-button>
              </div>
              
         </el-card>

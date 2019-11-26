@@ -23,7 +23,7 @@
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <router-link to="/datastatis/index">
+                    <router-link :to="`/iccardManage/onlineCardConsume?cardnumber=${scope.row.cardID}`">
                         <el-link type="primary" :underline="false">{{scope.row.cardID}}</el-link>
                     </router-link>
                 </template>
@@ -34,7 +34,9 @@
                 min-width="100"
                 >
                  <template slot-scope="scope">
-                    {{scope.row.money.toFixed(2)}} 
+                     <el-link type="success" :underline="false">
+                         {{ scope.row.relevawalt == 1 ? scope.row.walletmoney.toFixed(2) : scope.row.money.toFixed(2) }} 
+                     </el-link>
                 </template>
                 </el-table-column>
                 <el-table-column

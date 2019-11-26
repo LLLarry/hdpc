@@ -28,7 +28,7 @@ export default {
             colorLight : "#fff",
         })
         },
-    }
+    },
 }
 </script>
 

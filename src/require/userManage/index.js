@@ -21,7 +21,7 @@ export const handleMerInfoSet= function (data){ //请求 商户信息中的设�
  */
 export const setMerInfoSetInfo= function (data){
     return ajax({
-             url: '/allowAuthority/messSwitch',
+             url: '/allowAuthority/settingSwitch',
              data: data
          })
 }

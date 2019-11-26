@@ -85,7 +85,7 @@ export const getsystemParma= function (data){
  */
 export const savesystemParma= function (data){ 
     return ajax({
-             url: '/equipment/setSysPara',
+             url: '/equipment/setSysParam',
              data: data
          })
 }

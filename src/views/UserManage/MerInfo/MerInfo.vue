@@ -206,6 +206,12 @@
                         <el-radio :label="2">关闭</el-radio>
                     </el-radio-group>
                 </el-form-item>
+                 <el-form-item label="是否显示投币收益" prop="showincoins">
+                    <el-radio-group v-model="ruleSetForm.showincoins">
+                        <el-radio :label="1">开启</el-radio>
+                        <el-radio :label="2">关闭</el-radio>
+                    </el-radio-group>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogSetVisible = false">取 消</el-button>
@@ -306,17 +312,18 @@ export default {
 				setInfo.ordermess= setInfo.ordermess ? setInfo.ordermess : 2
 				setInfo.equipmess= setInfo.equipmess ? setInfo.equipmess : 2
                 setInfo.incoinrefund= setInfo.incoinrefund ? setInfo.incoinrefund : 1
-                let {withmess,ordermess,equipmess,incoinrefund} = setInfo
-                this.ruleSetForm= {withmess,ordermess,equipmess,incoinrefund,merid}
+                setInfo.showincoins= setInfo.showincoins ? setInfo.showincoins : 2
+                let {withmess,ordermess,equipmess,incoinrefund,showincoins} = setInfo
+                this.ruleSetForm= {withmess,ordermess,equipmess,incoinrefund,merid,showincoins}
                 this.dialogSetVisible= true
             }catch(error){
 
             }
         },
         async submitSetInfo(){ //设置设置框信息
-            const {merid, withmess,ordermess: order, equipmess: equip,incoinrefund}= this.ruleSetForm
+            const {merid, withmess,ordermess: order, equipmess: equip,incoinrefund,showincoins}= this.ruleSetForm
             try{
-                let info= await setMerInfoSetInfo({merid,withmess,order,equip,incoinrefund})
+                let info= await setMerInfoSetInfo({merid,withmess,order,equip,incoinrefund,showincoins})
                 if(info.code === 200){
                     messageTip(undefined,'设置成功')
                 }

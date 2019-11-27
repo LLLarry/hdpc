@@ -8,7 +8,6 @@ import store from '@/store'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-// let baseURL= 'http://192.168.3.45'
 let baseURL= window.location.origin || 'http://www.he360.com.cn'
 if (process.env.NODE_ENV === "development"){ //开发环境
   baseURL= 'http://localhost'
@@ -18,13 +17,13 @@ const service = axios.create({ // 创建axios实例
         timeout: 120000, // 请求超时时间
         headers: {
           // 'Content-Type': 'application/json;charset=UTF-8'
-          'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
+          'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
         },
         baseURL,
         withCredentials : true                         
 })
 
-service.interceptors.request.use(config => { //请求拦截器   
+service.interceptors.request.use(config => { //请求拦截器
         NProgress.start()
         let cancelTokenArr=  store.state.cancelTokenArr
         for(let i=0; i < cancelTokenArr.length ; i++){ //在请求之前，拦截、判断前面有没有相同路径正在发送请求，如果有，进行拦截，取消发送

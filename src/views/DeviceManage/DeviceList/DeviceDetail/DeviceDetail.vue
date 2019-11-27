@@ -906,7 +906,12 @@ export default {
             let systemParamer=  this.systemParamer
             let parmas= {}
             for (const iterator of systemParamer) {
-                parmas[iterator.type_key]= iterator.val
+                if(['coinElec','cardElec','cst'].includes(iterator.type_key)){
+                     parmas[iterator.type_key]= iterator.val.toFixed(1)
+                }else{
+                     parmas[iterator.type_key]= iterator.val
+                }
+               
             }
             savesystemParma({code: this.code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
                 loading.close()

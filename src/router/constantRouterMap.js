@@ -306,12 +306,13 @@ export const constantRouterMapSuperAdmin= [
         }
       },
       // 系统设置结束
+      // 结算收益
       {
-        path: '/datastatis/merearn/test',
-        name: 'Test',
-        component: ()=> import('@/views/DataStatis/Test'),
+        path: '/settlement/index',
+        name: '结算收益',
+        component: ()=> import('@/views/Settlement/Settlement'),
         meta: {
-          role: ['superAdmin','admin']
+          role: ['superAdmin']
         }
       },
       {
@@ -587,14 +588,6 @@ export const constantRouterMapAdmin= [
         }
       },
       // 小区管理结束
-      {
-        path: '/datastatis/merearn/test',
-        name: 'Test',
-        component: ()=> import('@/views/DataStatis/Test'),
-        meta: {
-          role: ['superAdmin','admin']
-        }
-      },
       {
         path: '*',
         component: ()=> import('@/components/NoFind/NoFind'),

@@ -177,6 +177,19 @@ export const superAdminMenuList= [
             }
         ]
     },
+    {
+        title: '结算收益',
+        index: "7",
+        link: '/settlement',
+        icon: 'icon-jiesuan',
+        children: [
+            {
+                title: '结算收益',
+                link: '/settlement/index',
+                index: '7-0'
+            }
+        ]
+    },
 
 ]
 

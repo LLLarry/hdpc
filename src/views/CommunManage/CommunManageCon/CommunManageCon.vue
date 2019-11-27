@@ -157,9 +157,10 @@
                 >
                 <template slot-scope="scope">
                     <span v-if="scope.row.manaphonenum == null">— —</span>
-                    <router-link to="/"  v-else>
-                        <el-link type="primary">{{scope.row.manaphonenum}}</el-link>
-                    </router-link>
+                    <el-link v-else>{{scope.row.manaphonenum}}</el-link>
+                    <!-- <router-link to="/"  v-else>
+                       
+                    </router-link> -->
                 </template>
                 </el-table-column>
                  <el-table-column

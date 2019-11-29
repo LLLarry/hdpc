@@ -731,9 +731,12 @@ export default {
                       item.elePower= 1.0
                       return item
                 })
+                console.log(7789)
+
                 let sysparam= deviceInfo.sysparam
                 let systemParamer=  _this.systemParamer
-                thi.elecTimeFirst= sysparam && sysparam.elecTimeFirst ? sysparam.elecTimeFirst : 0 //设置参数需要传递的值
+                this.elecTimeFirst= sysparam && sysparam.elecTimeFirst ? sysparam.elecTimeFirst : 0 //设置参数需要传递的值
+
                 _this.systemParamer= systemParamer.map((item,i)=>{
                     item.val= sysparam[item.type_key]== null ? item.val : sysparam[item.type_key]
                     return item
@@ -874,6 +877,7 @@ export default {
             
         },
         getDeviceSysParam(){ //获取设备的系统参数信息
+
             let loading= Loading.service({
                         lock: true,
                         text: '加载中',
@@ -886,8 +890,8 @@ export default {
                 if(res.status == '0'){
                     messageTip('error','系统参数获取失败')
                     return
-                    let systemParamer=  _this.systemParamer
-                    _this.systemParamer= systemParamer.map((item,i)=>{
+                    let systemParamer=  this.systemParamer
+                    this.systemParamer= systemParamer.map((item,i)=>{
                         item.val= res['param'+(i+1)]
                         return item
                     })

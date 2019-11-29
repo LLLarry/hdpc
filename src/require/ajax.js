@@ -69,7 +69,7 @@ export default function (obj){
                 let data= obj.data || {}
                if(method== 'get'){
                 return  new Promise((resolve,reject)=>{
-                    service.get(url,{params:params}).then(res=>{
+                    service.get(url,{params:{...params,isolate: 1}}).then(res=>{
                         if(res.status == 200){
                             resolve(res.data)   
                         }else{
@@ -81,7 +81,7 @@ export default function (obj){
                     })
                 })
                }else{
-                 data=  Qs.stringify(data) //post请求，转化格式
+                 data=  Qs.stringify({...data,isolate: 1}) //post请求，转化格式
                 return  new Promise((resolve,reject)=>{
                      service.post(url,data).then(res=>{
                         if(res.status == 200){

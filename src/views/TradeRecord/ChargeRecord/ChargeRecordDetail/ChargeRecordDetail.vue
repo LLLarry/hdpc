@@ -187,18 +187,17 @@ export default {
                             name: '销量',
                             type: 'line',
                             smooth: true, //曲线平滑
+                            itemStyle: {
+                                color:  "#22B14C"
+                            },
                             lineStyle: {
-                                color: "#22B14C",
-                                width: 1
-                            }, 
-                            areaStyle: {
-                                normal: {
-                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                                    { offset: 0.5, color: "#98E0AD" },
-                                    { offset: 0.75, color: "pink" },
-                                    { offset: 1, color: "transparent" }
-                                    ])
-                                }
+                                 normal: {
+                                    color: "#22B14C",
+                                    lineStyle: {
+                                        color: "#22B14C",
+                                        width:1
+                                    }
+                                },
                             }, 
                             // data: _this.powerList
                         }]

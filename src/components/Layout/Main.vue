@@ -1,6 +1,5 @@
 <template>
     <div class="main">
-        <!-- <BreadCrumbCon /> -->
         <BreadCrumbNav />
         <!-- <keep-alive>
         <router-view></router-view>
@@ -15,7 +14,6 @@
 </template>
 
 <script>
-import BreadCrumbCon from './BreadCrumbCon'
 import BreadCrumbNav from './BreadCrumbNav'
     export default {
         data(){
@@ -24,7 +22,6 @@ import BreadCrumbNav from './BreadCrumbNav'
             }
         },
         components:{
-            BreadCrumbCon,
             BreadCrumbNav
         }
 
@@ -34,7 +31,7 @@ import BreadCrumbNav from './BreadCrumbNav'
 <style lang="less" scoped>
 @import '../../../static/style/default.less';
 .main {
-    //background-color: @colorB;
+    background-color: @colorB;
     height: calc(100%);
     overflow: auto;
     // padding: 0 20px 20px 20px;

@@ -15,12 +15,6 @@ export default {
     },
     computed: {
         ...mapState({breadcrumbList:"breadcrumbList"}),
-        // breadcrumbList2(){
-        //     let tt= this.breadcrumbList
-        //     console.log(tt)
-        //     tt.shift()
-        //     return tt
-        // }
     }
 }
 </script>

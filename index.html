@@ -123,14 +123,21 @@
     <script src="https://cdn.bootcss.com/qs/6.9.0/qs.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+    <script src="https://cdn.bootcss.com/screenfull.js/5.0.0/screenfull.min.js"></script>
   </head>
   <body>
+    <script>
+        if (!Object.defineProperty) {
+            alert('不支持IE9以下的浏览器，请更换其它浏览器！');
+        }
+    </script>
     <div class="index_loading">
         <div class="index_loading_item"></div>
         <div class="index_loading_item"></div>
         <div class="index_loading_item"></div>
         <div class="loading_text">LOADING ···</div>
     </div>
+    
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>

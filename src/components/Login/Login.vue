@@ -81,11 +81,15 @@ export default {
         }
       },
       handleWxLogin(){
+          let origin= window.location.origin
+          let originList= origin.split(/:\/\//g)
+          originList[1]=  originList[1].includes('localhost') ? 'www.tengfuchong.com.cn' : originList[1]
+          let appid= originList[1].includes('tengfuchong') ? "wx695275de73b7dad4" : "wx003f63d4791f497d"
           let wxLogin=new WxLogin({
                 id:"login_ewm", 
-                appid: "wx695275de73b7dad4", 
+                appid: appid, 
                 scope: "snsapi_login",
-                redirect_uri:"http%3A%2F%2Fwww.tengfuchong.com.cn%2Flogin%2FqrCodeRedict",
+                redirect_uri:`${originList[0]}%3A%2F%2F${originList[1]}%2Flogin%2FqrCodeRedict`,
                 state: "2",
                 style: "black",
                 href: "data:text/css;base64,LmltcG93ZXJCb3ggLnFyY29kZSB7d2lkdGg6IDI0MHB4OyBkaXNwbGF5OiBibG9jazsgbWFyZ2luOiAwIGF1dG87fQ0KLmltcG93ZXJCb3ggLnRpdGxlIHtkaXNwbGF5OiBub25lO30NCi5pbXBvd2VyQm94IC5pbmZvIHt3aWR0aDogMjAwcHg7fQ0KLnN0YXR1c19pY29uIHtkaXNwbGF5OiBub25lfQ0KLmltcG93ZXJCb3ggLnN0YXR1cyB7dGV4dC1hbGlnbjogY2VudGVyO30g"

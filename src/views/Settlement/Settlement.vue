@@ -69,7 +69,7 @@
 
 <script>
 import { settlementTotalEarn,settlementAllEarn } from '@/require/settlement'
- import {messageTip} from '@/utils/ele'
+import {messageTip} from '@/utils/ele'
 export default {
     data(){
         return {

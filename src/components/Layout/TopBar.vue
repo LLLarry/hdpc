@@ -13,39 +13,50 @@
                 </div>
             </el-col>
             <el-col :span="12" class="col_con"><div class="grid-content bg-purple-light">
-               <el-link type="danger" @click="handleLayout">退出登录</el-link>
-                <!-- <span>用户名：张三</span>
-                <span>556</span> -->
+              
+                <el-link type="danger" @click="handleLayout">退出登录</el-link>
+                <i :class="['iconfont' , isBig ? 'icon-quxiaoquanping_o' : 'icon-quanping']" @click="handleFullScreen(isBig)" ></i>
+                <span class="top_name">{{userInfo.userName}}</span>
+                <!-- <span>556</span> -->
             </div></el-col>
         </el-row>
     </div>
 </template>
 
 <script>
-    // import {Link} from 'element-ui'
     import Vue from 'vue'
     import { mapMutations,mapState} from 'vuex'
-    // Vue.use(Link)
+    import {messageTip} from '@/utils/ele'
+
     export default {
         data(){
             return {
-
+               isBig: false 
             }
         },
         computed: {
-            ...mapState(['isShowSlide'])
+            ...mapState(['isShowSlide','userInfo'])
         },
         methods: {
             ...mapMutations(['handleLayoutStore','handleLayoutRemoveAsyRouterMap','updateSlideStatus']),
             handleLayout(){
                 this.handleLayoutStore()
                 this.handleLayoutRemoveAsyRouterMap()
-                // this.$router.push('/login')
                 window.location.reload() //让页面重新加载，这个是移除router中动态添加的路由，避免再次添加新的路由
             },
             hideOrShowSlide(){
                 this.updateSlideStatus(!this.isShowSlide)
-            }   
+            },
+            handleFullScreen(isBig){ //全屏
+                if (!screenfull.isEnabled) { // 如果不允许进入全屏，发出不允许提示
+                    messageTip("warning","您的浏览器暂时不支持全屏模式"); 
+                    return 
+                }else{
+                    screenfull.toggle();
+                    this.isBig= !this.isBig
+                }
+                
+            } 
         }
     }
 </script>
@@ -91,6 +102,29 @@
                             float: right;
                             margin-left: 10px;
                             font-size: @fontB; 
+                        }
+                        i {
+                            float: right;
+                            font-size: 20px;
+                            margin-right: 15px;
+                            font-weight: bold;
+                            color: #aacff4;
+                            vertical-align: middle;
+                            &:hover {
+                                color: #fff;
+                                transition: all .3s;
+                            }
+                        }
+                        .top_name {
+                            font-size: 16px;
+                            color: #aacff4;
+                            float: right;
+                            margin-right: 25px;
+                            width: 200px;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            text-align: right;
                         }
                     }
                }

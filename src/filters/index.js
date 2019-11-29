@@ -10,6 +10,13 @@ Vue.filter('fmtDate',(date,type="YYYY-MM-DD HH:mm:ss")=>{
     return moment(date).format(type)
 })
 
+// Vue.filter('parseBank',(num,type="YYYY-MM-DD HH:mm:ss")=>{
+//     if(typeof num == 'string' && num.length > 0){
+//         return `  `+num.match(/\d{4}/g).join(' ')
+//     }
+//     return '— —'
+// })
+
 Vue.prototype.$fmtDate= function(date,type="YYYY-MM-DD HH:mm:ss"){ //将日期格式化，并进行换行
     if(!date){
         return ''

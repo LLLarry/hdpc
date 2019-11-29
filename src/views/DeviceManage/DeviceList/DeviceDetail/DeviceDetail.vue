@@ -42,7 +42,7 @@
             </el-row>
          </el-card>
         <!-- 模块信息 -->
-        <el-card class="box-card">
+        <el-card class="box-card" id="module_card">
             <div slot="header" class="clearfix">
                 <span>模块信息（硬件，软件，IMEI, +CCID）</span>
             </div>
@@ -99,7 +99,7 @@
 
         </el-card>
         <!-- 位置信息 -->
-        <el-card class="box-card">
+        <el-card class="box-card" id="position_card">
             <div slot="header" class="clearfix">
                 <span>位置信息</span>
             </div>
@@ -144,7 +144,7 @@
 
         </el-card>
 
-        <el-card class="box-card temCard">
+        <el-card class="box-card temCard" id="template_card">
             <div slot="header" class="clearfix">
                 <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : '充电模板'}}）</span>
             </div>
@@ -166,8 +166,8 @@
            
         </el-card>
        
-        <!-- 端口状态 -->
-         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)">
+        <!-- 端口状态 --> 
+         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)" id="port_card">
             <div slot="header" class="clearfix">
                 <span>端口状态</span>
             </div>
@@ -275,7 +275,7 @@
             </el-table>
          </el-card>
         <!-- 远程充电 -->
-        <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)">
+        <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)" id="originCharcge_card">
             <div slot="header" class="clearfix">
                 <span>远程充电</span>
             </div>
@@ -431,7 +431,7 @@
                 </el-card>
              </el-col>
          </el-row>
-         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)">
+         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)" id="sysParmas_card">
                     <div slot="header" class="clearfix">
                         <span>系统参数表</span>
                     </div>
@@ -493,13 +493,13 @@
                 </el-card>
                 <!-- 地图弹框 -->
                 <el-dialog
-                    :title="`${code}设备地图位置`"
+                    :title="`${code}设备位置信息`"
                     :visible.sync="dialogVisible"
                     custom-class="mapDialog"
                     >
                      <!-- [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}] -->
                     <!-- <el-amap :vid="'amap-vue'" ref="tt"></el-amap> -->
-                    <el-amap vid="amapDemo" >
+                    <el-amap vid="amapDemo" :plugin="mapPlugin">
                         <el-amap-marker
                          v-for="(marker) in mapList" 
                          :position="marker.position" 
@@ -518,6 +518,28 @@
                 </el-dialog>
                 <!-- 设备绑定商户信息框 用户页面传的信息{show: true,from: 1,page: {id: 125}}  page里是用户的信息，包含id等，设备详情传的信息{show: true,from: 1,page: {code: '000001'}}--> 
             <bindMerOrArea :bindInfo="bindInfo" @backFn="backFn"/>  
+            <div class="nav_tag">
+               <div class="nav_tag_item">
+                    <a href="#module_card">
+                        <el-tag>模块信息</el-tag>
+                    </a>
+                    <a href="#position_card">
+                        <el-tag>位置信息</el-tag>
+                    </a>
+                    <a href="#template_card">
+                        <el-tag>设备模板</el-tag>
+                    </a>
+                    <a href="#port_card" v-if="!['03','04'].includes(hwVerson)">
+                        <el-tag>端口状态</el-tag>
+                    </a>
+                    <a href="#originCharcge_card" v-if="!['03','04'].includes(hwVerson)">
+                        <el-tag>远程充电</el-tag>
+                    </a>
+                    <a href="#sysParmas_card" v-if="!['03','04'].includes(hwVerson)">
+                        <el-tag>系统参数</el-tag>
+                    </a>
+               </div>
+            </div>
     </div>
 </template>
 
@@ -544,6 +566,20 @@ export default {
             hwVerson:'01',//硬件版本
             dialogVisible: false, //地图默认隐藏
             bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
+            mapPlugin: [ //地图插件配置
+                {
+                    pName: 'OverView',
+                    events: {}
+                },
+                {
+                    pName: 'Scale',
+                    events: {}
+                },
+                {
+                    pName: 'ToolBar',
+                    events: {}
+                }
+            ],
             deviceInfo: {
                 bindStatus: 1,
                 code: '000001',
@@ -582,7 +618,7 @@ export default {
             elecTimeFirst: 0,//这个是设置系统参数的时候另外传的值
             systemParamer: [ //系统参数
                         {
-                           type_key: 'coinMin', type: '设置投币充电时间(单位为分钟)', val: 120, unit: '分钟', maxVal: 999, minVal: 0
+                           type_key: 'coinMin', type: '设置投币充电时间(单位为分钟)', val: 240, unit: '分钟', maxVal: 999, minVal: 0
                         },
                         {
                            type_key: 'cardMin', type: '设置刷卡充电时间 (单位为分钟)', val: 240, unit: '分钟', maxVal: 999, minVal: 0
@@ -753,7 +789,7 @@ export default {
             this.mapList= [
                 {
                     position: [longitude,latitude],
-                    content: `<div>设备:${this.code}<div><p>地址：<p>`
+                    content: `<div>设备: ${this.code}<div><p>地址： <p>`
                     }
                 ]
                 console.log(this.mapList)
@@ -932,6 +968,7 @@ export default {
 </script>
 
 <style lang="less">
+
 .deviceDetail {
     background-color: #F8F8F9;
     .el-card.is-always-shadow {
@@ -973,6 +1010,26 @@ export default {
     .amap-wrapper {
         width: 500px;
         height: 500px;
+    }
+    .nav_tag {
+        position: fixed;
+        z-index: 3;
+        top: 100px;
+        right: 20px;
+        .nav_tag_item {
+            opacity: 0;
+            transition: opacity .3s;  
+            a {
+                display: block;
+                margin-bottom: 15px;
+            }
+        }
+        &:hover {
+            .nav_tag_item {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     }
 }
 </style>

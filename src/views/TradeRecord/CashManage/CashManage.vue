@@ -73,7 +73,7 @@
                 style="width: 100%"
                 :header-cell-style="{background:'#f5f7fa',color:'#666'}"
                 >
-                <el-table-column
+                <!-- <el-table-column
                 prop="index"
                 label="序号"
                 min-width="65"
@@ -81,11 +81,11 @@
                 <template slot-scope="scope">
                      {{ (nowPage-1)*10+scope.$index+1 }}
                 </template>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column
                 prop="withdrawnum"
                 label="提现单号"
-                min-width="200"
+                width="200"
                 >
                 </el-table-column>
                 <el-table-column
@@ -117,7 +117,8 @@
                         <div v-if="row.company != null">公司名称：{{`  ${row.company}` }}</div>
                         <div v-if="row.bankcardnum != 0">银行名称:{{row.bankname && row.bankname.length > 0 ? `  ${row.bankname}` : `  — —`}}</div>
                         <div v-else>微信零钱</div>
-                        <div v-if="row.bankcardnum != 0">银行账号:{{row.bankcardnum && row.bankcardnum.length > 0 ? `  ${row.bankcardnum}` : `  — —`}}</div>
+                        <!-- <div v-if="row.bankcardnum != 0">银行账号:{{row.bankcardnum && row.bankcardnum.length > 0 ? `  ${row.bankcardnum}` : `  — —`}}</div> -->
+                        <div v-if="row.bankcardnum != 0">银行账号:{{ row.bankcardnum | parseBank }}</div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -140,6 +141,11 @@
                 prop="money"
                 label="提现金额"
                 >
+                 <template slot-scope="scope">
+                    <el-link type="danger" :underline="false" style="font-weight: 600; font-size: 16px;">
+                        {{scope.row.money}}
+                    </el-link>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="amoMoney"
@@ -147,7 +153,7 @@
                 min-width="80"
                 >
                 <template slot-scope="scope">
-                    <el-link type="success" :underline="false">
+                    <el-link type="success" :underline="false" style="font-weight: 600; font-size: 16px;">
                         {{  scope.row.money - scope.row.servicecharge }}
                     </el-link>
                 </template>
@@ -162,7 +168,7 @@
                 <el-table-column
                 prop="create_time"
                 label="申请时间"
-                min-width="135"
+                width="135"
                 >
                 <template slot-scope="{row}">
                     <div v-html="$fmtDate(row.create_time)"></div>
@@ -183,7 +189,7 @@
                 <el-table-column
                 prop="handle"
                 label="操作"
-                min-width="150"
+                width="160"
                 fixed="right"
                 >
                 <template slot-scope="scope">
@@ -284,6 +290,14 @@ export default {
             this.$router.push({query:{... this.cashManageForm,currentPage: 1}})
             this.asyGetWithDrawRecord({... this.cashManageForm,currentPage: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
+        }
+    },
+    filters: {
+        parseBank(num){
+            if(typeof num == 'string' && num.length > 0){
+                return `  `+num.match(/\d{4}/g).join(' ')
+            }
+            return '— —'
         }
     }
 }

@@ -51,7 +51,7 @@
                 <el-table-column
                 prop="index"
                 label="序号"
-                min-width="100">
+                min-width="60">
                 <template slot-scope="scope">
                    {{ scope.$index+1 }}
                 </template>
@@ -60,6 +60,11 @@
                 prop="code"
                 label="设备号"
                 min-width="100">
+                <template slot-scope="{row}">
+                    <router-link :to="`/deviceManage/deviceList?devicenum=${row.code}`">
+                        <el-link  type="primary">{{row.code}}</el-link>
+                    </router-link>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="port"
@@ -184,7 +189,7 @@ export default {
                             right: '5%'
                         },
                         series: [{
-                            name: '销量',
+                            name: '功率',
                             type: 'line',
                             smooth: true, //曲线平滑
                             itemStyle: {
@@ -198,7 +203,23 @@ export default {
                                         width:1
                                     }
                                 },
-                            }, 
+                            },
+                            markLine: { //基准线
+                                silent: true,
+                                lineStyle: {
+                                normal: {
+                                    color: '#01fef9'                   // 这儿设置安全基线颜色
+                                }
+                                },
+                                data: [{
+                                    yAxis: 30
+                                }],
+                                label: {
+                                normal: {
+                                    formatter: '最小充电\n功率'           // 这儿设置安全基线
+                                }
+                                },
+                            },
                             // data: _this.powerList
                         }]
             });
@@ -220,16 +241,62 @@ export default {
                     this.powerList= powerList
                     this.myChart.setOption({
                             xAxis: {
-                                data: timeList
+                                type: 'category',
+                                name: '分钟',
+                                nameGap: 5,
+                                axisLabel:{color:'#666'},   // x轴字体颜色 
+                                axisLine:{
+                                        lineStyle:{color:'#666'}    // x轴坐标轴颜色
+                                        },
+                                axisTick:{
+                                        lineStyle:{color:'#666'}    // x轴刻度的颜色
+                                        },
+                                 data:timeList
                             },
-                            series: [
-                                {
-                                    name: '功率',
-                                    type:'line',
-                                    data: powerList
-                                    
+                            // xAxis: {
+                            //     data: timeList
+                            // },
+                            // series: [
+                            //     {
+                            //         name: '功率',
+                            //         type:'line',
+                            //         data: powerList 
+                            //     }
+                            // ]
+                            series: [{
+                            name: '功率',
+                            type: 'line',
+                            smooth: true, //曲线平滑
+                            itemStyle: {
+                                color:  "#22B14C"
+                            },
+                            lineStyle: {
+                                 normal: {
+                                    color: "#22B14C",
+                                    lineStyle: {
+                                        color: "#22B14C",
+                                        width:1
+                                    }
+                                },
+                            },
+                            markLine: { //基准线
+                                silent: true,
+                                lineStyle: {
+                                normal: {
+                                    color: '#409eff'
                                 }
-                            ]
+                                },
+                                data: [{
+                                    yAxis: 30
+                                }],
+                                label: {
+                                normal: {
+                                    formatter: '最小充\n电功率'    
+                                }
+                                },
+                            },
+                            data: powerList
+                            }]
                         });
                     this.chargeInfo= [
                         {type: '订单号',content: powerInfo.ordernum},

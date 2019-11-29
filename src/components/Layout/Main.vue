@@ -34,19 +34,22 @@ import BreadCrumbNav from './BreadCrumbNav'
     background-color: @colorB;
     height: calc(100%);
     overflow: auto;
+    // scroll-behavior: smooth;
     // padding: 0 20px 20px 20px;
-    &::-webkit-scrollbar-track-piece {
-        background: #d3dce6;
-    }
+    // &::-webkit-scrollbar-track-piece {
+    //     // background: #d3dce6;
+    //     background: #d3dce6;
+    // }
 
-    &::-webkit-scrollbar {
-    width: 6px;
-    }
+    // &::-webkit-scrollbar {
+    // width: 12px;
+    // }
 
-    &::-webkit-scrollbar-thumb {
-    background: #99a9bf;
-    border-radius: 20px;
-    }
+    // &::-webkit-scrollbar-thumb {
+    // // background: #99a9bf;
+    // background: #409eff;
+    // border-radius: 20px;
+    // }
     .bottomBar {
         color: #d7d7d7;
         text-align: center;

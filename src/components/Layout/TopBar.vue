@@ -4,7 +4,7 @@
             <el-col :span="12" class="col_con" >
                 <div class="grid-content bg-purple title_logo hidden-xs-only">
                     <img src="../../assets/images/logo.png" alt="自助充电平台">
-                    <span class="title">后台管理系统</span>
+                    <span class="title">自助充电平台</span>
                 </div>
                 <div class="grid-content bg-purple menuIcon hidden-sm-and-up">
                     <div class="menuIconCon" @click="hideOrShowSlide">
@@ -92,7 +92,8 @@
                         .title {
                             font-size: 25px;
                             margin-left: 10px;
-                            font-family: cursive;
+                            // font-family: cursive;
+                            font-family: 'Open Sans',sans-serif;
                             font-weight: 700;
                             color: #c0e5ff;
                         }

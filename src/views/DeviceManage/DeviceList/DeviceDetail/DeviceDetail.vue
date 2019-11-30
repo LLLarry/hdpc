@@ -457,8 +457,8 @@
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val" :step="20" v-if="['coinMin','cardMin'].includes(row.type_key)"></el-input-number>
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val" :precision="1" :step="1" v-if="['coinElec','cardElec'].includes(row.type_key)"></el-input-number>
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val" :precision="1" :step="1" v-if="['cst'].includes(row.type_key)"></el-input-number>
-                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="50" v-if="['powerMax1','power_max_2','power_max_3','power_max_4'].includes(row.type_key)"></el-input-number>
-                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="5" v-if="['power_2_tim','power_3_tim','power_4_tim'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="50" v-if="['powerMax1','powerMax2','powerMax3','powerMax4'].includes(row.type_key)"></el-input-number>
+                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="5" v-if="['powerTim2','powerTim3','powerTim4'].includes(row.type_key)"></el-input-number>
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="1" :step-strictly="true" v-if="['spRecMon','spFullEmpty'].includes(row.type_key)"></el-input-number>
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="10" v-if="['fullPowerMin'].includes(row.type_key)"></el-input-number>
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="10" v-if="['fullChargeTime'].includes(row.type_key)"></el-input-number>
@@ -636,23 +636,23 @@ export default {
                            type_key: 'powerMax1', type: '设置第一档最大充电功率（最大功率以机器支持为准）', val: 200, unit: '瓦', maxVal: 3500, minVal: 50
                         },
                         {
-                           type_key: 'power_max_2', type: '设置第二档最大充电功率（最大功率以机器支持为准）', val: 144, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'powerMax2', type: '设置第二档最大充电功率（最大功率以机器支持为准）', val: 144, unit: '瓦', maxVal: 3500, minVal: 50
                         },
                         {
-                           type_key: 'power_max_3', type: '设置第三档最大充电功率（最大功率以机器支持为准）', val: 88, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'powerMax3', type: '设置第三档最大充电功率（最大功率以机器支持为准）', val: 88, unit: '瓦', maxVal: 3500, minVal: 50
                         },
                         {
-                           type_key: 'power_max_4', type: '设置第四档最大充电功率（最大功率以机器支持为准）', val: 50, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'powerMax4', type: '设置第四档最大充电功率（最大功率以机器支持为准）', val: 50, unit: '瓦', maxVal: 3500, minVal: 50
                         },
 
                         {
-                           type_key: 'power_2_tim', type: '设置第二档充电时间百分比', val: 75, unit: '%', maxVal: 100, minVal: 1
+                           type_key: 'powerTim2', type: '设置第二档充电时间百分比', val: 75, unit: '%', maxVal: 100, minVal: 1
                         },
                         {
-                           type_key: 'power_3_tim', type: '设置第三档充电时间百分比', val: 50, unit: '%', maxVal: 100, minVal: 1
+                           type_key: 'powerTim3', type: '设置第三档充电时间百分比', val: 50, unit: '%', maxVal: 100, minVal: 1
                         },
                         {
-                           type_key: 'power_4_tim', type: '设置第四档充电时间百分比', val: 25, unit: '%', maxVal: 100, minVal: 1
+                           type_key: 'powerTim4', type: '设置第四档充电时间百分比', val: 25, unit: '%', maxVal: 100, minVal: 1
                         },
                         {
                            type_key: 'spRecMon', type: '是否支持余额回收（1为支持 0为不支持)', val: 1, unit: '无', maxVal: 1, minVal: 0
@@ -767,7 +767,6 @@ export default {
                       item.elePower= 1.0
                       return item
                 })
-                console.log(7789)
 
                 let sysparam= deviceInfo.sysparam
                 let systemParamer=  _this.systemParamer
@@ -926,13 +925,15 @@ export default {
                 if(res.status == '0'){
                     messageTip('error','系统参数获取失败')
                     return
+                }else{
+                    messageTip('success','参数获取获取成功')
                     let systemParamer=  this.systemParamer
                     this.systemParamer= systemParamer.map((item,i)=>{
                         item.val= res['param'+(i+1)]
                         return item
                     })
                 }
-
+                   
             }).catch(err=>{ loading.close() })
         },
         saveDeviceSysParam(){ //保存系统参数
@@ -956,11 +957,11 @@ export default {
             savesystemParma({code: this.code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
                 loading.close()
                 if (res.status == "0") {
-                     messageTip('success','系统参数设置成功')
+                     messageTip('error','系统参数设置失败')
                      return
                 }
-                messageTip('error','系统参数设置失败')
-            
+                messageTip('success','系统参数设置成功')
+
             }).catch(err=>{  loading.close() })
         }
     }

@@ -37,6 +37,17 @@
                         <el-option label="包月" value="4" ></el-option>
                     </el-select>
                 </el-form-item>
+                 <el-form-item label="结束原因" class="form_right25">
+                     <el-select v-model="chargeRecordForm.resultinfo"  placeholder="支付方式" clearable size="small">
+                        <el-option label="时间或者电量用完" value="0" ></el-option>
+                        <el-option label="手动停止" value="1" ></el-option>
+                        <el-option label="满电自停" value="2" ></el-option>
+                        <el-option label="超功率自停" value="3" ></el-option>
+                        <el-option label="远程断电" value="4" ></el-option>
+                        <el-option label="被迫停止" value="11" ></el-option>
+                        <el-option label="日志结束" value="255" ></el-option>
+                    </el-select>
+                </el-form-item>
 
                  <el-form-item label="开始时间" class="form_right25 w200">
                      <el-date-picker
@@ -304,7 +315,8 @@ export default {
         ...mapState(['userInfo'])
     },
      created(){
-        if(JSON.stringify(this.$route.query) != "{}"){
+          let {VNK,...routerKey}=  this.$route.query
+        if(JSON.stringify(routerKey) != "{}"){
             let [startTime,endTime]= Util.formatTimeArr()
             this.chargeRecordForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
             this.nowPage= parseInt(this.chargeRecordForm.currentPage) || 1

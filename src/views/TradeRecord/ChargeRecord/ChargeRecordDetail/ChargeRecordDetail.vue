@@ -216,7 +216,7 @@ export default {
                                 }],
                                 label: {
                                 normal: {
-                                    formatter: '最小充电\n功率'           // 这儿设置安全基线
+                                    formatter: '最大浮\n充功率'           // 这儿设置安全基线
                                 }
                                 },
                             },
@@ -291,7 +291,7 @@ export default {
                                 }],
                                 label: {
                                 normal: {
-                                    formatter: '最小充\n电功率'    
+                                    formatter: '最大浮\n充功率'    
                                 }
                                 },
                             },

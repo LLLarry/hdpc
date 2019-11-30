@@ -90,12 +90,12 @@
                            width: 60px;
                         }
                         .title {
-                            font-size: 25px;
+                            font-size: 30px;
                             margin-left: 10px;
                             // font-family: cursive;
                             font-family: 'Open Sans',sans-serif;
                             font-weight: 700;
-                            color: #c0e5ff;
+                            color: #fff;
                         }
                     }
                     &.bg-purple-light {

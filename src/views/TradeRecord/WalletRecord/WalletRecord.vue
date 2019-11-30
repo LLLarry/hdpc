@@ -212,7 +212,8 @@ export default {
         VerifiCode
     },
     created(){
-        if(JSON.stringify(this.$route.query) != "{}"){
+        let {VNK,...routerKey}=  this.$route.query
+        if(JSON.stringify(routerKey) != "{}"){
             let [startTime,endTime]= Util.formatTimeArr()
             this.walletRecordForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
             this.nowPage= parseInt(this.walletRecordForm.currentPage) || 1

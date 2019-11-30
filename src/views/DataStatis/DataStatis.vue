@@ -79,8 +79,8 @@
                             <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refwechatorder}}</td>
                             <td>支付宝退费总订单</td>
                             <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refalipayorder}}</td>
-                            <td></td>
-                            <td></td>
+                            <td>待提现金额</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.penextractmoney}}</td>
                         </tr>
                    </tbody>
 

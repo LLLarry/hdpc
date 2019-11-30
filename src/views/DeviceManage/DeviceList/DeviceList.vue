@@ -145,8 +145,7 @@
                 min-width="80"
                 >
                 <template slot-scope="scope">
-                    <el-button icon="el-icon-edit" size="mini" @click="handleHwVerBtn(scope.row)" plain type="primary" v-if="userInfo.classify=='superAdmin'">{{scope.row.hardversion}}</el-button>
-                    <span v-else>{{scope.row.hardversion}}</span>
+                    <el-button icon="el-icon-edit" size="mini" @click="handleHwVerBtn(scope.row)" plain type="primary" >{{scope.row.hardversion}}</el-button>
                 </template>
                 </el-table-column>
 

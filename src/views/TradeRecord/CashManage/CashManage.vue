@@ -141,11 +141,6 @@
                 prop="money"
                 label="提现金额"
                 >
-                 <template slot-scope="scope">
-                    <el-link type="danger" :underline="false" style="font-weight: 600; font-size: 16px;">
-                        {{scope.row.money}}
-                    </el-link>
-                </template>
                 </el-table-column>
                 <el-table-column
                 prop="amoMoney"
@@ -153,7 +148,7 @@
                 min-width="80"
                 >
                 <template slot-scope="scope">
-                    <el-link type="success" :underline="false" style="font-weight: 600; font-size: 16px;">
+                    <el-link type="danger" :underline="false" style="font-weight: 600; font-size: 16px;">
                         {{  scope.row.money - scope.row.servicecharge }}
                     </el-link>
                 </template>
@@ -232,7 +227,8 @@ export default {
         MyPagination
     },
     created(){
-        if(JSON.stringify(this.$route.query) != "{}"){
+         let {VNK,...routerKey}=  this.$route.query
+        if(JSON.stringify(routerKey) != "{}"){
             let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',30)
             this.cashManageForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
             this.nowPage= parseInt(this.cashManageForm.currentPage) || 1
@@ -295,7 +291,7 @@ export default {
     filters: {
         parseBank(num){
             if(typeof num == 'string' && num.length > 0){
-                return `  `+num.match(/\d{4}/g).join(' ')
+                return `  `+num.replace(/(\d{4})(?=\d)/g,"$1 ")
             }
             return '— —'
         }

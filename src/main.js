@@ -4,7 +4,9 @@ import Vue from 'vue' //cdn模式
 import App from './App'
 import router from './router'
 import store from './store'
+import Navigation from 'vue-navigation'
 import '@/filters'
+Vue.use(Navigation, {router})
 // import ElementUI from 'element-ui'; 这是加载全部
 // import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification,} from 'element-ui';
 import { Button,Checkbox,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,InputNumber,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination,Radio,

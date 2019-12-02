@@ -13,36 +13,97 @@
                 <el-table-column
                 prop="index"
                 label="序号"
-                min-width="300"
+                min-width="960"
                 >
-                <template>
-                    <div>
-                        <strong>模板名称:</strong>
-                        <span v-if="!item.edit" class="top_span">{{item.name}}</span>
-                        <el-input v-else size="mini" v-model="temForm.name" style="width: 70%; display: inline-block" placeholder="请输入模板名称"></el-input>
-                    </div>
-                    <div style="margin-top: 15px">
-                        <strong>是否支持退费:  </strong>
-                        <span v-if="!item.edit" :class="['top_span', item.permit ==1 ? 'green' : 'red']">{{item.permit ==1 ? '是' : '否'}}</span><span v-if="!item.edit">
-                            {{item.common2== 1 ? '(退费标准：时间和电量最小)' : item.common2== 2 ? '(退费标准：时间最小)' : item.common2== 3 ? '((退费标准：电量最小)': ''}}
-                        </span>
-                        <el-cascader
-                        v-else
-                        v-model="temForm.permit"
-                        :options="options"
-                        :props="{ expandTrigger: 'hover' }"
-                         size="mini"></el-cascader>
-                       
-                    </div> 
+                <template slot-scope="scope">
+
+                   <div class="tem_p">
+                       <div class="tem_parent clearfix">
+                            <div class="temContent" style="width: 33%; float: left; min-width: 295px;">
+                                        <div>
+                                            <strong>模板名称:</strong>
+                                            <span v-if="!item.edit" class="top_span">{{item.name}}</span>
+                                            <el-input v-else size="mini" v-model="temForm.name" style="width: 70%; display: inline-block" placeholder="请输入模板名称"></el-input>
+                                        </div>
+                                        <div style="margin-top: 15px">
+                                            <strong>是否支持退费:  </strong>
+                                            <span v-if="!item.edit" :class="['top_span', item.permit ==1 ? 'green' : 'red']">{{item.permit ==1 ? '是' : '否'}}</span><span v-if="!item.edit">
+                                                {{item.common2== 1 ? '(退费标准：时间和电量最小)' : item.common2== 2 ? '(退费标准：时间最小)' : item.common2== 3 ? '((退费标准：电量最小)': ''}}
+                                            </span>
+                                            <el-cascader
+                                            v-else
+                                            v-model="temForm.permit"
+                                            :options="options"
+                                            :props="{ expandTrigger: 'hover' }"
+                                            size="mini"></el-cascader>
+                                        
+                                        </div> 
+                                </div>
+
+                                <div class="temContent" style="width: 33%; float: left; min-width: 295px;">
+                                    <div>
+                                        <strong>品牌名称:  </strong>
+                                        <span v-if="!item.edit" class="top_span">{{item.remark}}</span>
+                                        <el-input v-else size="mini" v-model="temForm.remark" style="width: 70%; display: inline-block" placeholder="请输入品牌名称"></el-input>
+                                    </div>
+                                    <div style="margin-top: 15px">
+                                        <strong>是否钱包强制支付:  </strong>
+                                        <span v-if="!item.edit" :class="['top_span', item.walletpay ==1 ? 'green' : 'red']">{{item.walletpay ==1 ? '是' : '否'}}</span>
+                                        <el-radio-group v-model="temForm.walletpay"  v-else >
+                                            <el-radio :label="1">是</el-radio>
+                                            <el-radio :label="2">否</el-radio>
+                                        </el-radio-group>
+                                    </div> 
+                                </div>
+
+                                    <div class="temContent" style="width: 33%; float: left; min-width: 295px;">
+                                        <div>
+                                            <strong>售后电话:</strong>
+                                            <span v-if="!item.edit" class="top_span">{{item.common1}}</span>
+                                            <el-input v-else size="mini" v-model="temForm.common1" style="width: 70%; display: inline-block" placeholder="请输入售后电话"></el-input>
+                                        </div>
+                                        <div style="margin-top: 15px">&nbsp;
+                                        </div> 
+                                </div>
+                        </div>
+                        <div class="tem_text" style="margin-top: 15px">
+                            <div>
+                                <strong>收费说明:</strong>
+                                <span v-if="!item.edit">{{item.chargeInfo}}</span>
+                                <div v-else>
+                                    <div style="width: calc(100% - 200px); float: left;" >
+                                        <el-input
+                                            type="textarea"
+                                            :rows="4"
+                                            placeholder="请输入收费说明"
+                                            v-model="temForm.chargeInfo">
+                                        </el-input>
+                                    </div>
+                                    <div style="width: 200px; float: right; text-align: center;">
+                                        <el-button type="primary" size="mini" @click="handleSetChargeInfo()">功率模板</el-button>
+                                        <el-button type="primary" size="mini"  @click="handleSetChargeInfo(`选择的充电时间为小功率电动车充电时间，仅供参考。
+大功率电动车充电时间智能动态计算，以实际为准。`)">默认模板</el-button>
+                                    </div>
+                                </div>
+                            <!-- <el-input
+                                v-else
+                                type="textarea"
+                                :rows="4"
+                                placeholder="请输入收费说明"
+                                v-model="temForm.chargeInfo">
+                            </el-input> -->
+                            </div>
+                        </div>
+                   </div>
                 </template>
                 </el-table-column>
-
+<!-- 
                 <el-table-column
                 prop="communName"
                 label="小区名称"
                 min-width="300"
                 >   
-                 <template>
+                 <template slot-scope="scope">
                     <div>
                         <strong>品牌名称:  </strong>
                         <span v-if="!item.edit" class="top_span">{{item.remark}}</span>
@@ -57,13 +118,13 @@
                         </el-radio-group>
                     </div> 
                 </template>
-                </el-table-column>
-                <el-table-column
+                </el-table-column> -->
+                <!-- <el-table-column
                 prop="communName"
                 label="小区名称"
                 min-width="300"
                 >
-                  <template>
+                  <template slot-scope="scope">
                     <div>
                         <strong>售后电话:</strong>
                         <span v-if="!item.edit" class="top_span">{{item.common1}}</span>
@@ -72,13 +133,13 @@
                     <div style="margin-top: 15px">&nbsp;
                     </div> 
                 </template>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column
                 prop="communName"
                 label="小区名称"
                 width="200"
                 >
-                  <template>
+                  <template slot-scope="scope">
                     <div>
                         <strong>操作</strong>
                     </div>
@@ -349,23 +410,23 @@ export default {
             this.$message.warning('请先保存或取消其他的编辑操作！')
             return 
         }
-        let {name,remark,common1,permit,walletpay,common2} = item
+        let {name,remark,common1,permit,walletpay,common2,chargeInfo} = item
         if(common2== '' || typeof common2 == 'undefined'){
             permit=[permit.toString()]
         }else{
             permit=[permit.toString(),common2.toString()]
         }
-        this.temForm= {name,remark,common1,walletpay,permit}
+        this.temForm= {name,remark,common1,walletpay,permit,chargeInfo}
          Vue.set(item,'edit',true)
          this.isEditingTem= true
        },
        //保存编辑主模板
        handleSaveEditTem(item){
            //校验，发送请求
-           let{name,remark,common1,walletpay}= this.temForm
+           let{name,remark,common1,walletpay,chargeInfo}= this.temForm
            let [permit,common2='']= this.temForm.permit
            //注： 充电模板的status为0
-           updateTemplate({id: item.id,status: 0, name,remark,common1,walletpay,permit,common2}).then(res=>{ 
+           updateTemplate({id: item.id,status: 0, name,remark,common1,walletpay,permit,chargeInfo}).then(res=>{ 
                if(res.code === 200){
                     item.name= name
                     item.remark= remark
@@ -373,6 +434,7 @@ export default {
                     item.walletpay= walletpay
                     item.permit= permit
                     item.common2= common2
+                    item.chargeInfo= chargeInfo
                     Vue.set(item,'edit',false)
                     this.isEditingTem= false
                     messageTip('success','主模板修改成功')
@@ -426,7 +488,10 @@ export default {
            }).catch(err=>{})
        
            
-       }   
+       },
+       handleSetChargeInfo(info){ //点击设置默认模板或者功率模板
+
+       }
     }
 }
 </script>

@@ -11,6 +11,8 @@ VueRouter.prototype.push = function push(location) {
 }
 Vue.use(VueRouter)
 
+
+
 const router= new VueRouter({
   mode: 'history',
   base: '/dist',
@@ -27,7 +29,6 @@ const router= new VueRouter({
     },
     //上面这两个是基础的配置，后面的是请求过来的
   ],
-
 })
 //router.addRoutes(constantRouterMapSuperAdmin)
 let routesList= []
@@ -86,22 +87,16 @@ let navList=Util.slicePath(to.path).map((ktem,k)=>{
   })
   
   store.commit('updataBreadcrumbList',navList)
-  // let data= {} //这个是数组，包含title,link,index,是面包屑使用的
-  // let title= ''
-  // newList.forEach((item,i)=>{
-  //   if(to.path.includes(item.link)){
-  //     data.title= item.title
-  //     data.link= item.link
-  //     data.index= item.index
-  //     title= item.title
-  //     store.commit('handleChargeBreadList',data)
-  //   }
-  // })
-   
-  //  store.commit('handleChargeNowMenuLink',title);
 })
 
-
+router.afterEach((to,from,next) => {
+  if(to.path != from.path){
+    let main= document.getElementsByClassName('main')[0]
+    if(main){
+      main.scrollTop= '0px';
+    }
+  }
+});
 
 // next() 表示路由成功，直接进入to路由，不会再次调用router.beforeEach()
 // next('login') 表示路由拦截成功，重定向至login，会再次调用router.beforeEach()

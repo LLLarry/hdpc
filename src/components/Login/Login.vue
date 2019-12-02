@@ -41,16 +41,7 @@
                 </el-col>
            </el-row> 
            <div class="copyright_info ">
-               <div>
-                    <p>Copyright 2008 - 2016 郑州和动新能源有限公司 www.hedong.com.cn All Rights
-                        Reserved</p>
-                    <p>全国服务电话：4006-315-515 电话：0371-56788915 网址：www.hedong.com.cn</p>
-                </div>
-                <div>
-                    <span><font>版权归和动新能源有限公司所有</font></span> <a
-                        href="http://www.beian.miit.gov.cn/" style="text-decoration: none;"
-                        target="_blank">豫ICP备18017276号</a>
-                </div>
+               <a href="http://www.beian.miit.gov.cn/" style="text-decoration: none;" target="_blank">豫ICP备18017276号</a>
            </div>
     </div>
 </template>

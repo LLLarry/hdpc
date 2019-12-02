@@ -2,7 +2,10 @@
     <div class="layout">
          <TopBar /> <!-- 头部组件 -->
          <el-row class="layout_row">
-            <el-col :span="2"  class="layout_col_slide" :style="isShowSlide ? 'display: block' : 'display:none'">
+            <!-- <el-col :span="2"  class="layout_col_slide" :style="isShowSlide ? 'display: block' : 'display:none'">
+                <Slide />
+            </el-col> -->
+            <el-col :span="2"  class="layout_col_slide" >
                 <Slide />
             </el-col>
             <el-col :span="22" class="layout_col_main">
@@ -16,7 +19,7 @@
 import Slide from './Slide'
 import TopBar from './TopBar'
 import Main from './Main'
-import { mapMutations,mapState} from 'vuex'
+// import { mapMutations,mapState} from 'vuex'
 export default {
     data(){
         return {
@@ -26,9 +29,9 @@ export default {
     mounted(){
         
     },
-    computed: {
-        ...mapState(['isShowSlide'])
-    },
+    // computed: {
+    //     ...mapState(['isShowSlide'])
+    // },
     components: {
         Slide,
         TopBar,

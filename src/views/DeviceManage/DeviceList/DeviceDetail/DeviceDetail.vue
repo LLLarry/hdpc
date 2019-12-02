@@ -503,7 +503,9 @@
                         <el-amap-marker
                          v-for="(marker) in mapList" 
                          :position="marker.position" 
-                         :key="marker.position[0]">
+                         :key="marker.position[0]"
+                         v-if="marker.position[0] != null"
+                         >
                          </el-amap-marker>
                          <el-amap-info-window
                             v-for="(marker) in mapList" 
@@ -512,6 +514,7 @@
                             :content="marker.content"
                             :visible="true"
                             :offset="[0,-28]"
+                             v-if="marker.position[0] != null"
                             >
                          </el-amap-info-window>
                     </el-amap>
@@ -692,9 +695,9 @@ export default {
         });
         lazyAMapApiLoaderInstance.load().then(() => {
         // your code ...
-        this.map = new AMap.Map('tt', {
-            center: new AMap.LngLat(121.59996, 31.197646)
-        });
+        // this.map = new AMap.Map('tt', {
+        //     center: new AMap.LngLat(121.59996, 31.197646)
+        // });
         });
     },
     mounted(){
@@ -702,6 +705,9 @@ export default {
     },
     beforeDestroy(){
         this.Loading && this.Loading.close()
+    },
+    deactivated(){
+       this.Loading && this.Loading.close()
     },
     methods: {
          handleTaggleBind(type){ //绑定或解绑设备

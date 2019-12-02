@@ -149,7 +149,8 @@
                 >
                 <template slot-scope="scope">
                     <el-link type="danger" :underline="false" style="font-weight: 600; font-size: 16px;">
-                        {{  scope.row.money - scope.row.servicecharge }}
+                        {{  scope.row.money | accSub(scope.row.servicecharge) }}
+                        <!-- {{  scope.row.money - scope.row.servicecharge }} -->
                     </el-link>
                 </template>
                 </el-table-column>

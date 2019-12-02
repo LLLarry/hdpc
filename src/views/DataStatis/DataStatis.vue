@@ -142,6 +142,9 @@ export default {
     beforeDestroy(){ //退出之间，将未关闭的Loading关闭
         this.loading && this.loading.close()
     },
+    deactivated(){
+       this.loading && this.loading.close()
+    },
     methods:{
         async handleDataStatisInfo(){
             let loading= Loading.service({

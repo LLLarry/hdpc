@@ -364,12 +364,12 @@ export default {
     created(){
         let {VNK,...routerKey}=  this.$route.query
         if(JSON.stringify(routerKey) != "{}"){
-            let [startTime,endTime]= Util.formatTimeArr()
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',1)
             console.log(startTime)
             this.tradeRecordConForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
             this.nowPage= parseInt(this.tradeRecordConForm.currentPage) || 1
         }else{ //直接点击进来的
-            let [startTime,endTime]= Util.formatTimeArr()
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',1)
             this.tradeRecordConForm= {startTime,endTime}
         }
        this.asyGetTradeRecord(this.tradeRecordConForm)

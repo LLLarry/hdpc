@@ -147,12 +147,13 @@ export default {
         MyPagination
     },
     created(){
-        if(JSON.stringify(this.$route.query) != "{}"){
-           if(Util.checkKeyOnlyObj('devicenum',this.$route.query)){//从设备管理进来的 栏没有参数的时候（第一次进入的时候）
+        let {VNK,...routerKey}=  this.$route.query
+        if(JSON.stringify(routerKey) != "{}"){
+           if(Util.checkKeyOnlyObj('devicenum',routerKey)){//从设备管理进来的 栏没有参数的时候（第一次进入的时候）
                 let [startTime,endTime]= Util.formatTimeArr()
-                this.handleLogForm= {startTime,endTime,...this.$route.query}
+                this.handleLogForm= {startTime,endTime,...routerKey}
             }else{
-                this.handleLogForm= {...this.$route.query}
+                this.handleLogForm= {...routerKey}
                 this.nowPage= parseInt(this.handleLogForm.currentPage) || 1
             }
         }else{ //直接点击进来的

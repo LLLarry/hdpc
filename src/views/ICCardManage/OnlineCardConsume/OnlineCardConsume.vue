@@ -192,6 +192,7 @@
  import MyPagination from '@/components/common/MyPagination'
  import dateTimeJS from '@/utils/dateTime'
  import { getOrderOnlineCardRecordData } from '@/require/icCardManage'
+ import Util from '@/utils/util'
 export default {
     data(){
         return {
@@ -207,9 +208,14 @@ export default {
         MyPagination
     },
     created(){
-        if(JSON.stringify(this.$route.query) != "{}"){
-            this.onlineCardConsumeForm= {...this.$route.query} //将endTime放在这里是查询实时的订单
+        let {VNK,...routerKey}=  this.$route.query
+        if(JSON.stringify(routerKey) != "{}"){
+            let [startTime,endTime]= Util.formatTimeArr()
+            this.onlineCardConsumeForm= {...routerKey,endTime} //将endTime放在这里是查询实时的订单
             this.nowPage= parseInt(this.onlineCardConsumeForm.currentPage) || 1
+        }else{
+            let [startTime,endTime]= Util.formatTimeArr()
+            this.onlineCardConsumeForm= {startTime,endTime}
         }
        this.asyGetOrderOnlineCardRecordData(this.onlineCardConsumeForm)
     },

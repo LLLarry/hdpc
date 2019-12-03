@@ -194,16 +194,16 @@
                  </template>
                 </el-table-column>
                 <el-table-column
-                prop="recType"
+                prop="recycletype"
                 label="回复类型"
                 min-width="100"
                 >
                 <template slot-scope="{row}">
-                     <span v-if="row.handletype == 0">操作成功</span>
-                     <span v-else-if="row.handletype == 1">余额不足</span>
-                     <span v-else-if="row.handletype == 2">无卡</span>
-                     <span v-else-if="row.handletype == 3">卡号不统一</span>
-                     <span v-else-if="row.handletype == 4">其他错误</span>
+                     <span v-if="row.recycletype == 0">操作成功</span>
+                     <span v-else-if="row.recycletype == 1">余额不足</span>
+                     <span v-else-if="row.recycletype == 2">无卡</span>
+                     <span v-else-if="row.recycletype == 3">卡号不统一</span>
+                     <span v-else-if="row.recycletype == 4">其他错误</span>
                 </template>
                 </el-table-column>
                 <el-table-column

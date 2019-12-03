@@ -81,4 +81,17 @@ export const addTemplate= function (data){
          })
 }
 
+/**
+ * 添加模板的收费说明
+ */
+export const getChargeInfo= function (data){  
+    return ajax({
+             url: '/merchant/editTempForInfo',
+             data: data,
+             method: 'post'
+         })
+}
+
+
+
 

@@ -143,13 +143,13 @@
                 >
                 </el-table-column>
                 <el-table-column
-                prop="amoMoney"
+                prop="arrivemoney"
                 label="到账金额"
                 min-width="80"
                 >
                 <template slot-scope="scope">
                     <el-link type="danger" :underline="false" style="font-weight: 600; font-size: 16px;">
-                        {{  scope.row.money | accSub(scope.row.servicecharge) }}
+                        {{  scope.row.arrivemoney.toFixed(2) }}
                         <!-- {{  scope.row.money - scope.row.servicecharge }} -->
                     </el-link>
                 </template>

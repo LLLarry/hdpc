@@ -38,7 +38,7 @@
                     </el-select>
                 </el-form-item>
                  <el-form-item label="结束原因" class="form_right25">
-                     <el-select v-model="chargeRecordForm.resultinfo"  placeholder="支付方式" clearable size="small">
+                     <el-select v-model="chargeRecordForm.resultinfo"  placeholder="结束原因" clearable size="small">
                         <el-option label="时间或者电量用完" value="0" ></el-option>
                         <el-option label="手动停止" value="1" ></el-option>
                         <el-option label="满电自停" value="2" ></el-option>

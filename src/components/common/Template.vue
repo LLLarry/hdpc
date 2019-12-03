@@ -79,19 +79,35 @@
                                             v-model="temForm.chargeInfo">
                                         </el-input>
                                     </div>
-                                    <div style="width: 200px; float: right; text-align: center;">
-                                        <el-button type="primary" size="mini" @click="handleSetChargeInfo()">功率模板</el-button>
-                                        <el-button type="primary" size="mini"  @click="handleSetChargeInfo(`选择的充电时间为小功率电动车充电时间，仅供参考。
-大功率电动车充电时间智能动态计算，以实际为准。`)">默认模板</el-button>
+                                    <div style="width: 200px; float: right;">
+                                        <el-popover
+                                            placement="top-start"
+                                            title="功率模板说明"
+                                            width="200"
+                                            trigger="click"
+                                            ref="chargeBtn1"
+                                            content="是根据设备的系统参数中设置的分档功率和设备所使用的充电模板自动生成的收费标准模板">
+                                        </el-popover>
+                                        <el-popover
+                                            placement="bottom-start"
+                                            title="默认模板说明"
+                                            width="200"
+                                            trigger="click"
+                                            ref="chargeBtn2"
+                                            content="此模板为收费模板的通用模板">
+                                        </el-popover>
+                                        <div class="tem_text_con">
+                                            <el-button type="primary" size="mini" :icon="item.loading ? 'el-icon-loading' :'el-icon-setting'" @click="handleSetChargeInfo(1,item)">功率模板</el-button>
+                                            <span class="el-icon-warning-outline icon_span"  v-popover:chargeBtn1></span>
+                                        </div>
+                                        <div class="tem_text_con">
+                                            <el-button type="primary" size="mini" v-popover:chargeBtn2  icon="el-icon-menu"  @click="handleSetChargeInfo(2,item)">默认模板</el-button>
+                                            <span class="el-icon-warning-outline icon_span"  v-popover:chargeBtn2></span>
+                                        </div>
+                                        
                                     </div>
                                 </div>
-                            <!-- <el-input
-                                v-else
-                                type="textarea"
-                                :rows="4"
-                                placeholder="请输入收费说明"
-                                v-model="temForm.chargeInfo">
-                            </el-input> -->
+    
                             </div>
                         </div>
                    </div>
@@ -246,7 +262,7 @@
 import Vue from 'vue'
 import {confirDelete,messageTip} from '@/utils/ele'
 import TemMulDevice from '@/components/common/TemMulDevice'
-import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate,setSelectTem,deleteTem} from '@/require/template'
+import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate,setSelectTem,deleteTem,getChargeInfo} from '@/require/template'
 export default {
     data(){
         return {
@@ -489,8 +505,24 @@ export default {
        
            
        },
-       handleSetChargeInfo(info){ //点击设置默认模板或者功率模板
-
+       handleSetChargeInfo(info,item){ //点击设置默认模板或者功率模板 info 1分功率，2默认
+         if(info == 1){
+             Vue.set(item,'loading',true)
+             getChargeInfo({code: this.$route.query.code,tempid: item.id}).then(res=>{
+                  Vue.set(item,'loading',false)
+                 if(res.code === 200){
+                     this.temForm.chargeInfo= res.resultinfo
+                 }else{
+                     messageTip('warning',res.message)
+                 }
+             }).catch(err=>{
+                  messageTip('error','功率模板获取失败')
+                  Vue.set(item,'loading',false)
+             })
+         }else{
+             this.temForm.chargeInfo= `选择的充电时间为小功率电动车充电时间，仅供参考。
+大功率电动车充电时间智能动态计算，以实际为准。`
+         }
        }
     }
 }
@@ -508,6 +540,22 @@ export default {
                color: #6BD089;
            }
        }
+    }
+    .tem_text {
+        .tem_text_con {
+            display: inline-block;
+            margin: 10px 0 10px 40px;
+            .icon_span {
+                font-size: 20px;
+                margin-left: 10px;
+                color: #409EFF;
+                margin-top: 5px;
+            }
+        }
+        // button {
+        //     margin: 15px auto;
+        //     display: block;
+        // }
     }
 }
 </style>

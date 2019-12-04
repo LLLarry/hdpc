@@ -633,7 +633,7 @@ export default {
                            type_key: 'cardElec', type: '设置单次刷卡最大用电量(单位为度,KWH)', val: 1.0, unit: '0.1度', maxVal: 15, minVal: 0.1
                         },
                         {
-                           type_key: 'cst', type: '设置刷卡扣费金额(单位为元)', val: 1.0, unit: '角', maxVal: 15, minVal: 0.1
+                           type_key: 'cst', type: '设置刷卡扣费金额(单位为元)', val: 1.0, unit: '元', maxVal: 15, minVal: 0.1
                         },
                         {
                            type_key: 'powerMax1', type: '设置第一档最大充电功率（最大功率以机器支持为准）', val: 200, unit: '瓦', maxVal: 3500, minVal: 50
@@ -935,7 +935,12 @@ export default {
                     messageTip('success','参数获取获取成功')
                     let systemParamer=  this.systemParamer
                     this.systemParamer= systemParamer.map((item,i)=>{
-                        item.val= res['param'+(i+1)]
+                        if(i== 2 || i == 3){
+                            item.val= res['param'+(i+1)]/10
+                        }else{
+                            item.val= res['param'+(i+1)]
+                        }
+                        
                         return item
                     })
                 }

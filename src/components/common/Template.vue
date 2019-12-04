@@ -82,26 +82,26 @@
                                     <div style="width: 200px; float: right;">
                                         <el-popover
                                             placement="top-start"
-                                            title="功率模板说明"
+                                            title="自动说明"
                                             width="200"
                                             trigger="click"
                                             ref="chargeBtn1"
-                                            content="是根据设备的系统参数中设置的分档功率和设备所使用的充电模板自动生成的收费标准模板">
+                                            content="是根据设备的系统参数中设置的分档功率和设备所使用的充电模板自动生成的收费说明">
                                         </el-popover>
                                         <el-popover
                                             placement="bottom-start"
-                                            title="默认模板说明"
+                                            title="默认说明"
                                             width="200"
                                             trigger="click"
                                             ref="chargeBtn2"
-                                            content="此模板为收费模板的通用模板">
+                                            content="此模板为通用的收费说明">
                                         </el-popover>
                                         <div class="tem_text_con">
-                                            <el-button type="primary" size="mini" :icon="item.loading ? 'el-icon-loading' :'el-icon-setting'" @click="handleSetChargeInfo(1,item)">功率模板</el-button>
+                                            <el-button type="primary" size="mini" :icon="item.loading ? 'el-icon-loading' :'el-icon-setting'" @click="handleSetChargeInfo(1,item)">自动说明</el-button>
                                             <span class="el-icon-warning-outline icon_span"  v-popover:chargeBtn1></span>
                                         </div>
                                         <div class="tem_text_con">
-                                            <el-button type="primary" size="mini" v-popover:chargeBtn2  icon="el-icon-menu"  @click="handleSetChargeInfo(2,item)">默认模板</el-button>
+                                            <el-button type="primary" size="mini" v-popover:chargeBtn2  icon="el-icon-menu"  @click="handleSetChargeInfo(2,item)">默认说明</el-button>
                                             <span class="el-icon-warning-outline icon_span"  v-popover:chargeBtn2></span>
                                         </div>
                                         

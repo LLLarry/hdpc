@@ -164,12 +164,16 @@
                 <el-table-column
                 prop="status"
                 label="订单状态"
-                min-width="80"
+                width="85"
                 >
                  <template slot-scope="scope">
                     <el-link type="danger" :underline="false" v-if="scope.row.number==1">全额退款</el-link>
-                    <el-link type="warning" :underline="false" v-else-if="scope.row.number==2">部分退款</el-link>
+                    <div  v-else-if="scope.row.number==2">
+                        <el-link type="warning" :underline="false">部分退款 </el-link>
+                        （<el-link type="danger" :underline="false">{{ typeof (scope.row.refund_money) == 'number' ? scope.row.refund_money.toFixed(2) : '0.00'}}</el-link>）
+                    </div>
                     <el-link type="success" :underline="false" v-else>正常</el-link>
+                    
                 </template>
                 </el-table-column>
                 <el-table-column

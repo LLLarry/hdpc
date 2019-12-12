@@ -105,6 +105,16 @@
                 </el-table-column>
 
                 <el-table-column
+                prop="feeMoney"
+                label="缴费模板"
+                v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
+                min-width="100">
+                    <template slot-scope="scope">
+                        <el-button size="mini" icon="el-icon-setting" @click="handleScanPayTem(scope.row)">查看</el-button>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
                 prop="handle"
                 label="操作"
                 v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
@@ -242,16 +252,95 @@
                 <el-button @click="dialogRateVisible = false">取 消</el-button>
                 <el-button type="primary" @click="submitModifyRate">确 定</el-button>
             </div>
+        </el-dialog>
+        <!-- 商家缴费模板 -->
+        <el-dialog  
+            title="修改缴费模板"
+            :visible.sync="payTemVisible"
+             width="800px"
+            :modal="false"
+             custom-class="dialogStyle"
+            >
+            <el-row class="payTemRow">
+                <el-col :span="12" class="netWork">
+                    <div class="title">网络设备模板</div>
+                     <el-row class="item">
+                         <el-col :span="10">00出厂默认设置</el-col>
+                         <el-col :span="14"><el-input-number v-model="payTemData['00']['00']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">01十路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['01']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">02电轿款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['02']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">03脉冲板子</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['03']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">04离线充值机</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['04']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+
+                     <el-row class="item">
+                         <el-col :span="10">05十六路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['05']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                      <el-row class="item">
+                         <el-col :span="10">06二十路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['06']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                </el-col>
+                <el-col :span="12" class="blueBooth">
+                    <div class="title">蓝牙设备模板</div>
+                    <el-row class="item">
+                         <el-col :span="10">00出厂默认设置</el-col>
+                         <el-col :span="14"><el-input-number v-model="payTemData['01']['00']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">01十路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['01']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">02电轿款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['02']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">03脉冲板子</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['03']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">04离线充值机</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['04']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">05十六路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['05']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">06二十路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['06']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                </el-col>
+            </el-row>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="payTemVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitPayTem">确 定</el-button>
+            </div>
             </el-dialog>
    </div>
 </template>
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
-import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate } from '@/require/userManage'
+import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem } from '@/require/userManage'
 import { messageTip , alertPassword } from '@/utils/ele'
 import { mapState } from 'vuex'
 export default {
+
    data(){
        var checkRate= (rule,value,callback)=>{ //核对修改费率的费率是否正确
             if(value >=0 && value <= 100){
@@ -278,6 +367,28 @@ export default {
             },
             rules: {
                 rate: [{ required: true, trigger: 'blur', validator: checkRate }],
+            },
+            payTemVisible: false, //商户模板显示/隐藏
+            payTemRow: null, //选中缴费商户的row
+            payTemData: {
+                '00': {
+                    "00": 30,
+                    "01": 30,
+                    "02": 30,
+                    "03": 30,
+                    "04": 30,
+                    "05": 30,
+                    "06": 30,
+                },
+                '01': {
+                    "00": 30,
+                    "01": 30,
+                    "02": 30,
+                    "03": 30,
+                    "04": 30,
+                    "05": 30,
+                    "06": 30,
+                }
             }
        }
    },
@@ -417,7 +528,25 @@ export default {
             this.$router.push({query: this.merInfoForm})
             this.handleMerInfoData(this.merInfoForm)
             this.nowPage= 1 //搜索完之后将nowPage置为1
+        },
+        handleScanPayTem(row){ //点击缴费模板
+            this.payTemRow= row
+            let {id:merId}= row
+            getMerPayTem({merId}).then(res=>{
+                this.payTemData= res
+                this.payTemVisible= true
+            }).catch(err=>{
+
+            })
+        },
+        submitPayTem(){ //提交修改商户的缴费模板
+            console.log(JSON.stringify({
+                id: this.payTemRow.id,
+                username: this.payTemRow.username,           
+                ... this.payTemData
+            }))
         }
+
     }
 }
 </script>
@@ -426,6 +555,31 @@ export default {
 .merInfo {
     .dialogStyle {
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+    .payTemRow {
+        .title {
+            font-size: 18px;
+            text-align: center;
+            padding-bottom: 25px;
+        }
+        .item {
+            border-top: 1px solid #EBEEF5;
+            border-left: 1px solid #EBEEF5;
+            line-height: 32px;
+            &>div {
+                padding: 8px 15px;
+            }
+        }
+        .netWork {
+             border-bottom: 1px solid #EBEEF5;
+        }
+        .blueBooth {
+             border-bottom: 1px solid #EBEEF5;
+             .item {
+                  border-right: 1px solid #EBEEF5;
+             }
+        }
+    
     }
 }
 </style>

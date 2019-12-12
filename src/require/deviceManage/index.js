@@ -165,6 +165,17 @@ export const updateMapPosition= function (data){
          })
 }
 
+/**
+ * 修改设备到期时间
+ */
+export const updateDeviceExpire= function (data){ 
+    return ajax({
+             url: '/deviceData/setExpire',
+             data: data,
+             method: 'post'
+         })
+}
+
 
 
 

@@ -134,3 +134,15 @@ export const getDealerEarningsOrderDetail= function (data){
              data: data
          })
 }
+
+
+/**
+ * 获取商户缴费模板
+ */
+
+export const getMerPayTem= function (data){
+    return ajax({
+             url: '/AccountInfo/getListFeescale',
+             data: data
+         })
+}

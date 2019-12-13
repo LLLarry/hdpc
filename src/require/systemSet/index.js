@@ -10,3 +10,13 @@ export const getSystemSetInfo= function (data){
              data: data
          })
 }
+
+/**
+ * 修改商户缴费系统模板
+ */
+export const updateSystemMerPay= function (data){ 
+    return ajax({
+             url: '/systemSetting/selectSystemFeescale',
+             data: data
+         })
+}

@@ -36,6 +36,80 @@
             </div>
             <TemplateWallet :from="1" :list="temWalletList"/>
         </el-card>
+
+        <el-card class="box-card card_content">
+            <div slot="header" class="clearfix">
+                <span>商户缴费系统模板</span>
+            </div>
+            <el-card>
+             <el-row class="payTemRow">
+                <el-col :span="12" class="netWork">
+                    <div class="title">网络设备模板</div>
+                     <el-row class="item">
+                         <el-col :span="10">00出厂默认设置</el-col>
+                         <el-col :span="14"><el-input-number v-model="payTemData['00']['00']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">01十路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['01']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">02电轿款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['02']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">03脉冲板子</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['03']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">04离线充值机</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['04']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+
+                     <el-row class="item">
+                         <el-col :span="10">05十六路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['05']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                      <el-row class="item">
+                         <el-col :span="10">06二十路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['00']['06']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                </el-col>
+                <el-col :span="12" class="blueBooth">
+                    <div class="title">蓝牙设备模板</div>
+                    <!-- <el-row class="item">
+                         <el-col :span="10">00出厂默认设置</el-col>
+                         <el-col :span="14"><el-input-number v-model="payTemData['01']['00']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">01十路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['01']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">02电轿款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['02']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row> -->
+                     <el-row class="item">
+                         <el-col :span="10">03脉冲板子</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['03']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <!-- <el-row class="item">
+                         <el-col :span="10">04离线充值机</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['04']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">05十六路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['05']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row>
+                     <el-row class="item">
+                         <el-col :span="10">06二十路智慧款</el-col>
+                        <el-col :span="14"><el-input-number v-model="payTemData['01']['06']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     </el-row> -->
+                </el-col>
+            </el-row>
+            <div style="margin-top: 20px; text-align: center;"><el-button type="primary" icon="el-icon-document-checked" size="mini">保存模板</el-button></div>
+            </el-card>
+        </el-card>
         
     </div>
 </template>
@@ -45,7 +119,8 @@ import Template from '@/components/common/Template'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateWallet from '@/components/common/TemplateWallet'
-import { getSystemSetInfo } from '@/require/systemSet'
+import { messageTip } from '@/utils/ele'
+import { getSystemSetInfo,updateSystemMerPay } from '@/require/systemSet'
 export default {
     data(){
         return {
@@ -152,7 +227,27 @@ export default {
                             ]
                     }*/
             ],
-            temOnlineList: [] //在线卡模板
+            temOnlineList: [], //在线卡模板
+            payTemData: { //商户缴费系统模板
+                '00': {
+                    // "00": 30,
+                    // "01": 30,
+                    // "02": 30,
+                    // "03": 30,
+                    // "04": 30,
+                    // "05": 30,
+                    // "06": 30,
+                },
+                '01': {
+                    // "00": 30,
+                    // "01": 30,
+                    // "02": 30,
+                    // "03": 30,
+                    // "04": 30,
+                    // "05": 30,
+                    // "06": 30,
+                }
+            }
         }
     },
     components: {
@@ -212,6 +307,11 @@ export default {
                         _this.temOnlineList=[{id,name,remark,common1,permit,walletpay,common2,gather}]
                     }
 
+                    {
+                        // 商户缴费默认模板
+                        this.payTemData= systemTemInfo.PayTemData
+                    }
+
                 }
 
             }catch(error){
@@ -221,6 +321,29 @@ export default {
                    }
                     _this.loading= false
             }
+        },
+        submitPayTem(){ //提交修改商户的缴费模板
+            let {username=null,id}= this.payTemRow
+            let {"00":netType,"01":equipmentType}= this.payTemData
+            updateSystemMerPay({
+               id,
+               username,     
+               netType: {
+                   "00": this.payTemData["00"]
+               },
+               equipmentType: {
+                    "01": this.payTemData["01"]
+               }
+            }).then(res=>{
+                this.payTemVisible= false
+                if(res.code == 200){
+                    messageTip('success','修改成功')
+                }else{
+                    messageTip('error','修改失败')
+                }
+            }).catch(err=>{
+                this.payTemVisible= false
+            })
         }
     }
 }
@@ -231,6 +354,36 @@ export default {
     .card_content {
         box-shadow: none;
         border: none;
+    }
+    .payTemRow {
+        .title {
+            font-size: 18px;
+            text-align: center;
+            padding-bottom: 25px;
+        }
+        .item {
+            border-top: 1px solid #EBEEF5;
+            border-left: 1px solid #EBEEF5;
+            line-height: 32px;
+            font-size: 13px;
+            color: rgb(102, 102, 102);
+            &>div {
+                padding: 8px 15px;
+            }
+        }
+        .netWork {
+             border-bottom: 1px solid #EBEEF5;
+             .item {
+                  border-right: 1px solid #EBEEF5;
+             }
+        }
+        .blueBooth {
+             border-bottom: 1px solid #EBEEF5;
+             .item {
+                  border-right: 1px solid #EBEEF5;
+                  border-left: none;
+             }
+        }
     }
 }
 </style>

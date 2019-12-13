@@ -296,7 +296,7 @@
                 </el-col>
                 <el-col :span="12" class="blueBooth">
                     <div class="title">蓝牙设备模板</div>
-                    <el-row class="item">
+                    <!-- <el-row class="item">
                          <el-col :span="10">00出厂默认设置</el-col>
                          <el-col :span="14"><el-input-number v-model="payTemData['01']['00']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
                      </el-row>
@@ -307,12 +307,12 @@
                      <el-row class="item">
                          <el-col :span="10">02电轿款</el-col>
                         <el-col :span="14"><el-input-number v-model="payTemData['01']['02']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
-                     </el-row>
+                     </el-row> -->
                      <el-row class="item">
                          <el-col :span="10">03脉冲板子</el-col>
                         <el-col :span="14"><el-input-number v-model="payTemData['01']['03']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
                      </el-row>
-                     <el-row class="item">
+                     <!-- <el-row class="item">
                          <el-col :span="10">04离线充值机</el-col>
                         <el-col :span="14"><el-input-number v-model="payTemData['01']['04']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
                      </el-row>
@@ -323,7 +323,7 @@
                      <el-row class="item">
                          <el-col :span="10">06二十路智慧款</el-col>
                         <el-col :span="14"><el-input-number v-model="payTemData['01']['06']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
-                     </el-row>
+                     </el-row> -->
                 </el-col>
             </el-row>
             <div slot="footer" class="dialog-footer">
@@ -336,7 +336,7 @@
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
-import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem } from '@/require/userManage'
+import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem } from '@/require/userManage'
 import { messageTip , alertPassword } from '@/utils/ele'
 import { mapState } from 'vuex'
 export default {
@@ -372,22 +372,22 @@ export default {
             payTemRow: null, //选中缴费商户的row
             payTemData: {
                 '00': {
-                    "00": 30,
-                    "01": 30,
-                    "02": 30,
-                    "03": 30,
-                    "04": 30,
-                    "05": 30,
-                    "06": 30,
+                    // "00": 30,
+                    // "01": 30,
+                    // "02": 30,
+                    // "03": 30,
+                    // "04": 30,
+                    // "05": 30,
+                    // "06": 30,
                 },
                 '01': {
-                    "00": 30,
-                    "01": 30,
-                    "02": 30,
-                    "03": 30,
-                    "04": 30,
-                    "05": 30,
-                    "06": 30,
+                    // "00": 30,
+                    // "01": 30,
+                    // "02": 30,
+                    // "03": 30,
+                    // "04": 30,
+                    // "05": 30,
+                    // "06": 30,
                 }
             }
        }
@@ -533,6 +533,7 @@ export default {
             this.payTemRow= row
             let {id:merId}= row
             getMerPayTem({merId}).then(res=>{
+                console.log(res)
                 this.payTemData= res
                 this.payTemVisible= true
             }).catch(err=>{
@@ -540,11 +541,27 @@ export default {
             })
         },
         submitPayTem(){ //提交修改商户的缴费模板
-            console.log(JSON.stringify({
-                id: this.payTemRow.id,
-                username: this.payTemRow.username,           
-                ... this.payTemData
-            }))
+            let {username=null,id}= this.payTemRow
+            let {"00":netType,"01":equipmentType}= this.payTemData
+            updateMerPayTem({
+               id,
+               username,     
+               netType: {
+                   "00": this.payTemData["00"]
+               },
+               equipmentType: {
+                    "01": this.payTemData["01"]
+               }
+            }).then(res=>{
+                this.payTemVisible= false
+                if(res.code == 200){
+                    messageTip('success','修改成功')
+                }else{
+                    messageTip('error','修改失败')
+                }
+            }).catch(err=>{
+                this.payTemVisible= false
+            })
         }
 
     }
@@ -566,20 +583,25 @@ export default {
             border-top: 1px solid #EBEEF5;
             border-left: 1px solid #EBEEF5;
             line-height: 32px;
+            font-size: 13px;
+            color: rgb(102, 102, 102);
             &>div {
                 padding: 8px 15px;
             }
         }
         .netWork {
              border-bottom: 1px solid #EBEEF5;
+             .item {
+                  border-right: 1px solid #EBEEF5;
+             }
         }
         .blueBooth {
              border-bottom: 1px solid #EBEEF5;
              .item {
                   border-right: 1px solid #EBEEF5;
+                  border-left: none;
              }
         }
-    
     }
 }
 </style>

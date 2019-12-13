@@ -146,3 +146,14 @@ export const getMerPayTem= function (data){
              data: data
          })
 }
+
+/**
+ * 修改商家缴费模板收费标准
+ */
+
+export const updateMerPayTem= function (data){
+    return ajax({
+             url: '/AccountInfo/updateMerFeescale',
+             data: data
+         })
+}

@@ -107,7 +107,7 @@
                      </el-row> -->
                 </el-col>
             </el-row>
-            <div style="margin-top: 20px; text-align: center;"><el-button type="primary" icon="el-icon-document-checked" size="mini">保存模板</el-button></div>
+            <div style="margin-top: 20px; text-align: center;"><el-button type="primary" icon="el-icon-document-checked" size="mini" @click="submitPayTem" >保存模板</el-button></div>
             </el-card>
         </el-card>
         
@@ -309,7 +309,7 @@ export default {
 
                     {
                         // 商户缴费默认模板
-                        this.payTemData= systemTemInfo.PayTemData
+                        this.payTemData= systemTemInfo.payTemData
                     }
 
                 }
@@ -323,15 +323,12 @@ export default {
             }
         },
         submitPayTem(){ //提交修改商户的缴费模板
-            let {username=null,id}= this.payTemRow
-            let {"00":netType,"01":equipmentType}= this.payTemData
+            let {"00":netMap,"01":blueMap}= this.payTemData
             updateSystemMerPay({
-               id,
-               username,     
-               netType: {
+               netMap: {
                    "00": this.payTemData["00"]
                },
-               equipmentType: {
+               blueMap: {
                     "01": this.payTemData["01"]
                }
             }).then(res=>{

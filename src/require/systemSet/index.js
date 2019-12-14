@@ -16,7 +16,7 @@ export const getSystemSetInfo= function (data){
  */
 export const updateSystemMerPay= function (data){ 
     return ajax({
-             url: '/systemSetting/selectSystemFeescale',
+             url: '/systemSetting/updateSystemFeescale',    
              data: data
          })
 }

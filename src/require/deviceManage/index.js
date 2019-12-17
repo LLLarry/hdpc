@@ -176,6 +176,18 @@ export const updateDeviceExpire= function (data){
          })
 }
 
+/**
+ * 修改设备的名称
+ */
+export const updateDeviceName= function (data){ 
+    return ajax({
+             url: '/deviceData/editDeviceName',
+             data: data,
+             method: 'post'
+         })
+}
+
+
 
 
 

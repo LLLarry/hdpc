@@ -120,6 +120,7 @@
                 prop="expiration_time"
                 label="到期日期"
                 min-width="125"
+                v-if="userInfo.classify== 'superAdmin'" 
                 >
                 <template slot-scope="{row}">
                     <el-button  
@@ -129,8 +130,14 @@
                     @click="handleExpiration(row)" 
                     plain 
                     :type="contrastData(row.expiration_time)"
-                    >{{ row.expiration_time | fmtDate('YYYY-MM-DD') }}</el-button>
-                    <el-link v-else :type="contrastData(row.expiration_time)" :underline="false" >{{ row.expiration_time | fmtDate('YYYY-MM-DD') }}</el-link>
+                    >
+                        <span v-if="row.expiration_time == null">&nbsp;&nbsp;&nbsp;&nbsp;{{' — — '}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span v-else>{{ row.expiration_time | fmtDate('YYYY-MM-DD') }}</span>
+                    </el-button>
+                    <el-link v-else :type="contrastData(row.expiration_time)" :underline="false" >
+                        <span v-if="row.expiration_time == null">&nbsp;&nbsp;&nbsp;&nbsp;{{ '— —' }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span v-else>{{ row.expiration_time | fmtDate('YYYY-MM-DD') }}</span>
+                    </el-link>
                 </template>
                 </el-table-column>
 
@@ -383,10 +390,14 @@ export default {
         handleExpiration(row){ //修改设备的到期日期--验证密码
             alertPassword(()=>{
                let {code,expiration_time}= row
-               let expire= moment(expiration_time).format('YYYY-MM-DD')
-               this.expirationForm= {code,expire}
+               if(expiration_time != null){
+                   let expire= moment(expiration_time).format('YYYY-MM-DD')
+                    this.expirationForm= {code,expire}
+               }else{
+                    this.expirationForm= {code}
+               }
                this.selectRow= row
-                this.expirationVisable= true
+               this.expirationVisable= true
             })
         },
         async setDeviceExpiration(){//修改设备的到期日期

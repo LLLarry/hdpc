@@ -25,18 +25,25 @@
                          <span v-else>— —</span> 
                     </div>
                 </el-col>
-                <el-col :xs="8" :sm="4">
+                <!-- <el-col :xs="8" :sm="4">
                     <div class="colCon">
-                        <!-- <router-link to="/" v-if="deviceInfo.areaName && deviceInfo.areaName.length > 0">
-                        
-                        </router-link> -->
-                        
                          所属小区： {{ '— —'}}
                     </div>
-                </el-col>
-                <el-col :xs="8" :sm="4">
+                </el-col> -->
+                <el-col :xs="16" :sm="8">
                     <div class="colCon">
-                         电话： {{ '— —'}}
+                         设备名：
+                        <span v-if="!isShowDeviceName">
+                            <span  v-if="remark!= null">
+                                <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="handleShowDeviceName"> {{ remark }}</el-button>
+                                </span>
+                            <span v-else>— —</span>
+                         </span>
+                        <span v-else>
+                            <el-input v-model="resetRemark" placeholder="请输入设备名" size="mini" style="width: 40%"></el-input> 
+                            <el-button type="success" size="mini" @click="handleSaveName()" icon="el-icon-folder-checked">修改</el-button>
+                            <el-button type="warning" size="mini" @click="handleCancelDeleteName()"  icon="el-icon-folder-delete">取消</el-button>
+                        </span>
                     </div>
                 </el-col>
             </el-row>
@@ -554,7 +561,7 @@ import GradeTemplate from '@/components/common/GradeTemplate'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
 import {Loading} from 'element-ui'
 import {alertPassword,messageTip} from '@/utils/ele'
-import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,remoteChargeBreakOff,updateMapPosition } from '@/require/deviceManage'
+import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,remoteChargeBreakOff,updateMapPosition,updateDeviceName } from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
@@ -567,6 +574,9 @@ export default {
             merid: 0, //默认是 0 绑定了就有值
             username: '0' , //username默认是0，0代表设备未绑定，非0代表设备已绑定
             hwVerson:'01',//硬件版本
+            remark: '' , //设备名
+            resetRemark: '', //修改设备名
+            isShowDeviceName: false, //是否显示设备名称
             dialogVisible: false, //地图默认隐藏
             bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
             mapPlugin: [ //地图插件配置
@@ -583,13 +593,13 @@ export default {
                     events: {}
                 }
             ],
-            deviceInfo: {
-                bindStatus: 1,
-                code: '000001',
-                merName: '',
-                areaName: '',
-                phone: ''
-            },
+            // deviceInfo: {
+            //     bindStatus: 1,
+            //     code: '000001',
+            //     merName: '',
+            //     areaName: '',
+            //     phone: ''
+            // },
             moduleInfo: [
                 // {
                 //     code: '000001',
@@ -729,6 +739,29 @@ export default {
                 
             })
         },
+        handleShowDeviceName(){ //点击显示修改设备名称框
+            this.isShowDeviceName= true
+        },
+        handleSaveName(){ //点击保存设备名称
+            if(this.resetRemark == "" ||  this.resetRemark == null ){
+                messageTip('warning','设备名不能为空')
+                return
+            }
+           updateDeviceName({code: this.code,name: this.resetRemark}).then(res=>{
+               if(res.code == 200){
+                   this.remark= this.resetRemark
+                   messageTip('success','设备名设置成功') 
+               }else if(res.code == 102){
+                   messageTip('warning',res.message) 
+               }
+           }).catch(err=>{
+               messageTip('warning','设置失败') 
+           })
+            this.isShowDeviceName= false
+        },
+        handleCancelDeleteName(){ //点击取消显示设备名称框
+            this.isShowDeviceName= false
+        },
         backFn(bindInfo){ //绑定成功之后的回调
            this.asyGetDeviceDetailInfo({code: this.code}) 
         },
@@ -745,7 +778,8 @@ export default {
                 let deviceInfo= await getDeviceDetailInfo(data)
                 _this.username= deviceInfo.username
                 _this.merid= deviceInfo.merid
-                let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude }= deviceInfo.equipment
+                let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude,remark }= deviceInfo.equipment
+                _this.remark= remark
                 _this.moduleInfo= [{code,CCID,IMEI,hwVerson,hwVersonNum,sfVerson,single}] //设备信息
                 _this.mapInfo= [{longitude,latitude}] //经纬度信息
                 _this.hwVerson= hwVerson
@@ -864,7 +898,7 @@ export default {
                         lock: true,
                         text: '解锁中',
                         spinner: 'el-icon-loading',
-                        customClass: "loadClass"
+                        customClass: "loadClass",
                     });
             this.Loading= loading
             lockDevicePort({port: row.port,status: 1,code: this.code}).then(res=>{

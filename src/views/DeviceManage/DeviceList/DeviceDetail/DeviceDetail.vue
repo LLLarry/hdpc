@@ -34,10 +34,7 @@
                     <div class="colCon">
                          设备名：
                         <span v-if="!isShowDeviceName">
-                            <span  v-if="remark!= null">
-                                <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="handleShowDeviceName"> {{ remark }}</el-button>
-                                </span>
-                            <span v-else>— —</span>
+                            <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="handleShowDeviceName"> {{ remark!= null ? remark : '— —'}}</el-button>
                          </span>
                         <span v-else>
                             <el-input v-model="resetRemark" placeholder="请输入设备名" size="mini" style="width: 40%"></el-input> 

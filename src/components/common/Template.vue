@@ -27,9 +27,26 @@
                                         </div>
                                         <div style="margin-top: 15px">
                                             <strong>是否支持退费:  </strong>
-                                            <span v-if="!item.edit" :class="['top_span', item.permit ==1 ? 'green' : 'red']">{{item.permit ==1 ? '是' : '否'}}</span><span v-if="!item.edit">
-                                                {{item.common2== 1 ? '(退费标准：时间和电量最小)' : item.common2== 2 ? '(退费标准：时间最小)' : item.common2== 3 ? '((退费标准：电量最小)': ''}}
+                                             <span   v-if="!item.edit" >
+                                                 <!-- 是 -->
+                                                <span v-if="item.permit ==1" class="top_span green">
+                                                    是&nbsp;
+                                                     <span style="color: #666;">
+                                                         {{item.common2== 1 ? '(退费标准：时间和电量最小)' : item.common2== 2 ? '(退费标准：时间最小)' : item.common2== 3 ? '((退费标准：电量最小)': '(退费标准：时间和电量最小)'}}
+                                                     </span> 
+                                                </span> 
+                                                <!-- 否 -->
+                                                <span v-else class="top_span red">否</span>
                                             </span>
+
+                                            <!-- <span 
+                                            v-if="!item.edit" 
+                                            :class="['top_span', item.permit ==1 ? 'green' : 'red']">
+                                            {{item.permit ==1 ? '是' : '否'}}
+                                            </span>
+                                            <span v-if="!item.edit">
+                                                {{item.common2== 1 ? '(退费标准：时间和电量最小)' : item.common2== 2 ? '(退费标准：时间最小)' : item.common2== 3 ? '((退费标准：电量最小)': ''}}
+                                            </span> -->
                                             <el-cascader
                                             v-else
                                             v-model="temForm.permit"
@@ -427,8 +444,13 @@ export default {
             return 
         }
         let {name,remark,common1,permit,walletpay,common2,chargeInfo} = item
-        if(common2== '' || typeof common2 == 'undefined'){
-            permit=[permit.toString()]
+        if(common2== '' || typeof common2 == 'undefined' || common2 == null){
+            if(permit== 1){
+                permit=['1','1'] 
+            }else{
+                permit=['2']
+            }
+            // permit=[permit.toString()]
         }else{
             permit=[permit.toString(),common2.toString()]
         }
@@ -441,8 +463,9 @@ export default {
            //校验，发送请求
            let{name,remark,common1,walletpay,chargeInfo}= this.temForm
            let [permit,common2='']= this.temForm.permit
+           console.log( this.temForm.permit,common2)
            //注： 充电模板的status为0
-           updateTemplate({id: item.id,status: 0, name,remark,common1,walletpay,permit,chargeInfo}).then(res=>{ 
+           updateTemplate({id: item.id,status: 0, name,remark,common1,common2,walletpay,permit,chargeInfo}).then(res=>{ 
                if(res.code === 200){
                     item.name= name
                     item.remark= remark

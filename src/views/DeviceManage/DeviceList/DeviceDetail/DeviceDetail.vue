@@ -966,8 +966,9 @@ export default {
                     messageTip('success','参数获取获取成功')
                     let systemParamer=  this.systemParamer
                     this.systemParamer= systemParamer.map((item,i)=>{
-                        if(i== 2 || i == 3){
-                            item.val= res['param'+(i+1)]/10
+                        console.log(res['param'+(i+1)]/10)
+                        if(i== 2 || i == 3 || i== 4){
+                           item.val= isNaN(res['param'+(i+1)]/10) ? undefined : res['param'+(i+1)]/10   
                         }else{
                             item.val= res['param'+(i+1)]
                         }

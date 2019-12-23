@@ -441,6 +441,7 @@
                     </div>
                     <el-table
                         :data="systemParamer"
+                        :span-method="arraySpanMethod"
                         border
                         fit
                         style="width: 100%"
@@ -466,7 +467,8 @@
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="1" :step-strictly="true" v-if="['spRecMon','spFullEmpty'].includes(row.type_key)"></el-input-number>
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="10" v-if="['fullPowerMin'].includes(row.type_key)"></el-input-number>
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="10" v-if="['fullChargeTime'].includes(row.type_key)"></el-input-number>
-                            <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="1" :step-strictly="true" v-if="['elecTimeFirst1'].includes(row.type_key)"></el-input-number>
+                            <!-- <el-input-number @change="handleChange"  class="lastInput" style="width: 130px; text-align: center;" size="small"  v-model="row.val"   v-if="['elecTimeFirst1'].includes(row.type_key)"></el-input-number> -->
+                            <el-input size="small"  @change="handleChange" class="lastInput" style="width: 130px; text-align: center;"  v-model="row.val"   v-if="['elecTimeFirst1'].includes(row.type_key)"></el-input>
                         </template>
                         </el-table-column>
                         
@@ -643,16 +645,16 @@ export default {
                            type_key: 'cst', type: '设置刷卡扣费金额(单位为元)', val: 1.0, unit: '元', maxVal: 15, minVal: 0.1
                         },
                         {
-                           type_key: 'powerMax1', type: '设置第一档最大充电功率（最大功率以机器支持为准）', val: 200, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'powerMax1', type: '设置第一档最大充电功率（最大功率以机器支持为准）', val: 200, unit: '瓦', maxVal: 8000, minVal: 50
                         },
                         {
-                           type_key: 'powerMax2', type: '设置第二档最大充电功率（最大功率以机器支持为准）', val: 144, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'powerMax2', type: '设置第二档最大充电功率（最大功率以机器支持为准）', val: 144, unit: '瓦', maxVal: 8000, minVal: 50
                         },
                         {
-                           type_key: 'powerMax3', type: '设置第三档最大充电功率（最大功率以机器支持为准）', val: 88, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'powerMax3', type: '设置第三档最大充电功率（最大功率以机器支持为准）', val: 88, unit: '瓦', maxVal: 8000, minVal: 50
                         },
                         {
-                           type_key: 'powerMax4', type: '设置第四档最大充电功率（最大功率以机器支持为准）', val: 50, unit: '瓦', maxVal: 3500, minVal: 50
+                           type_key: 'powerMax4', type: '设置第四档最大充电功率（最大功率以机器支持为准）', val: 50, unit: '瓦', maxVal: 8000, minVal: 50
                         },
 
                         {
@@ -678,7 +680,7 @@ export default {
                            type_key: 'fullChargeTime', type: '设置浮充时间 （充电器充满变绿灯之后的，继续浮充时间，单位为分钟）', val: 120, unit: '分钟', maxVal: 240, minVal: 30
                         },
                         {
-                           type_key: 'elecTimeFirst1', type: '是否初始显示电量 （此功能是否支持和设备相关）', val: 255, unit: '无', maxVal: 1, minVal: 0
+                           type_key: 'elecTimeFirst1', type: '是否初始显示电量 （此功能是否支持和设备相关）', val: 0, unit: '无', maxVal: '1表示屏幕初始显示剩余电量，0表示初始时间， 255表示不支持此功能', minVal: 0
                         },
                     ]
             
@@ -979,6 +981,27 @@ export default {
                    
             }).catch(err=>{ loading.close() })
         },
+       handleChange(){
+           this.systemParamer= this.systemParamer.filter((item,i)=>{
+               if(item.type_key == 'elecTimeFirst1'){
+                   if(parseInt(item.val) <= 0 ){
+                       item.val= 0
+                   }else if(parseInt(item.val) >= 255 ){
+                       item.val= 255
+                   }else{
+                       item.val= 1
+                   }
+               }
+               return item
+           })
+       },
+       arraySpanMethod({ row, column, rowIndex, columnIndex }){
+            if (rowIndex == 16) {
+                if (columnIndex === 3) {
+                    return [3, 2];
+                } 
+            }
+       },
         saveDeviceSysParam(){ //保存系统参数
             let loading= Loading.service({
                         lock: true,
@@ -1073,6 +1096,11 @@ export default {
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+    }
+    .lastInput {
+        .el-input__inner {
+            text-align: center;
         }
     }
 }

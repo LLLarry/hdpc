@@ -99,6 +99,13 @@
                 min-width="80"
                 >
                 </el-table-column>
+                <el-table-column
+                prop="info"
+                label="操作"
+                min-width="120"
+                >
+                <el-button type="primary" size="mini" icon="el-icon-view" @click="getBoardInfo">获取主板信息</el-button>
+                </el-table-column>
             </el-table>
 
         </el-card>
@@ -560,7 +567,7 @@ import GradeTemplate from '@/components/common/GradeTemplate'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
 import {Loading} from 'element-ui'
 import {alertPassword,messageTip} from '@/utils/ele'
-import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,remoteChargeBreakOff,updateMapPosition,updateDeviceName } from '@/require/deviceManage'
+import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate } from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
@@ -820,6 +827,15 @@ export default {
             catch(error){
                  loading.close()
             }
+        },
+        getBoardInfo(){ //获取主板信息
+            getBoardInfoRotate({
+                code: this.code
+            }).then(res=>{
+                alert(JSON.stringify(res))
+            }).catch(err=>{
+                alert('错误··')
+            })
         },
         handleScanMap(){ //点击查看地图
         // [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]

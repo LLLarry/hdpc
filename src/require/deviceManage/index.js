@@ -187,6 +187,17 @@ export const updateDeviceName= function (data){
          })
 }
 
+/**
+ * 修改主板信息
+ */
+export const getBoardInfoRotate= function (data){ 
+    return ajax({
+             url: '/wolfmaininfo',
+             data: data,
+             method: 'post'
+         })
+}
+
 
 
 

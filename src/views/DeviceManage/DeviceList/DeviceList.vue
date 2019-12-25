@@ -59,6 +59,12 @@
                         <el-option label="达限制" value="3" ></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="到期排序" class="form_right25 w120">
+                    <el-select v-model="deviceListForm.expiretime"  placeholder="到期时间" clearable  size="small">
+                        <el-option label="从大到小" value="1" ></el-option>
+                        <el-option label="从小到大" value="2" ></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item class="form_margin0 content_btn">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>

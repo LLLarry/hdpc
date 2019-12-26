@@ -18,19 +18,29 @@
                          设备号: <router-link :to="`/deviceManage/deviceList?devicenum=${code}`"><el-link type="primary">{{code}}</el-link></router-link>
                     </div>
                 </el-col>
-                <el-col :xs="8" :sm="4">
+                <el-col :xs="8" :sm="4" :md="3">
                     <div class="colCon">
                          绑定商户：
                          <router-link :to="`/usermanage/merInfo?nick=${username}`" v-if="username != 0"><el-link type="primary">{{username}}</el-link></router-link>
                          <span v-else>— —</span> 
                     </div>
                 </el-col>
-                <!-- <el-col :xs="8" :sm="4">
+                <el-col :xs="8" :sm="3" :md="5"  v-if="userInfo.classify== 'superAdmin'" >
                     <div class="colCon">
-                         所属小区： {{ '— —'}}
+                        到期时间：
+                       <el-button  
+                        icon="el-icon-edit" 
+                        size="mini" 
+                        @click="handleExpiration(expirationTime)" 
+                        plain 
+                        :type="contrastData(expirationTime)"
+                        >
+                            <span v-if="expirationTime == null || typeof expirationTime == undefined">&nbsp;&nbsp;&nbsp;&nbsp;{{' — — '}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <span v-else>{{ expirationTime | fmtDate('YYYY-MM-DD') }}</span>
+                        </el-button>
                     </div>
-                </el-col> -->
-                <el-col :xs="16" :sm="8">
+                </el-col>
+                <el-col :xs="8" :sm="4" :md="7">
                     <div class="colCon">
                          设备名：
                         <span v-if="!isShowDeviceName">
@@ -43,6 +53,7 @@
                         </span>
                     </div>
                 </el-col>
+                
             </el-row>
          </el-card>
         <!-- 模块信息 -->
@@ -102,10 +113,14 @@
                 <el-table-column
                 prop="info"
                 label="操作"
-                min-width="120"
+                min-width="500"
                 >
-                <el-button type="primary" size="mini" icon="el-icon-view" @click="getBoardInfo">获取主板信息</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-view" @click="getBoardInfo">获取主板信息</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-view" @click="setsys=true">设置参数</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-view" @click="getBoardRead">读取参数</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-view" @click="chapay= true">开始充电</el-button>
                 </el-table-column>
+                
             </el-table>
 
         </el-card>
@@ -556,6 +571,87 @@
                     </a>
                </div>
             </div>
+            <!-- 修改设备的到期日期 -->
+            <el-dialog
+                :show-close="false"
+                :visible.sync="expirationVisable"
+                width="400px"
+                :modal="false"
+                title="修改设备到期时间"
+            >    
+                <el-form label-position="top" :model="expirationForm">
+                    <el-form-item label="设备号" class="form_right25">
+                        <el-input v-model="expirationForm.code" placeholder="设备号" disabled clearable ></el-input>
+                    </el-form-item>
+                    <el-form-item label="到期时间" class="form_right25" style="width: 100%;">
+                        <el-date-picker
+                            style="width: 100%;"
+                            v-model="expirationForm.expire"
+                            align="right"
+                            type="date"
+                            placeholder="选择日期"
+                            value-format="yyyy-MM-dd"
+                        :picker-options="disabledDateFn">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="expirationVisable = false" size="middle">取 消</el-button>
+                    <el-button type="primary" @click="setDeviceExpiration" size="middle">确 定</el-button>
+                </span>
+                </el-dialog>
+        <!-- 设置主板信息 -->
+         <el-dialog
+                :show-close="false"
+                :visible.sync="setsys"
+                width="400px"
+                :modal="false"
+                title="设置参数"
+            >    
+                <el-form label-position="top" :model="setsysForm">
+                    <el-form-item label="刷卡扣费金额" class="form_right25">
+                        <el-input v-model="setsysForm.cst" placeholder="刷卡扣费金额" clearable ></el-input>
+                    </el-form-item>
+                    <el-form-item label="扣费价格" class="form_right25" style="width: 100%;">
+                        <el-input v-model="setsysForm.elec_pri" placeholder="刷卡扣费金额" clearable ></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="setsys = false" size="middle">取 消</el-button>
+                    <el-button type="primary" @click="getBoardSet" size="middle">确 定</el-button>
+                </span>
+        </el-dialog>
+        <!-- 测试开始充电 -->
+       <el-dialog
+                :show-close="false"
+                :visible.sync="chapay"
+                width="400px"
+                :modal="false"
+                title="设置参数"
+            >    
+                <el-form label-position="top" :model="chapayForm">
+                    <el-form-item label="端口" class="form_right25">
+                        <el-input v-model="chapayForm.port" placeholder="端口" clearable ></el-input>
+                    </el-form-item>
+                    <el-form-item label="金额" class="form_right25" style="width: 100%;">
+                        <el-input v-model="chapayForm.money" placeholder="金额" clearable ></el-input>
+                    </el-form-item>
+                     <el-form-item label="时间" class="form_right25">
+                        <el-input v-model="chapayForm.time" placeholder="时间" clearable ></el-input>
+                    </el-form-item>
+                    <el-form-item label="电量" class="form_right25" style="width: 100%;">
+                        <el-input v-model="chapayForm.elec" placeholder="金额" clearable ></el-input>
+                    </el-form-item>
+                    <el-form-item label="分档状态" class="form_right25" style="width: 100%;">
+                        <el-input v-model="chapayForm.chargeType" placeholder="金额" clearable ></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="chapay = false" size="middle">取 消</el-button>
+                    <el-button type="primary" @click="getBoardStart" size="middle">确 定</el-button>
+                </span>
+        </el-dialog>
+        
     </div>
 </template>
 
@@ -567,14 +663,36 @@ import GradeTemplate from '@/components/common/GradeTemplate'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
 import {Loading} from 'element-ui'
 import {alertPassword,messageTip} from '@/utils/ele'
-import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate } from '@/require/deviceManage'
+import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
+remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,getWolfreadsys,getWolftestpay } from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
+import { mapState } from 'vuex'
 export default {
     data(){
         return {
+            // 主板信息
+            setsys: false,
+            setsysForm: {
+                cst: 1,
+                elec_pri: 1
+            },
+            chapay: false,
+            chapayForm:{
+                port: 1,
+                money: 1,
+                time:1,
+                elec: 1,
+                chargeType: 1
+            },
+            // 主板信息
+            disabledDateFn: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now()-8.64e7;
+                }
+            },
             Loading: null ,//Loading加载实例
             code: '', //设备号
             merid: 0, //默认是 0 绑定了就有值
@@ -582,6 +700,9 @@ export default {
             hwVerson:'01',//硬件版本
             remark: '' , //设备名
             resetRemark: '', //修改设备名
+            expirationTime: '',//设备到期时间
+            expirationVisable: false, //设备到期日期
+            expirationForm: {},//设备到期日期容器
             isShowDeviceName: false, //是否显示设备名称
             dialogVisible: false, //地图默认隐藏
             bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
@@ -725,6 +846,9 @@ export default {
     deactivated(){
        this.Loading && this.Loading.close()
     },
+    computed: {
+        ...mapState(['userInfo'])
+    },
     methods: {
          handleTaggleBind(type){ //绑定或解绑设备
             alertPassword(()=>{
@@ -771,6 +895,44 @@ export default {
         backFn(bindInfo){ //绑定成功之后的回调
            this.asyGetDeviceDetailInfo({code: this.code}) 
         },
+        contrastData(data){ //根据时间返回值
+            const dataTime= new Date(moment(data).format('YYYY-MM-DD')).getTime()
+            const nowTime= new Date(moment(new Date()).format('YYYY-MM-DD')).getTime()
+            if(dataTime- nowTime <= 0){
+                return 'danger'
+            }else if((dataTime- nowTime) > 0 && (dataTime- nowTime) <= 7*1000*60*60*24){
+                return 'warning'
+            }else{
+                return 'primary'
+            }
+        },
+        handleExpiration(expirationTime){ //修改设备的到期日期--验证密码
+            alertPassword(()=>{
+              
+               if(expirationTime != null){
+                   let expire= moment(expirationTime).format('YYYY-MM-DD')
+                    this.expirationForm= {code: this.code,expire}
+               }else{
+                    this.expirationForm= {code:this.code}
+               }
+               this.expirationVisable= true
+            })
+        },
+        async setDeviceExpiration(){//修改设备的到期日期
+            try{
+                let info=  await updateDeviceExpire(this.expirationForm)
+                if(info.code == 200){
+                    messageTip('success',`修改设备${this.expirationForm.code}成功`)
+                    this.expirationTime= info.result
+                }else{
+                    messageTip('error',info.message)
+                }
+                this.expirationVisable= false
+            } catch(error){
+                messageTip('error','修改失败')
+                this.expirationVisable= false
+            } 
+        },
         async asyGetDeviceDetailInfo(data){
             let _this= this
             let loading= Loading.service({
@@ -784,11 +946,12 @@ export default {
                 let deviceInfo= await getDeviceDetailInfo(data)
                 _this.username= deviceInfo.username
                 _this.merid= deviceInfo.merid
-                let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude,remark }= deviceInfo.equipment
+                let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude,remark,expirationTime }= deviceInfo.equipment
                 _this.remark= remark
                 _this.moduleInfo= [{code,CCID,IMEI,hwVerson,hwVersonNum,sfVerson,single}] //设备信息
                 _this.mapInfo= [{longitude,latitude}] //经纬度信息
                 _this.hwVerson= hwVerson
+                _this.expirationTime= expirationTime
                 if(hwVerson != '03' && hwVerson != '04'){
                     if(deviceInfo.temp != null){ //temp存在，说明此模板不是分等级模板
                         //十路智慧款
@@ -836,6 +999,29 @@ export default {
             }).catch(err=>{
                 alert('错误··')
             })
+        },
+        getBoardSet(){ //设置
+            getWolfsetsys({code: this.code,...this.setsysForm}).then(res=>{
+                alert(res)
+            }).catch(err=>{
+
+            })
+            this.setsys= false
+        },
+        getBoardRead(){ //读取
+            getWolfreadsys({code: this.code,}).then(res=>{
+                alert(res)
+            }).catch(err=>{
+
+            })
+        },
+        getBoardStart(){ //开始充电
+            getWolftestpay({code:this.code,...this.chapayForm}).then(res=>{
+              alert(res)
+            }).catch(err=>{
+
+            })
+            this.chapay= false
         },
         handleScanMap(){ //点击查看地图
         // [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]

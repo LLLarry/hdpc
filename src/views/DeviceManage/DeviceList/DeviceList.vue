@@ -129,18 +129,7 @@
                 v-if="userInfo.classify== 'superAdmin'" 
                 >
                 <template slot-scope="{row}">
-                    <el-button  
-                    v-if="userInfo.classify== 'superAdmin'" 
-                    icon="el-icon-edit" 
-                    size="mini" 
-                    @click="handleExpiration(row)" 
-                    plain 
-                    :type="contrastData(row.expiration_time)"
-                    >
-                        <span v-if="row.expiration_time == null">&nbsp;&nbsp;&nbsp;&nbsp;{{' — — '}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <span v-else>{{ row.expiration_time | fmtDate('YYYY-MM-DD') }}</span>
-                    </el-button>
-                    <el-link v-else :type="contrastData(row.expiration_time)" :underline="false" >
+                    <el-link :type="contrastData(row.expiration_time)" :underline="false" >
                         <span v-if="row.expiration_time == null">&nbsp;&nbsp;&nbsp;&nbsp;{{ '— —' }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <span v-else>{{ row.expiration_time | fmtDate('YYYY-MM-DD') }}</span>
                     </el-link>
@@ -158,6 +147,16 @@
                         </router-link>
                        <span v-else>— —</span>
                     </template>
+                </el-table-column>
+                <el-table-column
+                prop="create_time"
+                label="IMEI创建日期"
+                min-width="125"
+                v-if="userInfo.classify== 'superAdmin'" 
+                >
+                <template slot-scope="{row}">
+                    {{ row.create_time | fmtDate('YYYY-MM-DD') }}
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="imei"
@@ -292,35 +291,6 @@
             <el-button type="primary" @click="setHardversionBtn" size="middle">确 定</el-button>
         </span>
         </el-dialog>
-
-        <el-dialog
-        :show-close="false"
-        :visible.sync="expirationVisable"
-        width="400px"
-        :modal="false"
-        title="修改设备到期时间"
-       >    
-        <el-form label-position="top" :model="expirationForm">
-            <el-form-item label="设备号" class="form_right25">
-                <el-input v-model="expirationForm.code" placeholder="设备号" disabled clearable ></el-input>
-            </el-form-item>
-            <el-form-item label="到期时间" class="form_right25" style="width: 100%;">
-                <el-date-picker
-                    style="width: 100%;"
-                    v-model="expirationForm.expire"
-                    align="right"
-                    type="date"
-                    placeholder="选择日期"
-                    value-format="yyyy-MM-dd"
-                   :picker-options="disabledDateFn">
-                </el-date-picker>
-            </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="expirationVisable = false" size="middle">取 消</el-button>
-            <el-button type="primary" @click="setDeviceExpiration" size="middle">确 定</el-button>
-        </span>
-        </el-dialog>
     </div>
 </template>
 
@@ -329,19 +299,11 @@
  import dateTimeJS from '@/utils/dateTime'
  import {alertPassword,messageTip} from '@/utils/ele'
  import QRCode from '@/components/common/QRCode'
- import { getDeviceList,setHardversion,resetDeviceTestTime,updateDeviceExpire } from '@/require/deviceManage'
+ import { getDeviceList,setHardversion,resetDeviceTestTime } from '@/require/deviceManage'
  import { mapState } from 'vuex'
 export default {
     data(){
         return {
-            disabledDateFn: {
-                disabledDate(time) {
-                    return time.getTime() < Date.now()-8.64e7;
-                }
-            },
-            selectRow: null, //选中日期的设备项
-            expirationVisable: false, //设备到期日期
-            expirationForm: {},//设备到期日期容器
             deviceListForm: {},
             modifyHversonForm: {}, //修改硬件版本号的容器
             pickerOptions: dateTimeJS,
@@ -392,34 +354,6 @@ export default {
                let {code,hardversion}= row
                this.modifyHversonForm= {code,hardversion}
             })
-        },
-        handleExpiration(row){ //修改设备的到期日期--验证密码
-            alertPassword(()=>{
-               let {code,expiration_time}= row
-               if(expiration_time != null){
-                   let expire= moment(expiration_time).format('YYYY-MM-DD')
-                    this.expirationForm= {code,expire}
-               }else{
-                    this.expirationForm= {code}
-               }
-               this.selectRow= row
-               this.expirationVisable= true
-            })
-        },
-        async setDeviceExpiration(){//修改设备的到期日期
-            try{
-                let info=  await updateDeviceExpire(this.expirationForm)
-                if(info.code == 200){
-                    messageTip('success',`修改设备${this.expirationForm.code}成功`)
-                    this.selectRow.expiration_time= info.result
-                }else{
-                    messageTip('error',info.message)
-                }
-                this.expirationVisable= false
-            } catch(error){
-                messageTip('error','修改失败')
-                this.expirationVisable= false
-            } 
         },
         handleCreateQrCode(code){ //生成二维码
             this.alertDeviceCode= code

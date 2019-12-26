@@ -198,6 +198,39 @@ export const getBoardInfoRotate= function (data){
          })
 }
 
+/**
+ * 设置参数 （主板）
+ */
+export const getWolfsetsys= function (data){ 
+    return ajax({
+             url: '/wolfsetsys',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * 读取参数 （主板）
+ */
+export const getWolfreadsys= function (data){ 
+    return ajax({
+             url: '/wolfreadsys',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * 开始充电 （主板）
+ */
+export const getWolftestpay= function (data){ 
+    return ajax({
+             url: '/wolftestpay',
+             data: data,
+             method: 'post'
+         })
+}
+
 
 
 

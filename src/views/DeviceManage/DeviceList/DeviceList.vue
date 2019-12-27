@@ -29,6 +29,7 @@
                         <el-option label="04离线充值机" value="04" ></el-option>
                         <el-option label="05十六路智慧款" value="05" ></el-option>
                         <el-option label="06二十路智慧款" value="06" ></el-option>
+                        <el-option label="07单路交流桩" value="07" ></el-option>
                     </el-select>
                 </el-form-item>
 
@@ -283,6 +284,7 @@
                     <el-option label="04离线充值机" value="04" ></el-option>
                     <el-option label="05十六路智慧款" value="05" ></el-option>
                     <el-option label="06二十路智慧款" value="06" ></el-option>
+                     <el-option label="07单路交流桩" value="07" ></el-option>
                 </el-select>
             </el-form-item>
         </el-form>

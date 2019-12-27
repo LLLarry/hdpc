@@ -57,119 +57,106 @@
             </el-row>
          </el-card>
         <!-- 模块信息 -->
-        <el-card class="box-card" id="module_card">
-            <div slot="header" class="clearfix">
-                <span>模块信息（硬件，软件，IMEI, +CCID）</span>
-            </div>
-            <el-table
-                :data="moduleInfo"
-                border
-                fit
-                style="width: 100%"
-                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
-                >
-                <el-table-column
-                prop="code"
-                label="设备号"
-                min-width="80"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="CCID"
-                label="CCID"
-                min-width="200"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="IMEI"
-                label="IMEI"
-                min-width="160"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="hwVerson"
-                label="硬件版本"
-                min-width="80"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="hwVersonNum"
-                label="硬件版本号"
-                min-width="100"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="sfVerson"
-                label="软件版本号"
-                min-width="100"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="single"
-                label="信号强度"
-                min-width="80"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="info"
-                label="操作"
-                min-width="500"
-                >
-                    <el-button type="primary" size="mini" icon="el-icon-view" @click="getBoardInfo">获取主板信息</el-button>
-                    <el-button type="primary" size="mini" icon="el-icon-view" @click="setsys=true">设置参数</el-button>
-                    <el-button type="primary" size="mini" icon="el-icon-view" @click="getBoardRead">读取参数</el-button>
-                    <el-button type="primary" size="mini" icon="el-icon-view" @click="chapay= true">开始充电</el-button>
-                </el-table-column>
-                
-            </el-table>
+        <el-row>
+            <el-col :lg="16" style="padding: 0 20px;">
+                <el-card class="box-card" id="module_card" >
+                    <div slot="header" class="clearfix">
+                        <span>模块信息（硬件，软件，IMEI, +CCID）</span>
+                    </div>
+                    <el-table
+                        :data="moduleInfo"
+                        border
+                        fit
+                        style="width: 100%"
+                        :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                        >
+                        <el-table-column
+                        prop="title1"
+                        label="类型"
+                        min-width="80"
+                        >
+                        <template slot-scope="{row}">
+                            <span style="font-weight:600;">{{row.title1}}</span>
+                        </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="content1"
+                        label="信息"
+                        min-width="140"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                        prop="title2"
+                        label="类型"
+                        min-width="80"
+                        >
+                        <template slot-scope="{row}">
+                            <!-- 07显示的 主板ID显示，非07的都不显示 -->
+                            <div  v-if="['07'].includes(hwVerson)">
+                                <span style="font-weight:600;" >{{row.title2}}</span>
+                            </div>
+                            <div v-else>
+                                <span style="font-weight:600;" v-if="row.title2 != '主板ID'">{{row.title2}}</span>
+                            </div>
+                        </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="content2"
+                        label="信息"
+                        min-width="140"
+                        >
+                        <template slot-scope="{row}">
+                            
+                            <div  v-if="row.title2 == '主板ID'">
+                                <span style="margin-right: 25px;" v-if="['07'].includes(hwVerson)" >{{row.content2}}</span>
+                                <el-button  v-if="['07'].includes(hwVerson)"  type="primary" size="mini" :icon="row.get ? 'el-icon-loading' : 'el-icon-refresh-right'" @click="getBoardInfo(row)">获取主板信息</el-button>
+                            </div>
+                            <span v-else>{{row.content2}}</span>
+                        </template>
+                        </el-table-column>
+                    </el-table>
 
-        </el-card>
-        <!-- 位置信息 -->
-        <el-card class="box-card" id="position_card">
-            <div slot="header" class="clearfix">
-                <span>位置信息</span>
-            </div>
-            <el-table
-                :data="mapInfo"
-                border
-                fit
-                style="width: 100%"
-                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
-                >
-                <el-table-column
-                prop="longitude"
-                label="经度"
-                min-width="120"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="latitude"
-                label="纬度"
-                min-width="120"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="see"
-                label="查看"
-                min-width="120"
-                >
+                </el-card>
+            </el-col>
+            <!-- 位置信息 -->
+            <el-col :lg="8" style="padding: 0 20px;">
+                <el-card class="box-card" id="position_card" >
+                    <div slot="header" class="clearfix">
+                        <span>位置信息</span>
+                    </div>
+                    <el-table
+                    :data="mapInfo"
+                    border
+                    fit
+                    style="width: 100%"
+                    :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                    >
+                    <el-table-column
+                    prop="title"
+                    label="类型"
+                    min-width="80"
+                    >
                     <template slot-scope="{row}">
-                        <el-button type="primary" size="mini" icon="el-icon-view" @click="handleScanMap">查看地图</el-button>
+                        <span style="font-weight:600;">{{row.title}}</span>
                     </template>
-                </el-table-column>
-                <el-table-column
-                prop="upDate"
-                label="更新经纬度"
-                min-width="120"
-                >
+                    </el-table-column>
+                    <el-table-column
+                    prop="content"
+                    label="信息"
+                    min-width="140"
+                    >
                      <template slot-scope="{row}">
-                        <el-button type="primary" size="mini" icon="el-icon-position" @click="upDatePosition">更新经纬度</el-button>
+                        <el-button v-if="row.content == 'scanMap'" type="primary" size="mini" icon="el-icon-view" @click="handleScanMap">查看地图</el-button>
+                        <el-button v-else-if="row.content == 'updateData'" type="primary" size="mini" icon="el-icon-position" @click="upDatePosition">更新经纬度</el-button>
+                        <span v-else>{{row.content}}</span>
                     </template>
-                </el-table-column>
-            </el-table>
-
-        </el-card>
-
+                    </el-table-column>
+                   
+                </el-table>
+                </el-card>
+            </el-col>
+        </el-row>
+        <!-- 模板信息 -->
         <el-card class="box-card temCard" id="template_card">
             <div slot="header" class="clearfix">
                 <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : '充电模板'}}）</span>
@@ -193,7 +180,7 @@
         </el-card>
        
         <!-- 端口状态 --> 
-         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)" id="port_card">
+         <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="port_card">
             <div slot="header" class="clearfix">
                 <span>端口状态</span>
             </div>
@@ -301,7 +288,7 @@
             </el-table>
          </el-card>
         <!-- 远程充电 -->
-        <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)" id="originCharcge_card">
+        <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="originCharcge_card">
             <div slot="header" class="clearfix">
                 <span>远程充电</span>
             </div>
@@ -384,7 +371,7 @@
                 </el-table-column>
             </el-table>
          </el-card>
-         <el-row v-if="!['03','04'].includes(hwVerson)">
+         <el-row v-if="!['03','04','07'].includes(hwVerson)">
              <el-col :xs="24" :sm="12" style="padding: 0 20px;">
                   <!-- 查看消费总金额 -->
                  <el-card class="box-card">
@@ -457,7 +444,82 @@
                 </el-card>
              </el-col>
          </el-row>
-         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)" id="sysParmas_card">
+
+        <!-- 设备新的主板信息 -->
+         <el-row v-if="['07'].includes(hwVerson)">
+             <el-col :xs="24" :sm="12" style="padding: 0 20px;">
+                  <!-- 查看消费总金额 -->
+                 <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span> 读取/设置参数</span>
+                    </div>
+                    <el-table
+                        :data="deviceSysList"
+                        border
+                        fit
+                        style="width: 100%"
+                        :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                        >
+                        <el-table-column
+                        prop="type"
+                        label="类型"
+                        min-width="120"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                        prop="val"
+                        label="金额"
+                        min-width="120"
+                        >
+                        <template slot-scope="{row}">
+                            <el-input-number size="small"  v-model="row.val" style="width: 80%" ></el-input-number>
+                        </template>
+                        </el-table-column>
+                    </el-table>
+                     <div class="remoteChargeTit" style="margin-top: 15px; overflow: hidden;">
+                        <el-button type="success" size="mini" style="float: left; margin-left: 25%;" @click="getBoardRead">读取参数</el-button>
+                        <el-button type="primary" size="mini" style="float: right; margin-right: 25%;" @click="getBoardSet">设置参数</el-button>
+                    </div>
+                </el-card>
+             </el-col>
+            <el-col :xs="24" :sm="12" style="padding: 0 20px;">
+                
+                 <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>设置开始充电</span>
+                    </div>
+                    <el-table
+                        :data="chargeSendList"
+                        border
+                        fit
+                        style="width: 100%"
+                        :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                        >
+                        <el-table-column
+                        prop="type"
+                        label="类型"
+                        min-width="120"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                        prop="handle"
+                        label="解锁/锁定"
+                        min-width="120"
+                        >
+                        <template slot-scope="{row}">
+                           <el-input-number size="small"  v-model="row.val" style="width: 80%" v-if="row.type=='分档状态'" :min="0" :max="2" ></el-input-number>
+                           <el-input-number size="small"  v-model="row.val" style="width: 80%" v-else ></el-input-number>
+                        </template>
+                        </el-table-column>
+                    </el-table>
+                     <div class="remoteChargeTit" style="margin-top: 15px; text-align:center;">
+                        <el-button type="primary" size="mini" @click="getBoardStart">开始充电</el-button>
+                    </div>
+                </el-card>
+             </el-col>
+         </el-row>
+
+         <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="sysParmas_card">
                     <div slot="header" class="clearfix">
                         <span>系统参数表</span>
                     </div>
@@ -599,59 +661,7 @@
                     <el-button @click="expirationVisable = false" size="middle">取 消</el-button>
                     <el-button type="primary" @click="setDeviceExpiration" size="middle">确 定</el-button>
                 </span>
-                </el-dialog>
-        <!-- 设置主板信息 -->
-         <el-dialog
-                :show-close="false"
-                :visible.sync="setsys"
-                width="400px"
-                :modal="false"
-                title="设置参数"
-            >    
-                <el-form label-position="top" :model="setsysForm">
-                    <el-form-item label="刷卡扣费金额" class="form_right25">
-                        <el-input v-model="setsysForm.cst" placeholder="刷卡扣费金额" clearable ></el-input>
-                    </el-form-item>
-                    <el-form-item label="扣费价格" class="form_right25" style="width: 100%;">
-                        <el-input v-model="setsysForm.elec_pri" placeholder="刷卡扣费金额" clearable ></el-input>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="setsys = false" size="middle">取 消</el-button>
-                    <el-button type="primary" @click="getBoardSet" size="middle">确 定</el-button>
-                </span>
-        </el-dialog>
-        <!-- 测试开始充电 -->
-       <el-dialog
-                :show-close="false"
-                :visible.sync="chapay"
-                width="400px"
-                :modal="false"
-                title="设置参数"
-            >    
-                <el-form label-position="top" :model="chapayForm">
-                    <el-form-item label="端口" class="form_right25">
-                        <el-input v-model="chapayForm.port" placeholder="端口" clearable ></el-input>
-                    </el-form-item>
-                    <el-form-item label="金额" class="form_right25" style="width: 100%;">
-                        <el-input v-model="chapayForm.money" placeholder="金额" clearable ></el-input>
-                    </el-form-item>
-                     <el-form-item label="时间" class="form_right25">
-                        <el-input v-model="chapayForm.time" placeholder="时间" clearable ></el-input>
-                    </el-form-item>
-                    <el-form-item label="电量" class="form_right25" style="width: 100%;">
-                        <el-input v-model="chapayForm.elec" placeholder="金额" clearable ></el-input>
-                    </el-form-item>
-                    <el-form-item label="分档状态" class="form_right25" style="width: 100%;">
-                        <el-input v-model="chapayForm.chargeType" placeholder="金额" clearable ></el-input>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="chapay = false" size="middle">取 消</el-button>
-                    <el-button type="primary" @click="getBoardStart" size="middle">确 定</el-button>
-                </span>
-        </el-dialog>
-        
+            </el-dialog>
     </div>
 </template>
 
@@ -661,7 +671,7 @@ import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import GradeTemplate from '@/components/common/GradeTemplate'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
-import {Loading} from 'element-ui'
+import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
 remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,getWolfreadsys,getWolftestpay } from '@/require/deviceManage'
@@ -673,21 +683,6 @@ import { mapState } from 'vuex'
 export default {
     data(){
         return {
-            // 主板信息
-            setsys: false,
-            setsysForm: {
-                cst: 1,
-                elec_pri: 1
-            },
-            chapay: false,
-            chapayForm:{
-                port: 1,
-                money: 1,
-                time:1,
-                elec: 1,
-                chargeType: 1
-            },
-            // 主板信息
             disabledDateFn: {
                 disabledDate(time) {
                     return time.getTime() < Date.now()-8.64e7;
@@ -720,26 +715,19 @@ export default {
                     events: {}
                 }
             ],
-            // deviceInfo: {
-            //     bindStatus: 1,
-            //     code: '000001',
-            //     merName: '',
-            //     areaName: '',
-            //     phone: ''
-            // },
             moduleInfo: [
-                // {
-                //     code: '000001',
-                //     CCID: '89860433161871471648',
-                //     IMEI: '868994034714761',
-                //     hwVerson: '04',
-                //     hwVersonNum: '00',
-                //     sfVerson: '03',
-                //     single: 31
-                // }
+                    {title1: '设备号',content1: '',title2: 'CCID',content2: ''},
+                    {title1: '硬件版本',content1: '',title2: 'IMEI',content2: ''},
+                    {title1: '硬件版本号',content1: '',title2: '信号强度',content2: ''},
+                    {title1: '软件版本号',content1: '',title2: '主板ID',content2: ''},
             ],
             mapList: [],
-            mapInfo: [],
+            mapInfo: [
+                {title: '经度', content: ''},
+                {title: '维度', content: ''},
+                {title: '查看', content: 'scanMap'},
+                {title: '更新经纬度', content: 'updateData'}
+            ],
             portStatusList: [],
             isGrade: false, //默认分等级模板为false,当为分等级模板的时候 isGrade= true
             temChargeList: [], 
@@ -754,6 +742,17 @@ export default {
             seticCard: [ //设置IC卡、投币器是否可用
                 {type: '投币器',handle:1},
                 {type: 'IC卡',handle:2},
+            ],
+            deviceSysList: [//设置/读取参数
+                {type:'刷卡扣费金额',val: ''},
+                {type:'扣费价格',val: ''},
+            ],
+            chargeSendList: [ //开始充电 （发送充电信息）
+                {type:'端口',val: ''},
+                {type:'金额',val: ''},
+                {type:'时间',val: ''},
+                {type:'电量',val: ''},
+                {type:'分档状态',val: ''},
             ],
             elecTimeFirst: 0,//这个是设置系统参数的时候另外传的值
             systemParamer: [ //系统参数
@@ -946,10 +945,22 @@ export default {
                 let deviceInfo= await getDeviceDetailInfo(data)
                 _this.username= deviceInfo.username
                 _this.merid= deviceInfo.merid
-                let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude,remark,expirationTime }= deviceInfo.equipment
+                let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid }= deviceInfo.equipment
                 _this.remark= remark
-                _this.moduleInfo= [{code,CCID,IMEI,hwVerson,hwVersonNum,sfVerson,single}] //设备信息
-                _this.mapInfo= [{longitude,latitude}] //经纬度信息
+                _this.moduleInfo=[ //设备信息
+                    {title1: '设备号',content1: code, title2: 'CCID',content2: CCID},
+                    {title1: '硬件版本',content1: hwVerson, title2: 'IMEI',content2: IMEI},
+                    {title1: '硬件版本号',content1: hwVersonNum, title2: '信号强度',content2: single},
+                    {title1: '软件版本号',content1: sfVerson, title2: '主板ID',content2: mainid}
+                ],
+                _this.mapInfo= [ //经纬度信息
+                    {title: '经度', content: longitude},
+                    {title: '维度', content: latitude},
+                    {title: '查看', content: 'scanMap'},
+                    {title: '更新经纬度', content: 'updateData'}
+                ],
+                // _this.moduleInfo= [{code,CCID,IMEI,hwVerson,hwVersonNum,sfVerson,single}] //设备信息
+                //_this.mapInfo= [{longitude,latitude}] //经纬度信息
                 _this.hwVerson= hwVerson
                 _this.expirationTime= expirationTime
                 if(hwVerson != '03' && hwVerson != '04'){
@@ -991,48 +1002,87 @@ export default {
                  loading.close()
             }
         },
-        getBoardInfo(){ //获取主板信息
+        getBoardInfo(row){ //获取主板信息
+            Vue.set(row,'get',true)
             getBoardInfoRotate({
                 code: this.code
             }).then(res=>{
-                alert(JSON.stringify(res))
+               if(res.wolferror == 1001){
+                   messageTip('error',res.wolfmsg || '请求超时，请稍后重试')
+               }else{
+                   messageTip('success','获取成功')
+                   this.moduleInfo[3].content2= res.mainid
+               }
+                Vue.set(row,'get',false)
             }).catch(err=>{
-                alert('错误··')
+                Vue.set(row,'get',false)
             })
+            
         },
-        getBoardSet(){ //设置
-            getWolfsetsys({code: this.code,...this.setsysForm}).then(res=>{
-                alert(res)
+        getBoardSet(){ //设置参数 07
+        
+            let cst= this.deviceSysList[0].val
+            let elec_pri= this.deviceSysList[1].val
+             let loading= Loading.service({
+                lock: true,
+                text: '加载中',
+                spinner: 'el-icon-loading',
+                customClass: "loadClass"
+            });
+            this.Loading= loading
+            getWolfsetsys({code: this.code,cst,elec_pri}).then(res=>{
+               if(res.wolferror == 1001){
+                   messageTip('error',res.wolfmsg || '设置超时，请稍后重试')
+               }else{
+                   messageTip('success','设置成功')
+               }
+               loading.close()
             }).catch(err=>{
-
+               loading.close()
             })
-            this.setsys= false
         },
         getBoardRead(){ //读取
-            getWolfreadsys({code: this.code,}).then(res=>{
-                alert(res)
+            let loading= Loading.service({
+                        lock: true,
+                        text: '加载中',
+                        spinner: 'el-icon-loading',
+                        customClass: "loadClass"
+                    });
+            this.Loading= loading
+            getWolfreadsys({code: this.code}).then(res=>{
+               if(res.wolferror == 1001){
+                   messageTip('error',res.wolfmsg || '读取超时，请稍后重试')
+               }else{
+                   messageTip('success','读取成功')
+                   this.deviceSysList[0].val= res.cst
+                   this.deviceSysList[1].val= res.elec_pri
+               }
+               loading.close()
             }).catch(err=>{
-
+                loading.close()
             })
         },
         getBoardStart(){ //开始充电
-            getWolftestpay({code:this.code,...this.chapayForm}).then(res=>{
+            // let loading= Loading.service({
+            //             lock: true,
+            //             text: '加载中',
+            //             spinner: 'el-icon-loading',
+            //             customClass: "loadClass"
+            //         });
+            // this.Loading= loading
+            let [{val:port},{val:money},{val:time},{val:elec},{val:chargeType}]= this.chargeSendList
+            getWolftestpay({code:this.code,port,money,time,elec,chargeType}).then(res=>{
               alert(res)
             }).catch(err=>{
 
             })
-            this.chapay= false
         },
         handleScanMap(){ //点击查看地图
-        // [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]
-            let {longitude,latitude}= this.mapInfo[0]
-            this.mapList= [
-                {
-                    position: [longitude,latitude],
-                    content: `<div>设备: ${this.code}<div><p>地址： <p>`
-                    }
-                ]
-                console.log(this.mapList)
+            // [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]
+            // let {longitude,latitude}= this.mapInfo[0]
+            let longitude= this.mapInfo[0].content
+            let latitude= this.mapInfo[1].content
+            this.mapList= [{ position: [longitude,latitude],content: `<div>设备: ${this.code}<div><p>地址： <p>`}]
             this.dialogVisible= true
         },
         upDatePosition(){ //更新地图信息

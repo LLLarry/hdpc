@@ -1,14 +1,17 @@
 <template>
   <div class="bindMerOrArea">
-    <el-dialog title="绑定商户" :visible.sync="bindInfo.show" width="700px" custom-class="bindDialog" :modal="false" v-if="bindInfo.from == 1" >
-        <el-form :inline="true"  class="demo-form-inline" :model="bindMerOrAreaForm" size="mini">
-                <el-form-item label="昵称" class="form_right25" style="width: 210px;">
+    <el-dialog title="绑定商户" :visible.sync="bindInfo.show" width="900px" custom-class="bindDialog" :modal="false" v-if="bindInfo.from == 1" >
+       <el-form :inline="true"  class="demo-form-inline" :model="bindMerOrAreaForm" size="mini">
+                <el-form-item label="昵称" class="form_right25" style="width: 220px;">
                     <el-input v-model="bindMerOrAreaForm.nick" clearable placeholder="商户昵称"  size="small" style="width: 150px;"></el-input>
                 </el-form-item>
-                <el-form-item label="手机号" class="form_right25" style="width: 210px;">
+                <el-form-item label="商户名" class="form_right25" style="width: 220px;">
+                    <el-input v-model="bindMerOrAreaForm.realName" clearable placeholder="商户姓名"  size="small" style="width: 150px;"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号" class="form_right25" style="width: 220px;">
                     <el-input v-model="bindMerOrAreaForm.phone" clearable placeholder="手机号"  size="small" style="width: 150px;"></el-input>
                 </el-form-item>
-                <el-form-item label class="form_right25" style="width: 140px;">
+                <el-form-item label class="form_right25" style="width: 80px;">
                      <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>
         </el-form>
@@ -66,7 +69,7 @@ export default {
     data(){
         return {
             gridData:[],
-            list: [], //存放请求过来的数据的
+            //list: [], //存放请求过来的数据的
             bindMerOrAreaForm: {},
             loading: false
         }
@@ -77,6 +80,7 @@ export default {
         'bindInfo': {
             handler: function(newValue,oldValue){
                 if(newValue.from == 1 || newValue.from ==2){ //避免加载就请求
+                    this.gridData= []
                     this.asyGetMerOrAreaList(newValue)
                 }
                 
@@ -85,54 +89,29 @@ export default {
         }
     },
     methods: {
-        async asyGetMerOrAreaList(newVal){ //获取需要展示的list
-        let _this= this
-            try{
-                let info
-                _this.loading= true
-                if(newVal.from == 1){
-                    info= await getMerOrAreaList({source: 1}) //获取商户
-                }else if(newVal.from == 2){
-                    info= await getMerOrAreaList({source: 2,merid: newVal.page.merid}) //获取小区
-                }
-                _this.loading= false
-                if(info.code === 200){
-                    _this.list= info.listdata 
-                    _this.gridData= this.list 
-                } 
-            }
-            catch(error){
-                this.loading= false
-            }
-        },
+         async asyGetMerOrAreaList(newVal){ //获取需要展示的list
+         let _this= this
+             try{
+                 let info
+                 _this.loading= true
+                 if(newVal.from == 1){
+                     //info= await getMerOrAreaList({source: 1}) //获取商户  进来自动获取商户信息取消
+                 }else if(newVal.from == 2){
+                     info= await getMerOrAreaList({source: 2,merid: newVal.page.merid}) //获取小区
+                 }else if(newVal.from == 3){
+                     info= await getMerOrAreaList({source: 1,...newVal.searchInfo}) //获取商户
+                 }
+                 _this.loading= false
+                 if(info.code === 200){
+                     _this.gridData= info.listdata 
+                 } 
+             }
+             catch(error){
+                 this.loading= false
+             }
+         },
         handleSearch(){
-            let {phone='',nick=''} = this.bindMerOrAreaForm
-            console.log(phone,nick)
-            let newList= this.list.filter((item,i)=>{
-                item.phoneNum= item.phoneNum== null ? '' : item.phoneNum
-    
-                if(phone){
-                    if(nick){
-                        if(item.phoneNum.includes(phone.trim()) && item.username.includes(nick.trim())){
-                            return item
-                        }
-                    }else{
-                        if(item.phoneNum.includes(phone.trim())){
-                            return item
-                        }    
-                    }
-                }else{
-                    if(nick){
-                        if(item.username.includes(nick.trim())){
-                            return item
-                        }
-                    }else{
-                        return item  
-                    }
-                }
-                    
-            })
-            this.gridData= newList
+            this.asyGetMerOrAreaList({from: 3,searchInfo: {...this.bindMerOrAreaForm}})
         },
         handleBindMer(merid){ //绑定商户
             this.bindInfo.show= false

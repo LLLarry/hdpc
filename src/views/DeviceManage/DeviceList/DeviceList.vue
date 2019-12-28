@@ -3,25 +3,25 @@
         <el-card class="box-card card_bottom0 cardForm">
             <el-form :inline="true"  class="demo-form-inline" :model="deviceListForm" size="mini">
                 <el-form-item label="设备号" class="form_right25 w100">
-                    <el-input v-model="deviceListForm.devicenum" placeholder="设备号" clearable size="small"></el-input>
+                    <el-input v-model="deviceListForm.devicenum" placeholder="设备号" clearable size="small" @keyup.enter.native="handleSearch"></el-input>
                 </el-form-item>
                 <el-form-item label="所属人" class="form_right25 w120">
-                    <el-input v-model="deviceListForm.nick" placeholder="所属人" clearable size="small"></el-input>
+                    <el-input v-model="deviceListForm.nick" placeholder="所属人" clearable size="small"  @keyup.enter.native="handleSearch"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号" class="form_right25 w150" >
-                    <el-input v-model="deviceListForm.phone" placeholder="手机号" clearable size="small"></el-input>
+                    <el-input v-model="deviceListForm.phone" placeholder="手机号" clearable size="small"  @keyup.enter.native="handleSearch"></el-input>
                 </el-form-item>
                <el-form-item label="IMEI " class="form_right25 ">
-                    <el-input v-model="deviceListForm.imei" placeholder="请输入IMEI" clearable size="small"></el-input>
+                    <el-input v-model="deviceListForm.imei" placeholder="请输入IMEI" clearable size="small"  @keyup.enter.native="handleSearch"></el-input>
                 </el-form-item>
                  <el-form-item label="CCID " class="form_right25 w200" >
-                    <el-input v-model="deviceListForm.ccid" placeholder="请输入CCID" clearable size="small" ></el-input>
+                    <el-input v-model="deviceListForm.ccid" placeholder="请输入CCID" clearable size="small"  @keyup.enter.native="handleSearch"></el-input>
                 </el-form-item>
                 <el-form-item label="小区名称 " class="form_right25 w200" >
-                    <el-input v-model="deviceListForm.areaname" placeholder="所属小区" clearable size="small" ></el-input>
+                    <el-input v-model="deviceListForm.areaname" placeholder="所属小区" clearable size="small"  @keyup.enter.native="handleSearch"></el-input>
                 </el-form-item>
                 <el-form-item label="硬件版本" class="form_right25 w150">
-                     <el-select v-model="deviceListForm.hardversion"  placeholder="硬件版本" clearable size="small">
+                     <el-select v-model="deviceListForm.hardversion"  placeholder="硬件版本" clearable size="small"  @keyup.enter.native="handleSearch">
                         <el-option label="00出厂默认设置" value="00" ></el-option>
                         <el-option label="01十路智慧款" value="01" ></el-option>
                         <el-option label="02电轿款" value="02" ></el-option>
@@ -34,34 +34,34 @@
                 </el-form-item>
 
                 <el-form-item label="软件版本" class="form_right25 w100">
-                     <el-input v-model="deviceListForm.softversion" placeholder="软件版本" clearable size="small" ></el-input>
+                     <el-input v-model="deviceListForm.softversion" placeholder="软件版本" clearable size="small"  @keyup.enter.native="handleSearch"></el-input>
                 </el-form-item>
 
                 <el-form-item label="模块版本" class="form_right25 w100">
-                    <el-input v-model="deviceListForm.hardversionnum" placeholder="模块版本" clearable size="small" ></el-input>
+                    <el-input v-model="deviceListForm.hardversionnum" placeholder="模块版本" clearable size="small"  @keyup.enter.native="handleSearch"></el-input>
                 </el-form-item>
                
                 <el-form-item label="状态" class="form_right25 w100">
-                     <el-select v-model="deviceListForm.line"  placeholder="设备状态" clearable size="small">
+                     <el-select v-model="deviceListForm.line"  placeholder="设备状态" clearable size="small" @keyup.enter.native="handleSearch">
                         <el-option label="在线" value="1" ></el-option>
                         <el-option label="离线" value="0" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="信号强度" class="form_right25 w120">
-                     <el-select v-model="deviceListForm.signalsort"  placeholder="信号强度" clearable size="small">
+                     <el-select v-model="deviceListForm.signalsort"  placeholder="信号强度" clearable size="small"  @keyup.enter.native="handleSearch">
                         <el-option label="从大到小" value="1" ></el-option>
                         <el-option label="从小到大" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="测试状态" class="form_right25 w120">
-                    <el-select v-model="deviceListForm.payType"  placeholder="测试状态" clearable  size="small">
+                    <el-select v-model="deviceListForm.payType"  placeholder="测试状态" clearable  size="small"  @keyup.enter.native="handleSearch">
                         <el-option label="不可测" value="1" ></el-option>
                         <el-option label="可测试" value="2" ></el-option>
                         <el-option label="达限制" value="3" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="到期排序" class="form_right25 w120">
-                    <el-select v-model="deviceListForm.expiretime"  placeholder="到期时间" clearable  size="small">
+                    <el-select v-model="deviceListForm.expiretime"  placeholder="到期时间" clearable  size="small"  @keyup.enter.native="handleSearch">
                         <el-option label="从大到小" value="1" ></el-option>
                         <el-option label="从小到大" value="2" ></el-option>
                     </el-select>
@@ -136,6 +136,17 @@
                     </el-link>
                 </template>
                 </el-table-column>
+                
+                <el-table-column
+                prop="create_time"
+                label="IMEI创建日期"
+                min-width="125"
+                v-if="userInfo.classify== 'superAdmin'" 
+                >
+                <template slot-scope="{row}">
+                    {{ row.create_time | fmtDate('YYYY-MM-DD') }}
+                </template>
+                </el-table-column>
 
                 <el-table-column
                 prop="phone"
@@ -148,16 +159,6 @@
                         </router-link>
                        <span v-else>— —</span>
                     </template>
-                </el-table-column>
-                <el-table-column
-                prop="create_time"
-                label="IMEI创建日期"
-                min-width="125"
-                v-if="userInfo.classify== 'superAdmin'" 
-                >
-                <template slot-scope="{row}">
-                    {{ row.create_time | fmtDate('YYYY-MM-DD') }}
-                </template>
                 </el-table-column>
                 <el-table-column
                 prop="imei"

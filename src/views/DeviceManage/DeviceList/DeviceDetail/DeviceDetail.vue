@@ -57,8 +57,7 @@
             </el-row>
          </el-card>
         <!-- 模块信息 -->
-        <el-row>
-            <el-col :lg="16" style="padding: 0 20px;">
+
                 <el-card class="box-card" id="module_card" >
                     <div slot="header" class="clearfix">
                         <span>模块信息（硬件，软件，IMEI, +CCID）</span>
@@ -72,7 +71,7 @@
                         >
                         <el-table-column
                         prop="title1"
-                        label="类型"
+                        label="设备信息"
                         min-width="80"
                         >
                         <template slot-scope="{row}">
@@ -84,10 +83,21 @@
                         label="信息"
                         min-width="140"
                         >
+                        <template slot-scope="{row}">
+                            <span v-if="row.title1 == '硬件版本'">
+                                {{row.content1}} 
+                                <span>&nbsp;&nbsp;{{ row.content1 == '00' ? '出厂默认设置' : row.content1 == '01' ? '十路智慧款': row.content1 == '02' ? '电轿款' : row.content1 == '03' ? '脉冲板子' :  row.content1 == '04' ? '离线充值机' :  row.content1 == '05' ? '十六路智慧款' :  row.content1 == '06' ? '二十路智慧款' :  row.content1 == '07' ? '单路交流桩' : '' }}</span>
+                            </span>
+                            <span v-else-if="row.title1 == '硬件版本号'">
+                                {{row.content1}} 
+                                <span>&nbsp;&nbsp;{{ row.content1 == '00' ? '2G模块' : row.content1 == '01' ? '4G模块': row.content1 == '02' ? '蓝牙模块' : row.content1 == '03' ? '合宙2G模块' : '' }}</span>
+                            </span>
+                            <span v-else>{{row.content1}}</span>
+                        </template>
                         </el-table-column>
                         <el-table-column
                         prop="title2"
-                        label="类型"
+                        label="主板信息"
                         min-width="80"
                         >
                         <template slot-scope="{row}">
@@ -106,7 +116,6 @@
                         min-width="140"
                         >
                         <template slot-scope="{row}">
-                            
                             <div  v-if="row.title2 == '主板ID'">
                                 <span style="margin-right: 25px;" v-if="['07'].includes(hwVerson)" >{{row.content2}}</span>
                                 <el-button  v-if="['07'].includes(hwVerson)"  type="primary" size="mini" :icon="row.get ? 'el-icon-loading' : 'el-icon-refresh-right'" @click="getBoardInfo(row)">获取主板信息</el-button>
@@ -114,48 +123,30 @@
                             <span v-else>{{row.content2}}</span>
                         </template>
                         </el-table-column>
+                        <el-table-column
+                        prop="title3"
+                        label="位置信息"
+                        min-width="80"
+                        >
+                        <template slot-scope="{row}">
+                            <span style="font-weight:600;">{{row.title3}}</span>
+                        </template>
+                        </el-table-column>
+                        <el-table-column
+                        prop="content3"
+                        label="信息"
+                        min-width="140"
+                        >
+                        <template slot-scope="{row}">
+                            <el-button v-if="row.title3 == '查看地图'" type="primary" size="mini" icon="el-icon-view" @click="handleScanMap">查看地图</el-button>
+                            <el-button v-else-if="row.title3 == '更新经纬度'" type="primary" size="mini" icon="el-icon-position" @click="upDatePosition">更新经纬度</el-button>
+                            <span v-else>{{row.content3}}</span>
+                        </template>
+                        </el-table-column>
                     </el-table>
 
                 </el-card>
-            </el-col>
-            <!-- 位置信息 -->
-            <el-col :lg="8" style="padding: 0 20px;">
-                <el-card class="box-card" id="position_card" >
-                    <div slot="header" class="clearfix">
-                        <span>位置信息</span>
-                    </div>
-                    <el-table
-                    :data="mapInfo"
-                    border
-                    fit
-                    style="width: 100%"
-                    :header-cell-style="{background:'#f5f7fa',color:'#666'}"
-                    >
-                    <el-table-column
-                    prop="title"
-                    label="类型"
-                    min-width="80"
-                    >
-                    <template slot-scope="{row}">
-                        <span style="font-weight:600;">{{row.title}}</span>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="content"
-                    label="信息"
-                    min-width="140"
-                    >
-                     <template slot-scope="{row}">
-                        <el-button v-if="row.content == 'scanMap'" type="primary" size="mini" icon="el-icon-view" @click="handleScanMap">查看地图</el-button>
-                        <el-button v-else-if="row.content == 'updateData'" type="primary" size="mini" icon="el-icon-position" @click="upDatePosition">更新经纬度</el-button>
-                        <span v-else>{{row.content}}</span>
-                    </template>
-                    </el-table-column>
-                   
-                </el-table>
-                </el-card>
-            </el-col>
-        </el-row>
+
         <!-- 模板信息 -->
         <el-card class="box-card temCard" id="template_card">
             <div slot="header" class="clearfix">
@@ -179,8 +170,8 @@
            
         </el-card>
        
-        <!-- 端口状态 --> 
-         <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="port_card">
+        <!-- 00 01 02 03 04 05 06 端口状态 --> 
+         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)" id="port_card">
             <div slot="header" class="clearfix">
                 <span>端口状态</span>
             </div>
@@ -210,6 +201,21 @@
                     </template>
                 </el-table-column>
                
+                <el-table-column
+                prop="v"
+                label="电压 V"
+                width="100"
+                v-if="['07'].includes(hwVerson)"
+                >
+                </el-table-column>
+                 <el-table-column
+                prop="a"
+                label="电流 A"
+                width="100"
+                v-if="['07'].includes(hwVerson)"
+                >
+                </el-table-column>
+
                 <el-table-column
                 prop="time"
                 label="充电时间（分钟）"
@@ -371,6 +377,86 @@
                 </el-table-column>
             </el-table>
          </el-card>
+
+        <!-- 07 远程充电 -->
+        <el-card class="box-card" id="originCharcge_card"  v-if="['07'].includes(hwVerson)">
+            <div slot="header" class="clearfix">
+                <span>远程充电</span>
+            </div>
+            <el-table
+                :data="chargeSendList"
+                border
+                fit
+                style="width: 100%"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                >
+                <el-table-column
+                prop="port"
+                label="端口号"
+                width="100"
+                >
+                </el-table-column>
+                <el-table-column
+                prop="status"
+                label="端口状态"
+                min-width="80"
+                >
+                <template slot-scope="{row}">
+                    <el-link :type="row.status== 1 ? 'success': row.status== 2 ? 'danger': 'default' " size="mini" :underline="false" >
+                        {{row.portStatus== 1 ? '空闲': row.portStatus== 2 ? '使用':  row.portStatus== 3 ? '锁定' : '故障'}}
+                    </el-link>
+                </template>
+                </el-table-column>
+               
+                <el-table-column
+                prop="money"
+                label="金额"
+                min-width="120"
+                >
+                <template slot-scope="scope">
+                    <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="100" :min="0" v-model="scope.row.money" :step="1"></el-input-number>
+                </template>
+                </el-table-column>
+                <el-table-column
+                prop="time"
+                label="充电时间（分钟）"
+                min-width="120"
+                >
+                <template slot-scope="scope">
+                    <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="2000" :min="0" v-model="scope.row.time" :step="20"></el-input-number>
+                </template>
+                </el-table-column>
+                <el-table-column
+                prop="elec"
+                label="充电电量（度）"
+                min-width="120"
+                >
+                <template slot-scope="scope">
+                    <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="100" :min="0" :precision="1" v-model="scope.row.elec" :step="1"></el-input-number>
+                </template>
+                </el-table-column>
+
+                <el-table-column
+                prop="handle"
+                label="开始充电"
+                width="150"
+                >
+                    <template slot-scope="{row}">
+                        <el-button type="primary" size="mini" :icon="row.loading ? 'el-icon-loading' : 'el-icon-open'" @click="getBoardStart(row)">充电</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="handle"
+                label="远程断电"
+                width="150"
+                >
+                    <template slot-scope="{row}">
+                        <el-button type="danger" size="mini" icon="el-icon-turn-off" >断电</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+         </el-card>
+
          <el-row v-if="!['03','04','07'].includes(hwVerson)">
              <el-col :xs="24" :sm="12" style="padding: 0 20px;">
                   <!-- 查看消费总金额 -->
@@ -482,41 +568,6 @@
                     </div>
                 </el-card>
              </el-col>
-            <el-col :xs="24" :sm="12" style="padding: 0 20px;">
-                
-                 <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span>设置开始充电</span>
-                    </div>
-                    <el-table
-                        :data="chargeSendList"
-                        border
-                        fit
-                        style="width: 100%"
-                        :header-cell-style="{background:'#f5f7fa',color:'#666'}"
-                        >
-                        <el-table-column
-                        prop="type"
-                        label="类型"
-                        min-width="120"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                        prop="handle"
-                        label="解锁/锁定"
-                        min-width="120"
-                        >
-                        <template slot-scope="{row}">
-                           <el-input-number size="small"  v-model="row.val" style="width: 80%" v-if="row.type=='分档状态'" :min="0" :max="2" ></el-input-number>
-                           <el-input-number size="small"  v-model="row.val" style="width: 80%" v-else ></el-input-number>
-                        </template>
-                        </el-table-column>
-                    </el-table>
-                     <div class="remoteChargeTit" style="margin-top: 15px; text-align:center;">
-                        <el-button type="primary" size="mini" @click="getBoardStart">开始充电</el-button>
-                    </div>
-                </el-card>
-             </el-col>
          </el-row>
 
          <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="sysParmas_card">
@@ -576,8 +627,9 @@
                         >
                         </el-table-column>
                     </el-table>
-                     <div class="remoteChargeTit" style="margin-top: 15px ; overflow: hidden; ">
+                     <div class="remoteChargeTit" style="margin-top: 15px ; overflow: hidden; text-align: center;">
                         <el-button type="primary" size="mini" style="float: left; margin-left: 30%;" @click="getDeviceSysParam">读取系统参数</el-button>
+                        <el-button type="primary" size="mini"  @click="serDeviceSysToOther">复用到其他设备</el-button>
                         <el-button type="success" size="mini" style="float: right; margin-right: 30%;" @click="saveDeviceSysParam">保存系统参数</el-button>
                     </div>
                 </el-card>
@@ -662,6 +714,69 @@
                     <el-button type="primary" @click="setDeviceExpiration" size="middle">确 定</el-button>
                 </span>
             </el-dialog>
+            <!-- 复用系统参数弹框 -->
+            
+             <transition name="el-fade-in-linear">
+                <div v-show="alserShow" class="sysAlert transition-box">
+                    <el-row>
+                        <el-col :xs="6" :sm="6" :md="6" :lg="6">&nbsp;</el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="12">
+                            <el-card class="box-card">
+                                <div slot="header" class="clearfix">
+                                    <span>正在依次设置设备的系统参数</span>
+                                </div>
+                                <div>
+                                    <div class="listDiv">
+                                        <el-link :underline="false" 
+                                        v-for="(item,i) in list" :key="item.code"
+                                        :type="index== i ? 'primary' : item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info' " 
+                                        style="margin-right: 10px"
+                                        >{{item.code}}</el-link>
+                                    </div>
+                                    <div class="info">
+                                        <div class="info_item success">
+                                            <div class="info_title">设置成功：</div>
+                                            <div class="info_f">
+                                                <el-link :underline="false" 
+                                                v-for="(item,i) in list" :key="item.code"
+                                                :type="index== i ? 'primary' : item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info' " 
+                                                style="margin-right: 10px"
+                                                >
+                                                    <span v-if="item.status == 1">{{item.code}}</span>
+                                                </el-link> 
+                                            </div>
+                                        </div>
+                                        <div class="info_item danger">
+                                            <div class="info_title">设置失败：</div>
+                                            <div class="info_f">
+                                                <el-link :underline="false" 
+                                                v-for="(item,i) in list" :key="item.code"
+                                                :type="index== i ? 'primary' : item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info' " 
+                                                style="margin-right: 10px"
+                                                >
+                                                    <span v-if="item.status == 2">{{item.code}}</span>
+                                                </el-link> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="info_mid">
+                                        <span v-if="index <= list.length-1">
+                                            <span style="color: #666; font-size: 16px;">当前正在设置</span>
+                                            <el-link :underline="false" type="primary" style="font-size: 16px;">{{list[index].code}}</el-link>
+                                            <span style="color: #666; font-size: 16px;">的系统参数</span>
+                                        
+                                            <span class="el-icon-loading"></span>
+                                        </span>
+                                        <el-button v-else type="primary" @click="alserShow= false" size="small">设置完成，点击关闭设置界面</el-button>
+                                    </div>
+                                </div>
+                            </el-card>
+                        </el-col>
+                        <el-col :xs="6" :sm="6" :md="6" :lg="6">&nbsp;</el-col>
+                    </el-row>
+                
+                </div>
+            </transition>
     </div>
 </template>
 
@@ -716,10 +831,10 @@ export default {
                 }
             ],
             moduleInfo: [
-                    {title1: '设备号',content1: '',title2: 'CCID',content2: ''},
-                    {title1: '硬件版本',content1: '',title2: 'IMEI',content2: ''},
-                    {title1: '硬件版本号',content1: '',title2: '信号强度',content2: ''},
-                    {title1: '软件版本号',content1: '',title2: '主板ID',content2: ''},
+                    {title1: '设备号',content1: '',title2: 'CCID',content2: '',title3: '经度',content3: ''},
+                    {title1: '硬件版本',content1: '',title2: 'IMEI',content2: '',title3: '纬度',content3: ''},
+                    {title1: '硬件版本号',content1: '',title2: '信号强度',content2: '',title3: '查看地图',content3: ''},
+                    {title1: '软件版本号',content1: '',title2: '主板ID',content2: '',title3: '更新经纬度',content3: ''},
             ],
             mapList: [],
             mapInfo: [
@@ -747,12 +862,9 @@ export default {
                 {type:'刷卡扣费金额',val: ''},
                 {type:'扣费价格',val: ''},
             ],
-            chargeSendList: [ //开始充电 （发送充电信息）
-                {type:'端口',val: ''},
-                {type:'金额',val: ''},
-                {type:'时间',val: ''},
-                {type:'电量',val: ''},
-                {type:'分档状态',val: ''},
+            chargeSendList: [ // 07 开始充电 （发送充电信息）
+                {port: 1,status: 1, v:356,a: 15.3, money: 5,time: 480,elec: 12},
+                {port: 2,status: 2, v:356,a: 15.3, money: 5,time: 480,elec: 12}
             ],
             elecTimeFirst: 0,//这个是设置系统参数的时候另外传的值
             systemParamer: [ //系统参数
@@ -809,7 +921,10 @@ export default {
                         {
                            type_key: 'elecTimeFirst1', type: '是否初始显示电量 （此功能是否支持和设备相关）', val: 0, unit: '无', maxVal: '1表示屏幕初始显示剩余电量，0表示初始时间， 255表示不支持此功能', minVal: 0
                         },
-                    ]
+                    ],
+                    list: [{code:'000001',status: 0 },{code:'000002',status: 0 },{code:'000003',status: 0 }], //默认选中的设备，进行复用系统参数 0,默认 1，成功 2，失败
+                    index: 0, //当前循环的索引
+                    alserShow: false
             
         }
     },
@@ -948,10 +1063,10 @@ export default {
                 let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid }= deviceInfo.equipment
                 _this.remark= remark
                 _this.moduleInfo=[ //设备信息
-                    {title1: '设备号',content1: code, title2: 'CCID',content2: CCID},
-                    {title1: '硬件版本',content1: hwVerson, title2: 'IMEI',content2: IMEI},
-                    {title1: '硬件版本号',content1: hwVersonNum, title2: '信号强度',content2: single},
-                    {title1: '软件版本号',content1: sfVerson, title2: '主板ID',content2: mainid}
+                    {title1: '设备号',content1: code, title2: 'CCID',content2: CCID,title3: '经度',content3: longitude},
+                    {title1: '硬件版本',content1: hwVerson, title2: 'IMEI',content2: IMEI,title3: '纬度',content3: latitude},
+                    {title1: '硬件版本号',content1: hwVersonNum, title2: '信号强度',content2: single,title3: '查看地图',content3: ''},
+                    {title1: '软件版本号',content1: sfVerson, title2: '主板ID',content2: mainid,title3: '更新经纬度',content3: ''}
                 ],
                 _this.mapInfo= [ //经纬度信息
                     {title: '经度', content: longitude},
@@ -1062,16 +1177,9 @@ export default {
                 loading.close()
             })
         },
-        getBoardStart(){ //开始充电
-            // let loading= Loading.service({
-            //             lock: true,
-            //             text: '加载中',
-            //             spinner: 'el-icon-loading',
-            //             customClass: "loadClass"
-            //         });
-            // this.Loading= loading
-            let [{val:port},{val:money},{val:time},{val:elec},{val:chargeType}]= this.chargeSendList
-            getWolftestpay({code:this.code,port,money,time,elec,chargeType}).then(res=>{
+        getBoardStart(row){ //开始充电
+            let {port,money,time,elec}= row
+            getWolftestpay({code:this.code,port,money,time,elec}).then(res=>{
               alert(res)
             }).catch(err=>{
 
@@ -1281,6 +1389,49 @@ export default {
                 messageTip('success','系统参数设置成功')
 
             }).catch(err=>{  loading.close() })
+        },
+        serDeviceSysToOther(){// 设置当前系统参数到更多设备
+            this.list=[{code:'000001',status: 0 },{code:'000002',status: 0 },{code:'000003',status: 0 }],
+            this.index= 0 
+            this.alserShow= true
+            this.requireSystemByCode(this.index)
+            
+        },
+         requireSystemByCode(){
+            let systemParamer=  this.systemParamer
+            let parmas= {}
+            for (const iterator of systemParamer) {
+                if(['coinElec','cardElec','cst'].includes(iterator.type_key)){
+                     parmas[iterator.type_key]= iterator.val.toFixed(1)
+                }else{
+                     parmas[iterator.type_key]= iterator.val
+                }
+               
+            }
+            savesystemParma({code: this.list[this.index].code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
+                if (res.status == "0") {
+                     messageTip('error','系统参数设置失败')
+                     this.list[this.index].status= 2
+                }else{
+                    messageTip('success','系统参数设置成功')
+                    this.list[this.index].status= 1
+                }
+                 this.index++
+                 if(this.index <= this.list.length-1){
+                      this.requireSystemByCode()
+                 }else{ //结束请求
+                     
+                 } 
+
+            }).catch(err=>{
+                 this.list[index].status= 2
+                 index++
+                 if(index <= this.list.length-1){
+                      this.requireSystemByCode()
+                 }else{ //结束请求
+                    
+                 }
+            })
         }
     }
 }
@@ -1290,6 +1441,7 @@ export default {
 
 .deviceDetail {
     background-color: #F8F8F9;
+    po
     .el-card.is-always-shadow {
         box-shadow: none;
         margin-bottom: 0px;
@@ -1353,6 +1505,45 @@ export default {
     .lastInput {
         .el-input__inner {
             text-align: center;
+        }
+    }
+    .sysAlert {
+        position: absolute;
+        left: 180px;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        background-color: rgba(255,255,255,.8 );
+        z-index: 2300;
+        .box-card {
+            margin-top: 15%;
+        }
+        .listDiv {
+            margin-top: 3%;
+            text-align: center;
+           
+            span {
+                font-size: 20px;
+            }
+        }
+        .info {
+            margin-top: 30px;
+            .info_item {
+                overflow: hidden;
+                margin-bottom: 20px;
+                .info_title {
+                    width: 90px;
+                    float: left;
+                }
+                .info_f {
+                    overflow: hidden;
+                }
+            }
+        }
+        .info_mid {
+             margin-top: 15%;
+             font-size: 16px;
+             text-align: center;
         }
     }
 }

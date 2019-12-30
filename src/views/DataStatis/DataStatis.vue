@@ -115,6 +115,20 @@
                            <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.refalipaymoney}}</td>
                        </tr>
                    </tbody>
+                   
+                     <thead>
+                       <tr >
+                           <th colspan="10">缴费信息</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                        <tr>
+                           <td>缴费总额</td>
+                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.feescaleEarns}}</td>
+                         
+                       </tr>
+                   </tbody>
+
 
                </table>
             </div>

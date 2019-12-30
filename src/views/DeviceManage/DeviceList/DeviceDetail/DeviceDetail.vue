@@ -1,4 +1,6 @@
 <template>
+<el-row>
+    <el-col :md="21" :lg="20" :xl="19">
     <div class="deviceDetail">
          <el-card class="box-card">
             <el-row>
@@ -99,14 +101,15 @@
                         prop="title2"
                         label="主板信息"
                         min-width="80"
+                        v-if="['07'].includes(hwVerson)"
                         >
                         <template slot-scope="{row}">
                             <!-- 07显示的 主板ID显示，非07的都不显示 -->
-                            <div  v-if="['07'].includes(hwVerson)">
+                            <!-- <div  v-if="['07'].includes(hwVerson)">
                                 <span style="font-weight:600;" >{{row.title2}}</span>
-                            </div>
-                            <div v-else>
-                                <span style="font-weight:600;" v-if="row.title2 != '主板ID'">{{row.title2}}</span>
+                            </div> -->
+                            <div >
+                                <span style="font-weight:600;" >{{row.title2}}</span>
                             </div>
                         </template>
                         </el-table-column>
@@ -114,11 +117,12 @@
                         prop="content2"
                         label="信息"
                         min-width="140"
+                        v-if="['07'].includes(hwVerson)"
                         >
                         <template slot-scope="{row}">
                             <div  v-if="row.title2 == '主板ID'">
-                                <span style="margin-right: 25px;" v-if="['07'].includes(hwVerson)" >{{row.content2}}</span>
-                                <el-button  v-if="['07'].includes(hwVerson)"  type="primary" size="mini" :icon="row.get ? 'el-icon-loading' : 'el-icon-refresh-right'" @click="getBoardInfo(row)">获取主板信息</el-button>
+                                <span style="margin-right: 25px;">{{row.content2}}</span>
+                                <el-button   type="primary" size="mini" :icon="row.get ? 'el-icon-loading' : 'el-icon-refresh-right'" @click="getBoardInfo(row)">获取主板信息</el-button>
                             </div>
                             <span v-else>{{row.content2}}</span>
                         </template>
@@ -185,13 +189,13 @@
                 <el-table-column
                 prop="port"
                 label="端口号"
-                width="100"
+                width="70"
                 >
                 </el-table-column>
                 <el-table-column
                 prop="portStatus"
                 label="端口状态"
-                width="120"
+                min-width="80"
                 >
                     <template slot-scope="{row}">
                         <el-link :type="row.portStatus== 1 ? 'success': row.portStatus== 2 ? 'danger': 'default' " size="mini" :underline="false" >
@@ -202,16 +206,16 @@
                 </el-table-column>
                
                 <el-table-column
-                prop="v"
+                prop="portV"
                 label="电压 V"
-                width="100"
+                min-width="80"
                 v-if="['07'].includes(hwVerson)"
                 >
                 </el-table-column>
                  <el-table-column
-                prop="a"
+                prop="portA"
                 label="电流 A"
-                width="100"
+                min-width="80"
                 v-if="['07'].includes(hwVerson)"
                 >
                 </el-table-column>
@@ -219,19 +223,19 @@
                 <el-table-column
                 prop="time"
                 label="充电时间（分钟）"
-                width="150"
+                min-width="80"
                 >
                 </el-table-column>
                 <el-table-column
                 prop="power"
                 label="充电功率（W）"
-                width="150"
+                min-width="80"
                 >
                 </el-table-column>
                 <el-table-column
                 prop="elec"
                 label="剩余电量（度）"
-                min-width="120"
+                min-width="80"
                 >
                 <template slot-scope="{row}">
                     {{ row.elec/100 }}
@@ -240,13 +244,13 @@
                 <el-table-column
                 prop="surp"
                 label="可回收余额"
-                min-width="120"
+                min-width="80"
                 >
                 </el-table-column>
                 <el-table-column
                 prop="updateTime"
                 label="更新时间"
-                min-width="140"
+                min-width="100"
                 >
                  <template slot-scope="{row}">
                     {{ row.updateTime | fmtDate }}
@@ -280,7 +284,7 @@
                         <el-button type="success" size="mini" icon="el-icon-unlock" @click="handleDebloack(row)">解锁</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column
+                <!-- <el-table-column
                 prop="log"
                 label="日志"
                 min-width="120"
@@ -290,7 +294,7 @@
                             <el-link type="primary">查看</el-link>
                         </router-link>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
          </el-card>
         <!-- 远程充电 -->
@@ -312,13 +316,13 @@
                 <el-table-column
                 prop="port"
                 label="端口号"
-                width="100"
+                min-width="100"
                 >
                 </el-table-column>
                 <el-table-column
                 prop="status"
                 label="端口状态"
-                min-width="80"
+                min-width="100"
                 >
                 <template slot-scope="{row}">
                     <el-link :type="row.portStatus== 1 ? 'success': row.portStatus== 2 ? 'danger': 'default' " size="mini" :underline="false" >
@@ -330,7 +334,7 @@
                 <el-table-column
                 prop="free"
                 label="是否空闲"
-                min-width="80"
+                min-width="100"
                 >
                <template slot-scope="{row}">
                     <el-link :type="row.portStatus== 1 ? 'success': 'danger' " size="mini" :underline="false" >
@@ -341,7 +345,7 @@
                 <el-table-column
                 prop="chargeTime"
                 label="充电时间（分钟）"
-                min-width="120"
+               min-width="100"
                 >
                 <template slot-scope="scope">
                     <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="1500" :min="0" v-model="scope.row.chargeTime" :step="20"></el-input-number>
@@ -349,8 +353,8 @@
                 </el-table-column>
                 <el-table-column
                 prop="elePower"
-                label="充电电量（度）"
-                min-width="120"
+                label="充电电量（度）" 
+                min-width="100"
                 >
                 <template slot-scope="scope">
                     <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="20" :min="0" :precision="2" v-model="scope.row.elePower" :step="1"></el-input-number>
@@ -360,7 +364,7 @@
                 <el-table-column
                 prop="handle"
                 label="开始充电"
-                width="150"
+               min-width="100"
                 >
                     <template slot-scope="{row}">
                         <el-button type="primary" size="mini" :icon="row.loading ? 'el-icon-loading' : 'el-icon-open'" @click="handleRemoteCharge(row)">充电</el-button>
@@ -369,7 +373,7 @@
                 <el-table-column
                 prop="handle"
                 label="远程断电"
-                width="150"
+                min-width="100"
                 >
                     <template slot-scope="{row}">
                         <el-button type="danger" size="mini" icon="el-icon-turn-off" @click="handleRemoteBreakOff(row)">断电</el-button>
@@ -402,8 +406,9 @@
                 min-width="80"
                 >
                 <template slot-scope="{row}">
-                    <el-link :type="row.status== 1 ? 'success': row.status== 2 ? 'danger': 'default' " size="mini" :underline="false" >
+                    <el-link :type="row.portStatus== 1 ? 'success': row.portStatus== 2 ? 'danger': 'default' " size="mini" :underline="false" >
                         {{row.portStatus== 1 ? '空闲': row.portStatus== 2 ? '使用':  row.portStatus== 3 ? '锁定' : '故障'}}
+                        <!-- 自己设置的  portStatus 等于3时为锁定-->
                     </el-link>
                 </template>
                 </el-table-column>
@@ -418,21 +423,21 @@
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="time"
+                prop="chargeTime"
                 label="充电时间（分钟）"
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                    <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="2000" :min="0" v-model="scope.row.time" :step="20"></el-input-number>
+                    <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="2000" :min="0" v-model="scope.row.chargeTime" :step="20"></el-input-number>
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="elec"
+                prop="elePower"
                 label="充电电量（度）"
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                    <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="100" :min="0" :precision="1" v-model="scope.row.elec" :step="1"></el-input-number>
+                    <el-input-number :controls="false" style="width: 80%; min-width: 120px;" size="small" :max="100" :min="0" :precision="1" v-model="scope.row.elePower" :step="1"></el-input-number>
                 </template>
                 </el-table-column>
 
@@ -451,14 +456,14 @@
                 width="150"
                 >
                     <template slot-scope="{row}">
-                        <el-button type="danger" size="mini" icon="el-icon-turn-off" >断电</el-button>
+                        <el-button type="danger" size="mini" icon="el-icon-turn-off" @click="handleRemoteBreakOff(row)" >断电</el-button>
                     </template>
                 </el-table-column>
             </el-table>
          </el-card>
 
          <el-row v-if="!['03','04','07'].includes(hwVerson)">
-             <el-col :xs="24" :sm="12" style="padding: 0 20px;">
+             <el-col :xs="24" :sm="12" >
                   <!-- 查看消费总金额 -->
                  <el-card class="box-card">
                     <div slot="header" class="clearfix">
@@ -489,7 +494,7 @@
                     </div>
                 </el-card>
              </el-col>
-            <el-col :xs="24" :sm="12" style="padding: 0 20px;">
+            <el-col :xs="24" :sm="12" style="padding-left: 20px;">
                   <!-- 设置IC卡、投币器是否可用 -->
                  <el-card class="box-card">
                     <div slot="header" class="clearfix">
@@ -533,7 +538,7 @@
 
         <!-- 设备新的主板信息 -->
          <el-row v-if="['07'].includes(hwVerson)">
-             <el-col :xs="24" :sm="12" style="padding: 0 20px;">
+             <el-col :xs="24" :sm="12" >
                   <!-- 查看消费总金额 -->
                  <el-card class="box-card">
                     <div slot="header" class="clearfix">
@@ -629,7 +634,7 @@
                     </el-table>
                      <div class="remoteChargeTit" style="margin-top: 15px ; overflow: hidden; text-align: center;">
                         <el-button type="primary" size="mini" style="float: left; margin-left: 30%;" @click="getDeviceSysParam">读取系统参数</el-button>
-                        <el-button type="primary" size="mini"  @click="serDeviceSysToOther">复用到其他设备</el-button>
+                         <TemMulDevice2  :deviceInfo="deviceInfo" @getDeviceList="getDeviceList" />
                         <el-button type="success" size="mini" style="float: right; margin-right: 30%;" @click="saveDeviceSysParam">保存系统参数</el-button>
                     </div>
                 </el-card>
@@ -719,65 +724,107 @@
              <transition name="el-fade-in-linear">
                 <div v-show="alserShow" class="sysAlert transition-box">
                     <el-row>
-                        <el-col :xs="6" :sm="6" :md="6" :lg="6">&nbsp;</el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="12">
+                        <el-col :xs="6" :sm="6" :md="8" :lg="8">&nbsp;</el-col>
+                        <el-col :xs="12" :sm="12" :md="8" :lg="8">
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
                                     <span>正在依次设置设备的系统参数</span>
                                 </div>
                                 <div>
-                                    <div class="listDiv">
-                                        <el-link :underline="false" 
-                                        v-for="(item,i) in list" :key="item.code"
-                                        :type="index== i ? 'primary' : item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info' " 
-                                        style="margin-right: 10px"
-                                        >{{item.code}}</el-link>
-                                    </div>
-                                    <div class="info">
-                                        <div class="info_item success">
-                                            <div class="info_title">设置成功：</div>
-                                            <div class="info_f">
-                                                <el-link :underline="false" 
-                                                v-for="(item,i) in list" :key="item.code"
-                                                :type="index== i ? 'primary' : item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info' " 
-                                                style="margin-right: 10px"
-                                                >
-                                                    <span v-if="item.status == 1">{{item.code}}</span>
-                                                </el-link> 
+                                    <el-table
+                                        :data="list"
+                                        border
+                                        fit
+                                        style="width: 100%"
+                                        :max-height="warpHeight"
+                                        :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                                        ref="tabSetSys"
+                                        >
+                                        <el-table-column
+                                        prop="code"
+                                        label="设备号"
+                                        width="100"
+                                        >
+                                        <template slot-scope="scope">
+                                            <el-link :underline="false" :type="index== scope.$index ? 'primary' : '' ">{{scope.row.code}}</el-link>
+                                        </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="remark"
+                                        label="设备名"
+                                        min-width="80"
+                                        >
+                                        <template slot-scope="scope">
+                                            <div class="oveflow_ecllipsis" :class="{active : index== scope.$index}">    
+                                                {{ scope.row.remark == null ? '— —' : scope.row.remark  }}
                                             </div>
-                                        </div>
-                                        <div class="info_item danger">
-                                            <div class="info_title">设置失败：</div>
-                                            <div class="info_f">
-                                                <el-link :underline="false" 
-                                                v-for="(item,i) in list" :key="item.code"
-                                                :type="index== i ? 'primary' : item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info' " 
-                                                style="margin-right: 10px"
-                                                >
-                                                    <span v-if="item.status == 2">{{item.code}}</span>
-                                                </el-link> 
+                                        </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="areaname"
+                                        label="所属小区"
+                                        min-width="80"
+                                        >
+                                         <template slot-scope="scope">
+                                            <div class="oveflow_ecllipsis" :class="{active : index== scope.$index}">
+                                                {{ scope.row.areaname == null ? '— —' : scope.row.areaname  }}
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="info_mid">
-                                        <span v-if="index <= list.length-1">
-                                            <span style="color: #666; font-size: 16px;">当前正在设置</span>
-                                            <el-link :underline="false" type="primary" style="font-size: 16px;">{{list[index].code}}</el-link>
-                                            <span style="color: #666; font-size: 16px;">的系统参数</span>
-                                        
-                                            <span class="el-icon-loading"></span>
-                                        </span>
-                                        <el-button v-else type="primary" @click="alserShow= false" size="small">设置完成，点击关闭设置界面</el-button>
-                                    </div>
+                                        </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="status"
+                                        label="操作状态"
+                                        min-width="80"
+                                        >
+                                         <template slot-scope="scope">
+                                            <el-link :underline="false" :type="index== scope.$index ? 'primary' : scope.row.status == 0 ? 'info' : scope.row.status == 1 ? 'success' : 'danger' ">
+                                                <div v-if="index== scope.$index"><span  class="el-icon-loading" style="font-size: 16px; margin-right: 5px;" ></span>设置中</div>
+                                                <span v-else>{{scope.row.status == 0 ? '' : scope.row.status == 1 ? '设置成功' : '设置失败' }}</span>
+                                            </el-link>
+                                        </template>
+                                        </el-table-column>
+                                    </el-table>
                                 </div>
                             </el-card>
                         </el-col>
-                        <el-col :xs="6" :sm="6" :md="6" :lg="6">&nbsp;</el-col>
+                        <el-col :xs="6" :sm="6" :md="8" :lg="8">&nbsp;</el-col>
                     </el-row>
                 
                 </div>
             </transition>
+            <!-- 复用系统模板结束时显示 -->
+
+            <el-dialog
+                title="批量设置系统参数完成"
+                :visible.sync="msgboxVis"
+                :before-close="handleClose"
+                width="30%"
+                >
+                <div v-if="handleClose">
+                    <div style="font-weight: 700;">设置成功：</div>
+                    <div  style="margin-top: 5px;">
+                        <span  v-for="(item,i) in list" :key="i">
+                            <span v-if="item.status== 1" style="margin-left: 6px; color: #67c23a;">{{item.code}}</span>
+                        </span>
+                    </div>
+                    <div style="margin-top: 20px;font-weight: 700;">设置失败：</div>
+                    <div style="margin-top: 5px;">
+                        <span type="danger" v-for="(jtem,j) in list" :key="j">
+                            <span v-if="jtem.status== 2" style="margin-left: 6px; color: #f56c6c;" >{{jtem.code}}</span>
+                        </span>
+                    </div>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="msgboxVis = false;alserShow=false" size="small">取 消</el-button>
+                    <el-button type="primary" @click="msgboxVis = false;alserShow=false" size="small">确 定</el-button>
+                </span>
+            </el-dialog>
+             <!-- 复用系统模板结束时显示 -->
+
     </div>
+    </el-col>
+    <el-col :md="3" :lg="3" :xl="3">&nbsp;</el-col>
+</el-row>
 </template>
 
 <script>
@@ -786,6 +833,7 @@ import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import GradeTemplate from '@/components/common/GradeTemplate'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
+import TemMulDevice2 from '@/components/common/TemMulDevice2'
 import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
@@ -830,11 +878,12 @@ export default {
                     events: {}
                 }
             ],
-            moduleInfo: [
-                    {title1: '设备号',content1: '',title2: 'CCID',content2: '',title3: '经度',content3: ''},
-                    {title1: '硬件版本',content1: '',title2: 'IMEI',content2: '',title3: '纬度',content3: ''},
-                    {title1: '硬件版本号',content1: '',title2: '信号强度',content2: '',title3: '查看地图',content3: ''},
-                    {title1: '软件版本号',content1: '',title2: '主板ID',content2: '',title3: '更新经纬度',content3: ''},
+            moduleInfo: [ 
+                {title1: '硬件版本',content1: '', title2: '主板版本',content2: '',title3: '经度',content3: ''},
+                {title1: '硬件版本号',content1: '', title2: '主板硬件版本',content2: '',title3: '纬度',content3: ''},
+                {title1: 'CCID',content1: '', title2: '主板软件版本',content2: '',title3: '查看地图',content3: ''},
+                {title1: 'IMEI',content1: '', title2: '主板ID',content2: '',title3: '更新经纬度',content3: ''},
+                {title1: '信号强度',content1: '', title2: '',content2: '',title3: '',content3: ''}
             ],
             mapList: [],
             mapInfo: [
@@ -862,10 +911,7 @@ export default {
                 {type:'刷卡扣费金额',val: ''},
                 {type:'扣费价格',val: ''},
             ],
-            chargeSendList: [ // 07 开始充电 （发送充电信息）
-                {port: 1,status: 1, v:356,a: 15.3, money: 5,time: 480,elec: 12},
-                {port: 2,status: 2, v:356,a: 15.3, money: 5,time: 480,elec: 12}
-            ],
+            chargeSendList: [], // 07 开始充电 （发送充电信息） 
             elecTimeFirst: 0,//这个是设置系统参数的时候另外传的值
             systemParamer: [ //系统参数
                         {
@@ -922,9 +968,13 @@ export default {
                            type_key: 'elecTimeFirst1', type: '是否初始显示电量 （此功能是否支持和设备相关）', val: 0, unit: '无', maxVal: '1表示屏幕初始显示剩余电量，0表示初始时间， 255表示不支持此功能', minVal: 0
                         },
                     ],
-                    list: [{code:'000001',status: 0 },{code:'000002',status: 0 },{code:'000003',status: 0 }], //默认选中的设备，进行复用系统参数 0,默认 1，成功 2，失败
+                    list: [], //默认选中的设备，进行复用系统参数 0,默认 1，成功 2，失败  {code:'000001',status: 0 }
                     index: 0, //当前循环的索引
-                    alserShow: false
+                    topIndex: 0, //默认向上滚动的数量
+                    alserShow: false,
+                    warpHeight: 500, //复用系统参数的表格高度
+                    deviceInfo: {},//模板复用的信息
+                    msgboxVis: false
             
         }
     },
@@ -933,7 +983,8 @@ export default {
         TemplateCoin,
         TemplateOffline,
         GradeTemplate,
-        bindMerOrArea
+        bindMerOrArea,
+        TemMulDevice2
     },
     created(){
         this.code= this.$route.query.code
@@ -950,9 +1001,13 @@ export default {
         //     center: new AMap.LngLat(121.59996, 31.197646)
         // });
         });
+        const warpHeight= (document.documentElement.clientHeight - 80)*0.75
+        this.warpHeight= warpHeight
+        
     },
     mounted(){
         document.getElementsByClassName('main')[0].scrollTop= '0px'
+       
     },
     beforeDestroy(){
         this.Loading && this.Loading.close()
@@ -1060,13 +1115,16 @@ export default {
                 let deviceInfo= await getDeviceDetailInfo(data)
                 _this.username= deviceInfo.username
                 _this.merid= deviceInfo.merid
-                let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid }= deviceInfo.equipment
-                _this.remark= remark
-                _this.moduleInfo=[ //设备信息
-                    {title1: '设备号',content1: code, title2: 'CCID',content2: CCID,title3: '经度',content3: longitude},
-                    {title1: '硬件版本',content1: hwVerson, title2: 'IMEI',content2: IMEI,title3: '纬度',content3: latitude},
-                    {title1: '硬件版本号',content1: hwVersonNum, title2: '信号强度',content2: single,title3: '查看地图',content3: ''},
-                    {title1: '软件版本号',content1: sfVerson, title2: '主板ID',content2: mainid,title3: '更新经纬度',content3: ''}
+                let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,
+                csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid,mainType,mainHardver,mainSoftver }= deviceInfo.equipment
+                this.deviceInfo= {merid: deviceInfo.merid,hwVerson}
+               _this.remark= remark 
+                _this.moduleInfo=[ //设备信息  
+                    {title1: '硬件版本',content1: hwVerson, title2: '主板版本',content2: mainType,title3: '经度',content3: longitude},
+                    {title1: '硬件版本号',content1: hwVersonNum, title2: '主板硬件版本',content2: mainHardver,title3: '纬度',content3: latitude},
+                    {title1: 'CCID',content1: CCID, title2: '主版软件版本',content2: mainSoftver,title3: '查看地图',content3: ''},
+                    {title1: 'IMEI',content1: IMEI, title2: '主板ID',content2: mainid,title3: '更新经纬度',content3: ''},
+                    {title1: '信号强度',content1: single, title2: '',content2: '',title3: '',content3: ''}
                 ],
                 _this.mapInfo= [ //经纬度信息
                     {title: '经度', content: longitude},
@@ -1096,12 +1154,20 @@ export default {
                 }
                 // 系统参数
                  _this.portStatusList= deviceInfo.allPortStatusList || []
-                 _this.remoteCharge= deviceInfo.allPortStatusList || []
+                 _this.remoteCharge= JSON.parse(JSON.stringify(deviceInfo.allPortStatusList || [] ))// 非07设备的远程充电
+                 _this.chargeSendList= JSON.parse(JSON.stringify(deviceInfo.allPortStatusList || [] ))  //07设备的远程充电
                  _this.remoteCharge= _this.remoteCharge.map((item,i)=>{ //给remoteCharge的键赋值
                       item.chargeTime= 240
                       item.elePower= 1.0
                       return item
                 })
+                 _this.chargeSendList= _this.remoteCharge.map((item,i)=>{ //给remoteCharge的键赋值
+                      item.chargeTime= 60
+                      item.elePower= 1.0
+                      item.money= 1.0
+                      return item
+                })
+
 
                 let sysparam= deviceInfo.sysparam
                 let systemParamer=  _this.systemParamer
@@ -1126,7 +1192,11 @@ export default {
                    messageTip('error',res.wolfmsg || '请求超时，请稍后重试')
                }else{
                    messageTip('success','获取成功')
-                   this.moduleInfo[3].content2= res.mainid
+                    this.moduleInfo[0].content2=res.mainType //主板版本
+                    this.moduleInfo[1].content2=res.mainHardver  //主板硬件版本
+                    this.moduleInfo[2].content2=res.mainSoftver  //主板软件版本
+                    this.moduleInfo[3].content2= res.mainid
+                
                }
                 Vue.set(row,'get',false)
             }).catch(err=>{
@@ -1156,7 +1226,7 @@ export default {
                loading.close()
             })
         },
-        getBoardRead(){ //读取
+        getBoardRead(){ //07 读取
             let loading= Loading.service({
                         lock: true,
                         text: '加载中',
@@ -1177,10 +1247,10 @@ export default {
                 loading.close()
             })
         },
-        getBoardStart(row){ //开始充电
-            let {port,money,time,elec}= row
-            getWolftestpay({code:this.code,port,money,time,elec}).then(res=>{
-              alert(res)
+        getBoardStart(row){ //07 开始充电
+            let {port,money,chargeTime:time,elePower:elec}= row
+            getWolftestpay({code:this.code,port,money,time,elec,chargeType:1}).then(res=>{
+            //   messageTip('success',res)
             }).catch(err=>{
 
             })
@@ -1301,9 +1371,9 @@ export default {
             remoteChargeBreakOff({port,code: this.code}).then(res=>{
                  Vue.set(row,'loading',false)
                 if(res.wolfcode == '1000'){
-                    messageTip('success',`端口${port}，远程充电设置成功`)
+                    messageTip('success',`端口${port}，远程断电设置成功`)
                 }else{
-                     messageTip('error',`端口${port}，远程充电设置失败`)
+                     messageTip('error',`端口${port}，远程断电设置失败`)
                 }
             }).catch(err=>{
                  Vue.set(row,'loading',false)
@@ -1390,14 +1460,25 @@ export default {
 
             }).catch(err=>{  loading.close() })
         },
-        serDeviceSysToOther(){// 设置当前系统参数到更多设备
-            this.list=[{code:'000001',status: 0 },{code:'000002',status: 0 },{code:'000003',status: 0 }],
-            this.index= 0 
+        getDeviceList(list){ //接收系统参数复用子组件穿的值
+            // 初始化值 
+            this.list= list
+            this.index= 0
+            this.topIndex= 0
             this.alserShow= true
             this.requireSystemByCode(this.index)
-            
         },
-         requireSystemByCode(){
+        
+         requireSystemByCode(){ //发送请求，依次修改系统参数
+            let wrapEle= this.$refs.tabSetSys.bodyWrapper
+            let wrapHeight= wrapEle.offsetHeight //滚动高度
+            let trHeight= 50
+            try {
+                trHeight= wrapEle.getElementsByClassName('el-table__row').offsetHeight //有就用tr的高度，否则就trHeight为50
+            }catch(e){
+                trHeight= 50
+            }
+
             let systemParamer=  this.systemParamer
             let parmas= {}
             for (const iterator of systemParamer) {
@@ -1410,28 +1491,41 @@ export default {
             }
             savesystemParma({code: this.list[this.index].code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
                 if (res.status == "0") {
-                     messageTip('error','系统参数设置失败')
+                     messageTip('error',`${this.list[this.index].code}设备 系统参数设置失败`)
                      this.list[this.index].status= 2
                 }else{
-                    messageTip('success','系统参数设置成功')
+                    messageTip('success',`${this.list[this.index].code}设备 系统参数设置成功`)
                     this.list[this.index].status= 1
                 }
+                if(this.index*trHeight >= wrapHeight/2){
+                    this.topIndex++
+                    wrapEle.scrollTop= this.topIndex*trHeight
+                 }
                  this.index++
                  if(this.index <= this.list.length-1){
                       this.requireSystemByCode()
                  }else{ //结束请求
-                     
+                    this.msgboxVis= true
                  } 
 
             }).catch(err=>{
-                 this.list[index].status= 2
-                 index++
-                 if(index <= this.list.length-1){
+                if(this.index*trHeight >= wrapHeight/2){
+                    this.topIndex++
+                    wrapEle.scrollTop= this.topIndex*trHeight
+                 }
+                 console.log( this.list, this.index)
+                 this.list[this.index].status= 2
+                 this.index++
+                 if(this.index <= this.list.length-1){
                       this.requireSystemByCode()
                  }else{ //结束请求
-                    
+                   this.msgboxVis= true
                  }
             })
+        },
+        handleClose(){
+            this.msgboxVis= false
+            this.alserShow= false
         }
     }
 }
@@ -1488,19 +1582,19 @@ export default {
         top: 100px;
         right: 20px;
         .nav_tag_item {
-            opacity: 0;
-            transition: opacity .3s;  
+            // opacity: 0;
+            // transition: opacity .3s;  
             a {
                 display: block;
                 margin-bottom: 15px;
             }
         }
-        &:hover {
-            .nav_tag_item {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        // &:hover {
+        //     .nav_tag_item {
+        //         opacity: 1;
+        //         transform: translateY(0);
+        //     }
+        // }
     }
     .lastInput {
         .el-input__inner {
@@ -1508,42 +1602,21 @@ export default {
         }
     }
     .sysAlert {
-        position: absolute;
+        position: fixed;
         left: 180px;
-        top: 0;
+        top: 80px;
         bottom: 0;
         right: 0;
         background-color: rgba(255,255,255,.8 );
-        z-index: 2300;
+        z-index: 999;
         .box-card {
-            margin-top: 15%;
+            margin-top: 5%;
         }
-        .listDiv {
-            margin-top: 3%;
-            text-align: center;
-           
-            span {
-                font-size: 20px;
-            }
-        }
-        .info {
-            margin-top: 30px;
-            .info_item {
-                overflow: hidden;
-                margin-bottom: 20px;
-                .info_title {
-                    width: 90px;
-                    float: left;
-                }
-                .info_f {
-                    overflow: hidden;
-                }
-            }
-        }
-        .info_mid {
-             margin-top: 15%;
-             font-size: 16px;
-             text-align: center;
+        
+    }
+    .oveflow_ecllipsis{
+        &.active {
+            color: #409EFF;
         }
     }
 }

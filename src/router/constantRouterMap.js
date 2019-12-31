@@ -208,6 +208,14 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin']
         }
       },
+      {
+        path: '/tradeRecord/feescaleRecord',
+        name: '缴费记录',
+        component: ()=> import('@/views/TradeRecord/FeescaleRecord/FeescaleRecord'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
       // 交易记录
       // 设备管理
       

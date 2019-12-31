@@ -143,4 +143,14 @@ export const merWithdrawResolve= function (data){
          })
 }
 
+/**
+ *商户缴费记录
+ */
+export const merFeescaleRecode= function (data){ 
+    return ajax({
+             url: '/orderData/feescaleRecode',
+             data: data
+         })
+}
+
 

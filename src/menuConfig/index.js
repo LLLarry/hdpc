@@ -97,6 +97,11 @@ export const superAdminMenuList= [
                 title: '钱包记录',
                 link: '/tradeRecord/walletRecord',
                 index: '2-6'
+            },
+            {
+                title: '缴费记录',
+                link: '/tradeRecord/feescaleRecord',
+                index: '2-7'
             }
         ]
     },

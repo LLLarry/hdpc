@@ -101,7 +101,6 @@
                         prop="title2"
                         label="主板信息"
                         min-width="80"
-                        v-if="['07'].includes(hwVerson)"
                         >
                         <template slot-scope="{row}">
                             <!-- 07显示的 主板ID显示，非07的都不显示 -->
@@ -117,14 +116,12 @@
                         prop="content2"
                         label="信息"
                         min-width="140"
-                        v-if="['07'].includes(hwVerson)"
                         >
+                        <template slot="header" slot-scope="scope">
+                            信息 &nbsp;&nbsp;&nbsp;&nbsp;<el-button  :icon="scope.column.get ? 'el-icon-loading' : 'el-icon-refresh-right'"  type="primary" size="mini" plain  @click="getBoardInfo(scope.column)">更新</el-button>
+                        </template>
                         <template slot-scope="{row}">
-                            <div  v-if="row.title2 == '主板ID'">
-                                <span style="margin-right: 25px;">{{row.content2}}</span>
-                                <el-button   type="primary" size="mini" :icon="row.get ? 'el-icon-loading' : 'el-icon-refresh-right'" @click="getBoardInfo(row)">获取主板信息</el-button>
-                            </div>
-                            <span v-else>{{row.content2}}</span>
+                           {{row.content2}}
                         </template>
                         </el-table-column>
                         <el-table-column
@@ -729,7 +726,9 @@
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
                                     <span>正在依次设置设备的系统参数</span>
+                                    <el-button type="danger" plain style="float:right;" size="mini" @click="removeSysMui">取消设置</el-button>
                                 </div>
+                               
                                 <div>
                                     <el-table
                                         :data="list"
@@ -810,7 +809,7 @@
                     <div style="margin-top: 20px;font-weight: 700;">设置失败：</div>
                     <div style="margin-top: 5px;">
                         <span type="danger" v-for="(jtem,j) in list" :key="j">
-                            <span v-if="jtem.status== 2" style="margin-left: 6px; color: #f56c6c;" >{{jtem.code}}</span>
+                            <span v-if="jtem.status != 1" style="margin-left: 6px; color: #f56c6c;" >{{jtem.code}}</span>
                         </span>
                     </div>
                 </div>
@@ -835,14 +834,14 @@ import GradeTemplate from '@/components/common/GradeTemplate'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
 import TemMulDevice2 from '@/components/common/TemMulDevice2'
 import {Loading, Button} from 'element-ui'
-import {alertPassword,messageTip} from '@/utils/ele'
+import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
 remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,getWolfreadsys,getWolftestpay } from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
-import { mapState } from 'vuex'
+import { mapState,mapMutations } from 'vuex'
 export default {
     data(){
         return {
@@ -1019,6 +1018,7 @@ export default {
         ...mapState(['userInfo'])
     },
     methods: {
+        ...mapMutations(['clearToken']),
          handleTaggleBind(type){ //绑定或解绑设备
             alertPassword(()=>{
                 // 发送请求，进行绑定或解绑操作，成功了之后修改原本的状态
@@ -1117,7 +1117,7 @@ export default {
                 _this.merid= deviceInfo.merid
                 let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,
                 csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid,mainType,mainHardver,mainSoftver }= deviceInfo.equipment
-                this.deviceInfo= {merid: deviceInfo.merid,hwVerson}
+                this.deviceInfo= {merid: deviceInfo.merid,hwVerson,code}
                _this.remark= remark 
                 _this.moduleInfo=[ //设备信息  
                     {title1: '硬件版本',content1: hwVerson, title2: '主板版本',content2: mainType,title3: '经度',content3: longitude},
@@ -1391,7 +1391,7 @@ export default {
             this.Loading= loading
             getsystemParma({code:this.code}).then(res=>{
                 loading.close()
-                if(res.status == '0'){
+                if(res.wolfcode == '1001'){
                     messageTip('error','系统参数获取失败')
                     return
                 }else{
@@ -1452,7 +1452,7 @@ export default {
             }
             savesystemParma({code: this.code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
                 loading.close()
-                if (res.status == "0") {
+                if (res.wolfcode == "1001") {
                      messageTip('error','系统参数设置失败')
                      return
                 }
@@ -1470,11 +1470,12 @@ export default {
         },
         
          requireSystemByCode(){ //发送请求，依次修改系统参数
+            if(this.index < 0) return
             let wrapEle= this.$refs.tabSetSys.bodyWrapper
-            let wrapHeight= wrapEle.offsetHeight //滚动高度
+            let wrapHeight= wrapEle.offsetHeight > 100 ?  wrapEle.offsetHeight : 100  //滚动高度,第一次还没渲染好，第一次高度为0，为0时，高度设置100，为了下面对比做准备
             let trHeight= 50
             try {
-                trHeight= wrapEle.getElementsByClassName('el-table__row').offsetHeight //有就用tr的高度，否则就trHeight为50
+                trHeight= wrapEle.getElementsByClassName('el-table__row')[0].offsetHeight //有就用tr的高度，否则就trHeight为50
             }catch(e){
                 trHeight= 50
             }
@@ -1490,7 +1491,7 @@ export default {
                
             }
             savesystemParma({code: this.list[this.index].code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
-                if (res.status == "0") {
+                if (res.wolfcode == "1001") {
                      messageTip('error',`${this.list[this.index].code}设备 系统参数设置失败`)
                      this.list[this.index].status= 2
                 }else{
@@ -1499,6 +1500,7 @@ export default {
                 }
                 if(this.index*trHeight >= wrapHeight/2){
                     this.topIndex++
+                    console.log(this.topIndex,this.topIndex*trHeight)
                     wrapEle.scrollTop= this.topIndex*trHeight
                  }
                  this.index++
@@ -1513,8 +1515,13 @@ export default {
                     this.topIndex++
                     wrapEle.scrollTop= this.topIndex*trHeight
                  }
-                 console.log( this.list, this.index)
-                 this.list[this.index].status= 2
+                 let _this= this
+                 try {
+                   _this.list[_this.index].status= 2  
+                 } catch (error) {
+                     
+                 }
+                //  this.list[this.index].status= 2
                  this.index++
                  if(this.index <= this.list.length-1){
                       this.requireSystemByCode()
@@ -1526,6 +1533,13 @@ export default {
         handleClose(){
             this.msgboxVis= false
             this.alserShow= false
+        },
+        removeSysMui(){ //点击取消系统参数复用
+            confirDelete('确认取消设置系统参数复用吗？',()=>{
+                this.index= this.list.length
+                this.clearToken()
+            })
+           
         }
     }
 }

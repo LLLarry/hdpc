@@ -13,10 +13,11 @@
                    </thead>
                    <tbody>
                        <tr>
-                           <td>有效客户数</td>
+                           <td>有效商户数</td>
                            <td>{{dataStatisInfo.validdealer}}</td>
-                           <td colspan="8"></td>
-                          
+                           <td>客户总数</td>
+                           <td>{{dataStatisInfo.clientsnum}}</td>
+                           <td colspan="6"></td>
                        </tr>
                    </tbody>
 

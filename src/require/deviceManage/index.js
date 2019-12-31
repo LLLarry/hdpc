@@ -123,6 +123,17 @@ export const getSimilarDevice= function (data){
 }
 
 /**
+ * 查询同类型设备(按小区排序)
+ */
+export const getSimilarDeviceByaid= function (data){ 
+    return ajax({
+             url: '/deviceData/searchDeviceData',
+             data: data
+         })
+}
+
+
+/**
  * 设备复用模板
  */
 export const setDeviceMulDevice= function (data){ 

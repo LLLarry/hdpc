@@ -3,16 +3,16 @@
         <el-button type="primary" size="mini" @click="handleMulMoreDevice">复用到其他设备</el-button>
         <el-dialog title="选中设备使用此系统参数" :visible.sync="dialogTableVisible" width="40%" center custom-class="temMulDialog">
             <div class="tableContent">
-                <el-table :data="gridData" :v-loading="loading" @selection-change="handleSelectionChange">
+                <el-table :data="gridData" :v-loading="loading" @selection-change="handleSelectionChange" >
                     <el-table-column type="selection"  width="55"> </el-table-column>
                     <el-table-column property="code" label="设备号" min-width="130"></el-table-column>
-                    <el-table-column property="devicename" label="设备名称" min-width="150">
+                    <el-table-column property="devicename" label="设备名称" min-width="150" >
                         <template slot-scope="{row}">
                             <span v-if="row.devicename && row.devicename.length > 0">{{row.devicename}}</span>
                             <span v-else>— —</span>
                         </template>
                     </el-table-column>
-                    <el-table-column property="areaname" label="所属小区" min-width="150">
+                    <el-table-column property="areaname" label="所属小区" min-width="150" sortable  :sort-method="sortFn" >
                         <template slot-scope="{row}">
                             <span v-if="row.areaname && row.areaname.length > 0">{{row.areaname}}</span>
                             <span v-else>— —</span>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { getSimilarDevice,setDeviceMulDevice } from '@/require/deviceManage'
+import { getSimilarDeviceByaid,setDeviceMulDevice } from '@/require/deviceManage'
 import {messageTip,confirDelete} from '@/utils/ele'
 export default {
     data(){
@@ -46,7 +46,7 @@ export default {
             let _this= this
             try {
                 _this.loading= true
-                let deviceListInfo= await getSimilarDevice(data)
+                let deviceListInfo= await getSimilarDeviceByaid(data)
                  _this.loading= false
                 if(deviceListInfo.code == 200){
                    _this.gridData= deviceListInfo.devicelist
@@ -73,8 +73,8 @@ export default {
             }
         },
         handleMulMoreDevice(){
-            let { merid, hwVerson} = this.deviceInfo
-            this.asyGetSimilarDevice({ merid, hwVerson}) 
+            let { merid, hwVerson,code} = this.deviceInfo
+            this.asyGetSimilarDevice({ merid,hwVerson,code}) 
             this.dialogTableVisible= true
         },
         handleSelectionChange(val){
@@ -93,6 +93,9 @@ export default {
                 confirDelete('请先选择设备',()=>{})
             }
             
+        },
+        sortFn(a,b){
+           return a.aid- b.aid
         }
     }
 }

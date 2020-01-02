@@ -153,4 +153,28 @@ export const merFeescaleRecode= function (data){
          })
 }
 
+/**
+ *商户缴费详情
+ */
+export const merFeescaleRecodeDetail= function (data){ 
+    return ajax({
+             url: '/orderData/feescaleRecodeDetail',
+             data: data
+         })
+}
+
+/**
+ *获取收款账户信息
+ */
+export const getreviceInfo= function (data){ 
+    return ajax({
+             url: '/orderData/reviceUserDetail',
+             data: data
+         })
+}
+
+
+
+
+
 

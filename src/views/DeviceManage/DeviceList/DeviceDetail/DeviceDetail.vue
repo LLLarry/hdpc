@@ -880,8 +880,9 @@ export default {
             moduleInfo: [ 
                 {title1: '硬件版本',content1: '', title2: '主板版本',content2: '',title3: '经度',content3: ''},
                 {title1: '硬件版本号',content1: '', title2: '主板硬件版本',content2: '',title3: '纬度',content3: ''},
-                {title1: 'CCID',content1: '', title2: '主板软件版本',content2: '',title3: '查看地图',content3: ''},
-                {title1: 'IMEI',content1: '', title2: '主板ID',content2: '',title3: '更新经纬度',content3: ''},
+                {title1: '软件版本号',content1: '', title2: '主版软件版本',content2: '',title3: '查看地图',content3: ''},
+                {title1: 'CCID',content1: '', title2: '主板ID',content2: '',title3: '更新经纬度',content3: ''},
+                {title1: 'IMEI',content1: '',  title2: '',content2: '',title3: '',content3: ''},
                 {title1: '信号强度',content1: '', title2: '',content2: '',title3: '',content3: ''}
             ],
             mapList: [],
@@ -1122,8 +1123,9 @@ export default {
                 _this.moduleInfo=[ //设备信息  
                     {title1: '硬件版本',content1: hwVerson, title2: '主板版本',content2: mainType,title3: '经度',content3: longitude},
                     {title1: '硬件版本号',content1: hwVersonNum, title2: '主板硬件版本',content2: mainHardver,title3: '纬度',content3: latitude},
-                    {title1: 'CCID',content1: CCID, title2: '主版软件版本',content2: mainSoftver,title3: '查看地图',content3: ''},
-                    {title1: 'IMEI',content1: IMEI, title2: '主板ID',content2: mainid,title3: '更新经纬度',content3: ''},
+                    {title1: '软件版本号',content1: sfVerson, title2: '主版软件版本',content2: mainSoftver,title3: '查看地图',content3: ''},
+                    {title1: 'CCID',content1: CCID, title2: '主板ID',content2: mainid,title3: '更新经纬度',content3: ''},
+                    {title1: 'IMEI',content1: IMEI,  title2: '',content2: '',title3: '',content3: ''},
                     {title1: '信号强度',content1: single, title2: '',content2: '',title3: '',content3: ''}
                 ],
                 _this.mapInfo= [ //经纬度信息

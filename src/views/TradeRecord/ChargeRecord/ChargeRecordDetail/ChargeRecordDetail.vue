@@ -36,6 +36,9 @@
                         >
                         </el-table-column>
                     </el-table>
+                    <div style="text-align: center; padding-top: 15px">
+                        <el-button type="primary" size="small" @click="handleSCanAVBtn">查看电流/电压</el-button>
+                    </div>
                  </el-card>
             </el-col>
         </el-row>
@@ -107,6 +110,31 @@
                 </el-table-column>
             </el-table>
         </el-card>
+        <!-- 弹框，电压、电流表 -->
+        <el-dialog
+        title="电压/电流表"
+        :visible.sync="dialogVisible"
+        width="80%"
+        custom-class="echart-dialog"
+        :before-close="handleClose">
+        <el-row>
+            <el-col :lg="12" :xl="12" :md="12" :sm="12">
+                <div class="echart_V">
+                    <div id="echart_V" ref="echart_V"></div>
+                </div>
+            </el-col>
+            <el-col :lg="12" :xl="12" :md="12" :sm="12">
+                <div class="echart_A">
+                    <div id="echart_A" ref="echart_A"></div>
+                </div>
+            </el-col>
+        </el-row>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false" size="small"> 取消</el-button>
+            <el-button type="primary" @click="dialogVisible = false" size="small">确 定</el-button>
+        </span>
+        </el-dialog>
+        <!-- 弹框，电压、电流表结束 -->
     </div>
 </template>
 
@@ -134,10 +162,15 @@ export default {
              tableData: [],
              orderid: 0, //请求的订单id
              myChart: null,
+             dialogVisible: false,
+             myChartA: null,
+             myChartV: null,
+             listA: [], //电流数组
+             listV: [] //电压数组
         }
     },
     created(){
-         this.orderid= this.$route.query.orderid || 0
+        this.orderid= this.$route.query.orderid || 0
         this.asyGetpowerLineInfo({orderid: this.orderid})
     },
     beforeMount(){
@@ -233,11 +266,19 @@ export default {
                 if(powerInfo.code === 200){
                     let timeList= []
                     let powerList= []
+                    let listA= []
+                    let listV= []
                     for (const iterator of powerInfo.listpower) {
                         timeList.push(iterator.minuteTime)
                         powerList.push(iterator.power)
                     }
+                    for (const iterator of powerInfo.listdata) {
+                        listA.push(iterator.portA)
+                        listV.push(iterator.portV)
+                    }
                     this.timeList= timeList
+                    this.listA= listA
+                    this.listV= listV
                     this.powerList= powerList
                     this.myChart.setOption({
                             xAxis: {
@@ -253,16 +294,6 @@ export default {
                                         },
                                  data:timeList
                             },
-                            // xAxis: {
-                            //     data: timeList
-                            // },
-                            // series: [
-                            //     {
-                            //         name: '功率',
-                            //         type:'line',
-                            //         data: powerList 
-                            //     }
-                            // ]
                             series: [{
                             name: '功率',
                             type: 'line',
@@ -315,11 +346,150 @@ export default {
             }catch(error){
                 
             }
+        },
+        handleClose(){ //关闭电压电流表
+            this.dialogVisible= false
+        },
+        handleSCanAVBtn(){
+            // 点击，初始化echart_A,echart_V
+          this.dialogVisible= true
+          this.$nextTick(()=>{ //更新之后的回调
+                this.myChartA= echarts.init(this.$refs.echart_A)
+                this.myChartV= echarts.init(this.$refs.echart_V)
+                let _this= this
+                this.myChartV.setOption({
+                        xAxis: {
+                            type: 'category',
+                            name: '分钟',
+                            nameGap: 5,
+                            axisLabel:{color:'#666'},   // x轴字体颜色 
+                            axisLine:{
+                                    lineStyle:{color:'#666'}    // x轴坐标轴颜色
+                                    },
+                            axisTick:{
+                                    lineStyle:{color:'#666'}    // x轴刻度的颜色
+                                    },
+                                data:_this.timeList
+                        },
+                        yAxis: {
+                                name: '电压（V）',
+                                type: 'value',
+                                axisLabel:{color:'#666'},   
+                                axisLine:{
+                                        lineStyle:{color:'#666'}    
+                                        },
+                                axisTick:{
+                                        lineStyle:{color:'#666'}    
+                                        },
+                        },
+                        title: {
+                                text: '充电电压曲线',
+                                textStyle : {
+                                fontSize: 18,
+                                color: '#333',
+                                fontWeight: 'bold',
+                                fontFamily: 'monospace'
+                                },
+                                left: '3%'
+                            },
+                        series: [{
+                            name: '功率',
+                            type: 'line',
+                            smooth: true, //曲线平滑
+                            itemStyle: {
+                                color:  "#22B14C"
+                            },
+                            lineStyle: {
+                                 normal: {
+                                    color: "#22B14C",
+                                    lineStyle: {
+                                        color: "#22B14C",
+                                        width:1
+                                    }
+                                },
+                            },
+                            data: _this.listV
+                            }]
+                    })
+                this.myChartA.setOption({
+                        xAxis: {
+                            type: 'category',
+                            name: '分钟',
+                            nameGap: 5,
+                            axisLabel:{color:'#666'},   // x轴字体颜色 
+                            axisLine:{
+                                    lineStyle:{color:'#666'}    // x轴坐标轴颜色
+                                    },
+                            axisTick:{
+                                    lineStyle:{color:'#666'}    // x轴刻度的颜色
+                                    },
+                                data:_this.timeList
+                        },
+                        yAxis: {
+                                name: '电流（A）',
+                                type: 'value',
+                                axisLabel:{color:'#666'},   
+                                axisLine:{
+                                        lineStyle:{color:'#666'}    
+                                        },
+                                axisTick:{
+                                        lineStyle:{color:'#666'}    
+                                        },
+                        },
+                        title: {
+                                text: '充电电流曲线',
+                                textStyle : {
+                                fontSize: 18,
+                                color: '#333',
+                                fontWeight: 'bold',
+                                fontFamily: 'monospace'
+                                },
+                                left: '3%'
+                            },
+                        series: [{
+                            name: '功率',
+                            type: 'line',
+                            smooth: true, //曲线平滑
+                            itemStyle: {
+                                color:  "#22B14C"
+                            },
+                            lineStyle: {
+                                 normal: {
+                                    color: "#22B14C",
+                                    lineStyle: {
+                                        color: "#22B14C",
+                                        width:1
+                                    }
+                                },
+                            },
+                            data: _this.listA
+                            }]
+                    })  
+
+         })   
         }
     }
 }
 </script>
 
 <style lang="less">
+.echart-dialog {
+    margin-top: 10vh !important;
+    .echart_V {
+        padding-right: 15px;
+        #echart_V {
+            width: 38vw;
+            height: 60vh; 
+        }
+    }
+    .echart_A {
+        height: 60vh;
+        padding-left: 15px;
+        #echart_A {
+           width: 38vw;
+           height: 60vh; 
+        }
+    }
+}
 
 </style>

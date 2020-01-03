@@ -100,6 +100,20 @@
                 </el-table-column>
 
                  <el-table-column
+                prop="portV"
+                label="实时电压(V)"
+                 min-width="120"
+                >
+                </el-table-column>
+
+                <el-table-column
+                prop="portA"
+                label="实时电流(A)"
+                 min-width="120"
+                >
+                </el-table-column>
+
+                 <el-table-column
                 prop="createtime"
                 label="记录时间"
                  min-width="150"

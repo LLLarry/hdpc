@@ -933,13 +933,13 @@ export default {
                            type_key: 'powerMax1', type: '设置第一档最大充电功率（最大功率以机器支持为准）', val: 200, unit: '瓦', maxVal: 8000, minVal: 50
                         },
                         {
-                           type_key: 'powerMax2', type: '设置第二档最大充电功率（最大功率以机器支持为准）', val: 144, unit: '瓦', maxVal: 8000, minVal: 50
+                           type_key: 'powerMax2', type: '设置第二档最大充电功率（最大功率以机器支持为准）', val: 400, unit: '瓦', maxVal: 8000, minVal: 50
                         },
                         {
-                           type_key: 'powerMax3', type: '设置第三档最大充电功率（最大功率以机器支持为准）', val: 88, unit: '瓦', maxVal: 8000, minVal: 50
+                           type_key: 'powerMax3', type: '设置第三档最大充电功率（最大功率以机器支持为准）', val: 600, unit: '瓦', maxVal: 8000, minVal: 50
                         },
                         {
-                           type_key: 'powerMax4', type: '设置第四档最大充电功率（最大功率以机器支持为准）', val: 50, unit: '瓦', maxVal: 8000, minVal: 50
+                           type_key: 'powerMax4', type: '设置第四档最大充电功率（最大功率以机器支持为准）', val: 800, unit: '瓦', maxVal: 8000, minVal: 50
                         },
 
                         {
@@ -955,7 +955,7 @@ export default {
                            type_key: 'spRecMon', type: '是否支持余额回收（1为支持 0为不支持)', val: 1, unit: '无', maxVal: 1, minVal: 0
                         },
                         {
-                           type_key: 'spFullEmpty', type: '是否支持断电自停（1为支持 0为不支持)', val: 0, unit: '无', maxVal: 1, minVal: 0
+                           type_key: 'spFullEmpty', type: '是否支持断电自停（1为支持 0为不支持)', val: 1, unit: '无', maxVal: 1, minVal: 0
                         },
 
                         {

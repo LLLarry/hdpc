@@ -104,6 +104,9 @@
                 label="实时电压(V)"
                  min-width="120"
                 >
+                <template slot-scope="{row}">
+                    {{ row.portV == -1 ? '— —' : row.portV }}
+                </template>
                 </el-table-column>
 
                 <el-table-column
@@ -111,6 +114,9 @@
                 label="实时电流(A)"
                  min-width="120"
                 >
+                <template slot-scope="{row}">
+                    {{ row.portA == -1 ? '— —' : row.portA }}
+                </template>
                 </el-table-column>
 
                  <el-table-column

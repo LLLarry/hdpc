@@ -171,6 +171,7 @@ export default {
             chargeInfo: [
                 {type: '订单号',content:'' },
                 {type: '付款金额',content: ''},
+                {type: '支付方式',content: ''},
                 {type: '使用时间',content: ''},
                 {type: '使用电量',content: ''},
                 {type: '最大功率',content: ''},
@@ -349,9 +350,11 @@ export default {
                             data: powerList
                             }]
                         });
+                    let paytypeStr= powerInfo.paytype == 1 ? "钱包" : powerInfo.paytype == 2 ? "微信" : powerInfo.paytype == 3 ? "支付宝": powerInfo.paytype == 4 ? "包月" : powerInfo.paytype == 5 ? "投币" : powerInfo.paytype == 6 ? "刷卡" :"— —"
                     this.chargeInfo= [
                         {type: '订单号',content: powerInfo.ordernum},
                         {type: '付款金额',content: `${powerInfo.paymoney}元`},
+                        {type: '支付方式',content: paytypeStr},
                         {type: '使用时间',content: `${powerInfo.usetime}分钟`},
                         {type: '使用电量',content: `${powerInfo.useelec/100}度`},
                         {type: '最大功率',content: `${powerInfo.mapdata.maxpower}瓦`},

@@ -143,7 +143,8 @@
                 label="余额"
                 >
                 <template slot-scope="{row}">
-                   <el-link type="success" :underline="false"> {{row.balance != null ? row.balance.toFixed(2) : '0.00'}}</el-link>
+                   <span v-if="row.balance == -1">— —</span>
+                   <el-link type="success" :underline="false" v-else> {{row.balance != null ? row.balance.toFixed(2) : '0.00'}}</el-link>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -179,7 +180,7 @@
                 min-width="80"
                 >
                 <template slot-scope="{row}">
-                    {{row.paytype==1 ? "微信" : row.paytype==2 ? "支付宝" : row.paytype==3 ? "微信退款" : row.paytype==4?"支付宝退款":"— —" }}
+                    {{row.paytype==1 ? "微信" : row.paytype==2 ? "支付宝" : row.paytype==3 ? "微信退款" : row.paytype==4?"支付宝退款": row.paytype==7 ?"刷卡":"— —" }}
                 </template>
                 </el-table-column>
                 <el-table-column

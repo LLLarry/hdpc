@@ -20,8 +20,17 @@
                 <el-form-item label="商户电话" class="form_right25">
                     <el-input v-model="userInfoDetailForm.mobile" clearable placeholder="商户电话"  size="small"></el-input>
                 </el-form-item>
-                <el-form-item label="归属小区" class="form_right25">
-                    <el-input v-model="userInfoDetailForm.income" clearable placeholder="归属小区"  size="small"></el-input>
+                <el-form-item label="起始ID" class="form_right25">
+                    <el-input v-model="userInfoDetailForm.startID" clearable placeholder="起始ID"  size="small"></el-input>
+                </el-form-item>
+                <el-form-item label="结束ID" class="form_right25">
+                    <el-input v-model="userInfoDetailForm.endID" clearable placeholder="结束ID"  size="small"></el-input>
+                </el-form-item>
+                <el-form-item label="金额排序" class="form_right25">
+                     <el-select v-model="userInfoDetailForm.moneySort"  placeholder="金额排序" clearable size="small">
+                        <el-option label="从大到小" value="1" ></el-option>
+                        <el-option label="从小到大" value="2" ></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item class="form_margin0 content_btn">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>

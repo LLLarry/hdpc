@@ -1286,7 +1286,7 @@ export default {
             this.Loading= loading
             getDeviceStatus({port: row.port,code: this.code}).then(res=>{
                 loading.close()
-                if (res.err == "0") {
+                if (res.wolfcode == "1001") {
                     messageTip('error','获取端口状态失败')
                     return
 				}

@@ -37,7 +37,7 @@
                         </el-table-column>
                     </el-table>
                     <div style="text-align: center; padding-top: 15px">
-                        <el-button type="primary" size="small" @click="handleSCanAVBtn">查看电流/电压</el-button>
+                        <el-button type="primary" size="small" v-if="portAVShow" @click="handleSCanAVBtn">查看电流/电压</el-button>
                     </div>
                  </el-card>
             </el-col>
@@ -103,6 +103,7 @@
                 prop="portV"
                 label="实时电压(V)"
                  min-width="120"
+                v-if="portAVShow"
                 >
                 <template slot-scope="{row}">
                     {{ row.portV == -1 ? '— —' : row.portV }}
@@ -112,7 +113,8 @@
                 <el-table-column
                 prop="portA"
                 label="实时电流(A)"
-                 min-width="120"
+                min-width="120"
+                v-if="portAVShow"
                 >
                 <template slot-scope="{row}">
                     {{ row.portA == -1 ? '— —' : row.portA }}
@@ -122,7 +124,8 @@
                  <el-table-column
                 prop="createtime"
                 label="记录时间"
-                 min-width="150"
+                min-width="150"
+               
                 >
                 <template slot-scope="{row}">
                    <div v-html="row.createtime && row.createtime.length > 0 ? ($fmtDate(row.createtime).replace('</br>',' ')) : '— —'"></div>
@@ -187,7 +190,8 @@ export default {
              myChartA: null,
              myChartV: null,
              listA: [], //电流数组
-             listV: [] //电压数组
+             listV: [], //电压数组
+             portAVShow: true, //电压电流按钮，默认显示
         }
     },
     created(){
@@ -294,6 +298,10 @@ export default {
                         powerList.push(iterator.power)
                     }
                     for (const iterator of powerInfo.listdata) {
+                        if(iterator.portA == -1 || iterator.portV == -1){
+                            this.portAVShow= false  //判断当portA或者portV 为-1时，不显示电压电流
+                            break;
+                        }
                         listA.push(iterator.portA)
                         listV.push(iterator.portV)
                     }

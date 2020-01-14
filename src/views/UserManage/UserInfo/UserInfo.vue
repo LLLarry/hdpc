@@ -20,18 +20,21 @@
                 <el-form-item label="商户电话" class="form_right25">
                     <el-input v-model="userInfoDetailForm.mobile" clearable placeholder="商户电话"  size="small"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="起始ID" class="form_right25">
-                    <el-input v-model="userInfoDetailForm.startID" clearable placeholder="起始ID"  size="small"></el-input>
-                </el-form-item>
-                <el-form-item label="结束ID" class="form_right25">
-                    <el-input v-model="userInfoDetailForm.endID" clearable placeholder="结束ID"  size="small"></el-input>
-                </el-form-item>
+
                 <el-form-item label="金额排序" class="form_right25">
                      <el-select v-model="userInfoDetailForm.moneySort"  placeholder="金额排序" clearable size="small">
                         <el-option label="从大到小" value="1" ></el-option>
                         <el-option label="从小到大" value="2" ></el-option>
                     </el-select>
-                </el-form-item> -->
+                </el-form-item>
+                <el-form-item label="起始ID" class="form_right25">
+                    <el-input v-model="userInfoDetailForm.startID" clearable placeholder="起始ID"  size="small"></el-input>
+                </el-form-item>
+                <el-form-item label="结束ID" class="form_right25">
+                    <el-input v-model="userInfoDetailForm.endID" clearable placeholder="结束ID"  size="small"></el-input>
+                </el-form-item>
+                
+
                 <el-form-item class="form_margin0 content_btn">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>
@@ -189,6 +192,7 @@ import { alertPassword,messageTip } from '@/utils/ele'
 import { userUnbindMer, userUnbindArea } from '@/require'
 import { getUserMonthlyInfo } from '@/require/userManage'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
+import { mapState } from 'vuex'
 export default {
     data(){
         return {
@@ -202,13 +206,18 @@ export default {
                 nowPage: 1, //当前页数   
         }
     },
+    computed: {
+        ...mapState(['userInfo'])
+    },
     components: {MyPagination,bindMerOrArea},
     created(){
         if(JSON.stringify(this.$route.query) != "{}"){
             this.userInfoDetailForm= {...this.$route.query}
             this.nowPage= parseInt(this.userInfoDetailForm.currentPage) || 1
         }
-        this.asyGetUserInfo(this.userInfoDetailForm)
+        // 当 condition 为1的时候，超级管理元请求的数据为空，否则，则为正常请求
+        this.userInfoDetailForm.condition= this.userInfoDetailForm.condition == void 0 ? 1 : this.userInfoDetailForm.condition
+        this.asyGetUserInfo({...this.userInfoDetailForm})
     },
     methods: {
         getPage(page){ //分页发改变时，触发回调
@@ -285,8 +294,9 @@ export default {
              }
          },
          handleSearch(){ //点击搜索查询
-            this.$router.push({query:{... this.userInfoDetailForm,currentPage: 1}})
-            this.asyGetUserInfo({... this.userInfoDetailForm,currentPage: 1})
+            this.$router.push({query:{... this.userInfoDetailForm,currentPage: 1,condition: 0}})
+            this.userInfoDetailForm= this.$route.query
+            this.asyGetUserInfo(this.userInfoDetailForm)
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },
         backFn(data){ //绑定商户或小区回调，修改自己的值

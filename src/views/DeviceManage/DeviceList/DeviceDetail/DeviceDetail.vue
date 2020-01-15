@@ -1290,7 +1290,11 @@ export default {
                     messageTip('error','获取端口状态失败')
                     return
 				}
-                row= {...data}
+                Vue.set(row,'portStatus',res.portstatus)
+                Vue.set(row,'elec',res.elec)
+                Vue.set(row,'time',res.time)
+                Vue.set(row,'power',res.power)
+                Vue.set(row,'updateTime',parseInt(res.updatetime))
             }).catch(err=>{ 
                 loading.close()
             })

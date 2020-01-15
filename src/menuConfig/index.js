@@ -50,11 +50,16 @@ export const superAdminMenuList= [
                 link: '/usermanage/userInfo',
                 index: '1-1'
             },
-             {
+            {
                 title: '操作信息',
                 link: '/usermanage/userHandleInfo',
                 index: '1-2'
-            }
+            },
+            {
+                title: '代理商信息',
+                link: '/usermanage/agentManage',
+                index: '1-3'
+            },
         ]
     },
      {

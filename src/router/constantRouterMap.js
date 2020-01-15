@@ -134,6 +134,22 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/usermanage/agentManage',
+        name: '代理商信息',
+        component: ()=> import('@/views/UserManage/AgentManage/AgentManage'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
+      {
+        path: '/usermanage/agentManage/agentManageDetail',
+        name: '代理商详情',
+        component: ()=> import('@/views/UserManage/AgentManage/AgentManageDetail/AgentManageDetail'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
        // 用户管理 <==================
       //  交易记录TradeRecord
       {

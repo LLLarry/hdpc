@@ -157,3 +157,41 @@ export const updateMerPayTem= function (data){
              data: data
          })
 }
+
+/**
+ * 修改商家授权
+ */
+
+export const updatesetAgent= function (data){
+    return ajax({
+             url: '/AccountInfo/setAgent',
+             data: data
+         })
+}
+
+/**
+ * 查询代理商列表
+ */
+
+export const selectAgent= function (data){
+    return ajax({
+             url: '/AccountInfo/selectAgent',
+             data: data
+         })
+}
+
+/**
+ * 通过id查询代理商详情信息
+ */
+
+export const selectAgentUnderMer= function (data){
+    return ajax({
+             url: '/AccountInfo/selectAgentUnderMer',
+             data: data
+         })
+}
+
+
+
+
+

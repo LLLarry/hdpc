@@ -123,8 +123,22 @@
                 <el-table-column
                 prop="money"
                 label="操作金额"
-                min-width="100"
+                min-width="130"
                 >
+                <template slot-scope="scope">
+                    <div>
+                    充值金额：
+                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.money.toFixed(2)}}</el-link>
+                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.money.toFixed(2)}}</el-link>
+                    <el-link v-else :underline="false" type="info">{{scope.row.money.toFixed(2)}}</el-link>
+                    </div>
+                    <div>
+                    赠送金额：
+                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                    <el-link v-else :underline="false" type="info">{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                    </div>
+                </template>
                 </el-table-column>
 
                 <el-table-column
@@ -133,9 +147,9 @@
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.accountmoney}}</el-link>
-                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.accountmoney}}</el-link>
-                    <el-link v-else :underline="false" type="info">{{scope.row.accountmoney}}</el-link>
+                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.accountmoney.toFixed(2)}}</el-link>
+                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.accountmoney.toFixed(2)}}</el-link>
+                    <el-link v-else :underline="false" type="info">{{scope.row.accountmoney.toFixed(2)}}</el-link>
                 </template>
                 </el-table-column>
 
@@ -144,6 +158,9 @@
                 label="卡余额"
                 min-width="100"
                 >
+                 <template slot-scope="scope">
+                    {{ scope.row.balance.toFixed(2) }}
+                </template>
                 </el-table-column>
 
                 <el-table-column

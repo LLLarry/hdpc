@@ -112,15 +112,29 @@
                 </el-table-column>
                 <el-table-column
                 prop="relevawalt"
-                label="金额"
+                label="充值金额"
                 min-width="100"
                 >
                 <template slot-scope="scope">
                     <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${scope.row.uid}`" v-if="scope.row.relevawalt == 1">
-                        <el-link type="primary">{{scope.row.touristbalance}}</el-link>
+                        <el-link type="primary">{{scope.row.touristbalance.toFixed(2)}}</el-link>
                     </router-link>
                      <router-link :to="`/iccardManage/onlineCardConsume?cardnumber=${scope.row.cardID}`" v-if="scope.row.relevawalt == 2">
-                        <el-link type="primary">{{scope.row.money}}</el-link>
+                        <el-link type="primary">{{scope.row.money.toFixed(2)}}</el-link>
+                    </router-link>
+                </template>
+                </el-table-column>
+                <el-table-column
+                prop="sendmoney"
+                label="赠送金额"
+                min-width="100"
+                >
+                <template slot-scope="scope">
+                    <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${scope.row.uid}`" v-if="scope.row.relevawalt == 1">
+                        <el-link type="primary">{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                    </router-link>
+                     <router-link :to="`/iccardManage/onlineCardConsume?cardnumber=${scope.row.cardID}`" v-if="scope.row.relevawalt == 2">
+                        <el-link type="primary">{{scope.row.sendmoney.toFixed(2)}}</el-link>
                     </router-link>
                 </template>
                 </el-table-column>

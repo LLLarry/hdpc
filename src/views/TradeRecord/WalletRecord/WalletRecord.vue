@@ -99,10 +99,27 @@
                 <el-table-column
                 prop="money"
                 label="金额"
+                min-width="140"
+                >
+                <template slot-scope="scope">
+                    <div>
+                        充值金额：
+                        <el-link :type=" scope.row.tomoney >= 0 ?  'success' : 'danger' " :underline="false">{{scope.row.money.toFixed(2)}}</el-link>
+                    </div>
+                    <div>
+                        赠送金额：
+                        <el-link :type=" scope.row.tomoney >= 0 ?  'success' : 'danger' " :underline="false">{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                    </div>
+                </template>
+                </el-table-column>
+
+                <el-table-column
+                prop="tomoney"
+                label="到账金额"
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                        <el-link :type=" scope.row.money >= 0 ?  'success' : 'danger' " :underline="false">{{scope.row.money.toFixed(2)}}</el-link>
+                    <el-link :type=" scope.row.tomoney >= 0 ?  'success' : 'danger' " :underline="false">{{scope.row.tomoney.toFixed(2)}}</el-link>
                 </template>
                 </el-table-column>
 

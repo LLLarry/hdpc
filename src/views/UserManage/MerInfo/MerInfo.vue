@@ -142,7 +142,7 @@
                      <el-button size="mini" icon="el-icon-edit" @click="handleRateBtn({row: scope.row,type:2})"> {{scope.row.rate}} ‰</el-button>
                   </template>
                 </el-table-column>
-                <el-table-column
+               <el-table-column
                 prop="rank"
                 label="授权"
                 v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
@@ -355,29 +355,30 @@
             >    
                 <el-form label-position="top" :model="merRankVersionForm">
                     <el-form-item label="商户名" class="form_right25">
-                        <el-input v-model="merRankVersionForm.muusername" placeholder="商户名" disabled clearable ></el-input>
+                        <el-input v-model="merRankVersionForm.username" placeholder="商户名" disabled clearable ></el-input>
                     </el-form-item>
                     <el-form-item label="商户电话" class="form_right25">
                         <el-input v-model="merRankVersionForm.phone_num" placeholder="手机号" disabled clearable ></el-input>
                     </el-form-item>
                     <el-form-item label="商户权限" class="form_right25" style="width: 100%;">
-                        <el-select v-model="merRankVersionForm.hardversion"  placeholder="选择商户权限"  style="width: 100%;">
-                            <el-option label="代理商" value="3" ></el-option>
-                            <el-option label="商户" value="2" ></el-option>
+                        <el-select v-model="merRankVersionForm.rank"  placeholder="选择商户权限"  style="width: 100%;">
+                            <el-option label="商户" :value="2" ></el-option>
+                            <el-option label="代理商" :value="3" ></el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="merRankVersion = false" size="middle">取 消</el-button>
-                    <el-button type="primary" @click="merRankVersion" size="middle">确 定</el-button>
+                    <el-button type="primary" @click="HandlemerRankVersion" size="middle">确 定</el-button>
                 </span>
                 </el-dialog>
+               
    </div>
 </template>
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
-import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem } from '@/require/userManage'
+import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem,updatesetAgent } from '@/require/userManage'
 import { messageTip , alertPassword } from '@/utils/ele'
 import { mapState } from 'vuex'
 export default {
@@ -433,6 +434,7 @@ export default {
             },
             merRankVersion: false, // 商户授权显示
             merRankVersionForm: {}, //商户授权容器
+            changeMerRankRow: {}, //商户授权存储row的容器
        }
    },
     components: {
@@ -608,12 +610,26 @@ export default {
         },
         handChargeRank(row){ //改变授权信息
             alertPassword(()=>{
-            //   let {}
-              this.merRankVersionForm= {}
+              this.changeMerRankRow= row
+              let { username,phone_num,rank,id }=  row
+              this.merRankVersionForm= { username,phone_num,rank,id}
               this.merRankVersion= true
             })
+        },
+        HandlemerRankVersion(){ //点击提交商户权限修改
+            let {id,rank}= this.merRankVersionForm
+            updatesetAgent({merId: id,rank}).then(res=>{
+                this.merRankVersion= false
+                if(res.code == 200){
+                    messageTip('success', '设置成功')
+                    this.changeMerRankRow.rank= rank
+                }else{
+                    messageTip('error', '设置失败')
+                }
+            }).catch(err=>{
+                this.merRankVersion= false
+            })
         }
-
     }
 }
 </script>

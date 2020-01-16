@@ -15,7 +15,7 @@
                      <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                 </el-form-item>
         </el-form>
-        <el-table :data="gridData" height="70vh" v-loading="loading">
+        <el-table :data="gridData" :max-height="warpHeight" v-loading="loading" border>
             <el-table-column property="username" label="昵称" min-width="150">
                 <template slot-scope="{row}">
                     {{row.username ? row.username : '— —'}}
@@ -26,9 +26,9 @@
                     {{row.realname ? row.realname : '— —'}}
                 </template>
             </el-table-column>
-            <el-table-column property="phoneNum" label="手机号" min-width="120">
+            <el-table-column property="phone_num" label="手机号" min-width="120">
                 <template slot-scope="{row}">
-                    {{row.phoneNum ? row.phoneNum : '— —'}}
+                    {{row.phone_num ? row.phone_num : '— —'}}
                 </template>
             </el-table-column>
             <el-table-column property="address" label="绑定" min-width="120">
@@ -40,7 +40,7 @@
     </el-dialog>
     <!-- 绑定小区 -->
     <el-dialog title="绑定小区" :visible.sync="bindInfo.show" width="700px" custom-class="bindDialog" :modal="false" v-if="bindInfo.from == 2">
-        <el-table :data="gridData" height="70vh"  v-loading="loading">
+        <el-table :data="gridData" height="70vh"  v-loading="loading" border>
             <el-table-column property="name" label="小区名称" min-width="150">
                 <template slot-scope="{row}">
                     {{row.name ? row.name : '— —'}}
@@ -71,8 +71,13 @@ export default {
             gridData:[],
             //list: [], //存放请求过来的数据的
             bindMerOrAreaForm: {},
-            loading: false
+            loading: false,
+            warpHeight: 500
         }
+    },
+    created(){
+        const warpHeight= (document.documentElement.clientHeight - 80)*0.75
+        this.warpHeight= warpHeight
     },
     props: ['bindInfo'], //{ show: true/false, from: 1/2, id }  1、商户，2来自设备
     /* 设备绑定商户信息框 用户页面传的信息{show: true,from: 1,page: {id: 125}}  page里是用户的信息，包含id等，设备详情传的信息{show: true,from: 1,page: {code: '000001'}}*/
@@ -122,7 +127,7 @@ export default {
                         messageTip('success','绑定成功')
                         this.$emit('backFn',{from: 1,merid,id:this.bindInfo.page.id })
                     }else{
-                        messageTip('success','绑定失败')
+                        messageTip('error','绑定失败')
                     }
                 }).catch(error=>{
                     
@@ -134,7 +139,7 @@ export default {
                         messageTip('success','绑定成功')
                         this.$emit('backFn',{from: 1,merid})
                     }else{
-                        messageTip('success','绑定失败')
+                        messageTip('error','绑定失败')
                     }
                 }).catch(err=>{})
                 

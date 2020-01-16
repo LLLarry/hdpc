@@ -155,6 +155,21 @@
                   </template>
                 </el-table-column>
 
+                <el-table-column
+                prop="agentname"
+                label="绑定/解绑"
+                min-width="120">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.rank== 2">
+                            <el-button type="danger" size="mini" v-if="scope.row.agent_id != 0" @click="handUnbindMer(scope.row)">解绑代理商</el-button>
+                            <el-button type="primary" size="mini" v-else @click="handleBindAgent(scope.row)">绑定代理商</el-button>
+                        </div>
+                        <div v-else>
+                            <el-button type="primary" size="mini" disabled plain>禁止操作</el-button>
+                        </div>
+                    </template>
+                </el-table-column>
+
                  <el-table-column
                 prop="totalline"
                 label="设备数量"
@@ -173,6 +188,15 @@
                         <router-link :to="`/deviceManage/deviceList?phone=${scope.row.phone_num}&line=1`">
                              <el-link type="primary">{{scope.row.onlines}}</el-link>
                         </router-link>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                prop="agentname"
+                label="所属代理商"
+                min-width="100">
+                     <template slot-scope="scope">
+                        {{ scope.row.agentname == null ? '— —' : scope.row.agentname }}
                     </template>
                 </el-table-column>
 
@@ -372,15 +396,19 @@
                     <el-button type="primary" @click="HandlemerRankVersion" size="middle">确 定</el-button>
                 </span>
                 </el-dialog>
-               
+                
+                <!-- 绑定代理商 -->
+                <BindMerToAgent :bindInfo="bindInfo" @backFn="backFn" />     
    </div>
 </template>
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
 import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem,updatesetAgent } from '@/require/userManage'
-import { messageTip , alertPassword } from '@/utils/ele'
+import { messageTip , alertPassword , confirDelete} from '@/utils/ele'
+import { merUnbindAgent } from '@/require'
 import { mapState } from 'vuex'
+import BindMerToAgent from '@/components/common/bindMerToAgent'
 export default {
 
    data(){
@@ -435,10 +463,12 @@ export default {
             merRankVersion: false, // 商户授权显示
             merRankVersionForm: {}, //商户授权容器
             changeMerRankRow: {}, //商户授权存储row的容器
+            bindInfo: {show: false}
        }
    },
     components: {
-       MyPagination 
+       MyPagination,
+       BindMerToAgent
     },
     beforeCreate(){
 
@@ -454,8 +484,9 @@ export default {
     },
     methods: {
         getPage(page){ //分页发改变时，触发回调
-            let obj= {...this.merInfoForm,currentPage:page}
-            this.handleMerInfoData(obj)
+            this.merInfoForm= {...this.merInfoForm,currentPage:page}
+            this.$router.push({query: this.merInfoForm})
+            this.handleMerInfoData(this.merInfoForm)
             this.nowPage = page
         },
         handleSetClose(){ //set模态框关闭之前
@@ -624,11 +655,31 @@ export default {
                     messageTip('success', '设置成功')
                     this.changeMerRankRow.rank= rank
                 }else{
-                    messageTip('error', '设置失败')
+                    messageTip('error', res.result || '设置失败')
                 }
             }).catch(err=>{
                 this.merRankVersion= false
             })
+        },
+        handleBindAgent(row){
+            this.bindInfo= {show: true,from: 2,page: {id: row.id}}
+        },
+        handUnbindMer(row){ //解绑商户
+            confirDelete('确认解绑此商户吗？',()=>{
+                merUnbindAgent({merId: row.id}).then(res=>{
+                    if(res.code == 200){
+                        messageTip('success','解绑成功')
+                        this.handleMerInfoData(this.merInfoForm)
+                    }else{
+                        messageTip('danger','解绑失败')
+                    }
+                }).catch(err=>{
+
+                })
+            })
+        },
+        backFn(){
+            this.handleMerInfoData(this.merInfoForm)
         }
     }
 }

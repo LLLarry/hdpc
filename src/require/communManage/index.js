@@ -10,3 +10,6 @@ export const getCommunInfo= function (data){
              data: data
          })
 }
+
+
+

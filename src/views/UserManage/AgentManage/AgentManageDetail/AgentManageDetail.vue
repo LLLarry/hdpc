@@ -2,8 +2,8 @@
   <div class="agentManageDetailDetail">
 
          <el-card class="box-card">
-            <span style="margin-bottom: 15px;"><span style="color: #67C23A;">{{username}}</span> 代理商详情</span>
-            <el-button style="float: right; margin-bottom: 15px;" type="primary" size="small" icon="el-icon-plus">绑定商户</el-button>
+            <span style="margin-bottom: 15px;"><span style="color: #67C23A;" >{{username}}</span> 代理商详情</span>
+            <el-button style="float: right; margin-bottom: 15px;" type="primary" size="small" icon="el-icon-plus" @click="handleShowAgentList">绑定商户</el-button>
 
             <el-table
                 :data="tableData"
@@ -94,16 +94,21 @@
                 min-width="120"
                 >
                 <template slot-scope="{row}">
-                    <el-button type="danger" size="mini" plain icon="el-icon-delete">解绑商户</el-button>
+                    <el-button type="danger" size="mini" plain icon="el-icon-delete" @click="handUnbindMer(row)">解绑商户</el-button>
                 </template>
                 </el-table-column>
             </el-table>
         </el-card>
+
+        <BindMerToAgent :bindInfo="bindInfo" @backFn="backFn" />
   </div>
 </template>
 
 <script>
 import { selectAgentUnderMer } from '@/require/userManage'
+import BindMerToAgent from '@/components/common/bindMerToAgent'
+import { confirDelete,messageTip } from '@/utils/ele'
+import { merUnbindAgent } from '@/require'
 export default {
     data(){
         return {
@@ -111,9 +116,11 @@ export default {
             loading: false,
             tableData: [], //每条数据
             agentId: '', //代理商ID
-            username: '' //商户名称
+            username: '', //商户名称
+            bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
         }
     },
+    components:{BindMerToAgent},
     created(){
        let {id: agentId,username}= this.$route.query
        this.agentId= agentId
@@ -139,7 +146,27 @@ export default {
                      _this.loading= false
             }
         },
-        
+        handleShowAgentList(){ //绑定商户弹框
+            this.bindInfo= {show: true, from: 1, page: {id: this.agentId}}
+            this.bindInfo.show= true
+        },
+        handUnbindMer(row){ //解绑商户
+            confirDelete('确认解绑此商户吗？',()=>{
+                merUnbindAgent({merId: row.id}).then(res=>{
+                    if(res.code == 200){
+                        messageTip('success','解绑成功')
+                        this.asyGetSelectAgentUnderMerUnderMer({agentId: this.agentId})
+                    }else{
+                        messageTip('danger','解绑失败')
+                    }
+                }).catch(err=>{
+
+                })
+            })
+        },
+        backFn(){
+            this.asyGetSelectAgentUnderMerUnderMer({agentId: this.agentId})
+        }
     }
 }
 </script>

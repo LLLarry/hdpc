@@ -134,3 +134,24 @@ export const unbindDevice= function (data){
     })
 }
 
+/**
+ * 代理商绑定商户
+ */
+export const merBindAgent= function (data){ 
+    return ajax({
+             url: '/AccountInfo/bindAgent',
+             data: data
+         })
+}
+
+/**
+ * 代理商解绑商户
+ */
+export const merUnbindAgent= function (data){ 
+    return ajax({
+             url: '/AccountInfo/removeMer',
+             data: data
+         })
+}
+
+

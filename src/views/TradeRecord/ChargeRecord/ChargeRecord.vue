@@ -179,10 +179,18 @@
                 <el-table-column
                 prop="payType"
                 label="支付方式"
-                min-width="65"
+                min-width="85"
                 >
                 <template slot-scope="{row}">
-                    {{row.paytype == 1 ? "钱包" : row.paytype == 2 ? "微信" : row.paytype == 3 ? "支付宝": row.paytype == 4 ? "包月下发数据" : row.paytype == 5 ? "投币" : row.paytype == 6 ? "离线卡" : row.paytype == 7 ? "在线卡" : "— —"}}
+                    {{row.paytype == 1 ? "钱包" : row.paytype == 2 ? "微信" : row.paytype == 3 ? "支付宝": row.paytype == 4 ? "包月下发数据" : row.paytype == 5 ? "投币" : row.paytype == 6 ? "刷卡" : row.paytype == 7 ? "刷卡" : "— —"}}
+                    <el-popover
+                        v-if="row.paytype == 6 || row.paytype == 7"
+                        placement="right"
+                        width="200"
+                        trigger="hover"
+                        content="刷卡包含在线卡和离线卡">
+                        <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
+                    </el-popover>
                 </template>
                 </el-table-column>
                 <el-table-column

@@ -2,7 +2,7 @@
 //import VueRouter from 'vue-router' // cdn模式
 import store from '../store' //引入store调用getters方法
 import Util from '@/utils/util'
-import {constantRouterMapSuperAdmin,constantRouterMapAdmin} from './constantRouterMap' 
+import {constantRouterMapSuperAdmin,constantRouterMapAdmin,constantRouterMapAgent} from './constantRouterMap' 
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -48,7 +48,10 @@ router.beforeEach((to,from,next) => {
         routesList= constantRouterMapAdmin
       }else if(userInfo.classify === 'superAdmin'){
         routesList= constantRouterMapSuperAdmin
+      }else if(userInfo.classify === 'Agent'){
+        routesList= constantRouterMapAgent
       }
+      
       router.addRoutes(routesList)  //将过滤出来的路由添加到router中
       store.commit('storeAsyRouterMap',routesList) //将新添加的路由保存在vuex中 
       next({...to}) //调往目标路径

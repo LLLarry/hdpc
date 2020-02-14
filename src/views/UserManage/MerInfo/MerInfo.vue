@@ -40,12 +40,13 @@
                 v-loading="loading"
                 style="width: 100%"
                 :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                :row-style="rowClass"
                 >
                 <el-table-column
                 prop="serialNum"
                 label="序号"
                 min-width="70"
-                fixed
+                :fixed="userInfo.classify === 'Agent' ? false :true"
                 >
                 <template slot-scope="scope">
                      {{(nowPage-1)*10+scope.$index + 1}}
@@ -55,7 +56,7 @@
                 prop="username"
                 label="昵称"
                 min-width="130"
-                fixed
+                :fixed="userInfo.classify === 'Agent' ? false :true"
                 >
                 <template slot-scope="scope">
                      {{scope.row.username && scope.row.username.length >0 ? scope.row.username : '— —'}}
@@ -158,6 +159,7 @@
                 <el-table-column
                 prop="agentname"
                 label="绑定/解绑"
+                v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
                 min-width="120">
                     <template slot-scope="scope">
                         <div v-if="scope.row.rank== 2">
@@ -200,7 +202,7 @@
                     </template>
                 </el-table-column>
 
-                 <el-table-column
+                <el-table-column
                 prop="bankNum"
                 label="银行卡"
                 min-width="100">
@@ -217,6 +219,25 @@
                 <template slot-scope="scope">
                     {{ scope.row.create_time|fmtDate}}
                 </template>
+                </el-table-column>
+                <!-- 这个是代理商名下，查看商户详情的 -->
+                <el-table-column
+                    prop="bankNum"
+                    label="查看商户"
+                    min-width="120"
+                    v-if="userInfo.classify && userInfo.classify === 'Agent'"
+                    >
+                        <template slot-scope="scope">
+                            <!-- 当是代理商自己的时候，走上面的，否则走下面的 -->
+                            <div v-if="userInfo.token == scope.row.id">
+                                <el-button style="width: 100px;" type="primary" size="small" @click="selectScanMer(2,scope.row,scope.$index)" v-if="agentSelectMerInfo.id == '' || agentSelectMerInfo.id == scope.row.id" disabled>取消选择</el-button>
+                                <el-button style="width: 100px;" type="primary" plain size="small" @click="selectScanMer(1,scope.row,scope.$index)" v-else>选中此商户</el-button>
+                            </div>
+                            <div v-else>
+                                <el-button style="width: 100px;" type="primary" plain size="small" @click="selectScanMer(1,scope.row,scope.$index)" v-if="agentSelectMerInfo.id !== scope.row.id">选中此商户</el-button>
+                                <el-button style="width: 100px;" type="primary" size="small" @click="selectScanMer(2,scope.row,scope.$index)" v-else >取消选择</el-button>
+                            </div>
+                        </template>
                 </el-table-column>
             </el-table>
         </el-card>
@@ -407,7 +428,7 @@ import MyPagination from '@/components/common/MyPagination'
 import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem,updatesetAgent } from '@/require/userManage'
 import { messageTip , alertPassword , confirDelete} from '@/utils/ele'
 import { merUnbindAgent } from '@/require'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import BindMerToAgent from '@/components/common/bindMerToAgent'
 export default {
 
@@ -463,7 +484,7 @@ export default {
             merRankVersion: false, // 商户授权显示
             merRankVersionForm: {}, //商户授权容器
             changeMerRankRow: {}, //商户授权存储row的容器
-            bindInfo: {show: false}
+            bindInfo: {show: false},
        }
    },
     components: {
@@ -480,9 +501,11 @@ export default {
         this.handleMerInfoData(this.merInfoForm)
     },
     computed: {
-        ...mapState(['userInfo'])
+        //agentSelectMerId 代理商选择名下的商户的id
+        ...mapState(['userInfo','agentSelectMerInfo'])
     },
     methods: {
+        ...mapMutations(['setAgentSelectMerInfo']),
         getPage(page){ //分页发改变时，触发回调
             this.merInfoForm= {...this.merInfoForm,currentPage:page}
             this.$router.push({query: this.merInfoForm})
@@ -539,7 +562,6 @@ export default {
             } 
         },
         handleRateBtn(data){ //点击修改费率
-        console.log(data)
         let {username="— —",realname="— —",feerate,rate,id,bankid} = data.row
         let { type }= data
              alertPassword(()=>{
@@ -664,6 +686,41 @@ export default {
         handleBindAgent(row){
             this.bindInfo= {show: true,from: 2,page: {id: row.id}}
         },
+        selectScanMer(from,row,selectRowIndex){ //选择/取消选择的商户
+            if(from === 1){ //选择商户
+                this.setAgentSelectMerInfo({
+                    id:row.id,
+                    name: row.username || row.realname || ''
+                })
+                this.selectRowIndex= selectRowIndex
+                messageTip('success',`已成功选择 ${row.username || row.realname || ''} 为查看商户`)
+            }else if(from === 2){ //取消商户
+                this.setAgentSelectMerInfo({
+                    id:'',
+                    name:''
+                })
+                this.selectRowIndex= 0
+                messageTip('success',`取消选择商户成功`)
+            }
+            
+        },
+        rowClass({row,rowIndex}){ //改变选中行的颜色
+            // 当只有代理商时才返回背景颜色 
+            if(this.userInfo.classify === 'Agent'){
+                if(this.userInfo.token == row.id){ //当索引等于0时，判断 this.agentSelectMerInfo.id来让第一行为默认
+                    if(row.id == this.agentSelectMerInfo.id || this.agentSelectMerInfo.id == ''){
+                    return {"backgroundColor": 'rgba(255,0,0,.1)'}
+                    }
+                }else{
+                    if(row.id == this.agentSelectMerInfo.id ){
+                    return {"backgroundColor": 'rgba(255,0,0,.1)'}
+                    }
+                }
+            }else{
+                return {}
+            }  
+           
+        },
         handUnbindMer(row){ //解绑商户
             confirDelete('确认解绑此商户吗？',()=>{
                 merUnbindAgent({merId: row.id}).then(res=>{
@@ -719,6 +776,9 @@ export default {
                   border-left: none;
              }
         }
+    }
+    .el-table tbody tr:hover>td { 
+        background-color:transparent !important;
     }
 }
 </style>

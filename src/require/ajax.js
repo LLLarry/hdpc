@@ -13,6 +13,13 @@ if (process.env.NODE_ENV === "development"){ //开发环境
   baseURL= 'http://localhost'
 }
 
+ const filterUrlList= ['/dataCollectInfo/deviceEarningsData','/dataCollectInfo/dealerEarningsData','/AccountInfo/getAccountListInfo',
+'/AccountInfo/accountOperateInfo','/orderData/orderTradeRecordData','/orderData/orderChargeRecordData','/orderData/orderOfflineRecordData',
+'/orderData/orderinCoinsRecordData','/orderData/orderPackageMonthData','/deviceData/getDeviceData','/deviceData/getBluetoothDeviceData','/deviceData/inquireDeviceLogData',
+'/deviceData/inquireDeviceOperationData','/orderData/orderOnlineCardData','/orderData/orderOnlineOperateData','/orderData/orderOnlineCardRecordData',
+'/areaData/areaManageData'
+]
+
 const service = axios.create({ // 创建axios实例           
         timeout: 120000, // 请求超时时间
         headers: {
@@ -31,10 +38,18 @@ service.interceptors.request.use(config => { //请求拦截器
             cancelTokenArr[i].cancelToken('多次请求取消')
           }
         }
+        // 这里是筛选地址 代理商需要
+        let agentSelectmerid= store.state.agentSelectMerInfo.id
+        if(agentSelectmerid !== ''){ //说明代理商选择查看的商户了
+          if(filterUrlList.includes(config.url)){
+            config.params.agentSelectmerid= agentSelectmerid
+          }
+        }
+        
         config.cancelToken = new axios.CancelToken(function (cancel) { //将请求的cancelToken存到 vuex中的pushToken中
           store.commit('pushToken', {cancelToken: cancel,url:config.url})
         })
-      
+        
         return config
       }, error => {
         Promise.reject(error)

@@ -358,7 +358,7 @@ export default {
                             data: powerList
                             }]
                         });
-                    let paytypeStr= powerInfo.paytype == 1 ? "钱包" : powerInfo.paytype == 2 ? "微信" : powerInfo.paytype == 3 ? "支付宝": powerInfo.paytype == 4 ? "包月下发数据" : powerInfo.paytype == 5 ? "投币" : powerInfo.paytype == 6 ? "离线卡" : powerInfo.paytype == 7 ? "在线卡" : "— —"
+                    let paytypeStr= powerInfo.paytype == 1 ? "钱包" : powerInfo.paytype == 2 ? "微信" : powerInfo.paytype == 3 ? "支付宝": powerInfo.paytype == 4 ? "包月下发数据" : powerInfo.paytype == 5 ? "投币" : powerInfo.paytype == 6 ? "刷卡" : powerInfo.paytype == 7 ? "刷卡" : "— —"
                     this.chargeInfo= [
                         {type: '订单号',content: powerInfo.ordernum},
                         {type: '付款金额',content: `${powerInfo.paymoney}元`},

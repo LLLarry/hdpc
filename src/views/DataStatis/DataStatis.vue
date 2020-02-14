@@ -134,22 +134,40 @@
                </table>
             </div>
         </el-card>
+
+        <!-- 代理商操作： 查看商户信息提示框 -->
+        <el-dialog title="提示" :visible.sync="agentTipDialog" width="720px" :before-close="handleClose" v-if="userInfo.classify == 'Agent'">
+            <div>
+                <p style="margin-bottom: 30px;  font-size: 16px; line-height: 1.8em;"> 代理商可以通过自己的账户，查看自己名下商户的后台信息（包括：<strong>用户管理</strong>、<strong>交易记录</strong>、<strong>设备管理</strong>、<strong>IC卡管理</strong>、<strong>小区管理</strong> 等）</p>
+                <h2 style="margin-bottom: 10px; font-size: 16px;">查看步骤：</h2>
+                <el-steps :active="4" align-center>
+                    <el-step title="步骤1" description="打开“用户管理”"></el-step>
+                    <el-step title="步骤2" description="打开“商户信息”"></el-step>
+                    <el-step title="步骤3" description="选择要查看的商户（默认选择自己）"></el-step>
+                    <el-step title="步骤4" description="点击“设备列表”即可查看选择商户的设备信息"></el-step>
+                </el-steps>
+                <p style="margin-top: 15px;  font-size: 16px;">注：选中查看商户之后，在右上角会有“<span class="el-icon-chat-dot-square" style="font-size: 18px;"></span>”图标，鼠标移到上面会显示当前选中的商户</p>
+                <div style="text-align: center; margin: 30px 0 20px 0;">
+                    <el-button type="primary" style="width: 350px;" @click="handlegoToMerinfo">立即前往</el-button>
+                </div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import {Loading} from 'element-ui'
 import { handleDataStatis,handleDataStatisAdmin } from '@/require/datastatis'
-import { mapState } from 'vuex'
+import { mapState,mapMutations } from 'vuex'
 export default {
     data(){
         return {
             dataStatisInfo: {},
-            loading: null
+            loading: null,
         }
     },
     computed: {
-        ...mapState(['userInfo'])
+        ...mapState(['userInfo','agentTipDialog'])
     },
     created(){
         this.handleDataStatisInfo()
@@ -161,6 +179,7 @@ export default {
        this.loading && this.loading.close()
     },
     methods:{
+        ...mapMutations(['setAgentTipDialog']),
         async handleDataStatisInfo(){
             let loading= Loading.service({
                         lock: true,
@@ -180,6 +199,13 @@ export default {
                 }
                 loading.close()
             }
+        },
+        handlegoToMerinfo(){
+            this.setAgentTipDialog(false) //设置提示框关闭
+            this.$router.push({path: '/usermanage/merInfo'})
+        },
+        handleClose(){
+            this.setAgentTipDialog(false) //设置提示框关闭
         }
     },
     

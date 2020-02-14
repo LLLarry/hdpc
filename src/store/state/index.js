@@ -10,7 +10,12 @@ let obj= {
     menuList: [], //菜单列表
     isShowSlide: true, //默认显示菜单
     cancelTokenArr: [], // 取消请求token数组
-    temDetail: {}
+    temDetail: {},
+    agentSelectMerInfo: {
+        id: '',
+        name: ''
+    }, //代理商选择的商户信息
+    agentTipDialog: true, //汇总页面 代理商提示是否显示,默认第一次显示
 }
 let state= JSON.parse(sessionStorage.getItem('state') || JSON.stringify(obj))
 export default state

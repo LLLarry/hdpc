@@ -22,6 +22,11 @@ export default {
         state.isShowSlide= null, //slide状态
         state.cancelTokenArr= []
         state.temDetail= {}
+        state.agentSelectMerInfo= {
+            id: '',
+            name: ''
+        }
+        state.agentTipDialog= true
         sessionStorage.removeItem('state')
     },
     [UPDATEUSERINFO](state,data){ //更新用户信息
@@ -84,6 +89,14 @@ export default {
     },
     updateTemDetail(state,data){
         state.temDetail=data
+        sessionStorage.setItem('state',JSON.stringify(state))
+    },
+    setAgentSelectMerInfo(state,data){ //设置代理商选择的商户id
+        state.agentSelectMerInfo=data
+        sessionStorage.setItem('state',JSON.stringify(state))
+    },
+    setAgentTipDialog(state,data){
+        state.agentTipDialog=data
         sessionStorage.setItem('state',JSON.stringify(state))
     }
 }

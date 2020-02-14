@@ -6,7 +6,7 @@
 
 <script>
 import SlideLink from './SlideLink'
-import {superAdminMenuList,adminMenuList} from '../../menuConfig'
+import {superAdminMenuList,adminMenuList,agentMenuList } from '../../menuConfig'
 import {mapState} from 'vuex'
     export default {
         data(){
@@ -24,7 +24,9 @@ import {mapState} from 'vuex'
                     this.$store.commit('hadnleMenuList',adminMenuList) //更新菜单列表
                 }else if(this.userInfo.classify === 'superAdmin'){
                     this.$store.commit('hadnleMenuList',superAdminMenuList)
-                } 
+                }else if(this.userInfo.classify === 'Agent'){
+                    this.$store.commit('hadnleMenuList',agentMenuList)
+                }
             }
             // 去除vuex中的nowMenuLink当前连接的名称，传进去
             // this.activeItem= this.handleListToItemInfo(this.$store.state.nowMenuLink)

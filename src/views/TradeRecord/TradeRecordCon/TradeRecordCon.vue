@@ -307,6 +307,8 @@
                 </el-table-column>  
             </el-table>
          </el-card>
+         <!-- 导出excell -->
+         <!-- <el-button @click="export2Excel">导出Excell</el-button> -->
          <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
 
          <el-dialog title="合伙人金额明细" :visible.sync="dialogMoneyDetail" width="550px">
@@ -343,6 +345,7 @@ import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
 import { getTradeRecord,getPartnerIncomeDetail } from '@/require/tradeRecord'
 import Util from '@/utils/util'
+import Excel from '@/utils/excel'
 export default {
     data(){
         return {
@@ -431,8 +434,88 @@ export default {
             this.$router.push({query:{... this.tradeRecordConForm,currentPage: 1}})
             this.asyGetTradeRecord({... this.tradeRecordConForm,currentPage: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
+        },
+        export2Excel() {
+            //     import('@/vendor/Export2Excel').then(excel => {
+            //     const tHeader = ['Id', 'Title']
+            //     const filterVal = ['id', 'title']
+            //     const list = [
+            //         {id: 1, title: '标题1'},
+            //         {id: 2, title: '标题2'}
+            //     ]
+            //     const data = this.formatJson(filterVal, list)
+            //     excel.export_json_to_excel({
+            //     header: tHeader,
+            //     data,
+            //     filename: '测试excel',
+            //     autoWidth: true
+            //     })
+            // })
+           const tHeader= ["序号","订单号","用户名","商户名","设备(卡)号","设备类型","交易金额","商户金额","合伙人金额","订单状态","支付方式","来源","交易时间"]
+           const filterVal= ["index","ordernum","uusername","dealer","code","paysource","money","merMoney","partnerMoney","status","paytype","form","create_time"]
+
+           Excel({
+                tHeader: tHeader,
+                filterVal:  filterVal,
+                list: this.tableData,
+                filename: '交易记录',
+                formatJson: this.formatJson
+            })
+        },
+        formatJson(filterVal, list) {
+            return list.map((item,i)=>{
+                return filterVal.map((jtem)=>{
+                    let val
+                    if(jtem == 'index'){
+                        val= i+1
+                    }else if(['uusername','dealer'].includes(jtem)){
+                        val= item[jtem] == null ? '— —' : item[jtem]
+                    }else if(jtem == 'paysource'){
+                        if(item[jtem] == 5){
+                            val= '— —'
+                        }else{
+                            val= item.hardver=='00' ? "十路智慧款" : item.hardver=='01' ? "十路智慧款" : item.hardver=='02' ? "电轿款" : item.hardver=='03' ? "脉冲板子" :  item.hardver=='04' ? "离线充值机" : "— —"
+                        }
+                    }else if(['money'].includes(jtem)){
+                        if(item.status == 1){
+                            val= '+'+item[jtem]
+                        }else if(item.status == 2){
+                            val= '-'+item[jtem]
+                        }
+                    }else if(['merMoney'].includes(jtem)){
+                        if(item.status == 1){
+                            val= '+'+item.mermoney
+                        }else if(item.status == 2){
+                            val= '-'+item.mermoney
+                        }
+                    }else if(jtem == 'partnerMoney'){
+                        if(item.manmoney == 0){
+                            val= 0
+                        }else{
+                            if(item.status == 1){
+                                val= '+'+item[jtem]
+                            }else if(item.status == 2){
+                                val= '-'+item[jtem]
+                            }
+                        }
+                    }else if(jtem == 'status'){
+                        val= item[jtem] == 1 ? '正常' : item[jtem] == 2 ? '退款' : '— —'
+                    }else if(jtem == 'paytype'){
+                        val=  item.paytype == 1 ? '钱包' : item.paytype == 2 ? '微信' : item.paytype == 3 ? '支付宝' : item.paytype == 4 ? '微信小程序' : item.paytype == 5 ? '支付宝小程序' : item.paytype == 6 ? '虚拟充值' : '— —'
+                    }else if(jtem == 'form'){
+                        val= item.paysource == 1 ? "充电" : item.paysource == 2 ? "投币" : item.paysource == 3 ? "离线充值" : item.paysource == 4 ? "钱包" : item.paysource == 5 ? "在线卡" : item.paysource == 6 ? "包月卡" : "— —"
+                    }else if(jtem == 'create_time'){
+                        val= moment(item[jtem]).format('YYYY-MM-DD HH:mm:ss')
+                    }else {
+                        val= item[jtem]
+                    }
+
+                    return val
+                })
+            })
         }
-    }
+    },
+    
 }
 </script>
 

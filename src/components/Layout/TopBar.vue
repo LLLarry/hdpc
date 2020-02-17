@@ -16,7 +16,11 @@
                 <el-link type="danger" @click="handleLayout">退出登录</el-link>
                 <i :class="['iconfont' , isBig ? 'icon-quxiaoquanping_o' : 'icon-quanping']" @click="handleFullScreen(isBig)" ></i>
                 <span  class="selectMerIcon"  v-popover:popover>
-                    <span v-if="agentSelectMerInfo.id != '' " class="el-icon-chat-dot-square"></span>
+                    <div v-if="agentSelectMerInfo.id != '' ">
+                        <div>正在查看</div>
+                        <div class="span_content">{{agentSelectMerInfo.name}}</div>
+                    </div>
+                    <!-- <span v-if="agentSelectMerInfo.id != '' " class="el-icon-chat-dot-square"></span> -->
                 </span>
                 <span class="top_name">{{userInfo.userName}}</span>
                
@@ -32,9 +36,10 @@
             v-model="visible"
          >
             <p>当前代理商已选定查看商户   商户名: {{agentSelectMerInfo.name}}</p>
-            <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="handleCancleMerInfo">退出</el-button>
+            <div style="text-align: right; margin: 10px 0 0 0;">
+                <!-- <el-button size="mini" type="text" @click="visible = false">取消</el-button> -->
+                <el-button type="default" size="mini" @click="handleCancleMerInfo">退出选择</el-button>
+                <el-button size="mini" type="primary" @click="$router.push({path: '/usermanage/merInfo'})">切換商戶</el-button>
             </div>
         </el-popover>
     </div>
@@ -102,6 +107,11 @@
                .grid-content {
                     height: inherit;
                     line-height: 80px;
+                    .span_content {
+                       color: #fff;
+                       font-size: 14px;
+                       font-weight: bold;
+                    }
                     .menuIconCon {
                         i {
                             color: #555;
@@ -153,16 +163,22 @@
                             text-align: right;
                         }
                         .selectMerIcon {
-                            font-size: 27px;
-                            color: #aacff4;
                             float: right;
-                            margin-right: 25px;
-                            width: 30px;
-                            white-space: nowrap;
-                            text-overflow: ellipsis;
-                            overflow: hidden;
-                            text-align: right;
-                            line-height: 80px;
+                            &>div {
+                                padding: 15px 15px;
+                                font-size: 15px;
+                                color: #aacff4;
+                                margin-right: 25px;
+                                max-width: 260px;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                text-align: right;
+                                height: 80px;
+                                line-height: 25px;
+                                text-align: center;
+                                box-sizing: border-box;
+                            }
                         }
                     }
                }

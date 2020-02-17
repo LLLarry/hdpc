@@ -29,6 +29,8 @@
                         <el-option label="微信" value="1" ></el-option>
                         <el-option label="支付宝" value="2" ></el-option>
                         <el-option label="投币器" value="3" ></el-option>
+                        <el-option label="微信小程序" value="4" ></el-option>
+                        <el-option label="支付宝小程序" value="5" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="是否为预订单" class="form_right25">

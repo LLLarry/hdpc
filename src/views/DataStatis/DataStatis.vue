@@ -146,7 +146,7 @@
                     <el-step title="步骤3" description="选择要查看的商户（默认选择自己）"></el-step>
                     <el-step title="步骤4" description="点击“设备列表”即可查看选择商户的设备信息"></el-step>
                 </el-steps>
-                <p style="margin-top: 15px;  font-size: 16px;">注：选中查看商户之后，在右上角会有“<span class="el-icon-chat-dot-square" style="font-size: 18px;"></span>”图标，鼠标移到上面会显示当前选中的商户</p>
+                <p style="margin-top: 15px;  font-size: 16px;">注：选中查看商户之后，在右上角会有“正在查看”的商户名，鼠标移到上面会显示当前选中的商户</p>
                 <div style="text-align: center; margin: 30px 0 20px 0;">
                     <el-button type="primary" style="width: 350px;" @click="handlegoToMerinfo">立即前往</el-button>
                 </div>

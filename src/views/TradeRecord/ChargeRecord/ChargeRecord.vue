@@ -81,6 +81,9 @@
          </el-card>
 
          <el-card class="box-card">
+             <div>
+                 <el-button @click="export2Excel" size="small" type="primary" style="float:right; margin-bottom: 10px;">导出Excel</el-button>
+             </div>
             <el-table
                 :data="tableData"
                 border
@@ -145,11 +148,6 @@
                 label="端口号"
                 min-width="60"
                 >
-                <!-- <template slot-scope="{row}">
-                    <router-link to="/">
-                        <el-link type="primary">{{row.port}}</el-link>
-                    </router-link>
-                </template> -->
                 </el-table-column>
                  <el-table-column
                 prop="expenditure"
@@ -301,8 +299,9 @@ import dateTimeJS from '@/utils/dateTime'
 import { getChargeRecord,withdrawEntrance,tradeRefEntrance } from '@/require/tradeRecord'
 import Util from '@/utils/util'
 import VerifiCode from '@/components/common/VerifiCode'
-import { alertPassword,messageTip } from '@/utils/ele'
+import { alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { mapState } from 'vuex'
+import Excel from '@/utils/excel'
 export default {
     data(){
         return{
@@ -316,7 +315,8 @@ export default {
             verifiCode: '', //验证码
             userVerifiCode: '', //用户输入的验证码
             tipText: false,
-            row: {} //这里是点击退费/撤回所存的订单一列信息，为了退费的时候使用他
+            row: {}, //这里是点击退费/撤回所存的订单一列信息，为了退费的时候使用他
+            loading_obj: null, //全局loading实例
         }
     },
     components: {
@@ -326,7 +326,7 @@ export default {
     computed: {
         ...mapState(['userInfo'])
     },
-     created(){
+    created(){
           let {VNK,...routerKey}=  this.$route.query
         if(JSON.stringify(routerKey) != "{}"){
             let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',1)
@@ -337,6 +337,13 @@ export default {
             this.chargeRecordForm= {startTime,endTime}
         }
        this.asyGetChargeRecord(this.chargeRecordForm)
+    },
+    beforeDestroy(){
+        // 销毁之前，有this.loading_obj的时候关闭
+        this.loading_obj && this.loading_obj.close()
+    },
+    deactivated(){
+        this.loading_obj && this.loading_obj.close()
     },
     methods: {
         getPage(page){
@@ -435,6 +442,74 @@ export default {
             this.$router.push({query:{... this.chargeRecordForm,currentPage: 1}})
             this.asyGetChargeRecord({... this.chargeRecordForm,currentPage: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
+        },
+        export2Excel() {
+         confirDelete('确认导出充电记录吗？',()=>{
+                this.loading_obj = this.$loading({
+                lock: true,
+                text: '正在导出',
+                spinner: 'el-icon-loading',
+                background: 'rgba(255, 255, 255, 0.8)'
+                })
+             getChargeRecord({... this.chargeRecordForm,isAlllData: 1}).then(res=>{
+              this.loading_obj.close()
+              if(res.code == 200){
+                    const list=res.listdata
+                    const tHeader= ['序号','订单号','用户名','商户名','设备号','端口号','消费额','订单状态','支付方式','充电信息','是否续充','开始时间','结束时间','结束原因','退款时间']
+                    const filterVal= ['index','ordernum','username','dealer','equipmentnum','port','expenditure','status','payType','chargeInfo','isConCharge','begintime','endtime','endFrom','refDate']
+                    Excel({
+                        tHeader: tHeader,
+                        filterVal:  filterVal,
+                        list: list,
+                        filename: '充电记录',
+                        formatJson: this.formatJson
+                    })
+              }else{
+                  messageTip('error','导出失败，请稍后重试')
+              }
+              }).catch(err=>{
+                this.loading_obj.close()
+                messageTip('error','导出失败，请稍后重试')
+              })
+         })
+        },
+        formatJson(filterVal, list){
+            return list.map((item,i)=> filterVal.map((jtem)=>{
+                    let val= ''
+                    if(jtem == 'index'){
+                        val= i+1
+                    }else if(['username','dealer'].includes(jtem)){
+                        val= item[jtem] && item[jtem].length > 0 ? item[jtem] : '— —'
+                    }else if(jtem == 'expenditure'){
+                        val=  item[jtem] != null ? item[jtem]: 0
+                    }else if(jtem == 'status'){
+                        if(item.number == 1){
+                            val = '全额退款'
+                        }else if(item.number == 2){
+                            let refund_money= typeof item.refund_money == 'number' ? item.refund_money : 0
+                            val = '部分退款'+refund_money+')'
+                        }else{
+                            val = '正常'
+                        }
+                    }else if(jtem =='payType'){
+                        val= item.paytype == 1 ? "钱包" : item.paytype == 2 ? "微信" : item.paytype == 3 ? "支付宝": item.paytype == 4 ? "包月下发数据" : item.paytype == 5 ? "投币" : item.paytype == 6 ? "刷卡" : item.paytype == 7 ? "刷卡" : "— —"
+                    }else if(jtem == 'chargeInfo'){
+                        val= `${item.consume_quantity / 100}度--${item.consume_time}分钟`
+                    }else if(jtem == 'isConCharge'){
+                        val= item.ifcontinue != null ? '是' : '否'
+                    }else if(['begintime','endtime'].includes(jtem)){
+                        val= item[jtem] == null ? '' : moment(item[jtem]).format('YYYY-MM-DD HH:mm:ss')
+                    }else if(jtem == 'refDate'){
+                        val= item[jtem] == null ? '' : moment(item.refund_time).format('YYYY-MM-DD HH:mm:ss')
+                    }else if(jtem == 'endFrom'){
+                        val= item.resultinfo==0?"充电完成":item.resultinfo==1?"空载断电":item.resultinfo==2?"充满":
+                    	    item.resultinfo==3?"超功率自停":item.resultinfo==4?"远程断电" :item.resultinfo==5?"刷卡断电" : item.resultinfo==11?"被迫停止": item.resultinfo==255?"日志结束":"— —"
+                    }else{
+                        val= item[jtem]
+                    }
+                    return val
+                }
+            ))
         }
     }
 }

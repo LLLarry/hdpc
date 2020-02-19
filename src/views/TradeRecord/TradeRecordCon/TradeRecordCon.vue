@@ -143,7 +143,22 @@
                 min-width="80"
                 >
                 </el-table-column>
+
+                <el-table-column
+                prop="excel"
+                label="钱包退费"
+                min-width="80"
+                >
+                <template>
+                    <!-- 导出excell -->
+                    <div>
+                        <el-button @click="export2Excel" size="small" type="primary">导出Excel</el-button>
+                    </div> 
+                </template>
+                </el-table-column>
                </el-table>
+
+              
             <el-table
                 :data="tableData"
                 border
@@ -307,8 +322,7 @@
                 </el-table-column>  
             </el-table>
          </el-card>
-         <!-- 导出excell -->
-         <!-- <el-button @click="export2Excel">导出Excell</el-button> -->
+
          <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
 
          <el-dialog title="合伙人金额明细" :visible.sync="dialogMoneyDetail" width="550px">
@@ -344,6 +358,7 @@
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
 import { getTradeRecord,getPartnerIncomeDetail } from '@/require/tradeRecord'
+import { messageTip , confirDelete } from '@/utils/ele'
 import Util from '@/utils/util'
 import Excel from '@/utils/excel'
 export default {
@@ -358,7 +373,8 @@ export default {
              nowPage: 1,
              loading: false,
              dialogMoneyDetail: false, //合伙人收益弹框
-             gridData: []
+             gridData: [],
+             loading_obj: null, //全局loading实例
         }
     },
     components: {
@@ -376,6 +392,13 @@ export default {
             this.tradeRecordConForm= {startTime,endTime}
         }
        this.asyGetTradeRecord(this.tradeRecordConForm)
+    },
+    beforeDestroy(){
+        // 销毁之前，有this.loading_obj的时候关闭
+        this.loading_obj && this.loading_obj.close()
+    },
+    deactivated(){
+        this.loading_obj && this.loading_obj.close()
     },
     methods: {
         getPage(page){
@@ -451,18 +474,37 @@ export default {
             //     autoWidth: true
             //     })
             // })
-           const tHeader= ["序号","订单号","用户名","商户名","设备(卡)号","设备类型","交易金额","商户金额","合伙人金额","订单状态","支付方式","来源","交易时间"]
-           const filterVal= ["index","ordernum","uusername","dealer","code","paysource","money","merMoney","partnerMoney","status","paytype","form","create_time"]
-
-           Excel({
-                tHeader: tHeader,
-                filterVal:  filterVal,
-                list: this.tableData,
-                filename: '交易记录',
-                formatJson: this.formatJson
-            })
+         confirDelete('确认导出交易记录吗？',()=>{
+                this.loading_obj = this.$loading({
+                lock: true,
+                text: '正在导出',
+                spinner: 'el-icon-loading',
+                background: 'rgba(255, 255, 255, 0.8)'
+                })
+             getTradeRecord({... this.tradeRecordConForm,isAlllData : 1}).then(res=>{
+              this.loading_obj.close()
+              if(res.code == 200){
+                    const list=res.listdata
+                    const tHeader= ["序号","订单号","用户名","商户名","设备(卡)号","设备类型","交易金额","商户金额","合伙人金额","订单状态","支付方式","来源","交易时间"]
+                    const filterVal= ["index","ordernum","uusername","dealer","code","paysource","money","merMoney","partnerMoney","status","paytype","form","create_time"]
+                    Excel({
+                        tHeader: tHeader,
+                        filterVal:  filterVal,
+                        list: list,
+                        filename: '交易记录',
+                        formatJson: this.formatJson
+                    })
+              }else{
+                  messageTip('error','导出失败，请稍后重试')
+              }
+              }).catch(err=>{
+                this.loading_obj.close()
+                messageTip('error','导出失败，请稍后重试')
+              })
+         })
         },
         formatJson(filterVal, list) {
+            // return list.map(item=> filterVal.map(jtem=>item[jtem]))
             return list.map((item,i)=>{
                 return filterVal.map((jtem)=>{
                     let val
@@ -478,25 +520,26 @@ export default {
                         }
                     }else if(['money'].includes(jtem)){
                         if(item.status == 1){
-                            val= '+'+item[jtem]
+                            val= item[jtem]
                         }else if(item.status == 2){
-                            val= '-'+item[jtem]
+                            val= 0-item[jtem]
                         }
                     }else if(['merMoney'].includes(jtem)){
                         if(item.status == 1){
-                            val= '+'+item.mermoney
+                            val= item.mermoney
                         }else if(item.status == 2){
-                            val= '-'+item.mermoney
+                            val= 0-item.mermoney
                         }
                     }else if(jtem == 'partnerMoney'){
                         if(item.manmoney == 0){
                             val= 0
                         }else{
-                            if(item.status == 1){
-                                val= '+'+item[jtem]
-                            }else if(item.status == 2){
-                                val= '-'+item[jtem]
-                            }
+                             val= item.manmoney
+                            // if(item.status == 1){
+                            //     val= '+'+item[jtem]
+                            // }else if(item.status == 2){
+                            //     val= '-'+item[jtem]
+                            // }
                         }
                     }else if(jtem == 'status'){
                         val= item[jtem] == 1 ? '正常' : item[jtem] == 2 ? '退款' : '— —'

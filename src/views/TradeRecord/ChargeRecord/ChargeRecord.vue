@@ -74,7 +74,7 @@
                       </el-date-picker>
                 </el-form-item>
             
-                <el-form-item class="form_margin0 content_btn w200">
+                <el-form-item class="form_margin0 content_btn w260">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                     <el-button @click="export2Excel" size="small" type="primary">导出Excel</el-button>
                 </el-form-item>
@@ -446,6 +446,9 @@ export default {
              startTime= !startTime ? "20190101000001" : moment(startTime).format('YYYYMMDDHHmmss')
              endTime= !endTime ? moment(new Date()).format('YYYYMMDDHHmmss') : moment(endTime).format('YYYYMMDDHHmmss')
          confirDelete('确认导出充电记录吗？',()=>{
+                 // 当导出条数大于10000之后就不请求
+                if(this.totalPage > 10000) return messageTip('warning',`当前条数为 ${this.totalPage}条，超过最大导出条数（10000条），请缩短查询时间`)
+
                 this.loading_obj = this.$loading({
                 lock: true,
                 text: '正在导出',

@@ -69,7 +69,7 @@
                       </el-date-picker>
                 </el-form-item>
             
-                <el-form-item class="form_margin0 content_btn w200">
+                <el-form-item class="form_margin0 content_btn w260">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
                     <el-button @click="export2Excel" size="small" type="primary">导出Excel</el-button>
                 </el-form-item>
@@ -358,6 +358,7 @@ export default {
             pickerOptions: dateTimeJS,
             tableData: [],
             totalData: [],
+            totalRows: 0, //数据总条数
              totalPage: 1,
              nowPage: 1,
              loading: false,
@@ -466,12 +467,15 @@ export default {
             startTime= !startTime ? "20190101000001" : moment(startTime).format('YYYYMMDDHHmmss')
             endTime= !endTime ? moment(new Date()).format('YYYYMMDDHHmmss') : moment(endTime).format('YYYYMMDDHHmmss')
          confirDelete('确认导出交易记录吗？',()=>{
+                // 当导出条数大于10000之后就不请求
+                if(this.totalPage > 10000) return messageTip('warning',`当前条数为 ${this.totalPage}条，超过最大导出条数（10000条），请缩短查询时间`)
+
                 this.loading_obj = this.$loading({
                 lock: true,
                 text: '正在导出',
                 spinner: 'el-icon-loading',
                 background: 'rgba(255, 255, 255, 0.8)'
-                })
+                })  
              getTradeRecord({... this.tradeRecordConForm,isAlllData : 1}).then(res=>{
                 this.loading_obj.close()
                 if(res.code == 200){
@@ -488,11 +492,11 @@ export default {
                 }else if(res.code == 201){
                    messageTip('warning',res.message || '导出数量超过最大限制')
                 }else{
-                   messageTip('error','导出失败，请稍后重试') 
+                   messageTip('error','导出失败，请缩短导出条数') 
                 }
               }).catch(err=>{
                 this.loading_obj.close()
-                messageTip('error','导出失败，请稍后重试')
+                messageTip('error','导出失败，请缩短导出条数')
               })
          })
         },
@@ -528,11 +532,6 @@ export default {
                             val= 0
                         }else{
                              val= item.manmoney
-                            // if(item.status == 1){
-                            //     val= '+'+item[jtem]
-                            // }else if(item.status == 2){
-                            //     val= '-'+item[jtem]
-                            // }
                         }
                     }else if(jtem == 'status'){
                         val= item[jtem] == 1 ? '正常' : item[jtem] == 2 ? '退款' : '— —'

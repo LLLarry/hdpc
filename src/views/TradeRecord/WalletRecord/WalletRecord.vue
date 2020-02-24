@@ -11,6 +11,12 @@
                 <el-form-item label="用户姓名" class="form_right25">
                     <el-input v-model="walletRecordForm.username" placeholder="请输入用户姓名" clearable size="small"></el-input>
                 </el-form-item>
+                <el-form-item label="所属商户" class="form_right25">
+                    <el-input v-model="walletRecordForm.dealer" placeholder="请输入所属商户" clearable size="small"></el-input>
+                </el-form-item>
+                <el-form-item label="商户电话" class="form_right25">
+                    <el-input v-model="walletRecordForm.phone" placeholder="请输入商户电话" clearable size="small"></el-input>
+                </el-form-item>
                 <el-form-item label="类型" class="form_right25">
                     <el-select v-model="walletRecordForm.paytype"  placeholder="请选择状态" clearable  size="small">
                         <el-option label="充值" value="1" ></el-option>
@@ -88,17 +94,37 @@
                 </el-table-column>
                 <el-table-column
                 prop="realname"
-                label="姓名"
+                label="用戶姓名"
                 min-width="100"
                 >
                 <template slot-scope="{row}">
                         {{row.realname && row.realname.length > 0 ? row.realname : '— —'}}
                 </template>
                 </el-table-column>
+
+                <el-table-column
+                prop="dealernick"
+                label="所属商户"
+                min-width="100"
+                >
+                <template slot-scope="{row}">
+                        {{row.dealernick && row.dealernick.length > 0 ? row.dealernick : '— —'}}
+                </template>
+                </el-table-column>
+
+                <el-table-column
+                prop="mobile"
+                label="商戶电话"
+                min-width="120"
+                >
+                <template slot-scope="{row}">
+                        {{row.mobile && row.mobile.length > 0 ? row.mobile : '— —'}}
+                </template>
+                </el-table-column>
                 
                 <el-table-column
                 prop="money"
-                label="金额"
+                label="操作金额"
                 min-width="140"
                 >
                 <template slot-scope="scope">
@@ -126,10 +152,26 @@
                 <el-table-column
                 prop="balance"
                 label="余额"
-                min-width="100"
+                min-width="160"
                 >
                  <template slot-scope="scope">
-                     {{ scope.row.balance != null ? scope.row.balance.toFixed(2) : '— —' }}
+                     <!-- {{ scope.row.balance != null ? scope.row.balance.toFixed(2) : '— —' }} -->
+                      <div>
+                        充值余额：
+                        <el-link type="primary" >
+                            <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${scope.row.uid}`" tag="span">
+                                {{ scope.row.topupbalance != null ? scope.row.topupbalance.toFixed(2)  :  '— —'}}
+                            </router-link>
+                        </el-link>
+                    </div>
+                    <div>
+                        赠送余额：
+                        <el-link type="primary" >
+                             <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${scope.row.uid}`" tag="span">
+                                {{ scope.row.givebalance != null ? scope.row.givebalance.toFixed(2)  :  '— —'}}
+                             </router-link>
+                        </el-link>
+                    </div>
                 </template>
                 </el-table-column>
 

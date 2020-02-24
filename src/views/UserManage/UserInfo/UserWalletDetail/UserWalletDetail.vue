@@ -68,21 +68,68 @@
                     <router-link tag="li" :to="`/usermanage/userInfo/userOrderDetail`"><el-link type="primary" >{{scope.row.ordernum}}</el-link></router-link>
                   </template>
                 </el-table-column>
-                 <el-table-column
+                 <!-- <el-table-column
                 prop="money"
                 label="金额"
                 min-width="120"
                 >
                  <template slot-scope="scope">
-                    <el-link type="success" :underline="false" v-if="[1,5,7].includes(scope.row.paysource)">+{{scope.row.money.toFixed(2)}}</el-link>
-                    <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">-{{scope.row.money.toFixed(2)}}</el-link>
+                    <div>
+                        充值金额：
+                        <el-link type="success" :underline="false" v-if="[1,5].includes(scope.row.paysource)">+{{scope.row.money.toFixed(2)}}</el-link>
+                        <el-link :type="scope.row.money >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7].includes(scope.row.paysource)">{{(scope.row.money >= 0 ? '+' : '') + scope.row.money.toFixed(2)}}</el-link>
+                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">-{{scope.row.money.toFixed(2)}}</el-link>
+                    </div>
+                    <div>
+                        赠送金额：
+                        <el-link type="success" :underline="false" v-if="[1,5].includes(scope.row.paysource)">+{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                        <el-link :type="scope.row.sendmoney >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7].includes(scope.row.paysource)">{{(scope.row.sendmoney >= 0 ? '+' : '') + scope.row.sendmoney.toFixed(2)}}</el-link>
+                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">-{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                    </div>
+                    
                   </template>
-                </el-table-column>
-                 <el-table-column
-                prop="balance"
-                label="余额"
+                </el-table-column> -->
+                <el-table-column
+                prop="paysource"
+                label="充值金额"
                 min-width="120"
                 >
+                 <template slot-scope="scope">
+                    <div>
+                        <el-link type="success" :underline="false" v-if="[1,5].includes(scope.row.paysource)">+{{scope.row.money.toFixed(2)}}</el-link>
+                        <el-link :type="scope.row.money >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7].includes(scope.row.paysource)">{{(scope.row.money >= 0 ? '+' : '') + scope.row.money.toFixed(2)}}</el-link>
+                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">-{{scope.row.money.toFixed(2)}}</el-link>
+                    </div>
+                  </template>
+                </el-table-column>
+
+                 <el-table-column
+                prop="paysource"
+                label="赠送金额"
+                min-width="120"
+                >
+                 <template slot-scope="scope">
+                  <div>
+                        <el-link type="success" :underline="false" v-if="[1,5].includes(scope.row.paysource)">+{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                        <el-link :type="scope.row.sendmoney >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7].includes(scope.row.paysource)">{{(scope.row.sendmoney >= 0 ? '+' : '') + scope.row.sendmoney.toFixed(2)}}</el-link>
+                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">-{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                    </div>
+                  </template>
+                </el-table-column>
+
+                 <el-table-column
+                prop="balance"
+                label="钱包余额"
+                min-width="120"
+                >
+                 <template slot-scope="scope">
+                    <div>
+                        充值余额：{{scope.row.topupbalance != null ? scope.row.topupbalance.toFixed(2)  :  '— —'}}
+                    </div>
+                    <div>
+                        赠送余额：{{scope.row.givebalance != null ? scope.row.givebalance.toFixed(2)  :  '— —'}}
+                    </div>
+                  </template>
                 </el-table-column>
                 <el-table-column
                 prop="type"
@@ -90,7 +137,7 @@
                 min-width="120"
                 >
                   <template slot-scope="{row}">
-                    <el-link :type="[1,5,7].includes(row.paysource) ? 'success': 'danger'" :underline="false" >
+                    <el-link :type="[1,5].includes(row.paysource) ? 'success': [2,3,4,6,8].includes(row.paysource) ? 'danger' : 'default'" :underline="false" >
                        {{
                       row.paysource == 1 ? "充值" : row.paysource == 2 ? "消费" : row.paysource == 3 ? "消费" : row.paysource == 4 ? "消费" : 
 						row.paysource == 5 ? "退款到钱包" : row.paysource == 6 ? "钱包退款"  : row.paysource == 7 ? "虚拟充值" : row.paysource == 8 ? "虚拟退款" : "其它"

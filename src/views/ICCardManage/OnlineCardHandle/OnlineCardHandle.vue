@@ -118,7 +118,18 @@
                 min-width="100"
                 >
                  <template slot-scope="scope">
-                   {{ scope.row.balance.toFixed(2) }}
+                   <div>
+                        充值余额：
+                        <el-link type="default" >
+                                {{ scope.row.topupbalance != null ? scope.row.topupbalance.toFixed(2)  :  '— —'}}
+                        </el-link>
+                    </div>
+                    <div>
+                        赠送余额：
+                        <el-link type="default" >
+                                {{ scope.row.givebalance != null ? scope.row.givebalance.toFixed(2)  :  '— —'}}
+                        </el-link>
+                    </div>
                 </template>
                 </el-table-column>
                 <el-table-column

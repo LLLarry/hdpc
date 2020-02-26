@@ -123,19 +123,25 @@
                 <el-table-column
                 prop="money"
                 label="操作金额"
-                min-width="130"
+                min-width="150"
                 >
                 <template slot-scope="scope">
                     <div>
                     充值金额：
                     <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.money.toFixed(2)}}</el-link>
                     <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.money.toFixed(2)}}</el-link>
+                    <!-- <el-link v-else-if="[8].includes(scope.row.type)" :type="scope.row.money >= 0 ? 'success': 'danger'" :underline="false">
+                        {{(scope.row.money >= 0 ? '+' : '')+scope.row.money.toFixed(2)}}
+                    </el-link> -->
                     <el-link v-else :underline="false" type="info">{{scope.row.money.toFixed(2)}}</el-link>
                     </div>
                     <div>
                     赠送金额：
                     <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.sendmoney.toFixed(2)}}</el-link>
                     <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                    <!-- <el-link v-else-if="[8].includes(scope.row.type)" :type="scope.row.sendmoney >= 0 ? 'success': 'danger'" :underline="false">
+                        {{(scope.row.sendmoney >= 0 ? '+' : '')+scope.row.sendmoney.toFixed(2)}}
+                    </el-link> -->
                     <el-link v-else :underline="false" type="info">{{scope.row.sendmoney.toFixed(2)}}</el-link>
                     </div>
                 </template>
@@ -147,8 +153,11 @@
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.accountmoney.toFixed(2)}}</el-link>
-                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.accountmoney.toFixed(2)}}</el-link>
+                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">{{(0-scope.row.accountmoney).toFixed(2)}}</el-link>
+                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">
+                        {{ scope.row.accountmoney.toFixed(2)}}
+                    </el-link>
+                    <!-- <el-link v-else-if="[8].includes(scope.row.type)" :type="scope.row.accountmoney >= 0 ? 'success': 'danger'" :underline="false">{{(scope.row.accountmoney >= 0 ? '+' : '') +scope.row.accountmoney.toFixed(2)}}</el-link> -->
                     <el-link v-else :underline="false" type="info">{{scope.row.accountmoney.toFixed(2)}}</el-link>
                 </template>
                 </el-table-column>
@@ -156,10 +165,22 @@
                 <el-table-column
                 prop="balance"
                 label="卡余额"
-                min-width="100"
+                min-width="150"
                 >
                  <template slot-scope="scope">
-                    {{ scope.row.balance.toFixed(2) }}
+                    <!-- {{ scope.row.balance.toFixed(2) }} -->
+                      <div>
+                        充值余额：
+                        <el-link type="default" >
+                                {{ scope.row.topupbalance != null ? scope.row.topupbalance.toFixed(2)  :  '— —'}}
+                        </el-link>
+                    </div>
+                    <div>
+                        赠送余额：
+                        <el-link type="default" >
+                                {{ scope.row.givebalance != null ? scope.row.givebalance.toFixed(2)  :  '— —'}}
+                        </el-link>
+                    </div>
                 </template>
                 </el-table-column>
 

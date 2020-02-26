@@ -1,7 +1,748 @@
 <template>
     <div class="orderDetail">
          <el-card class="box-card">
-            <el-table
+             <!-- paysource    1 -->
+            <div v-if="paysource == 1">
+                <el-table
+                :data="tableData"
+                border
+                v-loading="loading"
+                style="width: 100%"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                >
+                    <el-table-column
+                    prop="orderNum"
+                    label="订单号"
+                    min-width="230"
+                    >
+                    </el-table-column>
+
+                     <el-table-column
+                        prop="payMoney"
+                        label="付款金额（元）"
+                        min-width="120"
+                        >
+                        <template slot-scope="scope">
+                            <el-link :underline="false" type="success" v-if="scope.row.payMoney>=0">{{scope.row.payMoney}}</el-link>
+                            <el-link :underline="false" type="danger" v-else>{{scope.row.payMoney}}</el-link>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="chargeTime"
+                    label="充电时间（分钟）"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="quantity"
+                    label="充电电量（度）"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="payType"
+                    label="付款方式"
+                    min-width="120"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                    prop="date"
+                    label="充电时间"
+                    min-width="200"
+                    >
+                    <template slot-scope="scope">
+                        {{scope.row.date | fmtDate}}
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="status"
+                    label="订单状态"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                    <span v-html="scope.row.status"></span>
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="handle"
+                    label="操作"
+                    min-width="120"
+                    >
+                    <template slot-scope="{row}">
+                        <div v-if="paysource ==1">
+                            <el-button type="danger" size="mini" v-if="row.number == 0 && [2,3].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,1,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==2">
+                            <el-button type="danger" size="mini" v-if="[1,2,6,8,10].includes(row.handletype)"
+                            @click="refundMoneyBtn(row.id,2,row.handletype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==3">
+                            <el-button type="danger" size="mini" v-if="[1,2].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,3,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==4">
+                            <el-button type="danger" size="mini" v-if="[0,1,7].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,4,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==5">
+                            <el-button type="danger" size="mini" v-if="row.flag == 1"
+                            @click="refundMoneyBtn(row.id,5,row.type)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==6">
+                            <el-button type="danger" size="mini" v-if="row.status2 != 2 && row.ifrefund == 0" 
+                            @click="refundMoneyBtn(row.id,6,'2')"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+                    
+                    </template>
+                    </el-table-column>
+
+                </el-table>
+            </div>
+
+             <!-- paysource    2 -->
+            <div v-if="paysource == 2">
+                <el-table
+                :data="tableData"
+                border
+                v-loading="loading"
+                style="width: 100%"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                >
+                    <el-table-column
+                    prop="orderNum"
+                    label="订单号"
+                    min-width="230"
+                    >
+                    </el-table-column>
+
+                     <el-table-column
+                        prop="payMoney"
+                        label="付款金额（元）"
+                        min-width="120"
+                        >
+                        <template slot-scope="scope">
+                            <el-link :underline="false" type="success" v-if="scope.row.payMoney>=0">{{scope.row.payMoney}}</el-link>
+                            <el-link :underline="false" type="danger" v-else>{{scope.row.payMoney}}</el-link>
+                        </template>
+                    </el-table-column>
+
+                     <el-table-column
+                    prop="num"
+                    label="投币个数"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="payType"
+                    label="支付方式"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="handleTime"
+                    label="交易时间"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                        {{scope.row.handleTime | fmtDate}}
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="status"
+                    label="订单状态"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                    <span v-html="scope.row.status"></span>
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="handle"
+                    label="操作"
+                    min-width="120"
+                    >
+                    <template slot-scope="{row}">
+                        <div v-if="paysource ==1">
+                            <el-button type="danger" size="mini" v-if="row.number == 0 && [2,3].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,1,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==2">
+                            <el-button type="danger" size="mini" v-if="[1,2,6,8,10].includes(row.handletype)"
+                            @click="refundMoneyBtn(row.id,2,row.handletype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==3">
+                            <el-button type="danger" size="mini" v-if="[1,2].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,3,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==4">
+                            <el-button type="danger" size="mini" v-if="[0,1,7].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,4,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==5">
+                            <el-button type="danger" size="mini" v-if="row.flag == 1"
+                            @click="refundMoneyBtn(row.id,5,row.type)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==6">
+                            <el-button type="danger" size="mini" v-if="row.status2 != 2 && row.ifrefund == 0" 
+                            @click="refundMoneyBtn(row.id,6,'2')"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+                    
+                    </template>
+                    </el-table-column>
+
+                </el-table>
+            </div>
+
+             <!-- paysource    3 -->
+            <div v-if="paysource == 3">
+                <el-table
+                :data="tableData"
+                border
+                v-loading="loading"
+                style="width: 100%"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                >
+                    <el-table-column
+                    prop="orderNum"
+                    label="订单号"
+                    min-width="230"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="cardNum"
+                    label="卡号"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="cardMoney"
+                    label="卡余额"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="payType"
+                    label="支付方式"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="time"
+                    label="充值时间"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                        {{scope.row.time | fmtDate}}
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="status"
+                    label="订单状态"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                    <span v-html="scope.row.status"></span>
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="handle"
+                    label="操作"
+                    min-width="120"
+                    >
+                    <template slot-scope="{row}">
+                        <div v-if="paysource ==1">
+                            <el-button type="danger" size="mini" v-if="row.number == 0 && [2,3].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,1,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==2">
+                            <el-button type="danger" size="mini" v-if="[1,2,6,8,10].includes(row.handletype)"
+                            @click="refundMoneyBtn(row.id,2,row.handletype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==3">
+                            <el-button type="danger" size="mini" v-if="[1,2].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,3,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==4">
+                            <el-button type="danger" size="mini" v-if="[0,1,7].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,4,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==5">
+                            <el-button type="danger" size="mini" v-if="row.flag == 1"
+                            @click="refundMoneyBtn(row.id,5,row.type)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==6">
+                            <el-button type="danger" size="mini" v-if="row.status2 != 2 && row.ifrefund == 0" 
+                            @click="refundMoneyBtn(row.id,6,'2')"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+                    
+                    </template>
+                    </el-table-column>
+
+                </el-table>
+            </div>
+
+             <!-- paysource    4 -->
+            <div v-if="paysource == 4">
+                <el-table
+                :data="tableData"
+                border
+                v-loading="loading"
+                style="width: 100%"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                >
+                    <el-table-column
+                    prop="orderNum"
+                    label="订单号"
+                    min-width="230"
+                    >
+                    </el-table-column>
+
+                     <el-table-column
+                        prop="payMoney"
+                        label="操作金额（元）"
+                        min-width="150"
+                        >
+                        <template slot-scope="scope">
+                            <div>
+                                充值金额：
+                                <el-link :type=" scope.row.tomoney >= 0 ?  'success' : 'danger' " :underline="false">{{scope.row.money.toFixed(2)}}</el-link>
+                            </div>
+                            <div>
+                                赠送金额：
+                                <el-link :type=" scope.row.tomoney >= 0 ?  'success' : 'danger' " :underline="false">{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                            </div>
+                            <!-- <el-link :underline="false" type="success" v-if="scope.row.payMoney>=0">{{scope.row.payMoney}}</el-link>
+                            <el-link :underline="false" type="danger" v-else>{{scope.row.payMoney}}</el-link> -->
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="walletMoney"
+                    label="钱包余额（元）"
+                    min-width="150"
+                    >
+                     <template slot-scope="scope">
+                        <!-- {{ scope.row.balance != null ? scope.row.balance.toFixed(2) : '— —' }} -->
+                        <div>
+                            充值余额：
+                            <el-link type="primary" :underline="false">
+                                    {{ scope.row.topupbalance != null ? scope.row.topupbalance.toFixed(2)  :  '— —'}}
+                            </el-link>
+                        </div>
+                        <div>
+                            赠送余额：
+                            <el-link type="primary" :underline="false">
+                                    {{ scope.row.givebalance != null ? scope.row.givebalance.toFixed(2)  :  '— —'}}
+                            </el-link>
+                        </div>
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="payType"
+                    label="支付方式"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="handleType"
+                    label="操作类型"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="handleTime"
+                    label="交易时间"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                        {{scope.row.handleTime | fmtDate}}
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="status"
+                    label="订单状态"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                    <span v-html="scope.row.status"></span>
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="handle"
+                    label="操作"
+                    min-width="120"
+                    >
+                    <template slot-scope="{row}">
+                        <div v-if="paysource ==1">
+                            <el-button type="danger" size="mini" v-if="row.number == 0 && [2,3].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,1,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==2">
+                            <el-button type="danger" size="mini" v-if="[1,2,6,8,10].includes(row.handletype)"
+                            @click="refundMoneyBtn(row.id,2,row.handletype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==3">
+                            <el-button type="danger" size="mini" v-if="[1,2].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,3,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==4">
+                            <el-button type="danger" size="mini" v-if="[0,1,7].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,4,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==5">
+                            <el-button type="danger" size="mini" v-if="row.flag == 1"
+                            @click="refundMoneyBtn(row.id,5,row.type)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==6">
+                            <el-button type="danger" size="mini" v-if="row.status2 != 2 && row.ifrefund == 0" 
+                            @click="refundMoneyBtn(row.id,6,'2')"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+                    
+                    </template>
+                    </el-table-column>
+
+                </el-table>
+            </div>
+
+             <!-- paysource   5 -->
+            <div v-if="paysource == 5">
+                <el-table
+                :data="tableData"
+                border
+                v-loading="loading"
+                style="width: 100%"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                >
+                    <el-table-column
+                    prop="orderNum"
+                    label="订单号"
+                    min-width="230"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                    prop="cardNum"
+                    label="卡号"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="money1"
+                    label="金额"
+                    min-width="160"
+                    >
+                    <template slot-scope="scope">
+                        <div>
+                            充值金额：
+                            <el-link type="default" >
+                                    {{ scope.row.money != null ? scope.row.money.toFixed(2)  :  '— —'}}
+                            </el-link>
+                        </div>
+                        <div>
+                            赠送金额：
+                            <el-link type="default" >
+                                    {{ scope.row.sendmoney != null ? scope.row.sendmoney.toFixed(2)  :  '— —'}}
+                            </el-link>
+                        </div>
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="money2"
+                    label="到账金额"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="cardMoney"
+                    label="卡余额"
+                    min-width="160"
+                    >
+                     <template slot-scope="scope">
+                        <div>
+                            充值金额：
+                            <el-link type="default" >
+                                    {{ scope.row.topupbalance != null ? scope.row.topupbalance.toFixed(2)  :  '— —'}}
+                            </el-link>
+                        </div>
+                        <div>
+                            赠送金额：
+                            <el-link type="default" >
+                                    {{ scope.row.givebalance != null ? scope.row.givebalance.toFixed(2)  :  '— —'}}
+                            </el-link>
+                        </div>
+                    </template>
+                    </el-table-column>
+
+                     <el-table-column
+                    prop="handleType"
+                    label="操作类型"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="status"
+                    label="订单状态"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                    <span v-html="scope.row.status"></span>
+                    </template>
+                    </el-table-column>
+
+                     <el-table-column
+                    prop="time3"
+                    label="创建时间"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                        {{scope.row.time3 | fmtDate}}
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="handle"
+                    label="操作"
+                    min-width="120"
+                    >
+                    <template slot-scope="{row}">
+                        <div v-if="paysource ==1">
+                            <el-button type="danger" size="mini" v-if="row.number == 0 && [2,3].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,1,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==2">
+                            <el-button type="danger" size="mini" v-if="[1,2,6,8,10].includes(row.handletype)"
+                            @click="refundMoneyBtn(row.id,2,row.handletype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==3">
+                            <el-button type="danger" size="mini" v-if="[1,2].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,3,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==4">
+                            <el-button type="danger" size="mini" v-if="[0,1,7].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,4,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==5">
+                            <el-button type="danger" size="mini" v-if="row.flag == 1"
+                            @click="refundMoneyBtn(row.id,5,row.type)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==6">
+                            <el-button type="danger" size="mini" v-if="row.status2 != 2 && row.ifrefund == 0" 
+                            @click="refundMoneyBtn(row.id,6,'2')"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+                    
+                    </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+
+             <!-- paysource    6 -->
+            <div v-if="paysource == 6">
+                <el-table
+                :data="tableData"
+                border
+                v-loading="loading"
+                style="width: 100%"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+                >
+                    <el-table-column
+                    prop="orderNum"
+                    label="订单号"
+                    min-width="230"
+                    >
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="money1"
+                    label="充值金额"
+                    min-width="120"
+                    >
+                    </el-table-column>
+
+                     <el-table-column
+                    prop="status"
+                    label="订单状态"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                    <span v-html="scope.row.status"></span>
+                    </template>
+                    </el-table-column>
+
+                     <el-table-column
+                    prop="time3"
+                    label="创建时间"
+                    min-width="120"
+                    >
+                    <template slot-scope="scope">
+                        {{scope.row.time3 | fmtDate}}
+                    </template>
+                    </el-table-column>
+
+                    <el-table-column
+                    prop="handle"
+                    label="操作"
+                    min-width="120"
+                    >
+                    <template slot-scope="{row}">
+                        <div v-if="paysource ==1">
+                            <el-button type="danger" size="mini" v-if="row.number == 0 && [2,3].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,1,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==2">
+                            <el-button type="danger" size="mini" v-if="[1,2,6,8,10].includes(row.handletype)"
+                            @click="refundMoneyBtn(row.id,2,row.handletype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==3">
+                            <el-button type="danger" size="mini" v-if="[1,2].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,3,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==4">
+                            <el-button type="danger" size="mini" v-if="[0,1,7].includes(row.paytype)"
+                            @click="refundMoneyBtn(row.id,4,row.paytype)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==5">
+                            <el-button type="danger" size="mini" v-if="row.flag == 1"
+                            @click="refundMoneyBtn(row.id,5,row.type)"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+
+                        <div v-if="paysource ==6">
+                            <el-button type="danger" size="mini" v-if="row.status2 != 2 && row.ifrefund == 0" 
+                            @click="refundMoneyBtn(row.id,6,'2')"
+                            >退款</el-button>
+                            <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
+                        </div>
+                    
+                    </template>
+                    </el-table-column>
+
+                </el-table>
+            </div>
+
+
+            <!-- <el-table
                 :data="tableData"
                 border
                 v-loading="loading"
@@ -31,14 +772,6 @@
                 v-if="['3','5'].includes(paysource)"
                 >
                 </el-table-column>
-
-                 <!-- <el-table-column
-                prop="cardMoney1"
-                label="余额"
-                min-width="120"
-                v-if="['6'].includes(paysource)"
-                >
-                </el-table-column> -->
 
                 <el-table-column
                 prop="money1"
@@ -229,7 +962,7 @@
                    
                 </template>
                 </el-table-column>
-            </el-table>
+            </el-table> -->
          </el-card>
 
          <el-dialog
@@ -371,8 +1104,8 @@ export default {
                 obj.paytype= paytype
                 this.tableData= [obj]
             }else if(this.paysource == 4){
-                let {ordernum,money,balance,paytype,paytime,id} = order
-                obj.payMoney= money.toFixed(2)
+                let {ordernum,money,balance,paytype,paytime,id,sendmoney,givebalance,topupbalance,tomoney}= order
+                obj.money= money
                 obj.walletMoney= balance.toFixed(2)
                 obj.orderNum= ordernum
                 obj.payType= [0,2].includes(paytype) ? '微信' : [1,6].includes(paytype) ? '虚拟操作' : [3,4,5].includes(paytype) ? '自动退费' : [7,8].includes(paytype) ? '支付宝' : '— —'
@@ -383,14 +1116,18 @@ export default {
                 obj.status= [0,1,7].includes(paytype) ? '正常' : [2,6,8].includes(paytype) ? '钱包退款' :  [3,4,5].includes(paytype) ? '退费到钱包' : '— —'
                 obj.paytype= paytype
                 obj.id= id
+                obj.sendmoney= sendmoney
+                obj.givebalance= givebalance
+                obj.topupbalance= topupbalance
+                obj.tomoney= tomoney
                 this.tableData= [obj]
 
             }else if(this.paysource == 5){
-                let {ordernum,cardID,balance,money,accountmoney,type,flag,status,createTime,id} = order
+                let {ordernum,cardID,balance,money,accountmoney,type,flag,status,createTime,id,givebalance,topupbalance,sendmoney} = order
                 obj.orderNum= ordernum
                 obj.cardNum= cardID
                 obj.cardMoney= balance.toFixed(2)
-                obj.money1= money.toFixed(2)
+                obj.money= money
                 obj.money2= accountmoney.toFixed(2)
                 obj.handleType= type == 1 ? "消费" : type == 2 ? "余额回收": type == 3 ? "微信充值" : type == 4 ? "卡操作" : type == 5 ? "微信退款" : type == 6 ? "支付宝充值" : type == 7 ? "支付宝退款" : type == 8 ? "虚拟充值" : type == 9 ? "虚拟充值退款" : "其它"
                 let payType= ''
@@ -405,6 +1142,9 @@ export default {
                 obj.status= payType 
                 obj.time3= createTime
                 obj.id= id
+                obj.givebalance= givebalance
+                obj.topupbalance= topupbalance
+                obj.sendmoney= sendmoney
                 this.tableData= [obj]
             }else if(this.paysource == 6){
                 let {ordernum,money,accountmoney,ifrefund,status,createTime,id} = order

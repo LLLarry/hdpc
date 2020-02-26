@@ -184,11 +184,11 @@ export default {
     created(){
         let {VNK,...routerKey}=  this.$route.query
         if(JSON.stringify(routerKey) != "{}"){
-            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD',30)
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD',7)
             this.merEarnForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
             this.nowPage= parseInt(this.merEarnForm.currentPage) || 1
         }else{ //直接点击进来的
-            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD',30)
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD',7)
             this.merEarnForm= {startTime,endTime}
         }
         this.getMerEarnData(this.merEarnForm)

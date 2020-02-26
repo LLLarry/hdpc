@@ -96,9 +96,13 @@
                 >
                  <template slot-scope="scope">
                     <div>
-                        <el-link type="success" :underline="false" v-if="[1,5].includes(scope.row.paysource)">+{{scope.row.money.toFixed(2)}}</el-link>
-                        <el-link :type="scope.row.money >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7].includes(scope.row.paysource)">{{(scope.row.money >= 0 ? '+' : '') + scope.row.money.toFixed(2)}}</el-link>
-                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">-{{scope.row.money.toFixed(2)}}</el-link>
+                        <el-link type="success" :underline="false" v-if="[1,5,7].includes(scope.row.paysource)">
+                          <span class="el-icon-plus"></span>&nbsp;&nbsp;
+                          {{scope.row.money.toFixed(2)}}</el-link>
+                        <!-- <el-link :type="scope.row.money >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7,8].includes(scope.row.paysource)">{{(scope.row.money >= 0 ? '+' : '') + scope.row.money.toFixed(2)}}</el-link> -->
+                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">
+                          <span class="el-icon-minus"></span>&nbsp;&nbsp;
+                          {{scope.row.money.toFixed(2)}}</el-link>
                     </div>
                   </template>
                 </el-table-column>
@@ -110,27 +114,41 @@
                 >
                  <template slot-scope="scope">
                   <div>
-                        <el-link type="success" :underline="false" v-if="[1,5].includes(scope.row.paysource)">+{{scope.row.sendmoney.toFixed(2)}}</el-link>
-                        <el-link :type="scope.row.sendmoney >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7].includes(scope.row.paysource)">{{(scope.row.sendmoney >= 0 ? '+' : '') + scope.row.sendmoney.toFixed(2)}}</el-link>
-                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">-{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                        <el-link type="success" :underline="false" v-if="[1,5,7].includes(scope.row.paysource)">
+                          <span class="el-icon-plus"></span>&nbsp;&nbsp;
+                          {{scope.row.sendmoney.toFixed(2)}}</el-link>
+                        <!-- <el-link :type="scope.row.sendmoney >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7,8].includes(scope.row.paysource)">{{(scope.row.sendmoney >= 0 ? '+' : '') + scope.row.sendmoney.toFixed(2)}}</el-link> -->
+                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">
+                          <span class="el-icon-minus"></span>&nbsp;&nbsp;
+                          {{scope.row.sendmoney.toFixed(2)}}</el-link>
                     </div>
                   </template>
                 </el-table-column>
 
-                 <el-table-column
+                <el-table-column
                 prop="balance"
-                label="钱包余额"
+                label="钱包充值余额"
                 min-width="120"
                 >
                  <template slot-scope="scope">
-                    <div>
-                        充值余额：{{scope.row.topupbalance != null ? scope.row.topupbalance.toFixed(2)  :  '— —'}}
-                    </div>
-                    <div>
-                        赠送余额：{{scope.row.givebalance != null ? scope.row.givebalance.toFixed(2)  :  '— —'}}
-                    </div>
+                   <el-link type="primary" :underline="false">
+                    {{scope.row.topupbalance != null ? scope.row.topupbalance.toFixed(2)  :  '— —'}}
+                  </el-link>
+                </template>
+                </el-table-column>
+
+                 <el-table-column
+                prop="balance"
+                label="钱包赠送余额"
+                min-width="120"
+                >
+                  <template slot-scope="scope">
+                    <el-link type="primary" :underline="false">
+                       {{ scope.row.givebalance != null ? scope.row.givebalance.toFixed(2)  :  '— —'}}
+                    </el-link>
                   </template>
                 </el-table-column>
+
                 <el-table-column
                 prop="type"
                 label="操作类型"

@@ -92,11 +92,26 @@
                 </el-table-column>
                  <el-table-column
                 prop="balance"
-                label="钱包"
-                min-width="120"
+                label="钱包余额"
+                min-width="150"
                 >
                 <template slot-scope="{row}">
-                    <router-link tag="li" :to="`/usermanage/userInfo/userWalletDetail?uid=${row.id}`"><el-link type="primary" >{{row.balance}}</el-link></router-link>
+                        <div>
+                            充值余额：
+                            <el-link type="primary" >
+                                <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${row.id}`" tag="span">
+                                    {{ row.balance != null ? row.balance.toFixed(2)  :  '— —'}}
+                                </router-link>
+                            </el-link>
+                        </div>
+                        <div>
+                            赠送余额：
+                            <el-link type="primary" >
+                                <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${row.id}`" tag="span">
+                                    {{ row.sendmoney != null ? row.sendmoney.toFixed(2)  :  '— —'}}
+                                </router-link>
+                            </el-link>
+                        </div>
                 </template>
                 </el-table-column>
                 <el-table-column

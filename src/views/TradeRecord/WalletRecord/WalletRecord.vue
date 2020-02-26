@@ -8,8 +8,8 @@
                 <el-form-item label="用户昵称" class="form_right25">
                     <el-input v-model="walletRecordForm.usernick" placeholder="请输入用户昵称" clearable size="small"></el-input>
                 </el-form-item>
-                <el-form-item label="用户姓名" class="form_right25">
-                    <el-input v-model="walletRecordForm.username" placeholder="请输入用户姓名" clearable size="small"></el-input>
+                <el-form-item label="用户ID" class="form_right25">
+                    <el-input v-model="walletRecordForm.uid" placeholder="请输入用户姓名" clearable size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="所属商户" class="form_right25">
                     <el-input v-model="walletRecordForm.dealer" placeholder="请输入所属商户" clearable size="small"></el-input>
@@ -93,12 +93,12 @@
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="realname"
-                label="用戶姓名"
+                prop="uid"
+                label="用戶ID"
                 min-width="100"
                 >
                 <template slot-scope="{row}">
-                        {{row.realname && row.realname.length > 0 ? row.realname : '— —'}}
+                        {{row.uid && row.uid > -1 ? `00000000${row.uid}`.substr(-8) : '— —'}}
                 </template>
                 </el-table-column>
 
@@ -130,11 +130,11 @@
                 <template slot-scope="scope">
                     <div>
                         充值金额：
-                        <el-link :type=" scope.row.tomoney >= 0 ?  'success' : 'danger' " :underline="false">{{scope.row.money.toFixed(2)}}</el-link>
+                        <el-link :type=" scope.row.money >= 0 ?  'success' : 'danger' " :underline="false">{{(scope.row.money >= 0 ? '+' : '') +scope.row.money.toFixed(2)}}</el-link>
                     </div>
                     <div>
                         赠送金额：
-                        <el-link :type=" scope.row.tomoney >= 0 ?  'success' : 'danger' " :underline="false">{{scope.row.sendmoney.toFixed(2)}}</el-link>
+                        <el-link :type=" scope.row.sendmoney >= 0 ?  'success' : 'danger' " :underline="false">{{(scope.row.sendmoney >= 0 ? '+' : '') +scope.row.sendmoney.toFixed(2)}}</el-link>
                     </div>
                 </template>
                 </el-table-column>
@@ -145,7 +145,7 @@
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <el-link :type=" scope.row.tomoney >= 0 ?  'success' : 'danger' " :underline="false">{{scope.row.tomoney.toFixed(2)}}</el-link>
+                    <el-link :type=" scope.row.tomoney >= 0 ?  'success' : 'danger' " :underline="false">{{(scope.row.tomoney >= 0 ? '+' : '') + scope.row.tomoney.toFixed(2)}}</el-link>
                 </template>
                 </el-table-column>
 

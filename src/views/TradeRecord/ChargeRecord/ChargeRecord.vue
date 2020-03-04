@@ -74,16 +74,14 @@
                       </el-date-picker>
                 </el-form-item>
             
-                <el-form-item class="form_margin0 content_btn">
+                <el-form-item class="form_margin0 content_btn w200">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
+                    <el-button @click="export2Excel" size="small" type="primary">导出Excel</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
 
          <el-card class="box-card">
-             <div>
-                 <el-button @click="export2Excel" size="small" type="primary" style="float:right; margin-bottom: 10px;">导出Excel</el-button>
-             </div>
             <el-table
                 :data="tableData"
                 border
@@ -444,6 +442,9 @@ export default {
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },
         export2Excel() {
+             let {startTime,endTime}= this.chargeRecordForm
+             startTime= !startTime ? "20190101000001" : moment(startTime).format('YYYYMMDDHHmmss')
+             endTime= !endTime ? moment(new Date()).format('YYYYMMDDHHmmss') : moment(endTime).format('YYYYMMDDHHmmss')
          confirDelete('确认导出充电记录吗？',()=>{
                 this.loading_obj = this.$loading({
                 lock: true,
@@ -452,21 +453,23 @@ export default {
                 background: 'rgba(255, 255, 255, 0.8)'
                 })
              getChargeRecord({... this.chargeRecordForm,isAlllData: 1}).then(res=>{
-              this.loading_obj.close()
-              if(res.code == 200){
-                    const list=res.listdata
-                    const tHeader= ['序号','订单号','用户名','商户名','设备号','端口号','消费额','订单状态','支付方式','充电信息','是否续充','开始时间','结束时间','结束原因','退款时间']
-                    const filterVal= ['index','ordernum','username','dealer','equipmentnum','port','expenditure','status','payType','chargeInfo','isConCharge','begintime','endtime','endFrom','refDate']
-                    Excel({
-                        tHeader: tHeader,
-                        filterVal:  filterVal,
-                        list: list,
-                        filename: '充电记录',
-                        formatJson: this.formatJson
-                    })
-              }else{
-                  messageTip('error','导出失败，请稍后重试')
-              }
+                    this.loading_obj.close()
+                    if(res.code == 200){
+                            const list=res.listdata
+                            const tHeader= ['序号','订单号','用户名','商户名','设备号','端口号','消费额','订单状态','支付方式','消耗电量(度)','充电时间(分钟)','是否续充','开始时间','结束时间','结束原因','退款时间']
+                            const filterVal= ['index','ordernum','username','dealer','equipmentnum','port','expenditure','status','payType','consume_quantity','consume_time','isConCharge','begintime','endtime','endFrom','refDate']
+                            Excel({
+                                tHeader: tHeader,
+                                filterVal:  filterVal,
+                                list: list,
+                                filename: `充电记录${startTime}-${endTime}`,
+                                formatJson: this.formatJson
+                            })
+                    }else if(res.code == 201){
+                        messageTip('warning',res.message || '导出数量超过最大限制')
+                    }else{
+                        messageTip('error','导出失败，请稍后重试') 
+                    }
               }).catch(err=>{
                 this.loading_obj.close()
                 messageTip('error','导出失败，请稍后重试')
@@ -493,8 +496,8 @@ export default {
                         }
                     }else if(jtem =='payType'){
                         val= item.paytype == 1 ? "钱包" : item.paytype == 2 ? "微信" : item.paytype == 3 ? "支付宝": item.paytype == 4 ? "包月下发数据" : item.paytype == 5 ? "投币" : item.paytype == 6 ? "刷卡" : item.paytype == 7 ? "刷卡" : "— —"
-                    }else if(jtem == 'chargeInfo'){
-                        val= `${item.consume_quantity / 100}度--${item.consume_time}分钟`
+                    }else if(jtem == 'consume_quantity'){
+                        val= item.consume_quantity / 100
                     }else if(jtem == 'isConCharge'){
                         val= item.ifcontinue != null ? '是' : '否'
                     }else if(['begintime','endtime'].includes(jtem)){

@@ -20,7 +20,7 @@
                         v-model="hisStatisForm.startTime"
                         size="small"
                         type="date"
-                        value-format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd"
                         placeholder="选择开始时间"
                         
                         >
@@ -32,7 +32,7 @@
                         size="small"
                         v-model="hisStatisForm.endTime"
                         type="date"
-                        value-format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd"
                         placeholder="选择结束时间"
                         >
                       </el-date-picker>
@@ -129,7 +129,7 @@
 import Vue from 'vue'
 import MyPagination from '../../components/common/MyPagination'
 import {handleHisStatis} from '@/require/datastatis'
-
+import Util from '@/utils/util'
 export default {
     data(){
         return {
@@ -150,8 +150,14 @@ export default {
         MyPagination
     },
     created(){
-        if(JSON.stringify(this.$route.query) != "{}"){
-            this.hisStatisForm= {...this.$route.query}
+       let {VNK,...routerKey}=  this.$route.query
+        if(JSON.stringify(routerKey) != "{}"){
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD',30)
+            this.hisStatisForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
+            this.nowPage= parseInt(this.hisStatisForm.currentPage) || 1
+        }else{ //直接点击进来的
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD',30)
+            this.hisStatisForm= {startTime,endTime}
         }
         this.getHisStatisData(this.hisStatisForm)
     },

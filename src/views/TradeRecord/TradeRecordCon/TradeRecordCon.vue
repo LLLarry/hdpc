@@ -69,8 +69,9 @@
                       </el-date-picker>
                 </el-form-item>
             
-                <el-form-item class="form_margin0 content_btn">
+                <el-form-item class="form_margin0 content_btn w200">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
+                    <el-button @click="export2Excel" size="small" type="primary">导出Excel</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
@@ -144,18 +145,6 @@
                 >
                 </el-table-column>
 
-                <el-table-column
-                prop="excel"
-                label="钱包退费"
-                min-width="80"
-                >
-                <template>
-                    <!-- 导出excell -->
-                    <div>
-                        <el-button @click="export2Excel" size="small" type="primary">导出Excel</el-button>
-                    </div> 
-                </template>
-                </el-table-column>
                </el-table>
 
               
@@ -384,7 +373,6 @@ export default {
         let {VNK,...routerKey}=  this.$route.query
         if(JSON.stringify(routerKey) != "{}"){
             let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',1)
-            console.log(startTime)
             this.tradeRecordConForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
             this.nowPage= parseInt(this.tradeRecordConForm.currentPage) || 1
         }else{ //直接点击进来的
@@ -474,6 +462,9 @@ export default {
             //     autoWidth: true
             //     })
             // })
+            let {startTime,endTime}= this.tradeRecordConForm
+            startTime= !startTime ? "20190101000001" : moment(startTime).format('YYYYMMDDHHmmss')
+            endTime= !endTime ? moment(new Date()).format('YYYYMMDDHHmmss') : moment(endTime).format('YYYYMMDDHHmmss')
          confirDelete('确认导出交易记录吗？',()=>{
                 this.loading_obj = this.$loading({
                 lock: true,
@@ -482,21 +473,23 @@ export default {
                 background: 'rgba(255, 255, 255, 0.8)'
                 })
              getTradeRecord({... this.tradeRecordConForm,isAlllData : 1}).then(res=>{
-              this.loading_obj.close()
-              if(res.code == 200){
-                    const list=res.listdata
-                    const tHeader= ["序号","订单号","用户名","商户名","设备(卡)号","设备类型","交易金额","商户金额","合伙人金额","订单状态","支付方式","来源","交易时间"]
-                    const filterVal= ["index","ordernum","uusername","dealer","code","paysource","money","merMoney","partnerMoney","status","paytype","form","create_time"]
-                    Excel({
-                        tHeader: tHeader,
-                        filterVal:  filterVal,
-                        list: list,
-                        filename: '交易记录',
-                        formatJson: this.formatJson
-                    })
-              }else{
-                  messageTip('error','导出失败，请稍后重试')
-              }
+                this.loading_obj.close()
+                if(res.code == 200){
+                        const list=res.listdata
+                        const tHeader= ["序号","订单号","用户名","商户名","设备(卡)号","设备类型","交易金额","商户金额","合伙人金额","订单状态","支付方式","来源","交易时间"]
+                        const filterVal= ["index","ordernum","uusername","dealer","code","paysource","money","merMoney","partnerMoney","status","paytype","form","create_time"]
+                        Excel({
+                            tHeader: tHeader,
+                            filterVal:  filterVal,
+                            list: list,
+                            filename: `交易记录${startTime}-${endTime}`,
+                            formatJson: this.formatJson
+                        })
+                }else if(res.code == 201){
+                   messageTip('warning',res.message || '导出数量超过最大限制')
+                }else{
+                   messageTip('error','导出失败，请稍后重试') 
+                }
               }).catch(err=>{
                 this.loading_obj.close()
                 messageTip('error','导出失败，请稍后重试')

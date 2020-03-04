@@ -28,7 +28,7 @@
                         v-model="deviceEarnForm.startTime"
                         size="small"
                         type="date"
-                        value-format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd"
                         placeholder="选择开始时间">
                       </el-date-picker>
                 </el-form-item>
@@ -38,7 +38,7 @@
                         size="small"
                         v-model="deviceEarnForm.endTime"
                         type="date"
-                        value-format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd"
                         placeholder="选择结束时间">
                       </el-date-picker>
                  </el-form-item>
@@ -183,6 +183,7 @@
 <script>
 import MyPagination from '../../components/common/MyPagination'
 import { handleGetDeviceEarn } from '@/require/datastatis'
+import Util from '@/utils/util'
 export default {
    data(){
        return {
@@ -206,9 +207,19 @@ export default {
        MyPagination 
     },
     created(){
-        if(JSON.stringify(this.$route.query) != "{}"){
-            this.deviceEarnForm= {...this.$route.query}
+        let {VNK,...routerKey}=  this.$route.query
+        if(JSON.stringify(routerKey) != "{}"){
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD',30)
+            this.deviceEarnForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单
+            this.nowPage= parseInt(this.deviceEarnForm.currentPage) || 1
+        }else{ //直接点击进来的
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD',30)
+            this.deviceEarnForm= {startTime,endTime}
         }
+
+        // if(JSON.stringify(this.$route.query) != "{}"){
+        //     this.deviceEarnForm= {...this.$route.query}
+        // }
         this.asyHandleGetDeviceEarn(this.deviceEarnForm)
     },
     methods: {

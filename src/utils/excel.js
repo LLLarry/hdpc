@@ -22,7 +22,7 @@ export default ({tHeader=[],filterVal=[],list=[],filename="文件",formatJson})=
         excel.export_json_to_excel({
         header: tHeader,
         data,
-        filename: filename+new Date().getTime(),
+        filename: filename,
         autoWidth: true
         })
     })

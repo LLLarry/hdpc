@@ -246,40 +246,51 @@
         <el-dialog
             title="设置"
             :visible.sync="dialogSetVisible"
-            width="390px"
+            width="780px"
             :before-close="handleSetClose">
-            <el-form :model="ruleSetForm" class="setForm" label-position="center" label-width="160px">
-                <el-form-item label="提现通知" prop="withmess">
-                     <el-radio-group v-model="ruleSetForm.withmess">
-                        <el-radio :label="1">开启</el-radio>
-                        <el-radio :label="2">关闭</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="订单通知" prop="ordermess">
-                    <el-radio-group v-model="ruleSetForm.ordermess">
-                        <el-radio :label="1">开启</el-radio>
-                        <el-radio :label="2">关闭</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="设备上下线通知" prop="equipmess">
-                    <el-radio-group v-model="ruleSetForm.equipmess">
-                        <el-radio :label="1">开启</el-radio>
-                        <el-radio :label="2">关闭</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="脉冲模块自动退费" prop="incoinrefund">
-                    <el-radio-group v-model="ruleSetForm.incoinrefund">
-                        <el-radio :label="1">开启</el-radio>
-                        <el-radio :label="2">关闭</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                 <el-form-item label="是否显示投币收益" prop="showincoins">
-                    <el-radio-group v-model="ruleSetForm.showincoins">
-                        <el-radio :label="1">开启</el-radio>
-                        <el-radio :label="2">关闭</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-            </el-form>
+            <div class="clearfix">
+                <div class="dialog_left">
+                    <el-form :model="ruleSetForm" class="setForm" label-position="center" label-width="160px">
+                        <el-form-item label="提现通知" prop="withmess">
+                            <el-radio-group v-model="ruleSetForm.withmess">
+                                <el-radio :label="1">开启</el-radio>
+                                <el-radio :label="2">关闭</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="订单通知" prop="ordermess">
+                            <el-radio-group v-model="ruleSetForm.ordermess">
+                                <el-radio :label="1">开启</el-radio>
+                                <el-radio :label="2">关闭</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="设备上下线通知" prop="equipmess">
+                            <el-radio-group v-model="ruleSetForm.equipmess">
+                                <el-radio :label="1">开启</el-radio>
+                                <el-radio :label="2">关闭</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="脉冲模块自动退费" prop="incoinrefund">
+                            <el-radio-group v-model="ruleSetForm.incoinrefund">
+                                <el-radio :label="1">开启</el-radio>
+                                <el-radio :label="2">关闭</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="是否显示投币收益" prop="showincoins">
+                            <el-radio-group v-model="ruleSetForm.showincoins">
+                                <el-radio :label="1">开启</el-radio>
+                                <el-radio :label="2">关闭</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-form>
+                </div>
+                <div  class="dialog_right">
+                    <el-form :model="ruleSetForm" class="setForm" label-position="center" label-width="100px">
+                        <el-form-item label="客服电话">
+                            <el-input v-model="ruleSetForm.servephone" placeholder="客服电话" size="small"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogSetVisible = false">取 消</el-button>
                 <el-button type="primary" @click="submitSetInfo">确 定</el-button>
@@ -518,22 +529,25 @@ export default {
         async handleSetButton(merid){ //获取设置框信息
             try{
                 let setInfo= await handleMerInfoSet({merid})
-                setInfo.withmess= setInfo.withmess ? setInfo.withmess : 2
-				setInfo.ordermess= setInfo.ordermess ? setInfo.ordermess : 2
-				setInfo.equipmess= setInfo.equipmess ? setInfo.equipmess : 2
-                setInfo.incoinrefund= setInfo.incoinrefund ? setInfo.incoinrefund : 1
-                setInfo.showincoins= setInfo.showincoins ? setInfo.showincoins : 2
-                let {withmess,ordermess,equipmess,incoinrefund,showincoins} = setInfo
-                this.ruleSetForm= {withmess,ordermess,equipmess,incoinrefund,merid,showincoins}
+                let result= setInfo.result
+                let setObj= {}
+                setObj.withmess= result.withmess ? result.withmess : 2
+				setObj.ordermess= result.ordermess ? result.ordermess : 2
+				setObj.equipmess= result.equipmess ? result.equipmess : 2
+                setObj.incoinrefund= result.incoinrefund ? result.incoinrefund : 1
+                setObj.showincoins= result.showincoins ? result.showincoins : 2
+                let {withmess,ordermess,equipmess,incoinrefund,showincoins} = setObj
+                let { servephone= ""}= setInfo.dealer
+                this.ruleSetForm= {withmess,ordermess,equipmess,incoinrefund,merid,showincoins,servephone}
                 this.dialogSetVisible= true
             }catch(error){
 
             }
         },
         async submitSetInfo(){ //设置设置框信息
-            const {merid, withmess,ordermess: order, equipmess: equip,incoinrefund,showincoins}= this.ruleSetForm
+            const {merid, withmess,ordermess: order, equipmess: equip,incoinrefund,showincoins,servephone}= this.ruleSetForm
             try{
-                let info= await setMerInfoSetInfo({merid,withmess,order,equip,incoinrefund,showincoins})
+                let info= await setMerInfoSetInfo({merid,withmess,order,equip,incoinrefund,showincoins,servephone})
                 if(info.code === 200){
                     messageTip(undefined,'设置成功')
                 }
@@ -746,6 +760,14 @@ export default {
 .merInfo {
     .dialogStyle {
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+    .dialog_left {
+        float: left;
+        width: 50%;
+    }
+    .dialog_right {
+        float: right;
+        width: 50%;
     }
     .payTemRow {
         .title {

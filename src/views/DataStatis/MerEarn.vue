@@ -144,9 +144,24 @@
                 min-width="80">
                 </el-table-column>
 
-                 <el-table-column
+                <el-table-column
                 prop="alipayretord"
                 label="支付宝退费订单"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="oncardmoney"
+                label="刷卡"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="windowpulsemoney"
+                label="窗口投币"
+                min-width="80">
+                </el-table-column>
+                <el-table-column
+                prop="incoinsmoney"
+                label="投币"
                 min-width="80">
                 </el-table-column>
             </el-table>
@@ -223,7 +238,10 @@ export default {
                             9: 'wechatretmoney',
                             10: 'wechatretord',
                             11: 'alipayretmoney',
-                            12: 'alipayretord'
+                            12: 'alipayretord',
+                            13: 'oncardmoney',
+                            14: 'windowpulsemoney',
+                            15: 'incoinsmoney'
                         }
                     sums[index]= this.gatherData[keyVal[index]]
                     sums[2]= 'N/A'

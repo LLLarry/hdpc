@@ -160,12 +160,21 @@
                 <el-table-column
                 prop="status"
                 label="订单状态"
-                width="85"
+                width="100"
                 >
                  <template slot-scope="scope">
                     <el-link type="danger" :underline="false" v-if="scope.row.number==1">全额退款</el-link>
                     <div  v-else-if="scope.row.number==2">
-                        <el-link type="warning" :underline="false">部分退款 </el-link>
+                        <el-link type="warning" :underline="false">
+                            部分退款 
+                            <el-popover
+                                placement="right"
+                                width="260"
+                                trigger="hover"
+                                content="该退款已退到平台用户的充电钱包，查看方法 登陆公众号->充电中心->个人中心">
+                                <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
+                            </el-popover>
+                        </el-link>
                         （<el-link type="danger" :underline="false">{{ typeof (scope.row.refund_money) == 'number' ? scope.row.refund_money.toFixed(2) : '0.00'}}</el-link>）
                     </div>
                     <el-link type="success" :underline="false" v-else>正常</el-link>

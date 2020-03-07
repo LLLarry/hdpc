@@ -36,93 +36,110 @@
                            <td>{{dataStatisInfo.disline}}</td>
                            <td>设备绑定总数</td>
                            <td>{{dataStatisInfo.onbinding}}</td>
-                           <td>设备未绑定数</td>
+                           <td>设备未绑定总数</td>
                            <td>{{dataStatisInfo.disbinding}}</td>
                        </tr>
                    </tbody>
 
                    <thead>
                        <tr >
-                           <th colspan="10">总订单信息</th>
+                           <th colspan="10">
+                               总订单信息
+                                <el-popover
+                                    placement="right"
+                                    width="260"
+                                    trigger="hover"
+                                    content="总订单信息为绑定设备后的在线信息">
+                                    <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
+                                </el-popover>
+                           </th>
                        </tr>
                    </thead>
                    <tbody>
                         <tr>
-                           <td>收益总额</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.incomemoney}}</td>
-                           <td>累计提现</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.extractmoney}}</td>
-                           <td>累计提现手续费</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.sumservicecharge}}</td>
-                           <td>未提现金额</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.earningsMoney}}</td>
-                           <td>资金总额</td>
+                           <td>
+                               资金总额
+                                <el-popover
+                                    placement="right"
+                                    width="260"
+                                    trigger="hover"
+                                    content=" 资金总额为在线收款、在线退款和提现金额的总计">
+                                    <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
+                                </el-popover>
+                           </td>
+                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.totalmoney}}</td>
+                           <td>在线收款</td>
                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.onlinemoney}}</td>
+                           <td>在线退款</td>
+                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refonlinemoney}}</td>
+                           <td>
+                               提现总额
+                                <el-popover
+                                    placement="right"
+                                    width="260"
+                                    trigger="hover"
+                                    content="提现金额为已从平台提取的金额">
+                                    <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
+                                </el-popover>
+                            </td>
+                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.extractmoney}}</td>
+                           <td>
+                               提现费用
+                                <el-popover
+                                    placement="right"
+                                    width="260"
+                                    trigger="hover"
+                                    content="提现费用为微信提现收取的费用">
+                                    <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
+                                </el-popover>
+                           </td>
+                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.sumservicecharge}}</td>
                         </tr>                     
                         <tr>
-                            <td>微信收入总额</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.wechatmoney}}</td>
-                            <td>支付宝收入总额</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.alipaymoney}}</td>
-                            <td>微信退费总额</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refwechatmoney}}</td>
-                            <td>支付宝退费总额</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refalipaymoney}}</td>
-                            <td>订单总数</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.totalorder}}</td>
-                        </tr>
-                        <tr>
-                            <td>微信总订单</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.wechatorder}}</td>
-                            <td>支付宝总订单</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.alipayorder}}</td>
-                            <td>微信退费总订单</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refwechatorder}}</td>
-                            <td>支付宝退费总订单</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.refalipayorder}}</td>
+                            <td>设备缴费金额</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.paymentmoney}}</td>
                             <td>待提现金额</td>
                             <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.penextractmoney}}</td>
+                            <td>未提现金额</td>
+                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.earningsMoney}}</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                    </tbody>
 
                    <thead>
-                       <tr >
-                           <th colspan="10">今日订单信息</th>
+                       <tr>
+                           <th colspan="10">
+                               今日订单信息
+                                <el-popover
+                                    placement="right"
+                                    width="260"
+                                    trigger="hover"
+                                    content="今日订单信息为当天收入信息">
+                                    <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
+                                </el-popover>
+                           </th>
                        </tr>
                    </thead>
                    <tbody>
                        <tr>
-                           <td>订单总数</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.totalorder}}</td>
-                           <td>微信总订单</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.wechatnum}}</td>
-                           <td>支付宝总订单</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.alipaynum}}</td>
-                           <td>微信退费总订单</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.refwechatnum}}</td>
-                           <td>支付宝退费总订单</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.refalipaynum}}</td>
-                       </tr>
-                        <tr>
-                           <td>资金总额</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.totalmoney}}</td>
-                           <td>微信支付总额</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.wechatmoney}}</td>
-                           <td>支付宝支付总额</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.alipaymoney}}</td>
-                           <td>微信退费总额</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.refwechatmoney}}</td>
-                           <td>支付宝退费总额</td>
-                           <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.refalipaymoney}}</td>
+                            <td>今日金额</td>
+                            <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.totalmoney}}</td>
+                            <td>今日在线收款</td>
+                            <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.onlinemoney}}</td>
+                            <td>今日在线退款</td>
+                            <td>{{dataStatisInfo.totaltodayinfo && dataStatisInfo.totaltodayinfo.refonlinemoney}}</td>
+                            <td></td>
+                            <td></td>
                        </tr>
                    </tbody>
                    
-                     <thead>
+                     <thead v-if="userInfo.classify === 'superAdmin'">
                        <tr >
                            <th colspan="10">缴费信息</th>
                        </tr>
                    </thead>
-                   <tbody>
+                   <tbody v-if="userInfo.classify === 'superAdmin'">
                         <tr>
                            <td>缴费总额</td>
                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.feescaleEarns}}</td>

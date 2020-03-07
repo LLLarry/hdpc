@@ -535,7 +535,7 @@ export default {
 				setObj.ordermess= result.ordermess ? result.ordermess : 2
 				setObj.equipmess= result.equipmess ? result.equipmess : 2
                 setObj.incoinrefund= result.incoinrefund ? result.incoinrefund : 1
-                setObj.showincoins= result.showincoins ? result.showincoins : 2
+                setObj.showincoins= result.showincoins !== 2 ? result.showincoins : 2
                 let {withmess,ordermess,equipmess,incoinrefund,showincoins} = setObj
                 let { servephone= ""}= setInfo.dealer
                 this.ruleSetForm= {withmess,ordermess,equipmess,incoinrefund,merid,showincoins,servephone}

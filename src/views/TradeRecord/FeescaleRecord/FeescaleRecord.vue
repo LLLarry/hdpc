@@ -133,6 +133,19 @@
                 </el-table-column>
                 
                 <el-table-column
+                prop="paytype"
+                label="缴费方式"
+                min-width="100"
+                >
+                <template slot-scope="{row}">
+                    <el-link v-if=" [0,1,2,3].includes(row.paytype)" type="success" :underline="false">钱包缴费</el-link>
+                    <el-link v-else-if="[4].includes(row.paytype)" type="warning" :underline="false">微信缴费</el-link>
+                    <el-link v-else type="default" :underline="false">未知</el-link>
+                    
+                </template>
+                </el-table-column>
+
+                <el-table-column
                 prop="createtime"
                 label="续费时间"
                 min-width="150"

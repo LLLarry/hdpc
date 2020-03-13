@@ -121,7 +121,14 @@
                             信息 &nbsp;&nbsp;&nbsp;&nbsp;<el-button  :icon="scope.column.get ? 'el-icon-loading' : 'el-icon-refresh-right'"  type="primary" size="mini" plain  @click="getBoardInfo(scope.column)">更新</el-button>
                         </template>
                         <template slot-scope="{row}">
-                           {{row.content2}}
+                            <el-button 
+                                type="primary" 
+                                size="mini" 
+                                v-if="row.title2 === '升级通知'"
+                                icon="el-icon-bell"
+                                @click="handleUpdateTip"
+                                >升级通知</el-button>
+                            <span v-else>{{row.content2}}</span>
                         </template>
                         </el-table-column>
                         <el-table-column
@@ -836,7 +843,7 @@ import TemMulDevice2 from '@/components/common/TemMulDevice2'
 import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
-remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,getWolfreadsys,getWolftestpay } from '@/require/deviceManage'
+remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,getWolfreadsys,getWolftestpay ,sendUpdataTip} from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
@@ -882,7 +889,7 @@ export default {
                 {title1: '硬件版本号',content1: '', title2: '主板硬件版本',content2: '',title3: '纬度',content3: ''},
                 {title1: '软件版本号',content1: '', title2: '主版软件版本',content2: '',title3: '查看地图',content3: ''},
                 {title1: 'CCID',content1: '', title2: '主板ID',content2: '',title3: '更新经纬度',content3: ''},
-                {title1: 'IMEI',content1: '',  title2: '',content2: '',title3: '',content3: ''},
+                {title1: 'IMEI',content1: '',  title2: '升级通知',content2: '',title3: '',content3: ''},
                 {title1: '信号强度',content1: '', title2: '',content2: '',title3: '',content3: ''}
             ],
             mapList: [],
@@ -1125,7 +1132,7 @@ export default {
                     {title1: '硬件版本号',content1: hwVersonNum, title2: '主板硬件版本',content2: mainHardver,title3: '纬度',content3: latitude},
                     {title1: '软件版本号',content1: sfVerson, title2: '主版软件版本',content2: mainSoftver,title3: '查看地图',content3: ''},
                     {title1: 'CCID',content1: CCID, title2: '主板ID',content2: mainid,title3: '更新经纬度',content3: ''},
-                    {title1: 'IMEI',content1: IMEI,  title2: '',content2: '',title3: '',content3: ''},
+                    {title1: 'IMEI',content1: IMEI,  title2: '升级通知',content2: '',title3: '',content3: ''},
                     {title1: '信号强度',content1: single, title2: '',content2: '',title3: '',content3: ''}
                 ],
                 _this.mapInfo= [ //经纬度信息
@@ -1205,6 +1212,15 @@ export default {
                 Vue.set(row,'get',false)
             })
             
+        },
+        handleUpdateTip(){ //设备升级通知
+            sendUpdataTip().then(res=>{
+                if(res.wolfcode == 1000){
+                    messageTip('success','通知成功')
+                }else{
+                    messageTip('error','通知失败')
+                }
+            })
         },
         getBoardSet(){ //设置参数 07
         

@@ -110,7 +110,12 @@
             <div style="margin-top: 20px; text-align: center;"><el-button type="primary" icon="el-icon-document-checked" size="mini" @click="submitPayTem" >保存模板</el-button></div>
             </el-card>
         </el-card>
-        
+        <el-card class="box-card card_content">
+            <div slot="header" class="clearfix">
+                <span>上传文件</span>
+            </div>
+            <UpLoadFile :baseURL="baseURL" />
+        </el-card>
     </div>
 </template>
 
@@ -119,11 +124,13 @@ import Template from '@/components/common/Template'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateWallet from '@/components/common/TemplateWallet'
+import UpLoadFile from '@/components/common/upLoadFile'
 import { messageTip } from '@/utils/ele'
 import { getSystemSetInfo,updateSystemMerPay } from '@/require/systemSet'
 export default {
     data(){
         return {
+            baseURL: 'http://www.he360.com.cn',
             temChargeList: [
                     // {   
                     //     id: 1,
@@ -254,9 +261,15 @@ export default {
         Template,
         TemplateCoin,
         TemplateOffline,
-        TemplateWallet
+        TemplateWallet,
+        UpLoadFile
     },
     created(){
+        let baseURL= window.location.origin || 'http://www.he360.com.cn'
+        if (process.env.NODE_ENV === "development"){ //开发环境
+        baseURL= 'http://localhost'
+        }
+        this.baseURL= baseURL
         this.sayGetSystemSetInfo()
     },
     methods: {

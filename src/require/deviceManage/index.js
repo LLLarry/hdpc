@@ -242,6 +242,18 @@ export const getWolftestpay= function (data){
          })
 }
 
+/**
+ * 升级通知 （主板）
+ */
+export const sendUpdataTip= function (){ 
+    return ajax({
+             url: '/updradeInform',
+             data: {},
+             method: 'post'
+         })
+}
+
+
 
 
 

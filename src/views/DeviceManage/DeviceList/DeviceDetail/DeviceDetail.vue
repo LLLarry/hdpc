@@ -55,7 +55,21 @@
                         </span>
                     </div>
                 </el-col>
-                
+            </el-row>
+            <el-row style="margin-top: 20px;">
+                <el-col :xs="10" :sm="12" :md="12">
+                    <div class="colCon">
+                        更换IMEI号：
+                        <span v-if="!isShowIMEI">
+                            <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="()=>{this.isShowIMEI= !this.isShowIMEI}">更换IMEI号</el-button>
+                         </span>
+                        <span v-else>
+                            <el-input v-model="changeIMEI" placeholder="请输入需要替换设备的设备号" size="mini" style="width: 40%"></el-input> 
+                            <el-button type="success" size="mini" @click="handleChangeIMEI()" icon="el-icon-folder-checked">替换</el-button>
+                            <el-button type="warning" size="mini" @click="()=>{ this.isShowIMEI= false; this.changeIMEI= ''; }"  icon="el-icon-folder-delete">取消</el-button>
+                        </span>
+                    </div>
+                </el-col>
             </el-row>
          </el-card>
         <!-- 模块信息 -->
@@ -843,7 +857,8 @@ import TemMulDevice2 from '@/components/common/TemMulDevice2'
 import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
-remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,getWolfreadsys,getWolftestpay ,sendUpdataTip} from '@/require/deviceManage'
+remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,
+getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI} from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
@@ -864,10 +879,12 @@ export default {
             hwVerson:'01',//硬件版本
             remark: '' , //设备名
             resetRemark: '', //修改设备名
+            changeIMEI: '', //更换IMEI号
             expirationTime: '',//设备到期时间
             expirationVisable: false, //设备到期日期
             expirationForm: {},//设备到期日期容器
             isShowDeviceName: false, //是否显示设备名称
+            isShowIMEI: false, //修改IMEI号是否显示
             dialogVisible: false, //地图默认隐藏
             bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
             mapPlugin: [ //地图插件配置
@@ -1065,6 +1082,14 @@ export default {
                messageTip('warning','设置失败') 
            })
             this.isShowDeviceName= false
+        },
+        handleChangeIMEI(){ //修改IMEI号
+            let {code:code1,changeIMEI:code2} = this
+           changeDeviceIMEI({code1,code2}).then(res=>{
+                messageTip('success',res.msg) 
+           })
+           this.isShowIMEI= false
+           this.changeIMEI= ''
         },
         handleCancelDeleteName(){ //点击取消显示设备名称框
             this.isShowDeviceName= false

@@ -252,6 +252,16 @@ export const sendUpdataTip= function (){
              method: 'post'
          })
 }
+/**
+ * 更换设备IMEI好
+ */
+export const changeDeviceIMEI= function (data){ 
+    return ajax({
+             url: '/deviceData/transpositionImei',
+             data: data,
+             method: 'post'
+         })
+}
 
 
 

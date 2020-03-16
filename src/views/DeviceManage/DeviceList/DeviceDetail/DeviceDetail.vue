@@ -141,7 +141,16 @@
                                 v-if="row.title2 === '升级通知'"
                                 icon="el-icon-bell"
                                 @click="handleUpdateTip"
-                                >升级通知</el-button>
+                                >升级通知
+                            </el-button>
+                            <el-button 
+                                type="primary" 
+                                size="mini" 
+                                v-if="row.title2 === '发送升级程序'"
+                                icon="el-icon-message"
+                                @click="handleSendUpdateInfo"
+                                >发送升级程序
+                            </el-button>
                             <span v-else>{{row.content2}}</span>
                         </template>
                         </el-table-column>
@@ -858,7 +867,7 @@ import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
 remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,
-getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI} from '@/require/deviceManage'
+getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo} from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
@@ -907,7 +916,7 @@ export default {
                 {title1: '软件版本号',content1: '', title2: '主版软件版本',content2: '',title3: '查看地图',content3: ''},
                 {title1: 'CCID',content1: '', title2: '主板ID',content2: '',title3: '更新经纬度',content3: ''},
                 {title1: 'IMEI',content1: '',  title2: '升级通知',content2: '',title3: '',content3: ''},
-                {title1: '信号强度',content1: '', title2: '',content2: '',title3: '',content3: ''}
+                {title1: '信号强度',content1: '', title2: '',content2: '发送升级程序',title3: '',content3: ''}
             ],
             mapList: [],
             mapInfo: [
@@ -1158,7 +1167,7 @@ export default {
                     {title1: '软件版本号',content1: sfVerson, title2: '主版软件版本',content2: mainSoftver,title3: '查看地图',content3: ''},
                     {title1: 'CCID',content1: CCID, title2: '主板ID',content2: mainid,title3: '更新经纬度',content3: ''},
                     {title1: 'IMEI',content1: IMEI,  title2: '升级通知',content2: '',title3: '',content3: ''},
-                    {title1: '信号强度',content1: single, title2: '',content2: '',title3: '',content3: ''}
+                    {title1: '信号强度',content1: single, title2: '发送升级程序',content2: '',title3: '',content3: ''}
                 ],
                 _this.mapInfo= [ //经纬度信息
                     {title: '经度', content: longitude},
@@ -1239,11 +1248,20 @@ export default {
             
         },
         handleUpdateTip(){ //设备升级通知
-            sendUpdataTip().then(res=>{
+            sendUpdataTip({code:this.code}).then(res=>{
                 if(res.wolfcode == 1000){
                     messageTip('success','通知成功')
                 }else{
                     messageTip('error','通知失败')
+                }
+            })
+        },
+        handleSendUpdateInfo(){ //发送升级程序
+            sendUpdataInfo().then(res=>{
+                if(res.wolfcode == 1000){
+                    messageTip('success','发送升级程序成功')
+                }else{
+                    messageTip('error','发送升级程序失败')
                 }
             })
         },

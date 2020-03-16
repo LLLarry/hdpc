@@ -245,15 +245,27 @@ export const getWolftestpay= function (data){
 /**
  * 升级通知 （主板）
  */
-export const sendUpdataTip= function (){ 
+export const sendUpdataTip= function (data){ 
     return ajax({
              url: '/updradeInform',
-             data: {},
+             data: data,
              method: 'post'
          })
 }
+
 /**
- * 更换设备IMEI好
+ * 发送升级程序（主板）
+ */
+export const sendUpdataInfo= function (data){ 
+    return ajax({
+             url: '/updradeDataSend',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * 更换设备IMEI号
  */
 export const changeDeviceIMEI= function (data){ 
     return ajax({

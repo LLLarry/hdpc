@@ -57,7 +57,7 @@
                 </el-col>
             </el-row>
             <el-row style="margin-top: 20px;">
-                <el-col :xs="10" :sm="12" :md="12">
+                <div class="code_handle">
                     <div class="colCon">
                         更换IMEI号：
                         <span v-if="!isShowIMEI">
@@ -69,7 +69,20 @@
                             <el-button type="warning" size="mini" @click="()=>{ this.isShowIMEI= false; this.changeIMEI= ''; }"  icon="el-icon-folder-delete">取消</el-button>
                         </span>
                     </div>
-                </el-col>
+                </div>
+                 <div class="code_handle">
+                    <div class="colCon">
+                        更换设备号：
+                        <span v-if="!isShowChangeCode">
+                            <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="()=>{this.isShowChangeCode= !this.isShowChangeCode}">更换设备号</el-button>
+                         </span>
+                        <span v-else>
+                            <el-input v-model="changeCode" placeholder="输入更换为的设备号" size="mini" style="width: 40%"></el-input> 
+                            <el-button type="success" size="mini" @click="handleChangeCode()" icon="el-icon-folder-checked">更换</el-button>
+                            <el-button type="warning" size="mini" @click="()=>{ this.isShowChangeCode= false; this.isShowChangeCode= ''; }"  icon="el-icon-folder-delete">取消</el-button>
+                        </span>
+                    </div>
+                </div>
             </el-row>
          </el-card>
         <!-- 模块信息 -->
@@ -867,7 +880,7 @@ import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
 remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,
-getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo} from '@/require/deviceManage'
+getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo,changeDeviceCode} from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
 import VueAMap from 'vue-amap';
@@ -889,11 +902,13 @@ export default {
             remark: '' , //设备名
             resetRemark: '', //修改设备名
             changeIMEI: '', //更换IMEI号
+            changeCode: '',//更换code
             expirationTime: '',//设备到期时间
             expirationVisable: false, //设备到期日期
             expirationForm: {},//设备到期日期容器
             isShowDeviceName: false, //是否显示设备名称
             isShowIMEI: false, //修改IMEI号是否显示
+            isShowChangeCode: false, //修改设备号是否显示
             dialogVisible: false, //地图默认隐藏
             bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
             mapPlugin: [ //地图插件配置
@@ -1095,10 +1110,31 @@ export default {
         handleChangeIMEI(){ //修改IMEI号
             let {code:code1,changeIMEI:code2} = this
            changeDeviceIMEI({code1,code2}).then(res=>{
-                messageTip('success',res.msg) 
+                if(res.code === 200){
+                    messageTip('success',res.msg) 
+                }else{
+                    messageTip('warning',res.msg) 
+                }
            })
            this.isShowIMEI= false
            this.changeIMEI= ''
+        },
+        handleChangeCode(){ //更换设备号
+            let {code:code1,changeCode:code2} = this
+            if(!(/^\d{6}$/.test(code2))){
+                return messageTip('warning','请输入设备号为6位纯数字')
+            }
+            changeDeviceCode({code1,code2}).then(res=>{
+                if(res.code === 200){
+                    messageTip('success',res.msg)
+                    this.$router.push({path: '/deviceManage/deviceList/deviceDetail',query: {code: code2}})
+                }else{
+                    messageTip('warning',res.msg) 
+                }
+                
+           })
+           this.isShowChangeCode= false
+           this.changeCode= ''
         },
         handleCancelDeleteName(){ //点击取消显示设备名称框
             this.isShowDeviceName= false
@@ -1614,7 +1650,13 @@ export default {
 
 .deviceDetail {
     background-color: #F8F8F9;
-    po
+    .code_handle {
+        float: left;
+        margin-right: 40px;
+        &:last-of-type {
+            margin-right: 0;
+        }
+    }
     .el-card.is-always-shadow {
         box-shadow: none;
         margin-bottom: 0px;

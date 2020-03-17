@@ -275,6 +275,16 @@ export const changeDeviceIMEI= function (data){
          })
 }
 
+/**
+ * 更换设备号
+ */
+export const changeDeviceCode= function (data){ 
+    return ajax({
+             url: '/deviceData/customizationCode',
+             data: data,
+             method: 'post'
+         })
+}
 
 
 

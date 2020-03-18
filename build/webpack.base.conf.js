@@ -18,12 +18,14 @@ module.exports = {
   },
   //webpack打包时忽略的包 
   externals: {
+    'vue': 'Vue',
     'vue-router': 'VueRouter',
     'vuex': 'Vuex',
     'axios': 'axios',
     "moment": "moment",
     "echarts": "echarts",
     'qs': 'Qs',
+    'element-ui': 'ELEMENT'
   },
   output: {
     path: config.build.assetsRoot,

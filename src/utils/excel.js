@@ -9,7 +9,7 @@
  */
 
 export default ({tHeader=[],filterVal=[],list=[],filename="文件",formatJson})=>{
-    import('@/vendor/Export2Excel').then(excel => {
+    import('@/vendor/Export2Excel').then(excel => { //异步导入
         // const tHeader = ['Id', 'Title']
         // const filterVal = ['id', 'title']
         // const list = [

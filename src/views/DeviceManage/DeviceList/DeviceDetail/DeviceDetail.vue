@@ -59,12 +59,12 @@
             <el-row style="margin-top: 20px;">
                 <div class="code_handle">
                     <div class="colCon">
-                        更换IMEI号：
+                        互换模块：
                         <span v-if="!isShowIMEI">
-                            <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="()=>{this.isShowIMEI= !this.isShowIMEI}">更换IMEI号</el-button>
+                            <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="()=>{this.isShowIMEI= !this.isShowIMEI}">输入要更换的设备号</el-button>
                          </span>
                         <span v-else>
-                            <el-input v-model="changeIMEI" placeholder="请输入需要替换设备的设备号" size="mini" style="width: 40%"></el-input> 
+                            <el-input v-model="changeIMEI" placeholder="输入要更换的设备号" size="mini" style="width: 40%"></el-input> 
                             <el-button type="success" size="mini" @click="handleChangeIMEI()" icon="el-icon-folder-checked">替换</el-button>
                             <el-button type="warning" size="mini" @click="()=>{ this.isShowIMEI= false; this.changeIMEI= ''; }"  icon="el-icon-folder-delete">取消</el-button>
                         </span>
@@ -72,12 +72,15 @@
                 </div>
                  <div class="code_handle">
                     <div class="colCon">
-                        更换设备号：
+                        定制设备号：
                         <span v-if="!isShowChangeCode">
-                            <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="()=>{this.isShowChangeCode= !this.isShowChangeCode}">更换设备号</el-button>
+                            <el-button  type="primary" icon="el-icon-edit" size="mini" plain 
+                            @click="()=>{this.isShowChangeCode= !this.isShowChangeCode}"
+                            :disabled="!(bindtype == 0 && expirationTime == null && totalOnlineEarn == 0)"
+                            >输入新设备号</el-button>
                          </span>
                         <span v-else>
-                            <el-input v-model="changeCode" placeholder="输入更换为的设备号" size="mini" style="width: 40%"></el-input> 
+                            <el-input v-model="changeCode" placeholder="输入新设备号" size="mini" style="width: 40%"></el-input> 
                             <el-button type="success" size="mini" @click="handleChangeCode()" icon="el-icon-folder-checked">更换</el-button>
                             <el-button type="warning" size="mini" @click="()=>{ this.isShowChangeCode= false; this.isShowChangeCode= ''; }"  icon="el-icon-folder-delete">取消</el-button>
                         </span>
@@ -903,7 +906,9 @@ export default {
             resetRemark: '', //修改设备名
             changeIMEI: '', //更换IMEI号
             changeCode: '',//更换code
-            expirationTime: '',//设备到期时间
+            expirationTime: null,//设备到期时间
+            totalOnlineEarn: 0, //总在线收益
+            bindtype: 0, //绑定类型
             expirationVisable: false, //设备到期日期
             expirationForm: {},//设备到期日期容器
             isShowDeviceName: false, //是否显示设备名称
@@ -1194,7 +1199,7 @@ export default {
                 _this.username= deviceInfo.username
                 _this.merid= deviceInfo.merid
                 let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,
-                csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid,mainType,mainHardver,mainSoftver }= deviceInfo.equipment
+                csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid,mainType,mainHardver,mainSoftver,totalOnlineEarn,bindtype }= deviceInfo.equipment
                 this.deviceInfo= {merid: deviceInfo.merid,hwVerson,code}
                _this.remark= remark 
                 _this.moduleInfo=[ //设备信息  
@@ -1215,6 +1220,8 @@ export default {
                 //_this.mapInfo= [{longitude,latitude}] //经纬度信息
                 _this.hwVerson= hwVerson
                 _this.expirationTime= expirationTime
+                _this.totalOnlineEarn= totalOnlineEarn
+                _this.bindtype= bindtype
                 if(hwVerson != '03' && hwVerson != '04'){
                     if(deviceInfo.temp != null){ //temp存在，说明此模板不是分等级模板
                         //十路智慧款

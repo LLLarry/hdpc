@@ -59,7 +59,7 @@
             <el-row style="margin-top: 20px;">
                 <div class="code_handle">
                     <div class="colCon">
-                        互换模块：
+                        更换模块：
                         <span v-if="!isShowIMEI">
                             <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="()=>{this.isShowIMEI= !this.isShowIMEI}">输入要更换的设备号</el-button>
                          </span>

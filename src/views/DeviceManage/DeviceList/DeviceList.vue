@@ -247,6 +247,15 @@
                     <el-button type="primary" size="mini" @click="handleCreateQrCode(scope.row.code)">生成</el-button>
                 </template>
                 </el-table-column>
+                <el-table-column
+                prop="qrCode"
+                label="端口二维码"
+                min-width="80"
+                >
+                <template slot-scope="scope">
+                    <el-button type="primary" size="mini" @click="handleScanPortQrcode(scope.row)">查看</el-button>
+                </template>
+                </el-table-column>
             </el-table>
         </el-card>
          <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
@@ -296,6 +305,19 @@
             <el-button type="primary" @click="setHardversionBtn" size="middle">确 定</el-button>
         </span>
         </el-dialog>
+        <!-- 端口二维码 -->
+         <el-dialog
+            :show-close="false"
+            :visible.sync="dialogQRCodePortVisible"
+            width="1260px"
+            :modal="false"
+            custom-class="dialog_port"
+            :destroy-on-close="true"
+        >
+        <div class="qeCodeContent">
+            <QRCodeForPort :selectPortCode="selectPortCodeObj.code" :hardversion="selectPortCodeObj.hardversion" v-if="dialogQRCodePortVisible" />
+        </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -304,6 +326,7 @@
  import dateTimeJS from '@/utils/dateTime'
  import {alertPassword,messageTip} from '@/utils/ele'
  import QRCode from '@/components/common/QRCode'
+ import QRCodeForPort from '@/components/common/QRCodeForPort'
  import { getDeviceList,setHardversion,resetDeviceTestTime } from '@/require/deviceManage'
  import { mapState } from 'vuex'
 export default {
@@ -318,12 +341,18 @@ export default {
             tableData: [],
              totalPage: 1,
              nowPage: 1,
-             alertDeviceCode: 0 //设备二维码的设备号
+             alertDeviceCode: 0 ,//设备二维码的设备号
+             dialogQRCodePortVisible:false, //端口号二维码是否显示
+             selectPortCodeObj: {
+                 code: 0,
+                 hardversion: '00'
+             }, //选择查看设备端口二维码的设备号
         }
     },
     components: {
         MyPagination,
-        QRCode
+        QRCode,
+        QRCodeForPort
     },
     computed: {
         ...mapState(['userInfo'])
@@ -363,6 +392,10 @@ export default {
         handleCreateQrCode(code){ //生成二维码
             this.alertDeviceCode= code
             this.dialogVisible= true
+        },
+        handleScanPortQrcode({code,hardversion}){ //查看端口二维码
+            this.selectPortCodeObj= {code,hardversion}
+            this.dialogQRCodePortVisible= true
         },
         async asyGetDeviceList(data){
             let _this= this
@@ -436,6 +469,17 @@ export default {
     }
     .dialogHverson {
         box-shadow: 0 5px 15px rgba(0, 0, 0, .7);
+    }
+    .dialog_port {
+        margin-top: 10vh !important;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+        .el-dialog__header {
+            padding: 0;
+        }
+        .el-dialog__body {
+            padding: 15px 20px;
+        }
     }
 }
 </style>

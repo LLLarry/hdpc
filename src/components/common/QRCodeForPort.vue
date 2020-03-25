@@ -1,16 +1,21 @@
 <template>
   <div class="qrcodefroport">
-      <div class="title">{{selectPortCode}}号设备的端口二维码</div>
+    <div class="title">{{selectPortCode}}号设备的端口二维码</div>
     <div class="qr_content">
       <div class="demo-image clearfix">
-        <div class="block" v-for="fit in 20" :key="fit">
-          <qrcode :value="`http://www.he360.com.cn/${selectPortCode}`" :size="200" />
+        <div class="block" v-for="fit in portNum" :key="fit">
+
+          <qrcode
+            :value="`${baseUrl}/oauth2Portpay?codeAndPort=${selectPortCode}${fit}`"
+            background="red"
+            :size="200"
+          />
           <span class="demonstration">{{selectPortCode}}-{{ fit }}</span>
         </div>
       </div>
     </div>
     <div class="port_code">
-        <el-button type="primary" size="mini" @click="this.handleDown">批量导出端口二维码</el-button>
+      <el-button type="primary" size="mini" @click="this.handleDown">批量导出端口二维码</el-button>
     </div>
   </div>
 </template>
@@ -18,7 +23,18 @@
 <script>
 import qrcode from "vue-qrcode2";
 export default {
-  props: ["selectPortCode"],
+  data() {
+    return {
+      baseUrl: 'http://www.tengfuchong.com.cn',
+    };
+  },
+  created() {
+    const origin = window.location.origin;
+    if(origin.includes('www.he360')){
+        this.baseUrl= 'http://www.he360.cn'
+    }
+  },
+  props: ["selectPortCode","portNum"],
   methods: {
     async handleDown() {
       let JSZip = await import("@/vendor/jszip.min");
@@ -32,7 +48,7 @@ export default {
       for (let index = 0; index < block.length; index++) {
         var myCanvas = block[index].getElementsByTagName("canvas")[0];
         let data = myCanvas.toDataURL("image/png");
-        let fileName = `${this.selectPortCode}-${index+1}`
+        let fileName = `${this.selectPortCode}-${index + 1}`;
         zip.file(fileName + ".png", data.substring(22), { base64: true });
         cache[fileName] = data;
       }
@@ -49,13 +65,13 @@ export default {
 .qrcodefroport {
   width: 100%;
   .title {
-      padding: 20px;
-      text-align: center;
-      font-size: 18px;
+    padding: 20px;
+    text-align: center;
+    font-size: 18px;
   }
   .qr_content {
     overflow: auto;
-    height: 70vh;
+    max-height: 70vh;
     .block {
       float: left;
       width: 200px;
@@ -69,8 +85,8 @@ export default {
     }
   }
   .port_code {
-      padding-top: 15px;
-      text-align: center;
+    padding-top: 15px;
+    text-align: center;
   }
 }
 </style>

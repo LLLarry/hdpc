@@ -315,7 +315,7 @@
             :destroy-on-close="true"
         >
         <div class="qeCodeContent">
-            <QRCodeForPort :selectPortCode="selectPortCodeObj.code" :hardversion="selectPortCodeObj.hardversion" v-if="dialogQRCodePortVisible" />
+            <QRCodeForPort :selectPortCode="selectPortCodeObj.code" :portNum="selectPortCodeObj.portNum" v-if="dialogQRCodePortVisible" />
         </div>
         </el-dialog>
     </div>
@@ -345,8 +345,9 @@ export default {
              dialogQRCodePortVisible:false, //端口号二维码是否显示
              selectPortCodeObj: {
                  code: 0,
-                 hardversion: '00'
+                 portNum: 10
              }, //选择查看设备端口二维码的设备号
+             
         }
     },
     components: {
@@ -394,7 +395,21 @@ export default {
             this.dialogVisible= true
         },
         handleScanPortQrcode({code,hardversion}){ //查看端口二维码
-            this.selectPortCodeObj= {code,hardversion}
+            const  hvToRort=  {
+                2: ['02','07'],
+                10: ['00','01','08'],
+                16: ['05'],
+                20: ['06']
+            }
+            const keyArr= Object.keys(hvToRort)
+            const valArr= Object.values(hvToRort)
+            let portNum= 10
+            valArr.forEach((item,i)=>{
+                if(item.includes(hardversion)){
+                    portNum= parseInt(keyArr[i])
+                }
+            })
+            this.selectPortCodeObj= {code,portNum}
             this.dialogQRCodePortVisible= true
         },
         async asyGetDeviceList(data){

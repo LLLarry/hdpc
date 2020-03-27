@@ -11,6 +11,9 @@
                 <el-form-item label="用户名" class="form_right25 w120" >
                     <el-input v-model="onlineCardQueryForm.usernick" placeholder="用户名" clearable  size="small"></el-input>
                 </el-form-item>
+                 <el-form-item label="用户电话" class="form_right25 w120" >
+                    <el-input v-model="onlineCardQueryForm.mobile" placeholder="用户电话" clearable  size="small"></el-input>
+                </el-form-item>
                 <el-form-item label="所属商户 " class="form_right25 w120">
                     <el-input v-model="onlineCardQueryForm.dealer" placeholder="所属商户" clearable size="small"></el-input>
                 </el-form-item>
@@ -84,6 +87,17 @@
                      {{ scope.row.touristnick !=null ? scope.row.touristnick : "— —" }}
                 </template>
                 </el-table-column>
+
+                <el-table-column
+                prop="touristphone"
+                label="用户电话"
+                min-width="120"
+                >
+                <template slot-scope="scope">
+                     {{ scope.row.touristphone !=null ? scope.row.touristphone : "— —" }}
+                </template>
+                </el-table-column>
+                
                 <el-table-column
                 prop="cardID"
                 label="十六进制卡号"

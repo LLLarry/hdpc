@@ -227,6 +227,17 @@
                 </el-table-column>
 
                 <el-table-column
+                prop="qrCode"
+                label="端口二维码"
+                min-width="80"
+                fixed="right"
+                >
+                <template slot-scope="scope">
+                    <el-button type="primary" size="mini" @click="handleScanPortQrcode(scope.row)">查看</el-button>
+                </template>
+                </el-table-column>
+
+                <el-table-column
                 prop="handle"
                 label="操作"
                 min-width="90"
@@ -247,15 +258,7 @@
                     <el-button type="primary" size="mini" @click="handleCreateQrCode(scope.row.code)">生成</el-button>
                 </template>
                 </el-table-column>
-                <el-table-column
-                prop="qrCode"
-                label="端口二维码"
-                min-width="80"
-                >
-                <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @click="handleScanPortQrcode(scope.row)">查看</el-button>
-                </template>
-                </el-table-column>
+                
             </el-table>
         </el-card>
          <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />

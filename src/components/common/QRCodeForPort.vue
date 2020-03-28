@@ -25,13 +25,13 @@ import qrcode from "vue-qrcode2";
 export default {
   data() {
     return {
-      baseUrl: 'http://www.tengfuchong.com.cn',
+      baseUrl: 'http://www.he360.cn',
     };
   },
   created() {
     const origin = window.location.origin;
-    if(origin.includes('www.he360')){
-        this.baseUrl= 'http://www.he360.cn'
+    if(origin.includes('www.tengfuchong')){
+        this.baseUrl= 'http://www.tengfuchong.com.cn'
     }
   },
   props: ["selectPortCode","portNum"],

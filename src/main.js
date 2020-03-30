@@ -13,7 +13,7 @@ import { Button,Checkbox,Col,Row,Progress,MessageBox,Message,Notification,Card,T
   RadioGroup,
   RadioButton,Cascader,Switch,Loading,Breadcrumb,
   BreadcrumbItem,Popover,Steps,Step,Upload} from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css';
+// import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import 'element-ui/lib/theme-chalk/display.css';
 import 'default-passive-events'
@@ -26,7 +26,6 @@ Vue.use(Select);
 Vue.use(Col);
 Vue.use(Row);
 Vue.use(Progress);
-
 Vue.use(Tag)
 Vue.use(Card)
 Vue.use(Table)

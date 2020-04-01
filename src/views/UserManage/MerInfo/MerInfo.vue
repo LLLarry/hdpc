@@ -5,7 +5,9 @@
                 <el-form-item label="昵称" class="form_right25">
                     <el-input v-model="merInfoForm.nick" placeholder="商户昵称" clearable  size="small"></el-input>
                 </el-form-item>
-
+                <el-form-item label="商户ID" class="form_right25">
+                    <el-input v-model="merInfoForm.merid" placeholder="商户ID" clearable  size="small"></el-input>
+                </el-form-item>
                 <el-form-item label="姓名" class="form_right25">
                     <el-input v-model="merInfoForm.name" placeholder="商户姓名" clearable  size="small"></el-input>
                 </el-form-item>
@@ -99,7 +101,7 @@
                 v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
                 min-width="100">
                     <template slot-scope="scope">
-                        <router-link :to="`/usermanage/userInfo?dealer=${scope.row.realname || ''}&mobile=${scope.row.phone_num || ''}`">
+                        <router-link :to="`/usermanage/userInfo?condition=0&dealer=${scope.row.realname || ''}&mobile=${scope.row.phone_num || ''}`">
                             <el-link type="primary" >查看详情</el-link>
                         </router-link>
                     </template>

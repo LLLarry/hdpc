@@ -93,8 +93,13 @@
                 label="用户电话"
                 min-width="120"
                 >
-                <template slot-scope="scope">
-                     {{ scope.row.touristphone !=null ? scope.row.touristphone : "— —" }}
+                <template slot-scope="{row}">
+                    <router-link :to="`/usermanage/userInfo?condition=0&phone=${row.touristphone}`" v-if="row.touristphone !== '' && row.uid !== null">
+                        <el-link type="primary">
+                            {{row.touristphone && row.touristphone.length > 0 ? row.touristphone : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.touristphone && row.touristphone.length > 0 ? row.touristphone : '— —'}}</span>
                 </template>
                 </el-table-column>
                 
@@ -120,8 +125,13 @@
                 label="所属商户"
                 min-width="120"
                 >
-                 <template slot-scope="scope">
-                     {{ scope.row.dealernick !=null ? scope.row.dealernick : "— —" }}
+                 <template slot-scope="{row}">
+                     <router-link :to="`/usermanage/merInfo??merid=${row.merid}`" v-if="row.merid !== 0 && row.merid !== null">
+                        <el-link type="primary">
+                            {{row.dealernick && row.dealernick.length > 0 ? row.dealernick : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.dealernick && row.dealernick.length > 0 ? row.dealernick : '— —'}}</span>
                 </template>
                 </el-table-column>
                 <el-table-column

@@ -201,12 +201,28 @@
                 label="用户名"
                 min-width="120"
                 >
+                <template slot-scope="{row}">
+                     <router-link :to="`/usermanage/userInfo?condition=0&memberId=${('00000000'+row.uid).substr(-8)}`" v-if="row.uid !== 0 && row.uid !== null">
+                        <el-link type="primary">
+                            {{row.uusername && row.uusername.length > 0 ? row.uusername : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.uusername && row.uusername.length > 0 ? row.uusername : '— —'}}</span>
+                </template>
                 </el-table-column>
                  <el-table-column
                 prop="dealer"
                 label="商户名"
                 min-width="120"
                 >
+                <template slot-scope="{row}">
+                    <router-link :to="`/usermanage/merInfo?merid=${row.merid}`" v-if="row.merid !== 0 && row.merid !== null">
+                        <el-link type="primary">
+                            {{row.dealer && row.dealer.length > 0 ? row.dealer : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.dealer && row.dealer.length > 0 ? row.dealer : '— —'}}</span>
+                </template>
                 </el-table-column>
                  <el-table-column
                 prop="code"

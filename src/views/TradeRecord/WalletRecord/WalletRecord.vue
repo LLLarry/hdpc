@@ -98,7 +98,12 @@
                 min-width="100"
                 >
                 <template slot-scope="{row}">
-                        {{row.uid && row.uid > -1 ? `00000000${row.uid}`.substr(-8) : '— —'}}
+                    <router-link :to="`/usermanage/userInfo?condition=0&memberId=${('00000000'+row.uid).substr(-8)}`" v-if="row.uid !== 0 && row.uid !== null">
+                        <el-link type="primary">
+                           {{row.uid && row.uid > -1 ? `00000000${row.uid}`.substr(-8) : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.uid && row.uid > -1 ? `00000000${row.uid}`.substr(-8) : '— —'}}</span>
                 </template>
                 </el-table-column>
 

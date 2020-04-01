@@ -90,7 +90,12 @@
                 min-width="120"
                 >
                 <template slot-scope="{row}">
-                        {{row.phone_num && row.phone_num.length > 0 ? row.phone_num : '— —'}}
+                     <router-link :to="`/usermanage/merInfo?phone=${row.phone_num}`" v-if="row.phone_num && row.phone_num.length > 0">
+                        <el-link type="primary">
+                            {{row.phone_num && row.phone_num.length > 0 ? row.phone_num : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.phone_num && row.phone_num.length > 0 ? row.phone_num : '— —'}}</span>
                 </template>
                 </el-table-column>
 

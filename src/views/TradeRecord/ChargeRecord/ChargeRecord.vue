@@ -116,7 +116,12 @@
                 min-width="80"
                 >
                 <template slot-scope="{row}">
-                    {{row.username && row.username.length > 0 ? row.username : '— —'}}
+                    <router-link :to="`/usermanage/userInfo?condition=0&memberId=${('00000000'+row.uid).substr(-8)}`" v-if="row.uid !== 0 && row.uid !== null">
+                        <el-link type="primary">
+                            {{row.username && row.username.length > 0 ? row.username : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.username && row.username.length > 0 ? row.username : '— —'}}</span>
                 </template>
                 </el-table-column>
 
@@ -126,7 +131,12 @@
                 min-width="80"
                 >
                 <template slot-scope="{row}">
-                    {{row.dealer && row.dealer.length > 0 ? row.dealer : '— —'}}
+                    <router-link :to="`/usermanage/merInfo?merid=${row.merchantid}`" v-if="row.merchantid !== 0 && row.merchantid !== null">
+                        <el-link type="primary">
+                            {{row.dealer && row.dealer.length > 0 ? row.dealer : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.dealer && row.dealer.length > 0 ? row.dealer : '— —'}}</span>
                 </template>
                 </el-table-column>
 

@@ -14,9 +14,21 @@
                    <tbody>
                        <tr>
                            <td>有效商户数</td>
-                           <td>{{dataStatisInfo.validdealer}}</td>
+                           <td>
+                               <router-link :to="`/usermanage/merInfo?type=1`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.validdealer}}
+                                    </el-link>
+                               </router-link>
+                            </td>
                            <td>客户总数</td>
-                           <td>{{dataStatisInfo.clientsnum}}</td>
+                           <td>
+                               <router-link :to="`/usermanage/userInfo`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.clientsnum}}
+                                    </el-link>
+                               </router-link>
+                           </td>
                            <td colspan="6"></td>
                        </tr>
                    </tbody>
@@ -29,11 +41,29 @@
                    <tbody>
                        <tr>
                            <td>设备总数</td>
-                           <td>{{dataStatisInfo.devisenum}}</td>
+                           <td>
+                               <router-link :to="`/deviceManage/deviceList`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.devisenum}}
+                                    </el-link>
+                               </router-link>
+                            </td>
                            <td>设备在线总数</td>
-                           <td>{{dataStatisInfo.online}}</td>
+                           <td>
+                               <router-link :to="`/deviceManage/deviceList?line=1`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.online}}
+                                    </el-link>
+                               </router-link>
+                           </td>
                            <td>设备离线总数</td>
-                           <td>{{dataStatisInfo.disline}}</td>
+                           <td>
+                               <router-link :to="`/deviceManage/deviceList?line=0`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.disline}}
+                                    </el-link>
+                               </router-link>
+                            </td>
                            <td>设备绑定总数</td>
                            <td>{{dataStatisInfo.onbinding}}</td>
                            <td>设备未绑定总数</td>
@@ -82,7 +112,13 @@
                                     <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
                                 </el-popover>
                             </td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.extractmoney}}</td>
+                           <td>
+                               <router-link :to="`/tradeRecord/cashManage`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.extractmoney}}
+                                    </el-link>
+                                </router-link>
+                            </td>
                            <td>
                                提现费用
                                 <el-popover
@@ -93,13 +129,31 @@
                                     <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
                                 </el-popover>
                            </td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.sumservicecharge}}</td>
+                           <td>
+                                <router-link :to="`/tradeRecord/cashManage`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.sumservicecharge}}
+                                    </el-link>
+                                </router-link>
+                           </td>
                         </tr>                     
                         <tr>
                             <td>设备缴费金额</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.paymentmoney}}</td>
+                            <td>
+                                <router-link :to="`/tradeRecord/feescaleRecord`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.paymentmoney}}
+                                    </el-link>
+                                </router-link>
+                            </td>
                             <td>待提现金额</td>
-                            <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.penextractmoney}}</td>
+                            <td>
+                                 <router-link :to="`/tradeRecord/cashManage?status=0`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.penextractmoney}}
+                                    </el-link>
+                                </router-link>
+                            </td>
                             <td>未提现金额</td>
                             <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.earningsMoney}}</td>
                             <td></td>
@@ -142,7 +196,13 @@
                    <tbody v-if="userInfo.classify === 'superAdmin'">
                         <tr>
                            <td>缴费总额</td>
-                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.feescaleEarns}}</td>
+                           <td>
+                               <router-link :to="`/tradeRecord/feescaleRecord`">
+                                    <el-link type="primary">
+                                        {{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.feescaleEarns}}
+                                    </el-link>
+                                </router-link>
+                           </td>
                          
                        </tr>
                    </tbody>

@@ -99,7 +99,12 @@
                 min-width="120"
                 >
                 <template slot-scope="{row}">
-                   {{ row.nickname && row.nickname.length > 0 ?  row.nickname : '— —'}}
+                    <router-link :to="`/usermanage/userInfo?condition=0&memberId=${('00000000'+row.uid).substr(-8)}`" v-if="row.uid !== 0 && row.uid !== null">
+                        <el-link type="primary">
+                            {{row.nickname && row.nickname.length > 0 ? row.nickname : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.nickname && row.nickname.length > 0 ? row.nickname : '— —'}}</span>
                 </template>
                 </el-table-column>
 
@@ -108,6 +113,14 @@
                 label="卡号"
                 min-width="120"
                 >
+                <template slot-scope="{row}">
+                    <router-link :to="`/iccardManage/onlineCardQuery?cardnumber=${row.cardID}`" v-if="row.cardID !== 0 && row.cardID !== null">
+                        <el-link type="primary">
+                            {{row.cardID && row.cardID.length > 0 ? row.cardID : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.cardID && row.cardID.length > 0 ? row.cardID : '— —'}}</span>
+                </template>
                 </el-table-column>
 
                 <el-table-column
@@ -115,8 +128,13 @@
                 label="商户名"
                 min-width="120"
                 >
-                 <template slot-scope="{row}">
-                   {{ row.dealer && row.dealer.length > 0 ?  row.dealer : '— —'}}
+                <template slot-scope="{row}">
+                    <router-link :to="`/usermanage/merInfo?merid=${row.merid}`" v-if="row.merid !== 0 && row.merid !== null">
+                        <el-link type="primary">
+                            {{row.dealer && row.dealer.length > 0 ? row.dealer : '— —'}}
+                        </el-link>  
+                    </router-link>
+                    <span v-else>{{row.dealer && row.dealer.length > 0 ? row.dealer : '— —'}}</span>
                 </template>
                 </el-table-column>
 

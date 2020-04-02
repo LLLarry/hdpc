@@ -205,6 +205,18 @@
                 </el-table-column>
 
                 <el-table-column
+                prop="agentname"
+                label="操作"
+                min-width="100">
+                     <template slot-scope="scope">
+                        <router-link :to="`/usermanage/merInfo/MerInfoDetail?dealer=${scope.row.id}`">
+                            <el-link type="primary">操作详情</el-link>
+                        </router-link>
+                    </template>
+                </el-table-column>
+
+                
+                <el-table-column
                 prop="bankNum"
                 label="银行卡"
                 min-width="100">

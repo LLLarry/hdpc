@@ -282,6 +282,11 @@ export const adminMenuList= [
                 link: '/tradeRecord/monthlyRecord',
                 index: '2-4'
             },
+            {
+                title: '缴费记录',
+                link: '/tradeRecord/feescaleRecord',
+                index: '2-5'
+            }
         ]
     },
     {

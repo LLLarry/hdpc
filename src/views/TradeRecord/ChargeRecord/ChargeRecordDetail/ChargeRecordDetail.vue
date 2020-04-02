@@ -121,6 +121,18 @@
                 </template>
                 </el-table-column>
 
+                <el-table-column
+                prop="money"
+                label="扣费金额(元)"
+                min-width="120"
+                v-if="moneyShow"
+                >
+                <template slot-scope="{row}">
+                    {{ row.money == -1 ? '— —' : row.money }}
+                </template>
+                </el-table-column>
+
+
                  <el-table-column
                 prop="createtime"
                 label="记录时间"
@@ -192,6 +204,7 @@ export default {
              listA: [], //电流数组
              listV: [], //电压数组
              portAVShow: true, //电压电流按钮，默认显示
+             moneyShow: true //实时扣费金额是否显示
         }
     },
     created(){
@@ -300,8 +313,12 @@ export default {
                     for (const iterator of powerInfo.listdata) {
                         if(iterator.portA == -1 || iterator.portV == -1){
                             this.portAVShow= false  //判断当portA或者portV 为-1时，不显示电压电流
-                            break;
+                            // break;
                         }
+                        if(iterator.money == null || iterator.money == -1){
+                            this.moneyShow= false 
+                        }
+                        listA.push(iterator.money)
                         listA.push(iterator.portA)
                         listV.push(iterator.portV)
                     }

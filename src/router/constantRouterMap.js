@@ -95,6 +95,14 @@ export const constantRouterMapSuperAdmin= [
         }
       },
       {
+        path: '/usermanage/merInfo/MerInfoDetail',
+        name: '商户信息详情',
+        component: ()=> import('@/views/UserManage/MerInfo/MerInfoDetail/MerInfoDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
         path: '/usermanage/userInfo',
         name: '用户信息',
         component: ()=> import('@/views/UserManage/UserInfo/UserInfo'),
@@ -528,6 +536,22 @@ export const constantRouterMapAdmin= [
         path: '/tradeRecord/walletRecord',
         name: '钱包记录',
         component: ()=> import('@/views/TradeRecord/WalletRecord/WalletRecord'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
+      {
+        path: '/tradeRecord/feescaleRecord',
+        name: '缴费记录',
+        component: ()=> import('@/views/TradeRecord/FeescaleRecord/FeescaleRecord'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
+      {
+        path: '/tradeRecord/feescaleRecord/feescaleRecordDetail',
+        name: '缴费详情',
+        component: ()=> import('@/views/TradeRecord/FeescaleRecord/FeescaleRecordDetail/FeescaleRecordDetail'),
         meta: {
           role: ['superAdmin']
         }

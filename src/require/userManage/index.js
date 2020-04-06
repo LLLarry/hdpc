@@ -203,6 +203,16 @@ export const selectMerDetailByMerid= function (data){
          })
 }
 
+/**
+ * 转移商户下的财产到另一商户
+ */
+
+export const transformMerToMer= function (data){
+    return ajax({
+             url: '/deviceData/deviceDataTransfer',
+             data: data
+         })
+}
 
 
 

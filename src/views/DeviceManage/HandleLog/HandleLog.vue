@@ -73,7 +73,7 @@
         <el-table-column prop="handlePerson" label="操作人" min-width="120">
           <template slot-scope="{row}">
             <span v-if="row.opername && row.opername.length> 0">{{row.opername}}</span>
-            <span v-else>— —</span>
+            <span v-else>{{  row.opernick && row.opernick.length> 0 ? row.opernick : '— —'}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="type" label="类型" min-width="120">
@@ -83,6 +83,7 @@
             <span v-if="row.sort==3">{{row.type == 1 ? '修改版本号' : row.type == 2 ? '修改收费模板' : '— —'}}</span>
             <span v-if="row.sort==4">{{row.type == 1 ? '绑定小区' : row.type == 2 ? '解绑小区' : '— —'}}</span>
             <span v-if="row.sort==5">IMEI号互换</span>
+            <span v-if="row.sort==6">批量转移设备</span>
           </template>
         </el-table-column>
         <el-table-column prop="remark" label="备注" min-width="160">
@@ -95,6 +96,9 @@
               <div>
                   <el-link type="success">{{ JSON.parse(row.remark)[2]}}</el-link>&nbsp;&nbsp;({{ JSON.parse(row.remark)[3]}})
               </div>
+            </div>
+            <div v-if="row.sort === 6">
+              {{ row.remark }}
             </div>
           </template>
         </el-table-column>

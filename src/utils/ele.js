@@ -54,6 +54,20 @@ const confirDelete= (title,callBack)=>{
     });
 }
 
+const confirVNdom= (title,message,callBack)=>{
+    that.$msgbox({
+        title,
+        message,
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+    }).then(() => {
+        callBack && callBack()
+      }).catch(() => {
+           
+    });
+}
+
 
 const messageTip= (type= 'success',message='删除成功')=>{
     that.$message({
@@ -68,5 +82,6 @@ export {
     alertPassword,
     confirDelete,
     messageTip,
-    alertConfim
+    alertConfim,
+    confirVNdom
 }

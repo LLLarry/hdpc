@@ -121,7 +121,7 @@
                 </template>
                 </el-table-column>
 
-                <el-table-column
+                <!-- <el-table-column
                 prop="money"
                 label="扣费金额(元)"
                 min-width="120"
@@ -130,7 +130,7 @@
                 <template slot-scope="{row}">
                     {{ row.money == -1 ? '— —' : row.money }}
                 </template>
-                </el-table-column>
+                </el-table-column> -->
 
 
                  <el-table-column
@@ -315,10 +315,10 @@ export default {
                             this.portAVShow= false  //判断当portA或者portV 为-1时，不显示电压电流
                             // break;
                         }
-                        if(iterator.money == null || iterator.money == -1){
-                            this.moneyShow= false 
-                        }
-                        listA.push(iterator.money)
+                        // if(iterator.money == null || iterator.money == -1){
+                        //     this.moneyShow= false 
+                        // }
+                        // listA.push(iterator.money)
                         listA.push(iterator.portA)
                         listV.push(iterator.portV)
                     }

@@ -75,15 +75,17 @@
 <script>
 import {
   selectAgentUnderMer,
-  selectMerDetailByMerid
+  selectMerDetailByMerid,
+  transformMerToMer
 } from "@/require/userManage";
-import { messageTip } from "@/utils/ele";
+import { messageTip, confirVNdom,alertConfim } from "@/utils/ele";
 export default {
   data() {
     return {
       dealer: 0,
       name: "",
       tableData: [],
+      ToId: 0,
       merInfo: [
         {
           title: "商户姓名",
@@ -131,25 +133,26 @@ export default {
       try {
         let userInfo = await selectMerDetailByMerid(data);
         if (userInfo.code === 200) {
-		  let { dealdata } = userInfo;
-		  if( Object.keys(dealdata).length >0 ){
-			  this.merInfo = [
-				{
-				title: "商户姓名",
-				content: dealdata.realname
-				},
-				{
-				title: "商户昵称",
-				content: dealdata.username
-				},
-				{
-				title: "电话",
-				content: dealdata.phone_num
-				}
-			];
-		  }else{
-			   messageTip("warning", '未搜索到商户！');
-		  }
+          let { dealdata } = userInfo;
+          if (Object.keys(dealdata).length > 0) {
+            this.merInfo = [
+              {
+                title: "商户姓名",
+                content: dealdata.realname
+              },
+              {
+                title: "商户昵称",
+                content: dealdata.username
+              },
+              {
+                title: "电话",
+                content: dealdata.phone_num
+              }
+            ];
+            this.ToId = dealdata.id;
+          } else {
+            messageTip("warning", "未搜索到商户！");
+          }
         } else {
           messageTip("error", userInfo.message);
         }
@@ -159,9 +162,9 @@ export default {
       this.asySelectMerDetailByMerid(this.merInfoDetailForm);
     },
     handleRemoveMer() {
-	  this.merInfoDetailForm= {
-		  type: '1'
-	  }
+      this.merInfoDetailForm = {
+        type: "1"
+      };
       this.merInfo = [
         {
           title: "商户姓名",
@@ -176,12 +179,41 @@ export default {
           content: ""
         }
       ];
+      this.ToId= 0
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
     handleTransfer() {
-      console.log(this.multipleSelection);
+      const areaList= this.multipleSelection.map(item=>item.areaid)
+      if(this.ToId === 0){
+         return messageTip('warning','请先选择接收人，再进行批量转移！')
+      }
+      const data = {
+        param: JSON.stringify({
+          fromId: this.dealer,
+          ToId: this.ToId,
+          areaList
+        })
+      };
+      const h = this.$createElement;
+      const VNdom = [
+        "p",
+        null,
+        [h("span", null, "确认转移选中小区下的用户和设备？")]
+      ];
+      const message = h(...VNdom);
+      confirVNdom("提示", message, () => {
+        this.asyTransformMerToMer(data);
+      });
+    },
+    async asyTransformMerToMer(data) {
+      let info = await transformMerToMer(data);
+      if(info.code === 200){
+        messageTip('success','批量转移成功！')
+      }else{
+        messageTip('success','批量转移失败！')
+      }
     }
   }
 };

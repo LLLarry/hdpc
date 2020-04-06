@@ -2,11 +2,12 @@
   <div class="merInfoDetail">
     <el-card class="box-card">
       <el-divider content-position="center">
-        转移<span class="merName">张三</span>下的用户和设备
+        转移
+        <span class="merName">{{ name }}</span>下的用户和设备
       </el-divider>
       <el-row ref="row">
         <el-col :span="8">
-          <div class="left_title">张三商户下的用户和设备</div>
+          <div class="left_title">{{ name }}商户下的用户和设备</div>
           <div class="grid-content bg-purple">
             <el-table
               ref="multipleTable"
@@ -17,15 +18,20 @@
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="55"></el-table-column>
-              <el-table-column prop="areaname" label="小区名称" min-width="100" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="areaname" label="小区名称" min-width="100" show-overflow-tooltip>
+                、
+                <template
+                  slot-scope="{row}"
+                >{{row.areaname && row.areaname.length > 0 ? row.areaname : '— —'}}</template>
+              </el-table-column>
               <el-table-column prop="userNum" label="用户数量" min-width="100">
                 <template slot-scope="{row}">
-                  <el-link type="primary">{{row.userNum}}</el-link>
+                  <el-link type="primary">{{row.clientsnum}}</el-link>
                 </template>
               </el-table-column>
               <el-table-column prop="deviceNum" label="设备数量" min-width="100">
                 <template slot-scope="{row}">
-                  <el-link type="primary">{{row.deviceNum}}</el-link>
+                  <el-link type="primary">{{row.quantity}}</el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -50,14 +56,14 @@
                 <el-option label="商户姓名" value="3"></el-option>
               </el-select>
               <el-input v-model="merInfoDetailForm.search" size="small" placeholder="请搜索商户" />
-              <el-button type="primary" size="small">搜索</el-button>
+              <el-button type="primary" size="small" @click="this.handleSearchMer">搜索</el-button>
             </div>
             <el-table :data="merInfo" style="width: 100%" border :show-header="false">
               <el-table-column prop="title" label="日期" min-width="180"></el-table-column>
               <el-table-column prop="content" label="姓名" min-width="180" show-overflow-tooltip></el-table-column>
             </el-table>
             <div class="deleteBtn">
-              <el-button type="danger" size="small">清除当前商户</el-button>
+              <el-button type="danger" size="small" @click="handleRemoveMer">清除当前商户</el-button>
             </div>
           </div>
         </el-col>
@@ -67,69 +73,42 @@
 </template>
 
 <script>
+import {
+  selectAgentUnderMer,
+  selectMerDetailByMerid
+} from "@/require/userManage";
+import { messageTip } from "@/utils/ele";
 export default {
   data() {
     return {
-      tableData: [
-        {
-          areaname: "莲花小区1",
-          userNum: 135,
-          deviceNum: 5
-        },
-        {
-          areaname: "莲花小区2",
-          userNum: 135,
-          deviceNum: 5
-        },
-        {
-          areaname: "莲花小区3",
-          userNum: 135,
-          deviceNum: 5
-        },
-        {
-          areaname: "莲花小区4",
-          userNum: 135,
-          deviceNum: 5
-        },
-        {
-          areaname: "莲花小区5",
-          userNum: 135,
-          deviceNum: 5
-        },
-        {
-          areaname: "莲花小区6",
-          userNum: 135,
-          deviceNum: 5
-        },
-        {
-          areaname: "未绑定小区",
-          userNum: 523,
-          deviceNum: 12
-        }
-      ],
+      dealer: 0,
+      name: "",
+      tableData: [],
       merInfo: [
         {
           title: "商户姓名",
-          content: "测试姓名"
+          content: ""
         },
         {
           title: "商户昵称",
-          content: "测试昵称"
+          content: ""
         },
         {
           title: "电话",
-          content: "156323XXXXXX"
+          content: ""
         }
-        //  {
-        //   title: '',
-        //   content: '测试姓名'
-        // },
       ],
       merInfoDetailForm: {
         type: "1"
       },
       multipleSelection: []
     };
+  },
+  created() {
+    const { dealer = 0, name = "" } = this.$route.query;
+    this.dealer = dealer;
+    this.name = name == "" ? dealer : name;
+    this.asySelectAgentUnderMer({ merid: dealer });
   },
   mounted() {
     setTimeout(() => {
@@ -138,6 +117,66 @@ export default {
     });
   },
   methods: {
+    async asySelectAgentUnderMer(data) {
+      try {
+        let areaInfo = await selectAgentUnderMer(data);
+        if (areaInfo.code === 200) {
+          this.tableData = areaInfo.listdata;
+        } else {
+          messageTip("error", "请求出错！");
+        }
+      } catch (err) {}
+    },
+    async asySelectMerDetailByMerid(data) {
+      try {
+        let userInfo = await selectMerDetailByMerid(data);
+        if (userInfo.code === 200) {
+		  let { dealdata } = userInfo;
+		  if( Object.keys(dealdata).length >0 ){
+			  this.merInfo = [
+				{
+				title: "商户姓名",
+				content: dealdata.realname
+				},
+				{
+				title: "商户昵称",
+				content: dealdata.username
+				},
+				{
+				title: "电话",
+				content: dealdata.phone_num
+				}
+			];
+		  }else{
+			   messageTip("warning", '未搜索到商户！');
+		  }
+        } else {
+          messageTip("error", userInfo.message);
+        }
+      } catch (err) {}
+    },
+    handleSearchMer() {
+      this.asySelectMerDetailByMerid(this.merInfoDetailForm);
+    },
+    handleRemoveMer() {
+	  this.merInfoDetailForm= {
+		  type: '1'
+	  }
+      this.merInfo = [
+        {
+          title: "商户姓名",
+          content: ""
+        },
+        {
+          title: "商户昵称",
+          content: ""
+        },
+        {
+          title: "电话",
+          content: ""
+        }
+      ];
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -152,7 +191,7 @@ export default {
 .merInfoDetail {
   .left_title {
     text-align: center;
-    margin-bottom:15px;
+    margin-bottom: 15px;
   }
   .merName {
     font-weight: bold;

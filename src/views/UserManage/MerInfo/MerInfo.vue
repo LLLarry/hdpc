@@ -209,7 +209,7 @@
                 label="操作"
                 min-width="100">
                      <template slot-scope="scope">
-                        <router-link :to="`/usermanage/merInfo/MerInfoDetail?dealer=${scope.row.id}`">
+                        <router-link :to="`/usermanage/merInfo/MerInfoDetail?dealer=${scope.row.id}&name=${scope.row.username == null ? '' : scope.row.username}`">
                             <el-link type="primary">操作详情</el-link>
                         </router-link>
                     </template>

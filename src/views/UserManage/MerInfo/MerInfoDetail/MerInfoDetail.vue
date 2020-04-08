@@ -74,7 +74,7 @@
 
 <script>
 import {
-  selectAgentUnderMer,
+  selectMerinfoByid,
   selectMerDetailByMerid,
   transformMerToMer
 } from "@/require/userManage";
@@ -121,7 +121,7 @@ export default {
   methods: {
     async asySelectAgentUnderMer(data) {
       try {
-        let areaInfo = await selectAgentUnderMer(data);
+        let areaInfo = await selectMerinfoByid(data);
         if (areaInfo.code === 200) {
           this.tableData = areaInfo.listdata;
         } else {

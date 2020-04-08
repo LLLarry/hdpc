@@ -121,7 +121,7 @@
                 </template>
                 </el-table-column>
 
-                <!-- <el-table-column
+                <el-table-column
                 prop="money"
                 label="扣费金额(元)"
                 min-width="120"
@@ -130,7 +130,7 @@
                 <template slot-scope="{row}">
                     {{ row.money == -1 ? '— —' : row.money }}
                 </template>
-                </el-table-column> -->
+                </el-table-column>
 
 
                  <el-table-column
@@ -310,17 +310,21 @@ export default {
                         timeList.push(iterator.minuteTime)
                         powerList.push(iterator.power)
                     }
-                    for (const iterator of powerInfo.listdata) {
-                        if(iterator.portA == -1 || iterator.portV == -1){
+                    let length= powerInfo.listdata.length
+                    if(length >= 2){
+                        if(powerInfo.listdata[1].portA == -1 || powerInfo.listdata[1].portV == -1){
                             this.portAVShow= false  //判断当portA或者portV 为-1时，不显示电压电流
-                            // break;
                         }
-                        // if(iterator.money == null || iterator.money == -1){
-                        //     this.moneyShow= false 
-                        // }
-                        // listA.push(iterator.money)
-                        listA.push(iterator.portA)
-                        listV.push(iterator.portV)
+                        if(powerInfo.listdata[1].money == null || powerInfo.listdata[1].money == -1){
+                            this.moneyShow= false 
+                        }
+                    }else if(length === 1){
+                        if(powerInfo.listdata[0].portA == -1 || powerInfo.listdata[0].portV == -1){
+                            this.portAVShow= false  //判断当portA或者portV 为-1时，不显示电压电流
+                        }
+                        if(powerInfo.listdata[0].money == null || powerInfo.listdata[0].money == -1){
+                            this.moneyShow= false 
+                        }
                     }
                     this.timeList= timeList
                     this.listA= listA

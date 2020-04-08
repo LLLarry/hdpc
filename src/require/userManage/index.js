@@ -186,6 +186,17 @@ export const selectAgent= function (data){
 
 export const selectAgentUnderMer= function (data){
     return ajax({
+             url: '/AccountInfo/selectAgentUnderMer',
+             data: data
+         })
+}
+
+/**
+ * 通过id查询代理商详情信息
+ */
+
+export const selectMerinfoByid= function (data){
+    return ajax({
              url: '/deviceData/searchDealerDeviceData',
              data: data
          })

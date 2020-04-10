@@ -1,6 +1,6 @@
 <template>
   <div class="merInfoDetail">
-    <el-card class="box-card">
+    <el-card class="box-card" style="margin-bottom: 40px;">
       <el-divider content-position="center">
         转移
         <span class="merName">{{ name }}</span>下的用户和设备
@@ -69,6 +69,13 @@
         </el-col>
       </el-row>
     </el-card>
+    <el-card class="box-card">
+      <el-divider content-position="center">
+        配置
+        <span class="merName">{{ name }}</span>特约商户信息
+      </el-divider>
+      <ConfigMerInfo :subMerData="subMerData" :merid="dealer" @handleReReq="handleReReq" />
+    </el-card>
   </div>
 </template>
 
@@ -79,6 +86,7 @@ import {
   transformMerToMer
 } from "@/require/userManage";
 import { messageTip, confirVNdom,alertConfim } from "@/utils/ele";
+import ConfigMerInfo from './ConfigMerInfo'
 export default {
   data() {
     return {
@@ -103,8 +111,12 @@ export default {
       merInfoDetailForm: {
         type: "1"
       },
-      multipleSelection: []
+      multipleSelection: [],
+      subMerData: [] //特约商户配置
     };
+  },
+  components:{
+    ConfigMerInfo
   },
   created() {
     const { dealer = 0, name = "" } = this.$route.query;
@@ -124,6 +136,7 @@ export default {
         let areaInfo = await selectMerinfoByid(data);
         if (areaInfo.code === 200) {
           this.tableData = areaInfo.listdata;
+          this.subMerData= areaInfo.subMerData
         } else {
           messageTip("error", "请求出错！");
         }
@@ -214,6 +227,9 @@ export default {
       }else{
         messageTip('success','批量转移失败！')
       }
+    },
+    handleReReq(){
+      this.asySelectAgentUnderMer({ merid:this.dealer });
     }
   }
 };

@@ -202,7 +202,7 @@
             <!-- 十路智慧款 -->
             <div v-if=" hwVerson != '03' && hwVerson != '04'" >
                 <!-- 正常模板 -->
-                 <Template :from="2" :list="temChargeList" v-if="!isGrade" :deviceInfo="{code:this.code,merid: this.merid, hwVerson: hwVerson}" /> 
+                 <TemplateCharge :from="2" :list="temChargeList" v-if="!isGrade" :deviceInfo="{code:this.code,merid: this.merid, hwVerson: hwVerson}" /> 
                  <!-- 分等级模板 -->
                  <GradeTemplate :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" v-else />
             </div>
@@ -873,7 +873,7 @@
 </template>
 
 <script>
-import Template from '@/components/common/Template'
+import TemplateCharge from '@/components/common/Template'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import GradeTemplate from '@/components/common/GradeTemplate'
@@ -1032,7 +1032,7 @@ export default {
         }
     },
     components: {
-        Template,
+        TemplateCharge,
         TemplateCoin,
         TemplateOffline,
         GradeTemplate,

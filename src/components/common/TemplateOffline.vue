@@ -14,7 +14,7 @@
                 label="序号"
                 min-width="300"
                 >
-                <template>
+                <template slot-scope="scope">
                     <div>
                         <strong>模板名称: </strong>
                         <span v-if="!item.edit" class="top_span">{{item.name}}</span>
@@ -29,7 +29,7 @@
                 label="小区名称"
                 min-width="300"
                 >   
-                 <template>
+                 <template slot-scope="scope">
                     <div>
                         <strong>品牌名称:  </strong>
                         <span v-if="!item.edit" class="top_span">{{item.remark}}</span>
@@ -43,7 +43,7 @@
                 label="小区名称"
                 min-width="300"
                 >
-                  <template>
+                  <template slot-scope="scope">
                     <div>
                         <strong>售后电话:</strong>
                         <span v-if="!item.edit" class="top_span">{{item.common1}}</span>
@@ -58,7 +58,7 @@
                 label="小区名称"
                 width="200"
                 >
-                  <template>
+                  <template slot-scope="scope">
                     <div>
                         <strong>操作</strong>
                     </div>

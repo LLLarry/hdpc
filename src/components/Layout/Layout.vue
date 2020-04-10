@@ -9,7 +9,7 @@
                 <Slide />
             </el-col>
             <el-col :span="22" class="layout_col_main">
-              <Main></Main><!-- 内容区域组件 -->
+              <MainCom></MainCom><!-- 内容区域组件 -->
             </el-col>
          </el-row>     
     </div>
@@ -18,7 +18,7 @@
 <script>
 import Slide from './Slide'
 import TopBar from './TopBar'
-import Main from './Main'
+import MainCom from './Main'
 // import { mapMutations,mapState} from 'vuex'
 export default {
     data(){
@@ -26,16 +26,10 @@ export default {
 
         }
     },
-    mounted(){
-        
-    },
-    // computed: {
-    //     ...mapState(['isShowSlide'])
-    // },
     components: {
         Slide,
         TopBar,
-        Main
+        MainCom
     }
 }
 </script>

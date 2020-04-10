@@ -4,7 +4,7 @@
             <span class="title">{{$route.query.hw == '03' ? '模拟投币模板' : $route.query.hw == '04' ? '离线卡模板': '充电模板'}}</span>
             <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddTem">添加主模板</el-button>
         </div>
-        <Template :from="3" :list="temChargeList" v-if="$route.query.hw == '01' " :source="source" :arecode="arecode" /> <!--充电模板-->
+        <TemplateCharge :from="3" :list="temChargeList" v-if="$route.query.hw == '01' " :source="source" :arecode="arecode" /> <!--充电模板-->
         <TemplateCoin :from="3" :list="temCoinList" v-else-if="$route.query.hw == '03' " :source="source" :arecode="arecode" /> <!--脉冲模板-->
         <TemplateOffline :from="3" :list="temOfflineList" v-if="$route.query.hw == '04' "  :source="source" :arecode="arecode" /> <!--离线卡模板-->
         <GradeTemplate :from="3" :list="tempgather" v-if="$route.query.hw == '01' " :source="source" :arecode="arecode" />
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import Template from '@/components/common/Template'
+import TemplateCharge from '@/components/common/Template'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import GradeTemplate from '@/components/common/GradeTemplate'
@@ -106,7 +106,7 @@ export default {
         }
     },
     components: {
-        Template,
+        TemplateCharge,
         TemplateCoin,
         TemplateOffline,
         GradeTemplate

@@ -90,7 +90,6 @@ function handleSlide(){
   }
 }
 
-
  Vue.config.productionTip = false
 
 /* eslint-disable no-new */

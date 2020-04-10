@@ -26,6 +26,7 @@
                      <el-select v-model="merInfoForm.type"  placeholder="所有商户" clearable size="small">
                         <el-option label="有效商户" value="1" ></el-option>
                         <el-option label="无效商户" value="2" ></el-option>
+                        <el-option label="特约商户" value="3" ></el-option>
                     </el-select>
                 </el-form-item>
             
@@ -207,6 +208,7 @@
                 <el-table-column
                 prop="agentname"
                 label="操作"
+                fixed="right"
                 min-width="100">
                      <template slot-scope="scope">
                         <router-link :to="`/usermanage/merInfo/MerInfoDetail?dealer=${scope.row.id}&name=${scope.row.username == null ? '' : scope.row.username}`">

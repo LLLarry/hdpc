@@ -225,6 +225,18 @@ export const transformMerToMer= function (data){
          })
 }
 
+/**
+ * 添加、修改，删除特约商户
+ */
+
+export const configMchidapi= function (data){
+    return ajax({
+             url: '/AccountInfo/configMchid',
+             data: data,
+             method: 'post'
+         })
+}
+
 
 
 

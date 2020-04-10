@@ -88,7 +88,7 @@
                  min-width="120"
                 >
                 <template slot-scope="{row}">
-                    {{ row.surpluselec/100}}
+                    {{ (row.surpluselec/100).toFix(2)}}
                 </template>
                 </el-table-column>
 
@@ -128,7 +128,7 @@
                 v-if="moneyShow"
                 >
                 <template slot-scope="{row}">
-                    {{ row.money == -1 ? '— —' : row.money }}
+                    {{ row.money == -1 ? '— —' : row.money.toFixed(2) }}
                 </template>
                 </el-table-column>
 

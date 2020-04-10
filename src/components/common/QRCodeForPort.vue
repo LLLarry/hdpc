@@ -4,10 +4,9 @@
     <div class="qr_content">
       <div class="demo-image clearfix">
         <div class="block" v-for="fit in portNum" :key="fit">
-
           <qrcode
             :value="`${baseUrl}/oauth2Portpay?codeAndPort=${selectPortCode}${fit}`"
-            background="red"
+            background="#FFFFFF"
             :size="200"
           />
           <span class="demonstration">{{selectPortCode}}-{{ fit }}</span>
@@ -26,6 +25,7 @@ export default {
   data() {
     return {
       baseUrl: 'http://www.he360.cn',
+      k: 0, //判断异步转化到哪一个了
     };
   },
   created() {
@@ -39,23 +39,39 @@ export default {
     async handleDown() {
       let JSZip = await import("@/vendor/jszip.min");
       let FileSaver = await import("@/vendor/FileSaver.min");
-      this.downloadPicture(JSZip, FileSaver);
+      let html2Canvas = await import("@/vendor/html2Canvas");
+      this.downloadPicture(JSZip, FileSaver,html2Canvas);
     },
-    downloadPicture(JSZip, FileSaver) {
+    downloadPicture(JSZip, FileSaver,html2canvas) {
       const zip = new JSZip();
       const cache = {};
       let block = document.querySelectorAll(".block");
+      let k= 0
       for (let index = 0; index < block.length; index++) {
-        var myCanvas = block[index].getElementsByTagName("canvas")[0];
-        let data = myCanvas.toDataURL("image/png");
-        let fileName = `${this.selectPortCode}-${index + 1}`;
-        zip.file(fileName + ".png", data.substring(22), { base64: true });
-        cache[fileName] = data;
+        // var myCanvas = block[index].getElementsByTagName("canvas")[0];
+        html2canvas(block[index]).then(canvas => {
+            let data = canvas.toDataURL("image/png");
+            let fileName = `${this.selectPortCode}-${index + 1}`;
+            zip.file(fileName + ".png", data.substring(22), { base64: true });
+            cache[fileName] = data;
+            this.k= this.k+1
+            if(this.k >= this.portNum){
+              this.k= 0
+              zip.generateAsync({ type: "blob" }).then(content => {
+                // 生成二进制流
+                FileSaver.saveAs(content, `${this.selectPortCode}端口二维码.zip`); // 利用file-saver保存文件
+              });
+            }
+        })
+        // let data = myCanvas.toDataURL("image/png");
+        // let fileName = `${this.selectPortCode}-${index + 1}`;
+        // zip.file(fileName + ".png", data.substring(22), { base64: true });
+        // cache[fileName] = data;
       }
-      zip.generateAsync({ type: "blob" }).then(content => {
-        // 生成二进制流
-        FileSaver.saveAs(content, `${this.selectPortCode}端口二维码.zip`); // 利用file-saver保存文件
-      });
+      // zip.generateAsync({ type: "blob" }).then(content => {
+      //   // 生成二进制流
+      //   FileSaver.saveAs(content, `${this.selectPortCode}端口二维码.zip`); // 利用file-saver保存文件
+      // });
     }
   }
 };
@@ -76,11 +92,13 @@ export default {
       float: left;
       width: 200px;
       padding: 0 20px 20px 20px;
+      background: #FFFFFF;
       .demonstration {
         width: 100%;
         display: inline-block;
         text-align: center;
-        margin-top: 5px;
+        color: #000;
+        font-size: 16px;
       }
     }
   }

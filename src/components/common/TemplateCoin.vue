@@ -14,7 +14,7 @@
                 label="序号"
                 min-width="300"
                 >
-                <template>
+                <template slot-scope="scope">
                     <div>
                         <strong>模板名称: </strong>
                         <span v-if="!item.edit" class="top_span">{{item.name}}</span>
@@ -29,7 +29,7 @@
                 label="小区名称"
                 min-width="300"
                 >   
-                 <template>
+                 <template slot-scope="scope">
                     <div>
                         <strong>品牌名称:  </strong>
                         <span v-if="!item.edit" class="top_span">{{item.remark}}</span>
@@ -43,7 +43,7 @@
                 label="小区名称"
                 min-width="300"
                 >
-                  <template>
+                  <template slot-scope="scope">
                     <div>
                         <strong>售后电话:</strong>
                         <span v-if="!item.edit" class="top_span">{{item.common1}}</span>
@@ -58,25 +58,25 @@
                 label="小区名称"
                 width="200"
                 >
-                  <template>
-                    <div>
-                        <strong>操作</strong>
-                    </div>
-                    <div style="margin-top: 15px">
-                        <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit"
-                        :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" 
-                        >编辑</el-button>
-                        <el-button type="danger" size="mini"  @click="handleDeleteTem(item,i)" v-if="!item.edit" 
-                        :disabled="from == 1 || from == 2 || (from==3 && item.pitchon ==1) " 
-                        :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1)"
-                        icon="el-icon-delete"
-                        >删除</el-button>
-                        <el-button type="success" size="mini" @click="handleSaveEditTem(item)" v-if="item.edit" icon="el-icon-folder-checked">保存</el-button>
-                        <el-button type="warning" size="mini" @click="handleCancelDeleteTem(item)"  v-if="item.edit" icon="el-icon-folder-delete">取消</el-button>
-                    </div> 
-                </template>
+                    <template slot-scope="scope">
+                        <div>
+                            <strong>操作</strong>
+                        </div>
+                        <div style="margin-top: 15px">
+                            <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit"
+                            :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" 
+                            >编辑</el-button>
+                            <el-button type="danger" size="mini"  @click="handleDeleteTem(item,i)" v-if="!item.edit" 
+                            :disabled="from == 1 || from == 2 || (from==3 && item.pitchon ==1) " 
+                            :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1)"
+                            icon="el-icon-delete"
+                            >删除</el-button>
+                            <el-button type="success" size="mini" @click="handleSaveEditTem(item)" v-if="item.edit" icon="el-icon-folder-checked">保存</el-button>
+                            <el-button type="warning" size="mini" @click="handleCancelDeleteTem(item)"  v-if="item.edit" icon="el-icon-folder-delete">取消</el-button>
+                        </div> 
+                    </template>
                 </el-table-column>
-           </el-table>
+            </el-table>
             <el-table
             :data="item.gather"
             border

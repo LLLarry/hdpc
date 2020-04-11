@@ -2,14 +2,14 @@
     <div class="gradeTemplate">
         <el-card :class="['box-card','temTableTitle', (from==3 && pitchon==1) ? 'selectedTem' : '']">
              <div v-for="(item,i) in list" :key="i">
-                <Template :from="from" :list="[item]" :deviceInfo="deviceInfo" :grade="item.rank" :gradeId="list[0].id" :gradePitchon="pitchon" :source="source" :arecode="arecode" />
+                <TemplateCharge :from="from" :list="[item]" :deviceInfo="deviceInfo" :grade="item.rank" :gradeId="list[0].id" :gradePitchon="pitchon" :source="source" :arecode="arecode" />
             </div>
         </el-card>
     </div>
 </template>
 
 <script>
-import Template from './Template'
+import TemplateCharge from './Template'
 import { mapState } from 'vuex'
 export default {
     data(){
@@ -98,7 +98,7 @@ export default {
         }
     },
     components: {
-        Template
+        TemplateCharge
     },
     computed:{
        ...mapState(['gradePitchon'])

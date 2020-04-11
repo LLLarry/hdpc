@@ -92,6 +92,15 @@ export const getChargeInfo= function (data){
          })
 }
 
+/**
+ * 修改V3充电模板
+ */
+export const changeV3ChargeTem= function (data){  
+    return ajax({
+             url: '/deviceData/insertOrModifyTemp',
+             data: data
+         })
+}
 
 
 

@@ -40,7 +40,7 @@
             <div slot="header" class="clearfix">
                 <span>智慧款V3模板</span>
             </div>
-            <TemplateV3 :from="1" :list="templateV3" />
+            <TemplateV3 :from="1" :list="templateV3" @handleReLoad="handleReLoad" />
         </el-card>
 
         <el-card class="box-card card_content">
@@ -303,12 +303,12 @@ export default {
         this.sayGetSystemSetInfo()
     },
     methods: {
-        async sayGetSystemSetInfo(){
+        async sayGetSystemSetInfo(callback){
             let _this= this
             try{
                 let systemTemInfo= await getSystemSetInfo()
                 if(systemTemInfo.code === 200) {
-                    // _this.temChargeList= systemTemInfo.chargesontem
+                    callback && callback()
                     {
                         //十路智慧款
                         let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.tempcharge
@@ -351,6 +351,12 @@ export default {
                     }
 
                     {
+                        // V3充电模板
+                         _this.templateV3= [systemTemInfo.templatev3]
+                
+                    }
+
+                    {
                         // 商户缴费默认模板
                         this.payTemData= systemTemInfo.payTemData
                     }
@@ -384,6 +390,9 @@ export default {
             }).catch(err=>{
                 this.payTemVisible= false
             })
+        },
+        handleReLoad(callback){ //重新请求数据
+            this.sayGetSystemSetInfo(callback)
         }
     }
 }

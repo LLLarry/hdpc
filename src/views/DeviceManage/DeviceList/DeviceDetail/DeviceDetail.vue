@@ -197,10 +197,10 @@
         <!-- 模板信息 -->
         <el-card class="box-card temCard" id="template_card">
             <div slot="header" class="clearfix">
-                <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : '充电模板'}}）</span>
+                <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : hwVerson== '08' ? 'V3充电模板' :'充电模板'}}）</span>
             </div>
             <!-- 十路智慧款 -->
-            <div v-if=" hwVerson != '03' && hwVerson != '04'" >
+            <div v-if=" hwVerson != '03' && hwVerson != '04' && hwVerson != '08'" >
                 <!-- 正常模板 -->
                  <TemplateCharge :from="2" :list="temChargeList" v-if="!isGrade" :deviceInfo="{code:this.code,merid: this.merid, hwVerson: hwVerson}" /> 
                  <!-- 分等级模板 -->
@@ -213,6 +213,10 @@
             <!-- 离线充值机模板 -->
             <div v-else-if="hwVerson == '04'">
                 <TemplateOffline :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
+            </div>
+            <!-- V3充电模板 -->
+            <div v-else-if="hwVerson == '08'">
+                <TemplateV3 :from="2" :list="temChargeList" @handleReLoad="handleReLoad" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
            
         </el-card>
@@ -874,6 +878,7 @@
 
 <script>
 import TemplateCharge from '@/components/common/Template'
+import TemplateV3 from '@/components/common/TemplateV3'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import GradeTemplate from '@/components/common/GradeTemplate'
@@ -1033,6 +1038,7 @@ export default {
     },
     components: {
         TemplateCharge,
+        TemplateV3,
         TemplateCoin,
         TemplateOffline,
         GradeTemplate,
@@ -1185,7 +1191,7 @@ export default {
                 this.expirationVisable= false
             } 
         },
-        async asyGetDeviceDetailInfo(data){
+        async asyGetDeviceDetailInfo(data,callback){
             let _this= this
             let loading= Loading.service({
                         lock: true,
@@ -1196,6 +1202,7 @@ export default {
             this.Loading= loading
             try{
                 let deviceInfo= await getDeviceDetailInfo(data)
+                callback && callback() //执行v3模板回调
                 _this.username= deviceInfo.username
                 _this.merid= deviceInfo.merid
                 let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,
@@ -1222,7 +1229,7 @@ export default {
                 _this.expirationTime= expirationTime
                 _this.totalOnlineEarn= totalOnlineEarn
                 _this.bindtype= bindtype
-                if(hwVerson != '03' && hwVerson != '04'){
+                if(hwVerson != '03' && hwVerson != '04' && hwVerson != '08'){
                     if(deviceInfo.temp != null){ //temp存在，说明此模板不是分等级模板
                         //十路智慧款
                         let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo}= deviceInfo.temp //merchantid是模板所属商户的id，可以通过它来判断是否是系统模板
@@ -1234,6 +1241,8 @@ export default {
                         _this.isGrade= true  //将分等级设为true
                          _this.temChargeList= deviceInfo.templist || []
                     }
+                }else if(hwVerson == '08'){
+                    _this.temChargeList= [ deviceInfo.templatev3 ]
                 }else{ //其他模板
                      let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid}= deviceInfo.temp
                      _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid}]
@@ -1253,7 +1262,6 @@ export default {
                       item.money= 1.0
                       return item
                 })
-
 
                 let sysparam= deviceInfo.sysparam
                 let systemParamer=  _this.systemParamer
@@ -1648,6 +1656,9 @@ export default {
                 this.clearToken()
             })
            
+        },
+        handleReLoad(callback){ //v3模板的回调函数
+            this.asyGetDeviceDetailInfo({code: this.code},callback)
         }
     }
 }

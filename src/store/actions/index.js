@@ -34,6 +34,7 @@ export default {
 
     async asyGetDeviceDetailTemInfo({commit,state},data){
         let temListInfo= await getDeviceDetailTemInfo(data)
+        data.callback && data.callback()
         if(temListInfo.code == 200){
             commit('updateTemDetail',temListInfo) 
         }

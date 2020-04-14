@@ -88,7 +88,7 @@
                  min-width="120"
                 >
                 <template slot-scope="{row}">
-                    {{ (row.surpluselec/100).toFix(2)}}
+                    {{ (row.surpluselec/100).toFixed(2)}}
                 </template>
                 </el-table-column>
 

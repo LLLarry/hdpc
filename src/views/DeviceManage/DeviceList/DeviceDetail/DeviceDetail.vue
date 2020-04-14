@@ -1,6 +1,6 @@
 <template>
 <el-row>
-    <el-col :md="21" :lg="20" :xl="19">
+    <el-col :md="22" :lg="21" :xl="20">
     <div class="deviceDetail">
          <el-card class="box-card">
             <el-row>

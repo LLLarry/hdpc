@@ -98,9 +98,22 @@ export const getChargeInfo= function (data){
 export const changeV3ChargeTem= function (data){  
     return ajax({
              url: '/deviceData/insertOrModifyTemp',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * V3设备选中默认模板
+ */
+export const selectV3ChargeTem= function (data){  
+    return ajax({
+             url: '/deviceData/pitchOnTemplate',
              data: data
          })
 }
+
+
 
 
 

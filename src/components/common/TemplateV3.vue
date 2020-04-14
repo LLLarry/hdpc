@@ -15,8 +15,8 @@
                     <template slot-scope="scope">
                         <div>
                             <strong>模板名称: </strong>
-                            <span v-if="!isEditingTem" class="top_span">{{item.name}}</span>
-                            <el-input v-else size="mini" v-model="temForm.name" style="width: 70%; display: inline-block" placeholder="请输入模板名称"></el-input>
+                            <el-input v-if="editId === item.id" size="mini" v-model="temForm.name" style="width: 70%; display: inline-block" placeholder="请输入模板名称"></el-input>
+                            <span v-else class="top_span">{{item.name}}</span>
                         </div>
                         <div style="margin-top: 15px">&nbsp;</div> 
                     </template>
@@ -27,8 +27,8 @@
                      <template slot-scope="scope">
                         <div>
                             <strong>品牌名称:  </strong>
-                            <span v-if="!isEditingTem" class="top_span">{{item.remark}}</span>
-                            <el-input v-else size="mini" v-model="temForm.remark" style="width: 70%; display: inline-block" placeholder="请输入品牌名称"></el-input>
+                            <el-input v-if="editId === item.id" size="mini" v-model="temForm.remark" style="width: 70%; display: inline-block" placeholder="请输入品牌名称"></el-input>
+                            <span v-else class="top_span">{{item.remark}}</span>
                         </div>
                         <div style="margin-top: 15px">&nbsp;</div> 
                     </template>
@@ -39,8 +39,8 @@
                     <template slot-scope="scope">
                         <div>
                             <strong>售后电话:</strong>
-                            <span v-if="!isEditingTem" class="top_span">{{item.common1}}</span>
-                            <el-input v-else size="mini" v-model="temForm.common1" style="width: 70%; display: inline-block" placeholder="请输入售后电话"></el-input>
+                            <el-input v-if="editId === item.id" size="mini" v-model="temForm.common1" style="width: 70%; display: inline-block" placeholder="请输入售后电话"></el-input>
+                            <span v-else class="top_span">{{item.common1}}</span>
                         </div>
                         <div style="margin-top: 15px">&nbsp;
                         </div> 
@@ -50,12 +50,13 @@
                     prop="communName"
                     label="小区名称"
                     width="200"
+                    v-if="from !== 4"
                 >
                     <template slot-scope="scope">
                         <div>
                             <strong>操作</strong>
                         </div>
-                        <div style="margin-top: 15px" v-if="!isEditingTem">
+                        <div style="margin-top: 15px" v-if="editId !== item.id">
                             <el-button 
                                 type="primary" 
                                 size="mini" 
@@ -67,7 +68,8 @@
                                 size="mini" 
                                 icon="el-icon-delete"
                                 :plain="from === 1"
-                                :disabled="from === 1"
+                                :disabled="from === 1 || from === 2 || item.pitchon === 1"
+                                 @click="handleDeleteTem(item,i)"
                             >删除</el-button>
                         </div>
                         <div style="margin-top: 15px" v-else>
@@ -99,7 +101,7 @@
                                 min-width="150"
                             >
                                 <template slot-scope="scope">
-                                    <div v-if="isEditingTem"> 
+                                    <div v-if="editId === item.id"> 
                                         <el-input-number 
                                             size="mini" 
                                             v-model="temForm.gather1[scope.$index].money" 
@@ -115,10 +117,10 @@
                             <el-table-column
                                 prop="power"
                                 label="功率区间"
-                                :min-width="isEditingTem ? 190 : 150"
+                                :min-width="editId !== item.id ? 190 : 150"
                             >
                                 <template slot-scope="scope">
-                                    <div v-if="isEditingTem"> 
+                                    <div v-if="editId === item.id"> 
                                         <el-input
                                             size="mini" 
                                             v-model="temForm.gather1[scope.$index].common1" 
@@ -140,7 +142,7 @@
                                 prop="handle"
                                 label="操作"
                                 min-width="90"
-                                v-if="!isEditingTem"
+                                v-if="from === 4 || (from !==4 && editId !== item.id)"
                             >
                                 <template slot-scope="scope">
                                     <el-button 
@@ -154,7 +156,7 @@
                         </el-table-column>    
                     </el-table>
                     <div class="addItem">
-                        <el-button type="primary" size="mini" @click="handleAddItem(item,'gather1')">添加子模板</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather1')">添加子模板</el-button>
                     </div>
                 </el-col>
                 <el-col :span="8">
@@ -178,7 +180,7 @@
                                 min-width="120"
                             >
                                 <template slot-scope="scope">
-                                    <div v-if="isEditingTem"> 
+                                    <div v-if="editId === item.id"> 
                                         <el-input 
                                             size="mini" 
                                             v-model="temForm.gather2[scope.$index].name" 
@@ -194,7 +196,7 @@
                                 min-width="170"
                             >
                                 <template slot-scope="scope">
-                                    <div v-if="isEditingTem"> 
+                                    <div v-if="editId === item.id"> 
                                         <el-input-number 
                                             size="mini"
                                             :step="10"
@@ -212,7 +214,7 @@
                                 prop="handle"
                                 label="操作"
                                 min-width="90"
-                                 v-if="!isEditingTem"
+                                v-if="from === 4 || (from !==4 && editId !== item.id)"
                             >
                                 <template slot-scope="scope">
                                     <el-button 
@@ -226,32 +228,34 @@
                         </el-table-column>    
                     </el-table>
                     <div class="addItem">
-                        <el-button type="primary" size="mini" @click="handleAddItem(item,'gather2')">添加子模板</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather2')">添加子模板</el-button>
                     </div>
                 </el-col>
                 <el-col :span="8">
                     <div class="v3MaskWrapper">
-                        <div class="v3Mask" v-show="isEditingTem ? (temForm.permit === 1 ? false : true) : (item.permit === 1 ? false : true)">
+                        <div class="v3Mask" v-show="editId === item.id ? (temForm.permit === 1 ? false : true) : (item.permit === 1 ? false : true)">
                             暂未开启临时充电
                         </div>
                         <div class="v3Child3header">
                         <el-row>
                             <el-col :span="8">
                                     <strong>是否支持临时充电:  </strong>&nbsp;&nbsp;
-                                    <span v-if="!isEditingTem" :class="[item.permit === 1  ? 'green': 'red']">{{item.permit === 1 ? '是': '否'}}</span>
-                                    <el-radio-group v-model="temForm.permit" v-else>
+                                    
+                                    <el-radio-group v-model="temForm.permit" v-if="editId === item.id">
                                         <el-radio :label="1">是</el-radio>
                                         <el-radio :label="2">否</el-radio>
                                     </el-radio-group>
+                                    <span v-else :class="[item.permit === 1  ? 'green': 'red']">{{item.permit === 1 ? '是': '否'}}</span>
                             </el-col>
                             <el-col :span="8">按照金额充电（临时充电）</el-col>
                             <el-col :span="8">
                                     <strong>是否支持退费:  </strong>&nbsp;&nbsp;
-                                    <span v-if="!isEditingTem" :class="[item.walletpay === 1  ? 'green': 'red']">{{item.walletpay === 1 ? '是': '否'}}</span>
-                                    <el-radio-group v-model="temForm.walletpay" v-else>
+                                    
+                                    <el-radio-group v-model="temForm.walletpay" v-if="editId === item.id">
                                         <el-radio :label="1">是</el-radio>
                                         <el-radio :label="2">否</el-radio>
                                     </el-radio-group>
+                                    <span v-else :class="[item.walletpay === 1  ? 'green': 'red']">{{item.walletpay === 1 ? '是': '否'}}</span>
                             </el-col>
                         </el-row>
                         </div>
@@ -269,7 +273,7 @@
                                 min-width="120"
                             >
                                 <template slot-scope="scope">
-                                    <div v-if="isEditingTem"> 
+                                    <div v-if="editId === item.id"> 
                                         <el-input 
                                             size="mini" 
                                             v-model="temForm.gather3[scope.$index].name" 
@@ -285,7 +289,7 @@
                                 min-width="170"
                             >
                                 <template slot-scope="scope">
-                                    <div v-if="isEditingTem"> 
+                                    <div v-if="editId === item.id"> 
                                         <el-input-number 
                                             size="mini"
                                             :step="1"
@@ -303,7 +307,7 @@
                                 prop="handle"
                                 label="操作"
                                 min-width="90"
-                                v-if="!isEditingTem"
+                                v-if="from === 4 || (from !==4 && editId !== item.id)"
                             >
                                 <template slot-scope="scope">
                                     <el-button 
@@ -317,14 +321,19 @@
                             </el-table-column>
                         </el-table>
                         <div class="addItem">
-                            <el-button type="primary" size="mini" @click="handleAddItem(item,'gather3')">添加子模板</el-button>
+                            <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather3')">添加子模板</el-button>
                         </div>
                     </div>
                 </el-col>
             </el-row>
             <div class="bottomMenu" v-if="from === 2">
-               <el-button type="primary" style="width: 160px;" icon="el-icon-view" size="mini">查看更多</el-button>
+                <router-link :to="`/deviceManage/deviceList/templateDetail?hw=${deviceInfo.hwVerson}&code=${deviceInfo.code}&merid=${deviceInfo.merid}`">
+                    <el-button type="primary" style="width: 160px;" icon="el-icon-view" size="mini">查看更多</el-button>
+                </router-link>
                <el-button type="primary" style="width: 160px;" size="mini">此模板复用更多设备</el-button>
+            </div>
+            <div class="bottomMenu" v-if="from === 3">
+                <el-button type="success" style="width: 200px;" icon="el-icon-check" size="mini" :plain="item.pitchon !== 1" @click="handleSelectTem(item)">{{item.pitchon === 1 ? '已选中此模板' : '选中此模板'}}</el-button>
             </div>
          </el-card>
     </div>
@@ -332,41 +341,58 @@
 
 <script>
 import { confirDelete,messageTip } from '@/utils/ele'
-import { deleteTemplateChild,addTemplateChild,changeV3ChargeTem } from '@/require/template'
+import { deleteTemplateChild,addTemplateChild,changeV3ChargeTem,setSelectTem,handleDeleteTem,deleteTem,selectV3ChargeTem } from '@/require/template'
 export default {
     data(){
         return{
             temForm: {},//存放编辑主模板的容器
             isEditingTem: false, //是都正在编辑
+            editId: 0, //正在编辑
         }
     },
-    props: ['from','list'],
+    props: ['from','list','deviceInfo','getFrom','deviceNum'],
     computed: {
         arr(){
-            return this.list
+            if(this.from === 4){
+                return [this.temForm]
+            }else{
+                 return this.list
+            } 
+        }
+    },
+    created(){
+        this.editId= this.from === 4 ? -1 : 0 //当添加模板时，editId设置为-1，否则默认为0
+        this.temForm= this.from === 4 ? JSON.parse(JSON.stringify(this.list[0])) : {}
+    },
+    watch: {
+        getFrom(newVal){
+            if(newVal){
+                this.$emit('getDataFromTem',this.temForm)
+            }
         }
     },
     methods: {
         handleEdit(item){ //点击编辑模板
             this.temForm = JSON.parse(JSON.stringify(item))
-            this.isEditingTem= true
+            console.log(this.temForm)
+            this.editId= item.id
         },
         handleSave(index){ //点击保存按钮
-            changeV3ChargeTem({paratem: this.temForm}).then(res=>{
+            changeV3ChargeTem({paratem: JSON.stringify(this.temForm)}).then(res=>{
                 if(res.code === 200){
                     this.$emit('handleReLoad',()=>{
                         messageTip('success','模板编辑成功！')
-                        this.isEditingTem= false
+                        this.editId= 0
                     }) 
                 }else{
                     messageTip('error','模板编辑失败！')
-                    this.isEditingTem= false
+                    this.editId= 0
                 }
             })
         },
         handleCancel(item){ //点击取消保存
             this.temForm = JSON.parse(JSON.stringify(item))
-            this.isEditingTem= false
+            this.editId= 0
         }, 
         handleAddItem(item,from){
             let newItem
@@ -402,17 +428,23 @@ export default {
                     newItem= newItem= { name: '1元', money: 1,type: 3 }
                 }  
             }
-            addTemplateChild({...newItem,tempid: item.id}).then(res=>{
-                if(res.code === 200){
-                    let itemCopy= JSON.parse(JSON.stringify(item))
-                    itemCopy[from].push(res.tempson)
-                    this.temForm= itemCopy
-                    this.$set(item,from,itemCopy[from])
-                    messageTip('success','子模板添加成功！')
-                }else{
-                    messageTip('error','子模板添加失败！')
-                }
-            })
+            if(this.from === 4){
+                let gatherCopy= JSON.parse(JSON.stringify(this.temForm[from]))
+                gatherCopy.push({id: new Date().getTime(),...newItem})
+                this.$set(this.temForm,from,gatherCopy)
+            }else{
+                addTemplateChild({...newItem,tempid: item.id}).then(res=>{
+                    if(res.code === 200){
+                        let itemCopy= JSON.parse(JSON.stringify(item))
+                        itemCopy[from].push(res.tempson)
+                        this.temForm= itemCopy
+                        this.$set(item,from,itemCopy[from])
+                        messageTip('success','子模板添加成功！')
+                    }else{
+                        messageTip('error','子模板添加失败！')
+                    }
+                })
+            }
         },
         /**
          * @param item 父元素对象
@@ -422,6 +454,13 @@ export default {
          */
         handleDeleteItem(item,index,from,cid){
             confirDelete('确认删除子模板吗？',()=>{
+                if(this.from === 4){
+                    let itemCopy= JSON.parse(JSON.stringify(item))
+                    let newGather= itemCopy[from].filter((val)=> val.id !== cid )
+                    // 深度设置值的，需要使用vue实例提供的方法来修改 this.$set || Vue.set
+                    this.$set(this.arr[index],from,newGather)
+                    return
+                }
                 deleteTemplateChild({id:cid}).then(res=>{
                     if(res.code === 200){
                         let itemCopy= JSON.parse(JSON.stringify(item))
@@ -435,6 +474,35 @@ export default {
                 })
                 
             })
+        },
+        handleSelectTem(item){ //选中模板
+            let temid= item.id
+            selectV3ChargeTem({temid: temid,source: 1,devicenum: this.deviceNum}).then(res=>{
+                if(res.code == 200){
+                    for (const iterator of this.arr) {
+                        if(iterator.id == item.id){
+                            iterator.pitchon= 1
+                        }else{
+                            iterator.pitchon= undefined
+                        }
+                    }
+                    messageTip('success','选中成功（注： 选中成功会自动至于第一位）')
+                }else{
+                    messageTip('warning','选中失败')
+                }
+           }).catch(err=>{})
+        },
+        handleDeleteTem(item,i){
+             confirDelete('确认删除主模板吗？',()=>{
+                deleteTem({id:item.id}).then(res=>{
+                    if(res.code == 200){
+                        this.arr.splice(i,1)
+                        messageTip('success','删除成功')
+                    }else{
+                        messageTip('warning',res.message)
+                    }
+                }).catch(error=>{})
+            }) 
         }
     }
 }
@@ -470,6 +538,7 @@ export default {
             align-items: center;
             font-size: 16px;
             color: #409eff;
+            font-weight: bold;
         }
         .v3Child3header {
             height: 48px;

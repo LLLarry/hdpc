@@ -242,26 +242,26 @@ export default {
                     }*/
             ],
             templateV3: [
-                {
-                    id: 1,
-                    name: '充电系统默认模板',
-                    remark: '和动充电站',
-                    common1: '1569365326',
-                    walletpay: 2,  //是否支持退费 1为支持，否则不支持
-                    permit: 2, //是否临时充电开启 1为开启，否则不开启
-                    gather1: [
-                        { id: 1, money: 1, common1: 0,common2: 200 },
-                        { id: 2, money: 2, common1: 200,common2: 400 }
-                    ],
-                    gather2: [
-                        { id: 3, name: '1小时', chargeTime: 60 },
-                        { id: 4, name: '2小时', chargeTime: 120 }
-                    ],
-                    gather3: [
-                        { id: 5, name: '1元',money: 1 },
-                        { id: 6, name: '2元',money: 2 }
-                    ],
-                }
+                // {
+                //     id: 1,
+                //     name: '充电系统默认模板',
+                //     remark: '和动充电站',
+                //     common1: '1569365326',
+                //     walletpay: 2,  //是否支持退费 1为支持，否则不支持
+                //     permit: 2, //是否临时充电开启 1为开启，否则不开启
+                //     gather1: [
+                //         { id: 1, money: 1, common1: 0,common2: 200 },
+                //         { id: 2, money: 2, common1: 200,common2: 400 }
+                //     ],
+                //     gather2: [
+                //         { id: 3, name: '1小时', chargeTime: 60 },
+                //         { id: 4, name: '2小时', chargeTime: 120 }
+                //     ],
+                //     gather3: [
+                //         { id: 5, name: '1元',money: 1 },
+                //         { id: 6, name: '2元',money: 2 }
+                //     ],
+                // }
             ],
             temOnlineList: [], //在线卡模板
             payTemData: { //商户缴费系统模板

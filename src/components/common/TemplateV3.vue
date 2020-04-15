@@ -10,7 +10,7 @@
                 :cell-style="{'background-color': 'rgba(0,211,255,0.06)', 'font-size': '13px',color: '#666'}"
             >
                 <el-table-column
-                    min-width="300"
+                    min-width="260"
                 >
                     <template slot-scope="scope">
                         <div>
@@ -22,7 +22,7 @@
                     </template>
                 </el-table-column>
                  <el-table-column
-                    min-width="300"
+                    min-width="260"
                 >
                      <template slot-scope="scope">
                         <div>
@@ -39,7 +39,7 @@
                     <template slot-scope="scope">
                         <div>
                             <strong>售后电话:</strong>
-                            <el-input v-if="editId === item.id" size="mini" v-model="temForm.common1" style="width: 70%; display: inline-block" placeholder="请输入售后电话"></el-input>
+                            <el-input v-if="editId === item.id" size="mini" v-model="temForm.common1" style="width: 60%; display: inline-block" placeholder="请输入售后电话"></el-input>
                             <span v-else class="top_span">{{item.common1}}</span>
                         </div>
                         <div style="margin-top: 15px">&nbsp;
@@ -61,7 +61,8 @@
                                 type="primary" 
                                 size="mini" 
                                 icon="el-icon-edit" 
-                                @click="handleEdit(item)" 
+                                @click="handleEdit(item)"
+                                :disabled="from ==2 && item.merchantid == 0 "
                             >编辑</el-button>
                             <el-button 
                                 type="danger" 
@@ -98,7 +99,7 @@
                             <el-table-column
                                 prop="money"
                                 label="每小时收费"
-                                min-width="150"
+                                :min-width="screenWidth <= 1400 ? 90 : 150"
                             >
                                 <template slot-scope="scope">
                                     <div v-if="editId === item.id"> 
@@ -117,14 +118,14 @@
                             <el-table-column
                                 prop="power"
                                 label="功率区间"
-                                :min-width="editId !== item.id ? 190 : 150"
+                                :min-width="screenWidth <= 1400 ? (editId !== item.id ? 140 : 110) : (editId !== item.id ? 190 : 150)"
                             >
                                 <template slot-scope="scope">
                                     <div v-if="editId === item.id"> 
                                         <el-input
                                             size="mini" 
                                             v-model="temForm.gather1[scope.$index].common1" 
-                                            style="min-width: 58px; width: 30%;margin-right: 10px;" 
+                                            style="min-width: 58px; width: 30%;" 
                                             placeholder="请输入起始功率"
                                         ></el-input>
                                         ~
@@ -141,7 +142,7 @@
                             <el-table-column
                                 prop="handle"
                                 label="操作"
-                                min-width="90"
+                                :min-width="from === 4 ? ((screenWidth < 1400) ? 35: 90) : 90"
                                 v-if="from === 4 || (from !==4 && editId !== item.id)"
                             >
                                 <template slot-scope="scope">
@@ -149,14 +150,14 @@
                                         type="danger" 
                                         size="mini" 
                                         @click="handleDeleteItem(item,i,'gather1',scope.row.id)" 
-                                        icon="el-icon-delete"
-                                    >删除</el-button>
+                                        :disabled="from ==2 && item.merchantid == 0 "
+                                    > <i class="el-icon-delete"></i> {{ (from === 4 && (screenWidth < 1400)) ?  '' : '删除'}}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table-column>    
                     </el-table>
                     <div class="addItem">
-                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather1')">添加子模板</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather1')">添加</el-button>
                     </div>
                 </el-col>
                 <el-col :span="8">
@@ -177,7 +178,7 @@
                             <el-table-column
                                 prop="name"
                                 label="显示名称"
-                                min-width="120"
+                                :min-width="screenWidth <= 1400 ? 100 : 120"
                             >
                                 <template slot-scope="scope">
                                     <div v-if="editId === item.id"> 
@@ -193,7 +194,7 @@
                             <el-table-column
                                 prop="chargeTime"
                                 label="充电时间"
-                                min-width="170"
+                                :min-width="screenWidth <= 1400 ? 120 : 170"
                             >
                                 <template slot-scope="scope">
                                     <div v-if="editId === item.id"> 
@@ -213,22 +214,22 @@
                             <el-table-column
                                 prop="handle"
                                 label="操作"
-                                min-width="90"
+                                :min-width="from === 4 ? ((screenWidth < 1400) ? 40: 90) : 90"
                                 v-if="from === 4 || (from !==4 && editId !== item.id)"
                             >
                                 <template slot-scope="scope">
                                     <el-button 
                                         type="danger" 
                                         size="mini"
-                                        @click="handleDeleteItem(item,i,'gather2',scope.row.id)"  
-                                        icon="el-icon-delete"
-                                    >删除</el-button>
+                                        @click="handleDeleteItem(item,i,'gather2',scope.row.id)" 
+                                        :disabled="from ==2 && item.merchantid == 0 "
+                                    ><i class="el-icon-delete"></i> {{ (from === 4 && (screenWidth < 1400)) ?  '' : '删除'}}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table-column>    
                     </el-table>
                     <div class="addItem">
-                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather2')">添加子模板</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather2')">添加</el-button>
                     </div>
                 </el-col>
                 <el-col :span="8">
@@ -239,23 +240,25 @@
                         <div class="v3Child3header">
                         <el-row>
                             <el-col :span="8">
-                                    <strong>是否支持临时充电:  </strong>&nbsp;&nbsp;
-                                    
-                                    <el-radio-group v-model="temForm.permit" v-if="editId === item.id">
-                                        <el-radio :label="1">是</el-radio>
-                                        <el-radio :label="2">否</el-radio>
-                                    </el-radio-group>
-                                    <span v-else :class="[item.permit === 1  ? 'green': 'red']">{{item.permit === 1 ? '是': '否'}}</span>
+                                    <strong>是否支持临时充电:  </strong>
+                                    <div>
+                                        <el-radio-group v-model="temForm.permit" v-if="editId === item.id">
+                                            <el-radio :label="1">是</el-radio>
+                                            <el-radio :label="2">否</el-radio>
+                                        </el-radio-group>
+                                        <span v-else :class="[item.permit === 1  ? 'green': 'red']">{{item.permit === 1 ? '是': '否'}}</span>
+                                    </div>
                             </el-col>
-                            <el-col :span="8">按照金额充电（临时充电）</el-col>
+                            <el-col :span="8">按照金额充电 <br/>（临时充电）</el-col>
                             <el-col :span="8">
-                                    <strong>是否支持退费:  </strong>&nbsp;&nbsp;
-                                    
-                                    <el-radio-group v-model="temForm.walletpay" v-if="editId === item.id">
-                                        <el-radio :label="1">是</el-radio>
-                                        <el-radio :label="2">否</el-radio>
-                                    </el-radio-group>
-                                    <span v-else :class="[item.walletpay === 1  ? 'green': 'red']">{{item.walletpay === 1 ? '是': '否'}}</span>
+                                    <strong>是否支持退费:  </strong>
+                                    <div>
+                                        <el-radio-group v-model="temForm.walletpay" v-if="editId === item.id">
+                                            <el-radio :label="1">是</el-radio>
+                                            <el-radio :label="2">否</el-radio>
+                                        </el-radio-group>
+                                        <span v-else :class="[item.walletpay === 1  ? 'green': 'red']">{{item.walletpay === 1 ? '是': '否'}}</span>
+                                    </div>
                             </el-col>
                         </el-row>
                         </div>
@@ -270,7 +273,7 @@
                             <el-table-column
                                 prop="name"
                                 label="显示名称"
-                                min-width="120"
+                                :min-width="screenWidth <= 1400 ? 100 : 120"
                             >
                                 <template slot-scope="scope">
                                     <div v-if="editId === item.id"> 
@@ -286,7 +289,7 @@
                             <el-table-column
                                 prop="money"
                                 label="付款金额"
-                                min-width="170"
+                                :min-width="screenWidth <= 1400 ? 120 : 170"
                             >
                                 <template slot-scope="scope">
                                     <div v-if="editId === item.id"> 
@@ -306,7 +309,7 @@
                             <el-table-column
                                 prop="handle"
                                 label="操作"
-                                min-width="90"
+                                :min-width="from === 4 ? ((screenWidth < 1400) ? 40: 90) : 90"
                                 v-if="from === 4 || (from !==4 && editId !== item.id)"
                             >
                                 <template slot-scope="scope">
@@ -314,14 +317,14 @@
                                         type="danger" 
                                         size="mini" 
                                         @click="handleDeleteItem(item,i,'gather3',scope.row.id)"  
-                                        v-if="!scope.row.edit" 
-                                        icon="el-icon-delete"
-                                    >删除</el-button>
+                                        v-if="!scope.row.edit"
+                                        :disabled="from ==2 && item.merchantid == 0 "
+                                    ><i class="el-icon-delete"></i> {{(from === 4 && (screenWidth < 1400)) ?  '' : '删除'}}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
                         <div class="addItem">
-                            <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather3')">添加子模板</el-button>
+                            <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather3')">添加</el-button>
                         </div>
                     </div>
                 </el-col>
@@ -330,7 +333,8 @@
                 <router-link :to="`/deviceManage/deviceList/templateDetail?hw=${deviceInfo.hwVerson}&code=${deviceInfo.code}&merid=${deviceInfo.merid}`">
                     <el-button type="primary" style="width: 160px;" icon="el-icon-view" size="mini">查看更多</el-button>
                 </router-link>
-               <el-button type="primary" style="width: 160px;" size="mini">此模板复用更多设备</el-button>
+               <!-- <el-button type="primary" style="width: 160px;" size="mini">此模板复用更多设备</el-button> -->
+               <TemMulDevice :deviceInfo="deviceInfo" :tempid="item.id" />
             </div>
             <div class="bottomMenu" v-if="from === 3">
                 <el-button type="success" style="width: 200px;" icon="el-icon-check" size="mini" :plain="item.pitchon !== 1" @click="handleSelectTem(item)">{{item.pitchon === 1 ? '已选中此模板' : '选中此模板'}}</el-button>
@@ -342,12 +346,14 @@
 <script>
 import { confirDelete,messageTip } from '@/utils/ele'
 import { deleteTemplateChild,addTemplateChild,changeV3ChargeTem,setSelectTem,handleDeleteTem,deleteTem,selectV3ChargeTem } from '@/require/template'
+import TemMulDevice from '@/components/common/TemMulDevice'
 export default {
     data(){
         return{
             temForm: {},//存放编辑主模板的容器
             isEditingTem: false, //是都正在编辑
             editId: 0, //正在编辑
+            screenWidth: 0
         }
     },
     props: ['from','list','deviceInfo','getFrom','deviceNum'],
@@ -360,9 +366,14 @@ export default {
             } 
         }
     },
+    components:{
+        TemMulDevice
+    },
     created(){
         this.editId= this.from === 4 ? -1 : 0 //当添加模板时，editId设置为-1，否则默认为0
         this.temForm= this.from === 4 ? JSON.parse(JSON.stringify(this.list[0])) : {}
+        this.screenWidth= document.documentElement.offsetWidth || document.body.offsetWidth
+        console.log(this.screenWidth)
     },
     watch: {
         getFrom(newVal){
@@ -553,6 +564,14 @@ export default {
                 text-align: center;
                 &:nth-child(2){
                     font-weight: bold;
+                }
+                strong {
+                    display: inline-block;
+                    max-width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    margin-top: -3px;
                 }
             }
         }

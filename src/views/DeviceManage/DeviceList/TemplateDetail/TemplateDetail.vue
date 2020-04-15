@@ -12,7 +12,7 @@
         <el-dialog 
             :title="$route.query.hw == '03' ? '新增模拟投币模板' : $route.query.hw == '04' ? '新增离线卡模板' : $route.query.hw == '08' ? '新增V3充电模板': '新增充电模板'" 
             :visible.sync="visiblesHw01" 
-            :width="$route.query.hw == '08' ? '90vw' : '450px'" 
+            :width="$route.query.hw == '08' ? '95vw' : '450px'" 
             custom-class="dialog_form" 
             validate="handleSubmit1">
             <!-- 添加V3模板 -->

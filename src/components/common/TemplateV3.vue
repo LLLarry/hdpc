@@ -109,7 +109,7 @@
                                             style="width: 80%;margin-right: 10px;" 
                                             placeholder="请输入每小时收费金额"
                                             :step="1"
-                                            :precision="1"
+                                            :precision="2"
                                             :min="0"
                                         ></el-input-number>元</div>
                                     <span v-else> {{scope.row.money}}元</span>

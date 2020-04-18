@@ -34,6 +34,29 @@
                         label="类型"
                         min-width="220"
                         >
+                         <template slot-scope="{row}">
+                                <span v-if="row.type === '付款金额' && include === 1">
+                                    {{row.content}} 
+                                    <el-popover
+                                        placement="right"
+                                        width="521"
+                                        trigger="click">
+                                        <h3 class="money_h3">消费信息</h3>
+                                        <el-table :data="listcharge" border>
+                                            <el-table-column width="240" property="ordernum" label="订单号"></el-table-column>
+                                            <el-table-column width="100" property="moany" label="支付金额">
+                                                <template slot-scope="cScope">{{ cScope.row.moany.toFixed(2) }}元</template>
+                                            </el-table-column>
+                                            <el-table-column width="180" property="begintime" label="支付时间" >
+                                                <template slot-scope="cScope">{{ cScope.row.begintime | fmtDate('YYYY-MM-DD hh:mm:ss') }}</template>
+                                            </el-table-column>
+                                        </el-table>
+                                        <i class="money_icon el-icon-warning-outline" slot="reference"></i>
+                                    </el-popover>
+                                    
+                                </span>
+                                <span v-else>{{row.content}}</span>
+                        </template>
                         </el-table-column>
                     </el-table>
                     <div style="text-align: center; padding-top: 15px">
@@ -204,7 +227,9 @@ export default {
              listA: [], //电流数组
              listV: [], //电压数组
              portAVShow: true, //电压电流按钮，默认显示
-             moneyShow: true //实时扣费金额是否显示
+             moneyShow: true, //实时扣费金额是否显示
+             include: 0, //0 没有续充，1有续充
+             listcharge: [] ,//订单列表，有续充的话包含续充
         }
     },
     created(){
@@ -330,6 +355,8 @@ export default {
                     this.listA= listA
                     this.listV= listV
                     this.powerList= powerList
+                    this.include= powerInfo.include
+                    this.listcharge= powerInfo.listcharge
                     this.myChart.setOption({
                             xAxis: {
                                 type: 'category',
@@ -542,6 +569,19 @@ export default {
            height: 60vh; 
         }
     }
+}
+.money_icon {
+    padding: 0 8px;
+    font-size: 16px;
+    color: #409EFF;
+}
+.money_h3 {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom:  15px;
+    color: #666;
+    font-weight: normal;
+    
 }
 
 </style>

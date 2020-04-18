@@ -6,12 +6,12 @@
             <el-row>
                 <el-col :xs="8" :sm="4" :md="3">
                     <div class="colCon">
-                        绑定状态： <el-link :type="username != 0 ? 'success' : 'danger'">{{username != 0 ? '已绑定' : '未绑定'}}</el-link>
+                        绑定状态： <el-link :type="bindtype != 0 ? 'success' : 'danger'">{{bindtype != 0 ? '已绑定' : '未绑定'}}</el-link>
                     </div>
                 </el-col>
                 <el-col :xs="8" :sm="3" :md="3">
                     <div class="colCon">
-                        <el-button type="danger" size="mini" v-if="username != 0" @click="handleTaggleBind(2)">解绑设备</el-button>
+                        <el-button type="danger" size="mini" v-if="bindtype != 0" @click="handleTaggleBind(2)">解绑设备</el-button>
                         <el-button type="primary" size="mini" v-else @click="handleTaggleBind(1)">绑定设备</el-button>
                     </div>
                 </el-col>
@@ -23,7 +23,7 @@
                 <el-col :xs="8" :sm="4" :md="3">
                     <div class="colCon">
                          绑定商户：
-                         <router-link :to="`/usermanage/merInfo?nick=${username}`" v-if="username != 0"><el-link type="primary">{{username}}</el-link></router-link>
+                         <router-link :to="`/usermanage/merInfo?nick=${username}`" v-if="bindtype != 0"><el-link type="primary">{{username}}</el-link></router-link>
                          <span v-else>— —</span> 
                     </div>
                 </el-col>
@@ -89,8 +89,8 @@
             </el-row>
          </el-card>
         <!-- 模块信息 -->
-
-                <el-card class="box-card" id="module_card" >
+                <ModuleInfo :moduleInfo="moduleInfo" :code="code" :mapInfo="mapInfo" />
+                <!-- <el-card class="box-card" id="module_card" >
                     <div slot="header" class="clearfix">
                         <span>模块信息（硬件，软件，IMEI, +CCID）</span>
                     </div>
@@ -133,10 +133,6 @@
                         min-width="80"
                         >
                         <template slot-scope="{row}">
-                            <!-- 07显示的 主板ID显示，非07的都不显示 -->
-                            <!-- <div  v-if="['07'].includes(hwVerson)">
-                                <span style="font-weight:600;" >{{row.title2}}</span>
-                            </div> -->
                             <div >
                                 <span style="font-weight:600;" >{{row.title2}}</span>
                             </div>
@@ -192,7 +188,7 @@
                         </el-table-column>
                     </el-table>
 
-                </el-card>
+                </el-card> -->
 
         <!-- 模板信息 -->
         <el-card class="box-card temCard" id="template_card">
@@ -222,130 +218,15 @@
         </el-card>
        
         <!-- 00 01 02 03 04 05 06 端口状态 --> 
-         <el-card class="box-card" v-if="!['03','04'].includes(hwVerson)" id="port_card">
-            <div slot="header" class="clearfix">
-                <span>端口状态</span>
-            </div>
-            <el-table
-                :data="portStatusList"
-                border
-                fit
-                style="width: 100%"
-                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
-                >
-                <el-table-column
-                prop="port"
-                label="端口号"
-                width="70"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="portStatus"
-                label="端口状态"
-                min-width="80"
-                >
-                    <template slot-scope="{row}">
-                        <el-link :type="row.portStatus== 1 ? 'success': row.portStatus== 2 ? 'danger': 'default' " size="mini" :underline="false" >
-                            {{row.portStatus== 1 ? '空闲': row.portStatus== 2 ? '使用':  row.portStatus== 3 ? '锁定' : '故障'}}
-                            <!-- 自己设置的  portStatus 等于3时为锁定-->
-                        </el-link>
-                    </template>
-                </el-table-column>
-               
-                <el-table-column
-                prop="portV"
-                label="电压 V"
-                min-width="80"
-                v-if="['07'].includes(hwVerson)"
-                >
-                </el-table-column>
-                 <el-table-column
-                prop="portA"
-                label="电流 A"
-                min-width="80"
-                v-if="['07'].includes(hwVerson)"
-                >
-                </el-table-column>
-
-                <el-table-column
-                prop="time"
-                label="充电时间（分钟）"
-                min-width="80"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="power"
-                label="充电功率（W）"
-                min-width="80"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="elec"
-                label="剩余电量（度）"
-                min-width="80"
-                >
-                <template slot-scope="{row}">
-                    {{ row.elec/100 }}
-                </template>
-                </el-table-column>
-                <el-table-column
-                prop="surp"
-                label="可回收余额"
-                min-width="80"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="updateTime"
-                label="更新时间"
-                min-width="100"
-                >
-                 <template slot-scope="{row}">
-                    {{ row.updateTime | fmtDate }}
-                </template>
-                </el-table-column>
-
-                <el-table-column
-                prop="update"
-                label="实时更新"
-                min-width="100"
-                >
-                    <template slot-scope="{row}">
-                        <el-button type="primary" size="mini" icon="el-icon-refresh-left" @click="handleGetPortStatus(row)">更新</el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="lock"
-                label="锁定"
-                min-width="120"
-                >
-                    <template slot-scope="{row}">
-                        <el-button type="danger" size="mini" plain icon="el-icon-lock" @click="handleLockPort(row)">锁定</el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="unLock"
-                label="解锁"
-                min-width="120"
-                >
-                    <template slot-scope="{row}">
-                        <el-button type="success" size="mini" icon="el-icon-unlock" @click="handleDebloack(row)">解锁</el-button>
-                    </template>
-                </el-table-column>
-                <!-- <el-table-column
-                prop="log"
-                label="日志"
-                min-width="120"
-                >
-                    <template slot-scope="{row}">
-                        <router-link :to="`/deviceManage/deviceLog?startTime=&endTime=&devicenum=${code}&port=${row.port}`">
-                            <el-link type="primary">查看</el-link>
-                        </router-link>
-                    </template>
-                </el-table-column> -->
-            </el-table>
-         </el-card>
+         <PortStatus 
+            :portStatusList="portStatusList" 
+            :hwVerson="hwVerson" 
+            :code="code" 
+            @handleGetPortStatusCallback="handleGetPortStatusCallback"
+            @handleLockPortStatusCallback="handleLockPortStatusCallback"
+        />
         <!-- 远程充电 -->
-        <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="originCharcge_card">
+        <!-- <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="originCharcge_card">
             <div slot="header" class="clearfix">
                 <span>远程充电</span>
             </div>
@@ -374,7 +255,6 @@
                 <template slot-scope="{row}">
                     <el-link :type="row.portStatus== 1 ? 'success': row.portStatus== 2 ? 'danger': 'default' " size="mini" :underline="false" >
                         {{row.portStatus== 1 ? '空闲': row.portStatus== 2 ? '使用':  row.portStatus== 3 ? '锁定' : '故障'}}
-                        <!-- 自己设置的  portStatus 等于3时为锁定-->
                     </el-link>
                 </template>
                 </el-table-column>
@@ -427,10 +307,10 @@
                     </template>
                 </el-table-column>
             </el-table>
-         </el-card>
+         </el-card> -->
 
         <!-- 07 远程充电 -->
-        <el-card class="box-card" id="originCharcge_card"  v-if="['07'].includes(hwVerson)">
+        <!-- <el-card class="box-card" id="originCharcge_card"  v-if="['07'].includes(hwVerson)">
             <div slot="header" class="clearfix">
                 <span>远程充电</span>
             </div>
@@ -455,7 +335,6 @@
                 <template slot-scope="{row}">
                     <el-link :type="row.portStatus== 1 ? 'success': row.portStatus== 2 ? 'danger': 'default' " size="mini" :underline="false" >
                         {{row.portStatus== 1 ? '空闲': row.portStatus== 2 ? '使用':  row.portStatus== 3 ? '锁定' : '故障'}}
-                        <!-- 自己设置的  portStatus 等于3时为锁定-->
                     </el-link>
                 </template>
                 </el-table-column>
@@ -507,8 +386,10 @@
                     </template>
                 </el-table-column>
             </el-table>
-         </el-card>
-
+         </el-card> -->
+         <!-- 远程充电 -->
+         <RemotoCharge :remoteCharge="remoteCharge" :chargeSendList="chargeSendList" :hwVerson="hwVerson" :code="code" />
+         <!-- 远程充电 -->
          <el-row v-if="!['03','04','07'].includes(hwVerson)">
              <el-col :xs="24" :sm="12" >
                   <!-- 查看消费总金额 -->
@@ -621,8 +502,10 @@
                 </el-card>
              </el-col>
          </el-row>
-
-         <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="sysParmas_card">
+        <!-- 系统参数 -->
+        <SystemParma :systemParamer="systemParamer" :hwVerson="hwVerson" :code="code" :deviceInfo="deviceInfo" :elecTimeFirst="elecTimeFirst" />
+        <!-- 系统参数 -->
+         <!-- <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="sysParmas_card">
                     <div slot="header" class="clearfix">
                         <span>系统参数表</span>
                     </div>
@@ -654,7 +537,6 @@
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="1" :step-strictly="true" v-if="['spRecMon','spFullEmpty'].includes(row.type_key)"></el-input-number>
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="10" v-if="['fullPowerMin'].includes(row.type_key)"></el-input-number>
                             <el-input-number size="small" :max="row.maxVal" :min="row.minVal" v-model="row.val"  :step="10" v-if="['fullChargeTime'].includes(row.type_key)"></el-input-number>
-                            <!-- <el-input-number @change="handleChange"  class="lastInput" style="width: 130px; text-align: center;" size="small"  v-model="row.val"   v-if="['elecTimeFirst1'].includes(row.type_key)"></el-input-number> -->
                             <el-input size="small"  @change="handleChange" class="lastInput" style="width: 130px; text-align: center;"  v-model="row.val"   v-if="['elecTimeFirst1'].includes(row.type_key)"></el-input>
                         </template>
                         </el-table-column>
@@ -684,15 +566,13 @@
                          <TemMulDevice2  :deviceInfo="deviceInfo" @getDeviceList="getDeviceList" />
                         <el-button type="success" size="mini" style="float: right; margin-right: 30%;" @click="saveDeviceSysParam">保存系统参数</el-button>
                     </div>
-                </el-card>
+                </el-card> -->
                 <!-- 地图弹框 -->
-                <el-dialog
+                <!-- <el-dialog
                     :title="`${code}设备位置信息`"
                     :visible.sync="dialogVisible"
                     custom-class="mapDialog"
                     >
-                     <!-- [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}] -->
-                    <!-- <el-amap :vid="'amap-vue'" ref="tt"></el-amap> -->
                     <el-amap vid="amapDemo" :plugin="mapPlugin">
                         <el-amap-marker
                          v-for="(marker) in mapList" 
@@ -712,7 +592,7 @@
                             >
                          </el-amap-info-window>
                     </el-amap>
-                </el-dialog>
+                </el-dialog> -->
                 <!-- 设备绑定商户信息框 用户页面传的信息{show: true,from: 1,page: {id: 125}}  page里是用户的信息，包含id等，设备详情传的信息{show: true,from: 1,page: {code: '000001'}}--> 
             <bindMerOrArea :bindInfo="bindInfo" @backFn="backFn"/>  
             <div class="nav_tag">
@@ -768,7 +648,7 @@
             </el-dialog>
             <!-- 复用系统参数弹框 -->
             
-             <transition name="el-fade-in-linear">
+             <!-- <transition name="el-fade-in-linear">
                 <div v-show="alserShow" class="sysAlert transition-box">
                     <el-row>
                         <el-col :xs="6" :sm="6" :md="8" :lg="8">&nbsp;</el-col>
@@ -840,10 +720,10 @@
                     </el-row>
                 
                 </div>
-            </transition>
+            </transition> -->
             <!-- 复用系统模板结束时显示 -->
 
-            <el-dialog
+            <!-- <el-dialog
                 title="批量设置系统参数完成"
                 :visible.sync="msgboxVis"
                 :before-close="handleClose"
@@ -867,7 +747,7 @@
                     <el-button @click="msgboxVis = false;alserShow=false" size="small">取 消</el-button>
                     <el-button type="primary" @click="msgboxVis = false;alserShow=false" size="small">确 定</el-button>
                 </span>
-            </el-dialog>
+            </el-dialog> -->
              <!-- 复用系统模板结束时显示 -->
 
     </div>
@@ -883,16 +763,23 @@ import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import GradeTemplate from '@/components/common/GradeTemplate'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
-import TemMulDevice2 from '@/components/common/TemMulDevice2'
+// import TemMulDevice2 from '@/components/common/TemMulDevice2' 
+import ModuleInfo from './components/MouleInfo' 
+import PortStatus from './components/PortStatus' 
+import RemotoCharge from './components/RemoteCharge' 
+import SystemParma from './components/SystemParma' 
 import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
+// import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
+// remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,
+// getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo,changeDeviceCode} from '@/require/deviceManage'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
-remoteChargeBreakOff,updateMapPosition,updateDeviceName,getBoardInfoRotate,updateDeviceExpire,getWolfsetsys,
+remoteChargeBreakOff,updateMapPosition,updateDeviceName,updateDeviceExpire,getWolfsetsys,
 getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo,changeDeviceCode} from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import Vue from 'vue'
-import VueAMap from 'vue-amap';
-import { lazyAMapApiLoaderInstance } from 'vue-amap';
+// import VueAMap from 'vue-amap';
+// import { lazyAMapApiLoaderInstance } from 'vue-amap';
 import { mapState,mapMutations } from 'vuex'
 export default {
     data(){
@@ -906,6 +793,7 @@ export default {
             code: '', //设备号
             merid: 0, //默认是 0 绑定了就有值
             username: '0' , //username默认是0，0代表设备未绑定，非0代表设备已绑定
+            bindtype: 0, //0为未绑定， 1为绑定
             hwVerson:'01',//硬件版本
             remark: '' , //设备名
             resetRemark: '', //修改设备名
@@ -913,7 +801,6 @@ export default {
             changeCode: '',//更换code
             expirationTime: null,//设备到期时间
             totalOnlineEarn: 0, //总在线收益
-            bindtype: 0, //绑定类型
             expirationVisable: false, //设备到期日期
             expirationForm: {},//设备到期日期容器
             isShowDeviceName: false, //是否显示设备名称
@@ -921,20 +808,20 @@ export default {
             isShowChangeCode: false, //修改设备号是否显示
             dialogVisible: false, //地图默认隐藏
             bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
-            mapPlugin: [ //地图插件配置
-                {
-                    pName: 'OverView',
-                    events: {}
-                },
-                {
-                    pName: 'Scale',
-                    events: {}
-                },
-                {
-                    pName: 'ToolBar',
-                    events: {}
-                }
-            ],
+            // mapPlugin: [ //地图插件配置
+            //     {
+            //         pName: 'OverView',
+            //         events: {}
+            //     },
+            //     {
+            //         pName: 'Scale',
+            //         events: {}
+            //     },
+            //     {
+            //         pName: 'ToolBar',
+            //         events: {}
+            //     }
+            // ],
             moduleInfo: [ 
                 {title1: '硬件版本',content1: '', title2: '主板版本',content2: '',title3: '经度',content3: ''},
                 {title1: '硬件版本号',content1: '', title2: '主板硬件版本',content2: '',title3: '纬度',content3: ''},
@@ -943,7 +830,7 @@ export default {
                 {title1: 'IMEI',content1: '',  title2: '升级通知',content2: '',title3: '',content3: ''},
                 {title1: '信号强度',content1: '', title2: '',content2: '发送升级程序',title3: '',content3: ''}
             ],
-            mapList: [],
+            // mapList: [],
             mapInfo: [
                 {title: '经度', content: ''},
                 {title: '维度', content: ''},
@@ -1026,13 +913,13 @@ export default {
                            type_key: 'elecTimeFirst1', type: '是否初始显示电量 （此功能是否支持和设备相关）', val: 0, unit: '无', maxVal: '1表示屏幕初始显示剩余电量，0表示初始时间， 255表示不支持此功能', minVal: 0
                         },
                     ],
-                    list: [], //默认选中的设备，进行复用系统参数 0,默认 1，成功 2，失败  {code:'000001',status: 0 }
-                    index: 0, //当前循环的索引
-                    topIndex: 0, //默认向上滚动的数量
-                    alserShow: false,
-                    warpHeight: 500, //复用系统参数的表格高度
+                    // list: [], //默认选中的设备，进行复用系统参数 0,默认 1，成功 2，失败  {code:'000001',status: 0 }
+                    // index: 0, //当前循环的索引
+                    // topIndex: 0, //默认向上滚动的数量
+                    // alserShow: false,
+                    // warpHeight: 500, //复用系统参数的表格高度
                     deviceInfo: {},//模板复用的信息
-                    msgboxVis: false
+                    // msgboxVis: false
             
         }
     },
@@ -1043,23 +930,27 @@ export default {
         TemplateOffline,
         GradeTemplate,
         bindMerOrArea,
-        TemMulDevice2
+        // TemMulDevice2,
+        ModuleInfo,
+        PortStatus,
+        RemotoCharge,
+        SystemParma
     },
     created(){
         this.code= this.$route.query.code
         this.asyGetDeviceDetailInfo({code: this.code})
-        Vue.use(VueAMap);
-        VueAMap.initAMapApiLoader({
-        key: '2c85f8508cc8c9c37829d4609cd8cad1',
-        plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
-        v: '1.4.4',
-        });
-        lazyAMapApiLoaderInstance.load().then(() => {
-        // your code ...
-        // this.map = new AMap.Map('tt', {
-        //     center: new AMap.LngLat(121.59996, 31.197646)
+        // Vue.use(VueAMap);
+        // VueAMap.initAMapApiLoader({
+        // key: '2c85f8508cc8c9c37829d4609cd8cad1',
+        // plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
+        // v: '1.4.4',
         // });
-        });
+        // lazyAMapApiLoaderInstance.load().then(() => {
+        // // your code ...
+        // // this.map = new AMap.Map('tt', {
+        // //     center: new AMap.LngLat(121.59996, 31.197646)
+        // // });
+        // });
         const warpHeight= (document.documentElement.clientHeight - 80)*0.75
         this.warpHeight= warpHeight
         
@@ -1206,7 +1097,7 @@ export default {
                 _this.username= deviceInfo.username
                 _this.merid= deviceInfo.merid
                 let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,
-                csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid,mainType,mainHardver,mainSoftver,totalOnlineEarn,bindtype }= deviceInfo.equipment
+                csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid,mainType,mainHardver,mainSoftver,totalOnlineEarn }= deviceInfo.equipment
                 this.deviceInfo= {merid: deviceInfo.merid,hwVerson,code}
                _this.remark= remark 
                 _this.moduleInfo=[ //设备信息  
@@ -1228,7 +1119,7 @@ export default {
                 _this.hwVerson= hwVerson
                 _this.expirationTime= expirationTime
                 _this.totalOnlineEarn= totalOnlineEarn
-                _this.bindtype= bindtype
+                _this.bindtype= deviceInfo.bindtype
                 if(hwVerson != '03' && hwVerson != '04' && hwVerson != '08'){
                     if(deviceInfo.temp != null){ //temp存在，说明此模板不是分等级模板
                         //十路智慧款
@@ -1277,45 +1168,45 @@ export default {
                  loading.close()
             }
         },
-        getBoardInfo(row){ //获取主板信息
-            Vue.set(row,'get',true)
-            getBoardInfoRotate({
-                code: this.code
-            }).then(res=>{
-               if(res.wolferror == 1001){
-                   messageTip('error',res.wolfmsg || '请求超时，请稍后重试')
-               }else{
-                   messageTip('success','获取成功')
-                    this.moduleInfo[0].content2=res.mainType //主板版本
-                    this.moduleInfo[1].content2=res.mainHardver  //主板硬件版本
-                    this.moduleInfo[2].content2=res.mainSoftver  //主板软件版本
-                    this.moduleInfo[3].content2= res.mainid
+        // getBoardInfo(row){ //获取主板信息
+        //     Vue.set(row,'get',true)
+        //     getBoardInfoRotate({
+        //         code: this.code
+        //     }).then(res=>{
+        //        if(res.wolferror == 1001){
+        //            messageTip('error',res.wolfmsg || '请求超时，请稍后重试')
+        //        }else{
+        //            messageTip('success','获取成功')
+        //             this.moduleInfo[0].content2=res.mainType //主板版本
+        //             this.moduleInfo[1].content2=res.mainHardver  //主板硬件版本
+        //             this.moduleInfo[2].content2=res.mainSoftver  //主板软件版本
+        //             this.moduleInfo[3].content2= res.mainid
                 
-               }
-                Vue.set(row,'get',false)
-            }).catch(err=>{
-                Vue.set(row,'get',false)
-            })
+        //        }
+        //         Vue.set(row,'get',false)
+        //     }).catch(err=>{
+        //         Vue.set(row,'get',false)
+        //     })
             
-        },
-        handleUpdateTip(){ //设备升级通知
-            sendUpdataTip({code:this.code}).then(res=>{
-                if(res.wolfcode == 1000){
-                    messageTip('success','通知成功')
-                }else{
-                    messageTip('error','通知失败')
-                }
-            })
-        },
-        handleSendUpdateInfo(){ //发送升级程序
-            sendUpdataInfo().then(res=>{
-                if(res.wolfcode == 1000){
-                    messageTip('success','发送升级程序成功')
-                }else{
-                    messageTip('error','发送升级程序失败')
-                }
-            })
-        },
+        // },
+        // handleUpdateTip(){ //设备升级通知
+        //     sendUpdataTip({code:this.code}).then(res=>{
+        //         if(res.wolfcode == 1000){
+        //             messageTip('success','通知成功')
+        //         }else{
+        //             messageTip('error','通知失败')
+        //         }
+        //     })
+        // },
+        // handleSendUpdateInfo(){ //发送升级程序
+        //     sendUpdataInfo().then(res=>{
+        //         if(res.wolfcode == 1000){
+        //             messageTip('success','发送升级程序成功')
+        //         }else{
+        //             messageTip('error','发送升级程序失败')
+        //         }
+        //     })
+        // },
         getBoardSet(){ //设置参数 07
         
             let cst= this.deviceSysList[0].val
@@ -1359,304 +1250,317 @@ export default {
                 loading.close()
             })
         },
-        getBoardStart(row){ //07 开始充电
-            let {port,money,chargeTime:time,elePower:elec}= row
-            getWolftestpay({code:this.code,port,money,time,elec,chargeType:1}).then(res=>{
-            //   messageTip('success',res)
-            }).catch(err=>{
+        // getBoardStart(row){ //07 开始充电
+        //     let {port,money,chargeTime:time,elePower:elec}= row
+        //     getWolftestpay({code:this.code,port,money,time,elec,chargeType:1}).then(res=>{
+        //     //   messageTip('success',res)
+        //     }).catch(err=>{
 
-            })
-        },
-        handleScanMap(){ //点击查看地图
-            // [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]
-            // let {longitude,latitude}= this.mapInfo[0]
-            let longitude= this.mapInfo[0].content
-            let latitude= this.mapInfo[1].content
-            this.mapList= [{ position: [longitude,latitude],content: `<div>设备: ${this.code}<div><p>地址： <p>`}]
-            this.dialogVisible= true
-        },
-        upDatePosition(){ //更新地图信息
-            updateMapPosition({code: this.code}).then(res=>{
-                if(res == 1){
-                     messageTip('success','更新位置成功')
-                }else{
-                    messageTip('error','更新位置失败')
-                }
-            }).catch(err=>{
+        //     })
+        // },
+        // handleScanMap(){ //点击查看地图
+        //     // [{position: [112.421181,35.989792]},{position: [116.481181,35.989792]}]
+        //     // let {longitude,latitude}= this.mapInfo[0]
+        //     let longitude= this.mapInfo[0].content
+        //     let latitude= this.mapInfo[1].content
+        //     this.mapList= [{ position: [longitude,latitude],content: `<div>设备: ${this.code}<div><p>地址： <p>`}]
+        //     this.dialogVisible= true
+        // },
+        // upDatePosition(){ //更新地图信息
+        //     updateMapPosition({code: this.code}).then(res=>{
+        //         if(res == 1){
+        //              messageTip('success','更新位置成功')
+        //         }else{
+        //             messageTip('error','更新位置失败')
+        //         }
+        //     }).catch(err=>{
                
-            })
+        //     })
+        // },
+        // handleGetPortStatus(row){ //更新端口状态
+        //     let loading= Loading.service({
+        //                 lock: true,
+        //                 text: '加载中',
+        //                 spinner: 'el-icon-loading',
+        //                 customClass: "loadClass"
+        //             });
+        //     this.Loading= loading
+        //     getDeviceStatus({port: row.port,code: this.code}).then(res=>{
+        //         loading.close()
+        //         if (res.wolfcode == "1001") {
+        //             messageTip('error','获取端口状态失败')
+        //             return
+		// 		}
+        //         Vue.set(row,'portStatus',res.portstatus)
+        //         Vue.set(row,'elec',res.elec)
+        //         Vue.set(row,'time',res.time)
+        //         Vue.set(row,'power',res.power)
+        //         Vue.set(row,'updateTime',parseInt(res.updatetime))
+        //     }).catch(err=>{ 
+        //         loading.close()
+        //     })
+        // },
+        handleGetPortStatusCallback({index,copeRow}){ //更新页面的回调
+            let row= this.portStatusList[index]
+            let portStatusListCope= JSON.parse(JSON.stringify(this.portStatusList))
+            portStatusListCope[index]= { ...row, ...copeRow }
+            this.portStatusList= portStatusListCope
         },
-        handleGetPortStatus(row){ //更新端口状态
-            let loading= Loading.service({
-                        lock: true,
-                        text: '加载中',
-                        spinner: 'el-icon-loading',
-                        customClass: "loadClass"
-                    });
-            this.Loading= loading
-            getDeviceStatus({port: row.port,code: this.code}).then(res=>{
-                loading.close()
-                if (res.wolfcode == "1001") {
-                    messageTip('error','获取端口状态失败')
-                    return
-				}
-                Vue.set(row,'portStatus',res.portstatus)
-                Vue.set(row,'elec',res.elec)
-                Vue.set(row,'time',res.time)
-                Vue.set(row,'power',res.power)
-                Vue.set(row,'updateTime',parseInt(res.updatetime))
-            }).catch(err=>{ 
-                loading.close()
-            })
+        handleLockPortStatusCallback({index,portStatus}){ //锁定端口状态
+             let row= this.portStatusList[index]
+             let portStatusListCope= JSON.parse(JSON.stringify(this.portStatusList))
+             portStatusListCope[index]= { ...row, portStatus }
+             this.portStatusList= portStatusListCope
         },
-        handleLockPort(row){ //锁定端口
-            let loading= Loading.service({
-                        lock: true,
-                        text: '锁定中',
-                        spinner: 'el-icon-loading',
-                        customClass: "loadClass"
-                    });
-            this.Loading= loading
-            lockDevicePort({port: row.port,status: 0,code: this.code}).then(res=>{
-                loading.close()
-                if (res.err == "0") {
-                    messageTip('error',res.errinfo)
-                    return
-                }
-                if (res.err == "1") {
-                    messageTip('error',res.errinfo)
-                    return
-                }
-                let portStatus
-                if(res.status == 0){ //当返回的status为0时，portStatus改为3（锁定）
-                    portStatus= 3
-                }else if(row.portStatus == 3){ //当portStatus为3（锁定）是，设置portStatus为1，为1是空闲
-                    portStatus= 1
-                }
-                row.portStatus= portStatus
-            }).catch(err=>{ 
-                loading.close()
-            })
-        },
-        handleDebloack(row){ //更新端口
-            let loading= Loading.service({
-                        lock: true,
-                        text: '解锁中',
-                        spinner: 'el-icon-loading',
-                        customClass: "loadClass",
-                    });
-            this.Loading= loading
-            lockDevicePort({port: row.port,status: 1,code: this.code}).then(res=>{
-                loading.close()
-                if (res.err == "0") {
-                    messageTip('error',res.errinfo)
-                    return
-                }
-                if (res.err == "1") {
-                    messageTip('error',res.errinfo)
-                    return
-                }
-                let portStatus
-                if(res.status == 1){ //当返回的status为0时，portStatus改为3（锁定）
-                    portStatus= 1
-                }else if(row.portStatus == 3){ //当portStatus为3（锁定）是，设置portStatus为1，为1是空闲
-                    portStatus= 1
-                }
-                row.portStatus= portStatus
-            }).catch(err=>{ 
-                loading.close()
-            })
-        },
-        handleRemoteCharge(row){ //远程充电
-            let {port:payport,chargeTime:time,elePower:elec }= row
-            Vue.set(row,'loading',true)
-            remoteChargeByPort({payport,time,elec,code: this.code}).then(res=>{
-                Vue.set(row,'loading',false)
-                if(res.wolfcode == '1000'){
-                    messageTip('success',`端口${port}，远程充电设置成功`)
-                }else{
-                     messageTip('error',`端口${port}，远程充电设置失败`)
-                }
-            }).catch(err=>{
-                  Vue.set(row,'loading',false)
-            })
-        },
-        handleRemoteBreakOff(row){ //远程断电
-            let {port}= row
-             Vue.set(row,'loading',true)
-            remoteChargeBreakOff({port,code: this.code}).then(res=>{
-                 Vue.set(row,'loading',false)
-                if(res.wolfcode == '1000'){
-                    messageTip('success',`端口${port}，远程断电设置成功`)
-                }else{
-                     messageTip('error',`端口${port}，远程断电设置失败`)
-                }
-            }).catch(err=>{
-                 Vue.set(row,'loading',false)
-            })
-            
-        },
-        getDeviceSysParam(){ //获取设备的系统参数信息
+        // handleLockPort(row){ //锁定端口
+        //     let loading= Loading.service({
+        //                 lock: true,
+        //                 text: '锁定中',
+        //                 spinner: 'el-icon-loading',
+        //                 customClass: "loadClass"
+        //             });
+        //     this.Loading= loading
+        //     lockDevicePort({port: row.port,status: 0,code: this.code}).then(res=>{
+        //         loading.close()
+        //         if (res.err == "0") {
+        //             messageTip('error',res.errinfo)
+        //             return
+        //         }
+        //         if (res.err == "1") {
+        //             messageTip('error',res.errinfo)
+        //             return
+        //         }
+        //         let portStatus
+        //         if(res.status == 0){ //当返回的status为0时，portStatus改为3（锁定）
+        //             portStatus= 3
+        //         }else if(row.portStatus == 3){ //当portStatus为3（锁定）是，设置portStatus为1，为1是空闲
+        //             portStatus= 1
+        //         }
+        //         row.portStatus= portStatus
+        //     }).catch(err=>{ 
+        //         loading.close()
+        //     })
+        // },
+        // handleDebloack(row){ //更新端口
+        //     let loading= Loading.service({
+        //                 lock: true,
+        //                 text: '解锁中',
+        //                 spinner: 'el-icon-loading',
+        //                 customClass: "loadClass",
+        //             });
+        //     this.Loading= loading
+        //     lockDevicePort({port: row.port,status: 1,code: this.code}).then(res=>{
+        //         loading.close()
+        //         if (res.err == "0") {
+        //             messageTip('error',res.errinfo)
+        //             return
+        //         }
+        //         if (res.err == "1") {
+        //             messageTip('error',res.errinfo)
+        //             return
+        //         }
+        //         let portStatus
+        //         if(res.status == 1){ //当返回的status为0时，portStatus改为3（锁定）
+        //             portStatus= 1
+        //         }else if(row.portStatus == 3){ //当portStatus为3（锁定）是，设置portStatus为1，为1是空闲
+        //             portStatus= 1
+        //         }
+        //         row.portStatus= portStatus
+        //     }).catch(err=>{ 
+        //         loading.close()
+        //     })
+        // },
+        // handleRemoteCharge(row){ //远程充电
+        //     let {port:payport,chargeTime:time,elePower:elec }= row
+        //     Vue.set(row,'loading',true)
+        //     remoteChargeByPort({payport,time,elec,code: this.code}).then(res=>{
+        //         Vue.set(row,'loading',false)
+        //         if(res.wolfcode == '1000'){
+        //             messageTip('success',`端口${port}，远程充电设置成功`)
+        //         }else{
+        //              messageTip('error',`端口${port}，远程充电设置失败`)
+        //         }
+        //     }).catch(err=>{
+        //           Vue.set(row,'loading',false)
+        //     })
+        // },
+        // handleRemoteBreakOff(row){ //远程断电
+        //     let {port}= row
+        //      Vue.set(row,'loading',true)
+        //     remoteChargeBreakOff({port,code: this.code}).then(res=>{
+        //          Vue.set(row,'loading',false)
+        //         if(res.wolfcode == '1000'){
+        //             messageTip('success',`端口${port}，远程断电设置成功`)
+        //         }else{
+        //              messageTip('error',`端口${port}，远程断电设置失败`)
+        //         }
+        //     }).catch(err=>{
+        //          Vue.set(row,'loading',false)
+        //     })  
+        // },
+        // getDeviceSysParam(){ //获取设备的系统参数信息
 
-            let loading= Loading.service({
-                        lock: true,
-                        text: '加载中',
-                        spinner: 'el-icon-loading',
-                        customClass: "loadClass"
-                    });
-            this.Loading= loading
-            getsystemParma({code:this.code}).then(res=>{
-                loading.close()
-                if(res.wolfcode == '1001'){
-                    messageTip('error','系统参数获取失败')
-                    return
-                }else{
-                    messageTip('success','参数获取获取成功')
-                    let systemParamer=  this.systemParamer
-                    this.systemParamer= systemParamer.map((item,i)=>{
-                        console.log(res['param'+(i+1)]/10)
-                        if(i== 2 || i == 3 || i== 4){
-                           item.val= isNaN(res['param'+(i+1)]/10) ? undefined : res['param'+(i+1)]/10   
-                        }else{
-                            item.val= res['param'+(i+1)]
-                        }
+        //     let loading= Loading.service({
+        //                 lock: true,
+        //                 text: '加载中',
+        //                 spinner: 'el-icon-loading',
+        //                 customClass: "loadClass"
+        //             });
+        //     this.Loading= loading
+        //     getsystemParma({code:this.code}).then(res=>{
+        //         loading.close()
+        //         if(res.wolfcode == '1001'){
+        //             messageTip('error','系统参数获取失败')
+        //             return
+        //         }else{
+        //             messageTip('success','参数获取获取成功')
+        //             let systemParamer=  this.systemParamer
+        //             this.systemParamer= systemParamer.map((item,i)=>{
+        //                 console.log(res['param'+(i+1)]/10)
+        //                 if(i== 2 || i == 3 || i== 4){
+        //                    item.val= isNaN(res['param'+(i+1)]/10) ? undefined : res['param'+(i+1)]/10   
+        //                 }else{
+        //                     item.val= res['param'+(i+1)]
+        //                 }
                         
-                        return item
-                    })
-                }
+        //                 return item
+        //             })
+        //         }
                    
-            }).catch(err=>{ loading.close() })
-        },
-       handleChange(){
-           this.systemParamer= this.systemParamer.filter((item,i)=>{
-               if(item.type_key == 'elecTimeFirst1'){
-                   if(parseInt(item.val) <= 0 ){
-                       item.val= 0
-                   }else if(parseInt(item.val) >= 255 ){
-                       item.val= 255
-                   }else{
-                       item.val= 1
-                   }
-               }
-               return item
-           })
-       },
-       arraySpanMethod({ row, column, rowIndex, columnIndex }){
-            if (rowIndex == 16) {
-                if (columnIndex === 3) {
-                    return [3, 2];
-                } 
-            }
-       },
-        saveDeviceSysParam(){ //保存系统参数
-            let loading= Loading.service({
-                        lock: true,
-                        text: '设置中',
-                        spinner: 'el-icon-loading',
-                        customClass: "loadClass"
-                    });
-            this.Loading= loading
-            let systemParamer=  this.systemParamer
-            let parmas= {}
-            for (const iterator of systemParamer) {
-                if(['coinElec','cardElec','cst'].includes(iterator.type_key)){
-                     parmas[iterator.type_key]= iterator.val.toFixed(1)
-                }else{
-                     parmas[iterator.type_key]= iterator.val
-                }
+        //     }).catch(err=>{ loading.close() })
+        // },
+    //    handleChange(){
+    //        this.systemParamer= this.systemParamer.filter((item,i)=>{
+    //            if(item.type_key == 'elecTimeFirst1'){
+    //                if(parseInt(item.val) <= 0 ){
+    //                    item.val= 0
+    //                }else if(parseInt(item.val) >= 255 ){
+    //                    item.val= 255
+    //                }else{
+    //                    item.val= 1
+    //                }
+    //            }
+    //            return item
+    //        })
+    //    },
+    //    arraySpanMethod({ row, column, rowIndex, columnIndex }){
+    //         if (rowIndex == 16) {
+    //             if (columnIndex === 3) {
+    //                 return [3, 2];
+    //             } 
+    //         }
+    //    },
+        // saveDeviceSysParam(){ //保存系统参数
+        //     let loading= Loading.service({
+        //                 lock: true,
+        //                 text: '设置中',
+        //                 spinner: 'el-icon-loading',
+        //                 customClass: "loadClass"
+        //             });
+        //     this.Loading= loading
+        //     let systemParamer=  this.systemParamer
+        //     let parmas= {}
+        //     for (const iterator of systemParamer) {
+        //         if(['coinElec','cardElec','cst'].includes(iterator.type_key)){
+        //              parmas[iterator.type_key]= iterator.val.toFixed(1)
+        //         }else{
+        //              parmas[iterator.type_key]= iterator.val
+        //         }
                
-            }
-            savesystemParma({code: this.code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
-                loading.close()
-                if (res.wolfcode == "1001") {
-                     messageTip('error','系统参数设置失败')
-                     return
-                }
-                messageTip('success','系统参数设置成功')
+        //     }
+        //     savesystemParma({code: this.code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
+        //         loading.close()
+        //         if (res.wolfcode == "1001") {
+        //              messageTip('error','系统参数设置失败')
+        //              return
+        //         }
+        //         messageTip('success','系统参数设置成功')
 
-            }).catch(err=>{  loading.close() })
+        //     }).catch(err=>{  loading.close() })
+        // },
+        // getDeviceList(list){ //接收系统参数复用子组件穿的值
+        //     // 初始化值 
+        //     this.list= list
+        //     this.index= 0
+        //     this.topIndex= 0
+        //     this.alserShow= true
+        //     this.requireSystemByCode(this.index)
+        // },
+        changeSystemParamerCallBack(newSystemParmamer){ //修改系统参数
+            this.systemParamer= newSystemParmamer
         },
-        getDeviceList(list){ //接收系统参数复用子组件穿的值
-            // 初始化值 
-            this.list= list
-            this.index= 0
-            this.topIndex= 0
-            this.alserShow= true
-            this.requireSystemByCode(this.index)
-        },
-        
-         requireSystemByCode(){ //发送请求，依次修改系统参数
-            if(this.index < 0) return
-            let wrapEle= this.$refs.tabSetSys.bodyWrapper
-            let wrapHeight= wrapEle.offsetHeight > 100 ?  wrapEle.offsetHeight : 100  //滚动高度,第一次还没渲染好，第一次高度为0，为0时，高度设置100，为了下面对比做准备
-            let trHeight= 50
-            try {
-                trHeight= wrapEle.getElementsByClassName('el-table__row')[0].offsetHeight //有就用tr的高度，否则就trHeight为50
-            }catch(e){
-                trHeight= 50
-            }
+        // requireSystemByCode(){ //发送请求，依次修改系统参数
+        //     if(this.index < 0) return
+        //     let wrapEle= this.$refs.tabSetSys.bodyWrapper
+        //     let wrapHeight= wrapEle.offsetHeight > 100 ?  wrapEle.offsetHeight : 100  //滚动高度,第一次还没渲染好，第一次高度为0，为0时，高度设置100，为了下面对比做准备
+        //     let trHeight= 50
+        //     try {
+        //         trHeight= wrapEle.getElementsByClassName('el-table__row')[0].offsetHeight //有就用tr的高度，否则就trHeight为50
+        //     }catch(e){
+        //         trHeight= 50
+        //     }
 
-            let systemParamer=  this.systemParamer
-            let parmas= {}
-            for (const iterator of systemParamer) {
-                if(['coinElec','cardElec','cst'].includes(iterator.type_key)){
-                     parmas[iterator.type_key]= iterator.val.toFixed(1)
-                }else{
-                     parmas[iterator.type_key]= iterator.val
-                }
+        //     let systemParamer=  this.systemParamer
+        //     let parmas= {}
+        //     for (const iterator of systemParamer) {
+        //         if(['coinElec','cardElec','cst'].includes(iterator.type_key)){
+        //              parmas[iterator.type_key]= iterator.val.toFixed(1)
+        //         }else{
+        //              parmas[iterator.type_key]= iterator.val
+        //         }
                
-            }
-            savesystemParma({code: this.list[this.index].code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
-                if (res.wolfcode == "1001") {
-                     messageTip('error',`${this.list[this.index].code}设备 系统参数设置失败`)
-                     this.list[this.index].status= 2
-                }else{
-                    messageTip('success',`${this.list[this.index].code}设备 系统参数设置成功`)
-                    this.list[this.index].status= 1
-                }
-                if(this.index*trHeight >= wrapHeight/2){
-                    this.topIndex++
-                    console.log(this.topIndex,this.topIndex*trHeight)
-                    wrapEle.scrollTop= this.topIndex*trHeight
-                 }
-                 this.index++
-                 if(this.index <= this.list.length-1){
-                      this.requireSystemByCode()
-                 }else{ //结束请求
-                    this.msgboxVis= true
-                 } 
+        //     }
+        //     savesystemParma({code: this.list[this.index].code ,elecTimeFirst: this.elecTimeFirst,...parmas}).then(res=>{
+        //         if (res.wolfcode == "1001") {
+        //              messageTip('error',`${this.list[this.index].code}设备 系统参数设置失败`)
+        //              this.list[this.index].status= 2
+        //         }else{
+        //             messageTip('success',`${this.list[this.index].code}设备 系统参数设置成功`)
+        //             this.list[this.index].status= 1
+        //         }
+        //         if(this.index*trHeight >= wrapHeight/2){
+        //             this.topIndex++
+        //             console.log(this.topIndex,this.topIndex*trHeight)
+        //             wrapEle.scrollTop= this.topIndex*trHeight
+        //          }
+        //          this.index++
+        //          if(this.index <= this.list.length-1){
+        //               this.requireSystemByCode()
+        //          }else{ //结束请求
+        //             this.msgboxVis= true
+        //          } 
 
-            }).catch(err=>{
-                if(this.index*trHeight >= wrapHeight/2){
-                    this.topIndex++
-                    wrapEle.scrollTop= this.topIndex*trHeight
-                 }
-                 let _this= this
-                 try {
-                   _this.list[_this.index].status= 2  
-                 } catch (error) {
+        //     }).catch(err=>{
+        //         if(this.index*trHeight >= wrapHeight/2){
+        //             this.topIndex++
+        //             wrapEle.scrollTop= this.topIndex*trHeight
+        //          }
+        //          let _this= this
+        //          try {
+        //            _this.list[_this.index].status= 2  
+        //          } catch (error) {
                      
-                 }
-                //  this.list[this.index].status= 2
-                 this.index++
-                 if(this.index <= this.list.length-1){
-                      this.requireSystemByCode()
-                 }else{ //结束请求
-                   this.msgboxVis= true
-                 }
-            })
-        },
-        handleClose(){
-            this.msgboxVis= false
-            this.alserShow= false
-        },
-        removeSysMui(){ //点击取消系统参数复用
-            confirDelete('确认取消设置系统参数复用吗？',()=>{
-                this.index= this.list.length
-                this.clearToken()
-            })
+        //          }
+        //         //  this.list[this.index].status= 2
+        //          this.index++
+        //          if(this.index <= this.list.length-1){
+        //               this.requireSystemByCode()
+        //          }else{ //结束请求
+        //            this.msgboxVis= true
+        //          }
+        //     })
+        // },
+        // handleClose(){
+        //     this.msgboxVis= false
+        //     this.alserShow= false
+        // },
+        // removeSysMui(){ //点击取消系统参数复用
+        //     confirDelete('确认取消设置系统参数复用吗？',()=>{
+        //         this.index= this.list.length
+        //         this.clearToken()
+        //     })
            
-        },
+        // },
         handleReLoad(callback){ //v3模板的回调函数
             this.asyGetDeviceDetailInfo({code: this.code},callback)
         }

@@ -285,10 +285,9 @@ export default {
 						} else {
 							item.val = res["param" + (i + 1)];
 						}
-
-						return item;
+						  return item;
 						});
-						this.$emit("changeSystemParamer", newSystemParmamer);
+						this.$emit("changeSystemParamerCallBack", newSystemParmamer);
 					}
 				})
 				.catch(err => {

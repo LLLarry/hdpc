@@ -290,6 +290,7 @@ export default {
         async getDataFromTem(v3Data){ //接收添加v3模板传过来的值
             try {
                 if(v3Data.name.length > 0 ){
+                    v3Data.merid= this.merid
                     let info= await changeV3ChargeTem({ paratem: JSON.stringify(v3Data) })
                     if(info.code === 200){
                         this.handleReLoad(()=>{})

@@ -5,8 +5,8 @@
                 <span>远程充电</span>
             </div>
             <div class="remoteChargeTit" style="margin-bottom: 15px;">
-                <el-button type="primary" size="mini">查询空闲端口</el-button>
-                <el-button type="primary" size="mini">查询端口状态</el-button>
+                <el-button type="primary" size="mini" disabled >查询空闲端口</el-button>
+                <el-button type="primary" size="mini" disabled >查询端口状态</el-button>
             </div>
             <el-table
                 :data="remoteCharge"

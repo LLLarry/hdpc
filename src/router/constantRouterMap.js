@@ -590,22 +590,22 @@ export const constantRouterMapAdmin= [
           role: ['superAdmin','admin']
         }
       },
-      // {
-      //   path: '/deviceManage/deviceList/deviceDetail',
-      //   name: '设备详情',
-      //   component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/DeviceDetail'),
-      //   meta: {
-      //     role: ['superAdmin','admin']
-      //   }
-      // },
-      // {
-      //   path: '/deviceManage/deviceList/templateDetail',
-      //   name: '模板详情',
-      //   component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
-      //   meta: {
-      //     role: ['superAdmin','admin']
-      //   }
-      // },
+      {
+        path: '/deviceManage/deviceList/deviceDetail',
+        name: '设备详情',
+        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/DeviceDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/deviceList/templateDetail',
+        name: '模板详情',
+        component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
       // 设备管理结束
       // IC卡管理开始
        {
@@ -866,22 +866,22 @@ export const constantRouterMapAgent= [
         role: ['superAdmin','admin']
       }
     },
-    // {
-    //   path: '/deviceManage/deviceList/deviceDetail',
-    //   name: '设备详情',
-    //   component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/DeviceDetail'),
-    //   meta: {
-    //     role: ['superAdmin','admin']
-    //   }
-    // },
-    // {
-    //   path: '/deviceManage/deviceList/templateDetail',
-    //   name: '模板详情',
-    //   component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
-    //   meta: {
-    //     role: ['superAdmin','admin']
-    //   }
-    // },
+    {
+      path: '/deviceManage/deviceList/deviceDetail',
+      name: '设备详情',
+      component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/DeviceDetail'),
+      meta: {
+        role: ['superAdmin','admin']
+      }
+    },
+    {
+      path: '/deviceManage/deviceList/templateDetail',
+      name: '模板详情',
+      component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
+      meta: {
+        role: ['superAdmin','admin']
+      }
+    },
     // 设备管理结束
     // IC卡管理开始
      {

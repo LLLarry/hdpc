@@ -426,7 +426,7 @@ export default {
                     newItem= { name: newName, chargeTime: newChargeTime,type: 2 }
                     console.log(newItem)
                 }else{ //使用默默人的
-                    newItem= newItem= { name: 1, chargeTime: 60,type: 2 }
+                    newItem= newItem= { name: '1小时', chargeTime: 60,type: 2 }
                 }  
             }else if(from === 'gather3'){
                 if(item['gather3'].length > 0){ //根据最后一项数据计算

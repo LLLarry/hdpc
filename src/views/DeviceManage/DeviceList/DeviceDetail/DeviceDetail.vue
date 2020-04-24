@@ -2,7 +2,16 @@
 <el-row>
     <el-col :md="22" :lg="21" :xl="20">
     <div class="deviceDetail">
-         <el-card class="box-card">
+         <TopDetailInfo 
+            :bindtype="bindtype" 
+            :code="code" 
+            :username="username"
+            :remark="remark"
+            :expirationTime="expirationTime"
+            :totalOnlineEarn="totalOnlineEarn"
+            @backFn="backFn"
+             />
+         <!-- <el-card class="box-card">
             <el-row>
                 <el-col :xs="8" :sm="4" :md="3">
                     <div class="colCon">
@@ -87,9 +96,9 @@
                     </div>
                 </div>
             </el-row>
-         </el-card>
+         </el-card> -->
         <!-- 模块信息 -->
-                <ModuleInfo :moduleInfo="moduleInfo" :code="code" :mapInfo="mapInfo" />
+                <ModuleInfo v-if="userInfo.classify== 'superAdmin'" :moduleInfo="moduleInfo" :code="code" :mapInfo="mapInfo" />
                 <!-- <el-card class="box-card" id="module_card" >
                     <div slot="header" class="clearfix">
                         <span>模块信息（硬件，软件，IMEI, +CCID）</span>
@@ -390,7 +399,7 @@
          <!-- 远程充电 -->
          <RemotoCharge :remoteCharge="remoteCharge" :chargeSendList="chargeSendList" :hwVerson="hwVerson" :code="code" />
          <!-- 远程充电 -->
-         <el-row v-if="!['03','04','07'].includes(hwVerson)">
+         <el-row v-if="!['03','04','07'].includes(hwVerson) &&  userInfo.classify== 'superAdmin' ">
              <el-col :xs="24" :sm="12" >
                   <!-- 查看消费总金额 -->
                  <el-card class="box-card">
@@ -503,7 +512,7 @@
              </el-col>
          </el-row>
         <!-- 系统参数 -->
-        <SystemParma :systemParamer="systemParamer" :hwVerson="hwVerson" :code="code" :deviceInfo="deviceInfo" :elecTimeFirst="elecTimeFirst" />
+        <SystemParma :systemParamer="systemParamer" :hwVerson="hwVerson" :code="code" :deviceInfo="deviceInfo" :elecTimeFirst="elecTimeFirst" @changeSystemParamerCallBack="changeSystemParamerCallBack" />
         <!-- 系统参数 -->
          <!-- <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="sysParmas_card">
                     <div slot="header" class="clearfix">
@@ -594,7 +603,7 @@
                     </el-amap>
                 </el-dialog> -->
                 <!-- 设备绑定商户信息框 用户页面传的信息{show: true,from: 1,page: {id: 125}}  page里是用户的信息，包含id等，设备详情传的信息{show: true,from: 1,page: {code: '000001'}}--> 
-            <bindMerOrArea :bindInfo="bindInfo" @backFn="backFn"/>  
+            <!-- <bindMerOrArea :bindInfo="bindInfo" @backFn="backFn"/>   -->
             <div class="nav_tag">
                <div class="nav_tag_item">
                     <a href="#module_card">
@@ -618,7 +627,7 @@
                </div>
             </div>
             <!-- 修改设备的到期日期 -->
-            <el-dialog
+            <!-- <el-dialog
                 :show-close="false"
                 :visible.sync="expirationVisable"
                 width="400px"
@@ -645,7 +654,7 @@
                     <el-button @click="expirationVisable = false" size="middle">取 消</el-button>
                     <el-button type="primary" @click="setDeviceExpiration" size="middle">确 定</el-button>
                 </span>
-            </el-dialog>
+            </el-dialog> -->
             <!-- 复用系统参数弹框 -->
             
              <!-- <transition name="el-fade-in-linear">
@@ -762,12 +771,13 @@ import TemplateV3 from '@/components/common/TemplateV3'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import GradeTemplate from '@/components/common/GradeTemplate'
-import bindMerOrArea from '@/components/common/bindMerOrArea'
+// import bindMerOrArea from '@/components/common/bindMerOrArea'
 // import TemMulDevice2 from '@/components/common/TemMulDevice2' 
 import ModuleInfo from './components/MouleInfo' 
 import PortStatus from './components/PortStatus' 
 import RemotoCharge from './components/RemoteCharge' 
 import SystemParma from './components/SystemParma' 
+import TopDetailInfo from './components/TopDetailInfo' 
 import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 // import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
@@ -776,7 +786,7 @@ import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
 remoteChargeBreakOff,updateMapPosition,updateDeviceName,updateDeviceExpire,getWolfsetsys,
 getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo,changeDeviceCode} from '@/require/deviceManage'
-import { unbindDevice } from '@/require'
+// import { unbindDevice } from '@/require'
 import Vue from 'vue'
 // import VueAMap from 'vue-amap';
 // import { lazyAMapApiLoaderInstance } from 'vue-amap';
@@ -784,11 +794,11 @@ import { mapState,mapMutations } from 'vuex'
 export default {
     data(){
         return {
-            disabledDateFn: {
-                disabledDate(time) {
-                    return time.getTime() < Date.now()-8.64e7;
-                }
-            },
+            // disabledDateFn: {
+            //     disabledDate(time) {
+            //         return time.getTime() < Date.now()-8.64e7;
+            //     }
+            // },
             Loading: null ,//Loading加载实例
             code: '', //设备号
             merid: 0, //默认是 0 绑定了就有值
@@ -796,18 +806,18 @@ export default {
             bindtype: 0, //0为未绑定， 1为绑定
             hwVerson:'01',//硬件版本
             remark: '' , //设备名
-            resetRemark: '', //修改设备名
-            changeIMEI: '', //更换IMEI号
-            changeCode: '',//更换code
+            // resetRemark: '', //修改设备名
+            // changeIMEI: '', //更换IMEI号
+            // changeCode: '',//更换code
             expirationTime: null,//设备到期时间
             totalOnlineEarn: 0, //总在线收益
-            expirationVisable: false, //设备到期日期
-            expirationForm: {},//设备到期日期容器
-            isShowDeviceName: false, //是否显示设备名称
-            isShowIMEI: false, //修改IMEI号是否显示
-            isShowChangeCode: false, //修改设备号是否显示
+            // expirationVisable: false, //设备到期日期
+            // expirationForm: {},//设备到期日期容器
+            // isShowDeviceName: false, //是否显示设备名称
+            // isShowIMEI: false, //修改IMEI号是否显示
+            // isShowChangeCode: false, //修改设备号是否显示
             dialogVisible: false, //地图默认隐藏
-            bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
+            // bindInfo: {show: false},//默认绑定信息 {show: false,from: 1,page: {code: '0'}}
             // mapPlugin: [ //地图插件配置
             //     {
             //         pName: 'OverView',
@@ -929,12 +939,13 @@ export default {
         TemplateCoin,
         TemplateOffline,
         GradeTemplate,
-        bindMerOrArea,
+        // bindMerOrArea,
         // TemMulDevice2,
         ModuleInfo,
         PortStatus,
         RemotoCharge,
-        SystemParma
+        SystemParma,
+        TopDetailInfo
     },
     created(){
         this.code= this.$route.query.code
@@ -970,118 +981,118 @@ export default {
     },
     methods: {
         ...mapMutations(['clearToken']),
-         handleTaggleBind(type){ //绑定或解绑设备
-            alertPassword(()=>{
-                // 发送请求，进行绑定或解绑操作，成功了之后修改原本的状态
-                console.log(type)
-                if(type== 1){ //绑定设备
-                    this.bindInfo= {show: true,from: 1,page: {code: this.code}}
-                }else{ //解绑设备
-                    unbindDevice({devicenum: this.code}).then(res=>{
-                        if(res.code == 200){
-                            messageTip('success','解绑成功')
-                            this.asyGetDeviceDetailInfo({code: this.code})       
-                        }else{
-                            messageTip('error','解绑失败')
-                        }
-                    }).catch(err=>{})
-                }
+        //  handleTaggleBind(type){ //绑定或解绑设备
+        //     alertPassword(()=>{
+        //         // 发送请求，进行绑定或解绑操作，成功了之后修改原本的状态
+        //         console.log(type)
+        //         if(type== 1){ //绑定设备
+        //             this.bindInfo= {show: true,from: 1,page: {code: this.code}}
+        //         }else{ //解绑设备
+        //             unbindDevice({devicenum: this.code}).then(res=>{
+        //                 if(res.code == 200){
+        //                     messageTip('success','解绑成功')
+        //                     this.asyGetDeviceDetailInfo({code: this.code})       
+        //                 }else{
+        //                     messageTip('error','解绑失败')
+        //                 }
+        //             }).catch(err=>{})
+        //         }
                 
-            })
-        },
-        handleShowDeviceName(){ //点击显示修改设备名称框
-            this.isShowDeviceName= true
-        },
-        handleSaveName(){ //点击保存设备名称
-            if(this.resetRemark == "" ||  this.resetRemark == null ){
-                messageTip('warning','设备名不能为空')
-                return
-            }
-           updateDeviceName({code: this.code,name: this.resetRemark}).then(res=>{
-               if(res.code == 200){
-                   this.remark= this.resetRemark
-                   messageTip('success','设备名设置成功') 
-               }else if(res.code == 102){
-                   messageTip('warning',res.message) 
-               }
-           }).catch(err=>{
-               messageTip('warning','设置失败') 
-           })
-            this.isShowDeviceName= false
-        },
-        handleChangeIMEI(){ //修改IMEI号
-            let {code:code1,changeIMEI:code2} = this
-           changeDeviceIMEI({code1,code2}).then(res=>{
-                if(res.code === 200){
-                    messageTip('success',res.msg) 
-                }else{
-                    messageTip('warning',res.msg) 
-                }
-           })
-           this.isShowIMEI= false
-           this.changeIMEI= ''
-        },
-        handleChangeCode(){ //更换设备号
-            let {code:code1,changeCode:code2} = this
-            if(!(/^\d{6}$/.test(code2))){
-                return messageTip('warning','请输入设备号为6位纯数字')
-            }
-            changeDeviceCode({code1,code2}).then(res=>{
-                if(res.code === 200){
-                    messageTip('success',res.msg)
-                    this.$router.push({path: '/deviceManage/deviceList/deviceDetail',query: {code: code2}})
-                }else{
-                    messageTip('warning',res.msg) 
-                }
+        //     })
+        // },
+        // handleShowDeviceName(){ //点击显示修改设备名称框
+        //     this.isShowDeviceName= true
+        // },
+        // handleSaveName(){ //点击保存设备名称
+        //     if(this.resetRemark == "" ||  this.resetRemark == null ){
+        //         messageTip('warning','设备名不能为空')
+        //         return
+        //     }
+        //    updateDeviceName({code: this.code,name: this.resetRemark}).then(res=>{
+        //        if(res.code == 200){
+        //            this.remark= this.resetRemark
+        //            messageTip('success','设备名设置成功') 
+        //        }else if(res.code == 102){
+        //            messageTip('warning',res.message) 
+        //        }
+        //    }).catch(err=>{
+        //        messageTip('warning','设置失败') 
+        //    })
+        //     this.isShowDeviceName= false
+        // },
+        // handleChangeIMEI(){ //修改IMEI号
+        //     let {code:code1,changeIMEI:code2} = this
+        //    changeDeviceIMEI({code1,code2}).then(res=>{
+        //         if(res.code === 200){
+        //             messageTip('success',res.msg) 
+        //         }else{
+        //             messageTip('warning',res.msg) 
+        //         }
+        //    })
+        //    this.isShowIMEI= false
+        //    this.changeIMEI= ''
+        // },
+        // handleChangeCode(){ //更换设备号
+        //     let {code:code1,changeCode:code2} = this
+        //     if(!(/^\d{6}$/.test(code2))){
+        //         return messageTip('warning','请输入设备号为6位纯数字')
+        //     }
+        //     changeDeviceCode({code1,code2}).then(res=>{
+        //         if(res.code === 200){
+        //             messageTip('success',res.msg)
+        //             this.$router.push({path: '/deviceManage/deviceList/deviceDetail',query: {code: code2}})
+        //         }else{
+        //             messageTip('warning',res.msg) 
+        //         }
                 
-           })
-           this.isShowChangeCode= false
-           this.changeCode= ''
-        },
-        handleCancelDeleteName(){ //点击取消显示设备名称框
-            this.isShowDeviceName= false
-        },
-        backFn(bindInfo){ //绑定成功之后的回调
+        //    })
+        //    this.isShowChangeCode= false
+        //    this.changeCode= ''
+        // },
+        // handleCancelDeleteName(){ //点击取消显示设备名称框
+        //     this.isShowDeviceName= false
+        // },
+        backFn(){ //绑定成功之后的回调
            this.asyGetDeviceDetailInfo({code: this.code}) 
         },
-        contrastData(data){ //根据时间返回值
-            const dataTime= new Date(moment(data).format('YYYY-MM-DD')).getTime()
-            const nowTime= new Date(moment(new Date()).format('YYYY-MM-DD')).getTime()
-            if(dataTime- nowTime <= 0){
-                return 'danger'
-            }else if((dataTime- nowTime) > 0 && (dataTime- nowTime) <= 7*1000*60*60*24){
-                return 'warning'
-            }else{
-                return 'primary'
-            }
-        },
-        handleExpiration(expirationTime){ //修改设备的到期日期--验证密码
-            alertPassword(()=>{
+        // contrastData(data){ //根据时间返回值
+        //     const dataTime= new Date(moment(data).format('YYYY-MM-DD')).getTime()
+        //     const nowTime= new Date(moment(new Date()).format('YYYY-MM-DD')).getTime()
+        //     if(dataTime- nowTime <= 0){
+        //         return 'danger'
+        //     }else if((dataTime- nowTime) > 0 && (dataTime- nowTime) <= 7*1000*60*60*24){
+        //         return 'warning'
+        //     }else{
+        //         return 'primary'
+        //     }
+        // },
+        // handleExpiration(expirationTime){ //修改设备的到期日期--验证密码
+        //     alertPassword(()=>{
               
-               if(expirationTime != null){
-                   let expire= moment(expirationTime).format('YYYY-MM-DD')
-                    this.expirationForm= {code: this.code,expire}
-               }else{
-                    this.expirationForm= {code:this.code}
-               }
-               this.expirationVisable= true
-            })
-        },
-        async setDeviceExpiration(){//修改设备的到期日期
-            try{
-                let info=  await updateDeviceExpire(this.expirationForm)
-                if(info.code == 200){
-                    messageTip('success',`修改设备${this.expirationForm.code}成功`)
-                    this.expirationTime= info.result
-                }else{
-                    messageTip('error',info.message)
-                }
-                this.expirationVisable= false
-            } catch(error){
-                messageTip('error','修改失败')
-                this.expirationVisable= false
-            } 
-        },
+        //        if(expirationTime != null){
+        //            let expire= moment(expirationTime).format('YYYY-MM-DD')
+        //             this.expirationForm= {code: this.code,expire}
+        //        }else{
+        //             this.expirationForm= {code:this.code}
+        //        }
+        //        this.expirationVisable= true
+        //     })
+        // },
+        // async setDeviceExpiration(){//修改设备的到期日期
+        //     try{
+        //         let info=  await updateDeviceExpire(this.expirationForm)
+        //         if(info.code == 200){
+        //             messageTip('success',`修改设备${this.expirationForm.code}成功`)
+        //             this.expirationTime= info.result
+        //         }else{
+        //             messageTip('error',info.message)
+        //         }
+        //         this.expirationVisable= false
+        //     } catch(error){
+        //         messageTip('error','修改失败')
+        //         this.expirationVisable= false
+        //     } 
+        // },
         async asyGetDeviceDetailInfo(data,callback){
             let _this= this
             let loading= Loading.service({

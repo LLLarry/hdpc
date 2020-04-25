@@ -33,8 +33,9 @@
                       <el-date-picker
                         v-model="merEarnForm.startTime"
                         size="small"
-                        type="date"
-                        value-format="yyyy-MM-dd"
+                        :type="merEarnForm.exportType === '1' ? 'date' : 'month'"
+                        :format="merEarnForm.exportType === '1' ? 'yyyy-MM-dd' : 'yyyy-MM'"
+                        :value-format="merEarnForm.exportType === '1' ? 'yyyy-MM-dd' : 'yyyy-MM'"
                         placeholder="选择开始时间">
                       </el-date-picker>
                 </el-form-item>
@@ -43,14 +44,23 @@
                       <el-date-picker
                         size="small"
                         v-model="merEarnForm.endTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
+                        :type="merEarnForm.exportType === '1' ? 'date' : 'month'"
+                        :format="merEarnForm.exportType === '1' ? 'yyyy-MM-dd' : 'yyyy-MM'"
+                        :value-format="merEarnForm.exportType === '1' ? 'yyyy-MM-dd' : 'yyyy-MM'"
                         placeholder="选择结束时间">
                       </el-date-picker>
                  </el-form-item>
 
-                <el-form-item class="form_margin0 content_btn">
+                <el-form-item label="查询方式" class="form_right25">
+                    <el-select v-model="merEarnForm.exportType" placeholder="请选择"  size="small">
+                        <el-option label="按日查询" value="1"></el-option>
+                        <el-option label="按月查询" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item class="form_margin0 content_btn w220">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
+                    <el-button type="primary" size="small" @click="handleExportExcel" >导出Excel</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
@@ -172,9 +182,30 @@
 
 <script>
 import {handleGetMerEarn} from '@/require'
+import {handleExportMerEarn} from '@/require/datastatis'
 import MyPagination from '../../components/common/MyPagination'
+import exportExcel from '@/utils/excel'
+import {messageTip,confirDelete} from '@/utils/ele'
 import Util from '@/utils/util'
-
+const tableTitle= {
+                "time": "时间",
+                "dealernick": "归属商户",
+                "dealerphone": "手机号",
+                "moneytotal": "总收益",
+                "ordertotal": "总订单",
+                "wechatmoney": "微信收益",
+                "wechatorder": "微信订单",
+                "alipaymoney": "支付宝收益",
+                "alipayorder": "支付宝订单",
+                "wechatretmoney": "微信退费",
+                "wechatretord": "微信退费订单",
+                "alipayretmoney": "支付宝退费",
+                "alipayretord": "支付宝退费订单",
+                "oncardmoney": "刷卡",
+                "windowpulsemoney": "窗口投币",
+                "incoinsmoney": "投币"
+            }
+            
 export default {
    data(){
        return {
@@ -185,6 +216,7 @@ export default {
                phone: '',
                startTime: '',
                endTime: '',
+               exportType: '1'
            },
            loading: false,
            tableData: [], //每条数据
@@ -204,14 +236,10 @@ export default {
             this.nowPage= parseInt(this.merEarnForm.currentPage) || 1
         }else{ //直接点击进来的
             let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD',7)
-            this.merEarnForm= {startTime,endTime}
+            this.merEarnForm= {startTime,endTime,exportType: '1'}
         }
         this.getMerEarnData(this.merEarnForm)
     },
-    // activated(){ //keep alive时进入页面触发
-    //     console.log(this.merEarnForm)
-    //      this.getMerEarnData()
-    // },
     methods: {
         getPage(page){ //分页发改变时，触发回调
             let obj= {...this.merEarnForm,currentPage:page}
@@ -251,36 +279,66 @@ export default {
                 });
                 return sums;
                
-            },
-            async getMerEarnData(data){ //发送请求获取信息
-                let _this= this
-                try{
-                    _this.loading= true
-                    let merEarnData= await handleGetMerEarn(data)
-                    _this.loading= false
-                    _this.tableData= merEarnData.listdata
-                    _this.gatherData= merEarnData.totaldata
-                    _this.totalPage= merEarnData.totalRows
-                }
-                catch(error){
-                    if(error == '拦截请求'){ //当访问出错时会error为字符串，当拦截器拦截时error为undefined,当拦截器拦截时继续加载
-                       _this.loading= true
-                       return 
-                   }
-                       _this.loading= false
-                }
-            },
-            handleSearch(){ //点击搜索查询
-                this.$router.push({query: this.merEarnForm})
-                this.getMerEarnData(this.merEarnForm)
-                this.nowPage= 1 //搜索完之后将nowPage置为1
+        },
+        async getMerEarnData(data){ //发送请求获取信息
+            let _this= this
+            try{
+                _this.loading= true
+                let merEarnData= await handleGetMerEarn(data)
+                _this.loading= false
+                _this.tableData= merEarnData.listdata
+                _this.gatherData= merEarnData.totaldata
+                _this.totalPage= merEarnData.totalRows
             }
+            catch(error){
+                if(error == '拦截请求'){ //当访问出错时会error为字符串，当拦截器拦截时error为undefined,当拦截器拦截时继续加载
+                    _this.loading= true
+                    return 
+                }
+                    _this.loading= false
+            }
+        },
+        handleSearch(){ //点击搜索查询
+            this.$router.push({query: this.merEarnForm})
+            this.getMerEarnData(this.merEarnForm)
+            this.nowPage= 1 //搜索完之后将nowPage置为1
+        },
+        handleExportExcel(){ //导出excel
+            confirDelete('确定导出商户收益吗？',async ()=>{
+                const { startTime,endTime,exportType='1',phone='' }= this.merEarnForm
+                let info= await handleExportMerEarn({
+                    startTime, 
+                    endTime,
+                    exportType,
+                    phone
+                })
+                if(info.code === 200){
+                    const list= info.listdata
+                    exportExcel({
+                        tHeader: Object.values(tableTitle),
+                        filterVal: Object.keys(tableTitle),
+                        list,
+                        filename: `商户收益${this.merEarnForm.startTime}-${this.merEarnForm.endTime}`,
+                        formatJson: this.formatJson
+                    })
+                }else{
+                    messageTip('error',info.message)
+                }
+            })
+        },
+        formatJson(filterVal, list){
+             return list.map((item,i)=> filterVal.map((jtem)=>{
+                 let val= ''
+                 if(['dealernick','dealerphone'].includes(jtem)){
+                     val= item[jtem] === '' || item[jtem] === null ? '— —' : item[jtem]
+                 }else if(['moneytotal','wechatmoney','alipaymoney','wechatretmoney','alipayretmoney','oncardmoney'].includes(jtem)){
+                     val= item[jtem].toFixed(1)
+                 }else{
+                     val= item[jtem]
+                 }
+                 return val
+             }))
+        }
     }
 }
 </script>
-
-<style lang="less">
-    // .deviceEarn {
-       
-    // }
-</style>

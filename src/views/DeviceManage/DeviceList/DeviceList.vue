@@ -67,8 +67,9 @@
                         <el-option label="从小到大" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item class="form_margin0 content_btn">
+                <el-form-item class="form_margin0 content_btn w220">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
+                    <el-button type="primary" size="small" @click="handleExportExcel" >导出Excel</el-button>
                 </el-form-item>
             </el-form>
          </el-card>
@@ -326,11 +327,26 @@
 <script>
  import MyPagination from '@/components/common/MyPagination'
  import dateTimeJS from '@/utils/dateTime'
- import {alertPassword,messageTip} from '@/utils/ele'
+ import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
  import QRCode from '@/components/common/QRCode'
  import QRCodeForPort from '@/components/common/QRCodeForPort'
+ import exportExcel from '@/utils/excel'
  import { getDeviceList,setHardversion,resetDeviceTestTime } from '@/require/deviceManage'
  import { mapState } from 'vuex'
+ const tableTitle= { //导出配置
+	code: '设备号',
+	remark: '设备名',
+	name: '归属小区',
+	username: '所属人',
+	expiration_time: '到期日期',
+	create_time: '创建时间',
+	phone_num: '电话',
+	imei: 'IMEI',
+	ccid: 'CCID',
+	hardversion: '硬件版本号',
+	softversionnum: '软件版本号',
+	hardversionnum: '模块版本',
+}
 export default {
     data(){
         return {
@@ -467,6 +483,39 @@ export default {
             this.$router.push({query:{... this.deviceListForm,currentPage: 1}})
             this.asyGetDeviceList({... this.deviceListForm,currentPage: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
+        },
+        handleExportExcel(){ //导出excel
+            confirDelete('确定导出设备列表吗？',async ()=>{
+                let info= await getDeviceList({...this.deviceListForm,export: 1})
+                if(info.code === 200){
+                    const list= info.listdata
+                    exportExcel({
+                        tHeader: Object.values(tableTitle),
+                        filterVal: Object.keys(tableTitle),
+                        list: info.deviceData,
+                        filename: `设备列表`,
+                        formatJson: this.formatJson
+                    })
+                }else{
+                    messageTip('error',info.message)
+                }
+            })
+        },
+        formatJson(filterVal, list){
+             return list.map((item,i)=> filterVal.map((jtem)=>{
+                 let val= ''
+                 if(['remark','name','username','phone_num'].includes(jtem)){
+                     val= item[jtem] === '' || item[jtem] === null || item[jtem] === undefined ? '— —' : item[jtem]
+                 }else if(['expiration_time','create_time'].includes(jtem)){
+                     val= item[jtem] === '' || item[jtem] === null || item[jtem] === undefined ? '— —' : this.$fmtDate(item[jtem],'YYYY-MM-DD')
+                 }else if(['hardversion'].includes(jtem)){
+                    //  let dName= item[jtem] == '00' ? '出厂默认设置' : item[jtem] == '01' ? '十路智慧款': item[jtem] == '02' ? '电轿款' : item[jtem] == '03' ? '脉冲板子' : item[jtem] == '04' ? '离线充值机' : item[jtem] == '05' ? '十六路智慧款' : item[jtem] == '06' ? '二十路智慧款' : item[jtem] == '07' ? '单路交流桩' : ''
+                     val= item[jtem]
+                 }else{
+                     val= item[jtem]
+                 }
+                 return val
+             }))
         }
     }
 }

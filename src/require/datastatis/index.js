@@ -27,3 +27,10 @@ export const handleGetDeviceEarn= function (data){ //处理 设备收益
              data: data
          })
 }
+
+export const handleExportMerEarn= function (data){ //导出商户收益
+    return ajax({
+             url: '/dataCollectInfo/dealerEarningsDownload',
+             data: data
+         })
+}

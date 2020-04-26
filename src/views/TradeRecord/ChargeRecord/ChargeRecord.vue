@@ -344,7 +344,7 @@ export default {
         ...mapState(['userInfo'])
     },
     created(){
-          let {VNK,...routerKey}=  this.$route.query
+        let {VNK,...routerKey}=  this.$route.query
         if(JSON.stringify(routerKey) != "{}"){
             let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',0.5)
             this.chargeRecordForm= {...this.$route.query,endTime} //将endTime放在这里是查询实时的订单

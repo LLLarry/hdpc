@@ -20,22 +20,24 @@
                     </el-select>
                 </el-form-item>
 
-                 <el-form-item label="开始时间" class="form_right25" clearable>
+                 <el-form-item label="开始时间" class="form_right25 w200" clearable>
                      <el-date-picker
                         v-model="merEarnDetailForm.startTime"
                         size="small"
-                        type="date"
+                        type="datetime"
                         value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         placeholder="选择开始时间"
                         >
                       </el-date-picker>
                 </el-form-item>
-                 <el-form-item label="结束时间" class="form_right25" clearable>
+                 <el-form-item label="结束时间" class="form_right25 w200" clearable>
                      <el-date-picker
                         v-model="merEarnDetailForm.endTime"
                         size="small"
-                        type="date"
+                        type="datetime"
                         value-format="yyyy-MM-dd HH:mm:ss"
+                        clearable
                         placeholder="选择结束时间"
                         >
                       </el-date-picker>
@@ -61,7 +63,7 @@
                 min-width="60"
                 >
                 <template slot-scope="scope">
-                      {{scope.$index+1}} 
+                     {{ (nowPage-1)*10+scope.$index+1 }}
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -130,7 +132,7 @@
 <script>
 import MyPagination from '@/components/common/MyPagination'
 import { merEarnDetail } from '@/require/userManage'
-
+import Util from '@/utils/util'
 export default {
     data(){
         return {
@@ -144,18 +146,27 @@ export default {
             tableData: [],
             totalPage: 1,
             loading: false,
+            dealer: '',
             nowPage: 1 //当前页数
         }
     },
     created(){
-        if(JSON.stringify(this.$route.query) != "{}"){
-            this.merEarnDetailForm= {...this.$route.query}
+        let {VNK,dealer,...routerKey}=  this.$route.query
+        this.dealer= dealer
+        if(Object.keys(routerKey).length > 0){
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',15)
+            this.merEarnDetailForm= {...this.$route.query,endTime}
+            this.nowPage= parseInt(this.merEarnDetailForm.currentPage) || 1
+        }else {
+            let [startTime,endTime]= Util.formatTimeArr('YYYY-MM-DD HH:mm:ss',15)
+            this.merEarnDetailForm= {startTime,endTime}
         }
-        this.asyMerEarnDetail(this.merEarnDetailForm)
+        this.asyMerEarnDetail({...this.merEarnDetailForm,dealer})
     },
     methods: {
         getPage(page){
-            let obj= {...this.merEarnDetailForm,currentPage:page}
+            let obj= {...this.merEarnDetailForm,currentPage:page,dealer: this.dealer}
+            this.$router.push({query: obj})
             this.asyMerEarnDetail(obj)
             this.nowPage = page
         },
@@ -179,8 +190,8 @@ export default {
                 }
         },
         handleSearch(){ //点击搜索查询
-            this.$router.push({query: this.merEarnDetailForm})
-            this.asyMerEarnDetail(this.merEarnDetailForm)
+            this.$router.push({query: {...this.merEarnDetailForm,dealer: this.dealer}})
+            this.asyMerEarnDetail({...this.merEarnDetailForm,dealer: this.dealer})
             this.nowPage= 1 //搜索完之后将nowPage置为1
         }
     },

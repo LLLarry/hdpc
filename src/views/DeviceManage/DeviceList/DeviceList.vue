@@ -67,9 +67,9 @@
                         <el-option label="从小到大" value="2" ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item class="form_margin0 content_btn w220">
+                <el-form-item class="form_margin0 content_btn" :class="{w220: (userInfo.classify== 'superAdmin')}">
                     <el-button type="primary" size="small" @click="handleSearch" icon="el-icon-search">查询</el-button>
-                    <el-button type="primary" size="small" @click="handleExportExcel" >导出Excel</el-button>
+                    <el-button type="primary" size="small" @click="handleExportExcel" v-if="userInfo.classify== 'superAdmin'" >导出Excel</el-button>
                 </el-form-item>
             </el-form>
          </el-card>

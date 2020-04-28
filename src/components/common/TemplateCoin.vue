@@ -20,7 +20,14 @@
                         <span v-if="!item.edit" class="top_span">{{item.name}}</span>
                         <el-input v-else size="mini" v-model="temForm.name" style="width: 70%; display: inline-block" placeholder="请输入模板名称"></el-input>
                     </div>
-                    <div style="margin-top: 15px">&nbsp;</div> 
+                     <div style="margin-top: 15px">
+                        <strong>是否钱包强制支付:  </strong>
+                        <span v-if="!item.edit" :class="['top_span', item.walletpay ==1 ? 'green' : 'red']">{{item.walletpay ==1 ? '是' : '否'}}</span>
+                        <el-radio-group v-model="temForm.walletpay"  v-else >
+                            <el-radio :label="1">是</el-radio>
+                            <el-radio :label="2">否</el-radio>
+                        </el-radio-group>
+                    </div> 
                 </template>
                 </el-table-column>
 
@@ -191,6 +198,7 @@ export default {
     props: ['from','list','deviceInfo','source','arecode'],
     computed: {
         arr(){
+            console.log(this.list)
             return this.list
         }
     },
@@ -323,12 +331,13 @@ export default {
        //保存编辑主模板
        handleSaveEditTem(item){
            //校验，发送请求
-           let{name,remark,common1}= this.temForm
-            updateTemplate({id: item.id,status: 2, name,remark,common1}).then(res=>{  //投币 status为2
+           let{name,remark,common1,walletpay}= this.temForm
+            updateTemplate({id: item.id,status: 2, name,remark,common1,walletpay}).then(res=>{  //投币 status为2
                if(res.code === 200){
-                     item.name=  this.temForm.name
+                    item.name=  this.temForm.name
                     item.remark=  this.temForm.remark
                     item.common1=  this.temForm.common1
+                    item.walletpay= this.temForm.walletpay
                     Vue.set(item,'edit',false)
                     this.isEditingTem= false
                     messageTip('success','主模板修改成功')
@@ -368,7 +377,7 @@ export default {
 </script>
 
 <style lang="less" scope>
-.template {
+.templateCoin {
     .temTableTitle {
        .top_span {
            margin:0 10px;

@@ -230,13 +230,14 @@ export default {
                 let status= 0
                 if(valid){
                     if(this.$route.query.hw === '03' || this.$route.query.hw === '04'){
-                        const {name,remark,common1}= this.hwForm
+                        const {name,remark,common1,walletpay}= this.hwForm
                         status= this.$route.query.hw === '03' ? 2 : 1
                          const data= {
                             name,
                             remark,
                             common1,
                             status,
+                            walletpay,
                             merid: this.merid
                         }
                         addTemplate(data).then(res=>{

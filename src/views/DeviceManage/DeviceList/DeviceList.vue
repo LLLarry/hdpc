@@ -395,7 +395,7 @@ export default {
             const nowTime= new Date(moment(new Date()).format('YYYY-MM-DD')).getTime()
             if(dataTime- nowTime <= 0){
                 return 'danger'
-            }else if((dataTime- nowTime) > 0 && (dataTime- nowTime) <= 7*1000*60*60*24){
+            }else if((dataTime- nowTime) > 0 && (dataTime- nowTime) <= 15*1000*60*60*24){
                 return 'warning'
             }else{
                 return 'primary'

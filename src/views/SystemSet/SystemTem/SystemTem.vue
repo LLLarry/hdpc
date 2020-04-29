@@ -116,12 +116,20 @@
             <div style="margin-top: 20px; text-align: center;"><el-button type="primary" icon="el-icon-document-checked" size="mini" @click="submitPayTem" >保存模板</el-button></div>
             </el-card>
         </el-card>
-        <el-card class="box-card card_content">
-            <div slot="header" class="clearfix">
-                <span>上传文件</span>
-            </div>
-            <UpLoadFile :baseURL="baseURL" />
-        </el-card>
+        <el-row>
+            <el-col :xs="{span: 24}" :sm="{span: 11}">
+                <el-card class="box-card card_content">
+                    <div slot="header" class="clearfix">
+                        <span>上传文件</span>
+                    </div>
+                    <UpLoadFile :baseURL="baseURL" />
+                </el-card>
+            </el-col>
+            <el-col :xs="{span: 24}" :sm="{span: 11, offset: 2}">
+                 <ConfigChangeParmars :sysTime="sysTime" @handleReLoad="handleReLoad" />
+            </el-col>
+        </el-row>
+       
     </div>
 </template>
 
@@ -132,6 +140,7 @@ import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateWallet from '@/components/common/TemplateWallet'
 import UpLoadFile from '@/components/common/upLoadFile'
+import ConfigChangeParmars from './components/ConfigChangeParmars'
 import { messageTip } from '@/utils/ele'
 import { getSystemSetInfo,updateSystemMerPay } from '@/require/systemSet'
 export default {
@@ -283,7 +292,8 @@ export default {
                     // "05": 30,
                     // "06": 30,
                 }
-            }
+            },
+            sysTime: {} //配置充电时间
         }
     },
     components: {
@@ -292,7 +302,8 @@ export default {
         TemplateOffline,
         TemplateWallet,
         UpLoadFile,
-        TemplateV3
+        TemplateV3,
+        ConfigChangeParmars
     },
     created(){
         let baseURL= window.location.origin || 'http://www.he360.com.cn'
@@ -360,6 +371,8 @@ export default {
                         // 商户缴费默认模板
                         this.payTemData= systemTemInfo.payTemData
                     }
+                    // 获取充电配置
+                    _this.sysTime= systemTemInfo.sysTime
 
                 }
 

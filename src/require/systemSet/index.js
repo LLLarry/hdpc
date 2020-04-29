@@ -20,3 +20,15 @@ export const updateSystemMerPay= function (data){
              data: data
          })
 }
+
+/**
+ * 修改充电配置信息
+ */
+export const changeChargeInfo= function (data){ 
+    return ajax({
+             url: '/setTimerTaskSys/setOfflineTime',    
+             data: data,
+             method: 'post'
+         })
+}
+

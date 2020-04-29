@@ -318,13 +318,13 @@ export default {
             this.$message.warning('请先保存或取消其他的编辑操作！')
             return 
         }
-        let {name,remark,common1,permit,walletpay,common2} = item
-        if(common2== '' || typeof common2 == 'undefined'){
-            permit=[permit.toString()]
-        }else{
-            permit=[permit.toString(),common2.toString()]
-        }
-        this.temForm= {name,remark,common1,walletpay,permit}
+        let {name,remark,common1,walletpay,common2} = item
+        // if(common2== '' || typeof common2 == 'undefined' || typeof common2== null){
+        //     permit=[permit.toString()]
+        // }else{
+        //     permit=[permit.toString(),common2.toString()]
+        // }
+        this.temForm= {name,remark,common1,walletpay}
          Vue.set(item,'edit',true)
          this.isEditingTem= true
        },

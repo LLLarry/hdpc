@@ -286,6 +286,16 @@ export const changeDeviceCode= function (data){
          })
 }
 
+/**
+ * 设置报警系统值
+ */
+export const changeDeviceAlarm= function (data){ 
+    return ajax({
+             url: '/getdeviceargument',
+             data: data,
+             method: 'post'
+         })
+}
 
 
 

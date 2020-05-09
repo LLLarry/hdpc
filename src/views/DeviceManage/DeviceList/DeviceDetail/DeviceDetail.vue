@@ -473,6 +473,9 @@
              </el-col>
          </el-row>
 
+         <!-- 报警系统配置 -->
+         <AlarmConfig :code="code" />
+
         <!-- 设备新的主板信息 -->
          <el-row v-if="['07'].includes(hwVerson)">
              <el-col :xs="24" :sm="12" >
@@ -778,6 +781,7 @@ import PortStatus from './components/PortStatus'
 import RemotoCharge from './components/RemoteCharge' 
 import SystemParma from './components/SystemParma' 
 import TopDetailInfo from './components/TopDetailInfo' 
+import AlarmConfig from './components/AlarmConfig' 
 import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 // import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
@@ -945,7 +949,8 @@ export default {
         PortStatus,
         RemotoCharge,
         SystemParma,
-        TopDetailInfo
+        TopDetailInfo,
+        AlarmConfig
     },
     created(){
         this.code= this.$route.query.code

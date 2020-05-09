@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { changeDeviceAlarm } from '@/require/deviceManage'
+import { setDeviceAlarm } from '@/require/deviceManage'
 export default {
     props: {
         code: String
@@ -199,7 +199,6 @@ export default {
         },
         handleSave(row){ //保存
             row.edit= false
-            console.log(row)
             let newRow= JSON.parse(JSON.stringify(row))
             let value= this.alarmConfigFrom[newRow.type]
             const keyCode= {
@@ -208,7 +207,7 @@ export default {
                 power: 3
             }
             let newtype= keyCode[newRow.type]
-            changeDeviceAlarm({
+            setDeviceAlarm({
                 type: newtype,
                 value,
                 code: this.code

@@ -289,9 +289,9 @@ export const changeDeviceCode= function (data){
 /**
  * 设置报警系统值
  */
-export const changeDeviceAlarm= function (data){ 
+export const setDeviceAlarm= function (data){ 
     return ajax({
-             url: '/getdeviceargument',
+             url: '/setdeviceargument',
              data: data,
              method: 'post'
          })

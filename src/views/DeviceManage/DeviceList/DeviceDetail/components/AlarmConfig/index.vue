@@ -27,7 +27,7 @@
                                             <span>{{row.value}}℃</span>
                                             <div>
                                                 <el-button type="primary" size="mini" @click="handleSet(row)">设置</el-button>
-                                                <el-button type="success" size="mini">获取</el-button>
+                                                <el-button type="success" size="mini" :icon="row.loading ? 'el-icon-loading' : ''" @click="getDeviceAlarmCallBack(row)" >获取</el-button>
                                             </div>
                                         </div>
                                         <div v-show="row.edit"  class="edit_item">
@@ -43,7 +43,7 @@
                                             <span>{{row.value}}</span>
                                             <div>
                                                 <el-button type="primary" size="mini" @click="handleSet(row)">设置</el-button>
-                                                <el-button type="success" size="mini">获取</el-button>
+                                                <el-button type="success" size="mini" :icon="row.loading ? 'el-icon-loading' : '' " @click="getDeviceAlarmCallBack(row)" >获取</el-button>
                                             </div>
                                         </div>
                                         <div v-show="row.edit"  class="edit_item">
@@ -59,7 +59,7 @@
                                             <span>{{row.value}}W</span>
                                             <div>
                                                 <el-button type="primary" size="mini" @click="handleSet(row)">设置</el-button>
-                                                <el-button type="success" size="mini">获取</el-button>
+                                                <el-button type="success" size="mini" :icon="row.loading ? 'el-icon-loading' : ''" @click="getDeviceAlarmCallBack(row)" >获取</el-button>
                                             </div>
                                         </div>
                                         <div v-show="row.edit"  class="edit_item">
@@ -74,7 +74,7 @@
                                         <div v-show="!row.edit" class="edit_item">
                                             <span>{{row.value}}度</span>
                                             <div>
-                                                <el-button type="success" size="mini">获取</el-button>
+                                                <el-button type="success" size="mini" :icon="row.loading ? 'el-icon-loading' : ''"  @click="getNowDeviceAlarmFn(row)">获取</el-button>
                                             </div>
                                         </div>
                                     </div>
@@ -105,7 +105,7 @@
                                             <router-link :to="`/deviceManage/deviceList/temperhistory`">
                                                     <el-link type="primary" size="mini" style="margin-right: 10px;">历史温度</el-link>
                                                 </router-link>
-                                                <el-button type="success" size="mini">获取</el-button>
+                                                <el-button type="success" size="mini" :icon="row.loading ? 'el-icon-loading' : ''" @click="getNowDeviceAlarmFn(row)">获取</el-button>
                                             </div>
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                                         <div v-show="!row.edit" class="edit_item">
                                             <el-link :underline="false" :type="warnGrad(row)">{{row.value}}</el-link>
                                             <div>
-                                                <el-button type="success" size="mini">获取</el-button>
+                                                <el-button type="success" size="mini" :icon="row.loading ? 'el-icon-loading' : ''"  @click="getNowDeviceAlarmFn(row)">获取</el-button>
                                             </div>
                                         </div>
                                     </div>
@@ -121,7 +121,7 @@
                                         <div v-show="!row.edit" class="edit_item">
                                             <el-link :underline="false" :type="warnGrad(row)">{{row.value}}W</el-link>
                                             <div>
-                                                <el-button type="success" size="mini">获取</el-button>
+                                                <el-button type="success" size="mini" :icon="row.loading ? 'el-icon-loading' : ''"  @click="getNowDeviceAlarmFn(row)">获取</el-button>
                                             </div>
                                         </div>
                                     </div>
@@ -136,10 +136,22 @@
 </template>
 
 <script>
-import { setDeviceAlarm } from '@/require/deviceManage'
+import { setDeviceAlarm,getNowDeviceAlarm,getDeviceSetAlarm } from '@/require/deviceManage'
+import Utils from '@/utils/util'
+let loading //loading实例
 export default {
     props: {
         code: String
+    },
+    mounted(){
+        console.log(Utils.Hd_Loading)
+        loading= new Utils.Hd_Loading()
+    },
+    beforeDestroy(){ //关闭前销毁
+        loading && loading.hide()
+    },
+    deactivated(){ //关闭前销毁 （keep-alive销毁回调）
+        loading && loading.hide()
     },
     data(){
         return {
@@ -198,6 +210,7 @@ export default {
             this.$set(row,'edit',false) 
         },
         handleSave(row){ //保存
+            loading.show()
             row.edit= false
             let newRow= JSON.parse(JSON.stringify(row))
             let value= this.alarmConfigFrom[newRow.type]
@@ -212,9 +225,63 @@ export default {
                 value,
                 code: this.code
             }).then(res=>{
+                loading.hide()
                 console.log(res)
             }).catch(e=>{
+                loading.hide()
                console.log(e)
+            })
+        },
+        getDeviceAlarmCallBack(row){ //获取设置的参数
+            this.$set(row,'loading',true)
+            loading.show()
+            let newRow= JSON.parse(JSON.stringify(row))
+            let value= this.alarmConfigFrom[newRow.type]
+            const keyCode= {
+                temperature: 1,
+                smoke: 2,
+                power: 3
+            }
+            let newtype= keyCode[newRow.type]
+           
+            getDeviceSetAlarm({
+                type: newtype,
+                code: this.code
+            })
+            .then(res=>{
+                console.log(res)
+                this.$set(row,'loading',false)
+                loading.hide()
+            })
+            .catch(e=>{
+                this.$set(row,'loading',false)
+                loading.hide()
+            })
+        },
+        getNowDeviceAlarmFn(row){
+            this.$set(row,'loading',true)
+            loading.show()
+            let newRow= JSON.parse(JSON.stringify(row))
+            let value= this.alarmConfigFrom[newRow.type]
+            const keyCode= {
+                nowTemperature: 1,
+                nowSmoke: 2,
+                nowPower: 3,
+                read: 4
+            }
+            let newtype= keyCode[newRow.type]
+            getNowDeviceAlarm({
+                type: newtype,
+                code: this.code
+            })
+            .then(res=>{
+                console.log(res)
+                this.$set(row,'loading',false)
+                loading.hide()
+            })
+            .catch(e=>{
+                this.$set(row,'loading',false)
+                loading.hide()
             })
         }
     }

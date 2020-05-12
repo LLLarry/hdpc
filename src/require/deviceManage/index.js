@@ -291,11 +291,35 @@ export const changeDeviceCode= function (data){
  */
 export const setDeviceAlarm= function (data){ 
     return ajax({
-             url: '/setdeviceargument',
+             url: '/setDeviceArgument',
              data: data,
              method: 'post'
          })
 }
+
+/**
+ * 获取当前报警系统值
+ */
+export const getNowDeviceAlarm= function (data){ 
+    return ajax({
+             url: '/getDeviceNowArgument',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * 获取设置的报警系统值
+ */
+export const getDeviceSetAlarm= function (data){ 
+    return ajax({
+             url: '/getDeviceSetArgument',
+             data: data,
+             method: 'post'
+         })
+}
+
+
 
 
 

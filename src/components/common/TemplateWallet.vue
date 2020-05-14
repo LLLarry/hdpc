@@ -130,9 +130,7 @@
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
              </div>
               <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '05'}})" style="float:left;margin-left: 30%;" icon="el-icon-view">查看更多</el-button>
-               <!-- <el-button type="primary" size="mini" >此模板复用更多设备</el-button> -->
-               <TemMulDevice />
+                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '05'}})" icon="el-icon-view">查看更多</el-button>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
              </div>
              <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>

@@ -2,6 +2,17 @@
   <div class="comManageDetail">
         <!-- 顶部详情 -->
         <TopInfo />
+        <!-- 小区名下用户数、在线卡数、设备数 -->
+        <!-- <el-card class="box-card card_content">
+            <div slot="header" class="clearfix">
+                <span>钱包系统模板</span>
+            </div>
+            <el-row>
+                <el-col :span="8">用户数: 50</el-col>
+                <el-col :span="8">在线卡数: 50</el-col>
+                <el-col :span="8">设备数: 50</el-col>
+            </el-row>
+        </el-card> -->
         <!-- 合伙人和商户 -->
         <PartnerAndDevice />
         <!-- 钱包模板 -->
@@ -9,14 +20,14 @@
             <div slot="header" class="clearfix">
                 <span>钱包系统模板</span>
             </div>
-            <TemplateWallet :from="1" :list="temWalletList"/>
+            <TemplateWallet :from="2" :list="temWalletList"/>
         </el-card>
         <!-- 在线卡模板 -->
         <el-card class="box-card card_content">
             <div slot="header" class="clearfix">
                 <span>在线卡系统模板</span>
             </div>
-            <TemplateOffline :from="1" :list="temonline"/>
+            <TemplateOffline :from="2" :list="temonline"/>
         </el-card>
   </div>
 </template>

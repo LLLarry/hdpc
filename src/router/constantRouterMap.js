@@ -349,7 +349,15 @@ export const constantRouterMapSuperAdmin= [
         component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail'),
         meta: {
           role: ['superAdmin','admin']
-      }
+        }
+      },
+      {
+        path: '/communManage/communManageCon/tempdetail',
+        name: '小区模板详情',
+        component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail/Tempdetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
       },
       
       // 小区管理结束
@@ -674,7 +682,15 @@ export const constantRouterMapAdmin= [
         component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail'),
         meta: {
           role: ['superAdmin','admin']
-      }
+        }
+      },
+      {
+        path: '/communManage/communManageCon/tempdetail',
+        name: '小区模板详情',
+        component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail/Tempdetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
       },
       // 小区管理结束
       {
@@ -966,7 +982,15 @@ export const constantRouterMapAgent= [
       component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail'),
       meta: {
         role: ['superAdmin','admin']
-    }
+      }
+    },
+    {
+      path: '/communManage/communManageCon/tempdetail',
+      name: '小区模板详情',
+      component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail/Tempdetail'),
+      meta: {
+        role: ['superAdmin','admin']
+      }
     },
     // 小区管理结束
     {

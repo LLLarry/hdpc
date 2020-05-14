@@ -158,18 +158,24 @@
                 <template slot-scope="scope">
                     <span v-if="scope.row.manaphonenum == null">— —</span>
                     <el-link v-else>{{scope.row.manaphonenum}}</el-link>
-                    <!-- <router-link to="/"  v-else>
-                       
-                    </router-link> -->
                 </template>
                 </el-table-column>
-                 <el-table-column
+                <el-table-column
                 prop="create_time"
                 label="创建时间"
                 min-width="150"
                 >
                  <template slot-scope="scope">
                     {{scope.row.create_time | fmtDate}}
+                 </template>
+                </el-table-column>
+                <el-table-column
+                label="详情"
+                min-width="90"
+                fixed="right"
+                >
+                 <template slot-scope="scope">
+                    <el-button type="primary" size="mini" @click="goTo(scope.row)">详情</el-button>
                  </template>
                 </el-table-column>
                 
@@ -246,6 +252,9 @@ export default {
             this.$router.push({query:{... this.communManageConForm,currentPage: 1}})
             this.asyGetCommunInfo({... this.communManageConForm,currentPage: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
+        },
+        goTo({id,merid}){ //跳转小区详情
+            this.$router.push({path: '/communManage/communManageCon/comManageDetail',query: {id,merid} }) 
         }
     }
 }

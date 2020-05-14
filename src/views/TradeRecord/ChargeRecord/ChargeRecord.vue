@@ -203,7 +203,16 @@
                         placement="right"
                         width="200"
                         trigger="hover"
-                        content="刷卡包含在线卡和离线卡">
+                        @show="handleGetInfo(row)"
+                        @hode="handleHide"
+                        >
+                        <div>
+                            <div v-show="!cardShowInfo">刷卡包含在线卡和离线卡</div>
+                            <div v-show="cardShowInfo">
+                                <div>卡号： {{cardShowInfo && cardShowInfo.cardid}}</div>
+                                <div>充电类型：{{cardShowInfo && cardShowInfo.typeStr}}</div>
+                            </div>
+                        </div>
                         <span  slot="reference" class="el-icon-warning-outline" style="font-size: 18px;"></span>
                     </el-popover>
                 </template>
@@ -313,7 +322,7 @@
 <script>
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-import { getChargeRecord,withdrawEntrance,tradeRefEntrance } from '@/require/tradeRecord'
+import { getChargeRecord,withdrawEntrance,tradeRefEntrance,getWolfchargeInfo } from '@/require/tradeRecord'
 import Util from '@/utils/util'
 import VerifiCode from '@/components/common/VerifiCode'
 import { alertPassword,messageTip,confirDelete} from '@/utils/ele'
@@ -334,6 +343,7 @@ export default {
             tipText: false,
             row: {}, //这里是点击退费/撤回所存的订单一列信息，为了退费的时候使用他
             loading_obj: null, //全局loading实例
+            cardShowInfo: null //刷卡提示信息
         }
     },
     components: {
@@ -459,6 +469,27 @@ export default {
             this.$router.push({query:{... this.chargeRecordForm,currentPage: 1}})
             this.asyGetChargeRecord({... this.chargeRecordForm,currentPage: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
+        },
+        async handleGetInfo(row){ //鼠标移动到刷卡上面时显示刷卡数据
+        console.log(row)
+            try{
+                let info= await getWolfchargeInfo({ordernum: row.ordernum})
+                if(info.wolfcode == 1000){
+                    let { cardid,type }= info
+                    let typeStr= type == 1 ? '充满自停' : '正常'
+                    this.cardShowInfo= {
+                        cardid,
+                        typeStr
+                    }
+                }else{
+
+                }
+            }catch(e){
+
+            }
+        },
+        handleHide(){//隐藏刷卡提示
+            this.cardShowInfo= null
         },
         export2Excel() {
              let {startTime,endTime}= this.chargeRecordForm

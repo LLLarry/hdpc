@@ -173,7 +173,15 @@ export const getreviceInfo= function (data){
          })
 }
 
-
+/**
+ *充电详情鼠标移动到刷卡上面时显示刷卡数据
+ */
+export const getWolfchargeInfo= function (data){ 
+    return ajax({
+             url: '/wolfchargeInfo',
+             data: data
+         })
+}
 
 
 

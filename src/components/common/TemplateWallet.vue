@@ -126,21 +126,19 @@
             </template>
             </el-table-column>
             </el-table>
-             <div style="margin-top: 20px; text-align: center" class="clearfix"  v-if="from==1">
+            <div style="margin-top: 20px; text-align: center" class="clearfix"  v-if="from==1">
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
-             </div>
-              <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '05'}})" style="float:left;margin-left: 30%;" icon="el-icon-view">查看更多</el-button>
-               <!-- <el-button type="primary" size="mini" >此模板复用更多设备</el-button> -->
-               <TemMulDevice />
+            </div>
+            <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
+                <el-button type="primary" size="mini" @click="$router.push({path: '/communManage/communManageCon/tempdetail',query: {aid: 1234,temType: 1}})" icon="el-icon-view">查看更多</el-button>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
-             </div>
-             <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
+            </div>
+            <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
                 <el-link type="success" :underline="false" v-if="item.isSelected ==1"> 默认模板</el-link>
                 <el-button type="danger" size="mini" style="float:right;margin-right: 30%;" v-if="item.isSelected !=1" @click="handleSetDefault(item)">设为默认</el-button>
                 <el-button type="primary" size="mini" icon="el-icon-check" style="float:right;margin-right: 30%;" v-if="item.isSelected ==1" disabled plain>设为默认</el-button>
-             </div>
+            </div>
              
         </el-card>
     </div>

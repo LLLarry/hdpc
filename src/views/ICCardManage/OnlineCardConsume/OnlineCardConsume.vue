@@ -86,7 +86,11 @@
                 width="220"
                 >
                  <template slot-scope="scope">
-                    <router-link :to="`/tradeRecord/tradeRecordCon/orderDetail?paysource=5&orderId=${scope.row.id}&status=${scope.row.type}&orderNum=${scope.row.ordernum}`">
+                    <router-link :to="
+                    scope.row.type == 1 ?
+                    `/tradeRecord/tradeRecordCon?&ordernum=${scope.row.ordernum}` :
+                    `/tradeRecord/tradeRecordCon/orderDetail?paysource=5&orderId=${scope.row.id}&status=${scope.row.type}&orderNum=${scope.row.ordernum}`
+                    ">
                         <el-link type="primary" ::underline="false">
                             {{ scope.row.ordernum }}
                         </el-link>

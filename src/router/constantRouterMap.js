@@ -343,6 +343,23 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/communManage/communManageCon/comManageDetail',
+        name: '小区详情',
+        component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/communManage/communManageCon/tempdetail',
+        name: '小区模板详情',
+        component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail/Tempdetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      
       // 小区管理结束
        // 系统设置开始
        {
@@ -659,6 +676,22 @@ export const constantRouterMapAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/communManage/communManageCon/comManageDetail',
+        name: '小区详情',
+        component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/communManage/communManageCon/tempdetail',
+        name: '小区模板详情',
+        component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail/Tempdetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
       // 小区管理结束
       {
         path: '*',
@@ -939,6 +972,22 @@ export const constantRouterMapAgent= [
       path: '/communManage/communManageCon',
       name: '小区管理',
       component: ()=> import('@/views/CommunManage/CommunManageCon/CommunManageCon'),
+      meta: {
+        role: ['superAdmin','admin']
+      }
+    },
+    {
+      path: '/communManage/communManageCon/comManageDetail',
+      name: '小区详情',
+      component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail'),
+      meta: {
+        role: ['superAdmin','admin']
+      }
+    },
+    {
+      path: '/communManage/communManageCon/tempdetail',
+      name: '小区模板详情',
+      component: ()=> import('@/views/CommunManage/CommunManageCon/ComManageDetail/Tempdetail'),
       meta: {
         role: ['superAdmin','admin']
       }

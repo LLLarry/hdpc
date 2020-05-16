@@ -254,7 +254,7 @@ export default {
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },
         goTo({id,merid}){ //跳转小区详情
-            this.$router.push({path: '/communManage/communManageCon/comManageDetail',query: {id,merid} }) 
+            this.$router.push({path: '/communManage/communManageCon/comManageDetail',query: {aid: id} }) 
         }
     }
 }

@@ -7,7 +7,7 @@
        
         <el-dialog 
             :title="temType === 2 ? '新增在线卡模板' : '新增钱包模板'" 
-            :visible.sync="visiblesHw01" 
+            :visible.sync="visibles" 
             :width="'450px'" 
             custom-class="dialog_form" 
             validate="handleSubmit1">
@@ -23,7 +23,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="visiblesHw01 = false">取 消</el-button>
+                <el-button @click="visibles = false">取 消</el-button>
                 <el-button type="primary" @click="handleSubmit1">确 定</el-button>
             </div>
         </el-dialog>
@@ -43,16 +43,9 @@ export default {
     data(){
         return{
             topHeight: 0,//顶部框到顶部固定定位据顶部的距离
-            visiblesHw01: false, //版本号为01的模板是否显示
-            temType: 0, // 1钱包模板 2在线卡模板
-            hwForm: {
-                name: '',
-                remark: '',
-                common1: '',
-                permitObj: ["1","1"],
-                walletpay: 2,
-                grade: 2
-            },//版本号为01的模板form表单容器
+            visibles: false, //添加模板是否显示
+            temType: 1, // 1钱包模板 2在线卡模板
+            hwForm: {},//版本号为01的模板form表单容器
             rule1:{
                 name: [{required: true,message: '模板名称不能为空', trigger: 'change'}]
             }, // 表单1的校验
@@ -76,6 +69,9 @@ export default {
     },
     beforeDestroy(){
        document.getElementsByClassName('main')[0].removeEventListener('scroll',this.handleTopTitle)
+    },
+    deactivated(){
+        document.getElementsByClassName('main')[0].removeEventListener('scroll',this.handleTopTitle)
     },
     // computed: {
     //     ...mapState(['temDetail'])
@@ -106,6 +102,7 @@ export default {
     // },
     methods: {
         handleTopTitle(e){
+            console.log(e)
             e= e || window.event
             let target= e.target || e.srcElement
             let scrollTop= target.scrollTop
@@ -117,7 +114,7 @@ export default {
         },
         // 添加主模板
         handleAddTem(){
-            this.visiblesHw01= true
+            this.visibles= true
         },
         // 提交添主模板hw01
         handleSubmit1(){
@@ -125,8 +122,14 @@ export default {
                 let status= 0
                 if(valid){
                     console.log(valid)
+                    console.log(this.hwForm)
+                    if(temType == 1){ //钱包模板
+
+                    }else{ //在线卡模板
+
+                    }
+                    this.visibles= false
                 }
-                this.visiblesHw01= false
             })
         },
         // handleReLoad(callback){ //v3模板修改成功之后的回调

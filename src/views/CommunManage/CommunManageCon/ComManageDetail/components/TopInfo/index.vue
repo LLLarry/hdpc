@@ -4,54 +4,78 @@
             <div class="clearfix item_c">
                 <div class="item">
                     小区名称：
-                    <el-button v-show="!editAreaName" type="primary" size="mini" icon="el-icon-edit" @click="handleEditName(1)">测试小区</el-button>
+                    <el-button v-show="!editAreaName" type="primary" size="mini" icon="el-icon-edit" @click="handleEditName(1)">{{name}}</el-button>
                     <div v-show="editAreaName" class="editCon">
                         <el-input placeholder="请输入小区名称" size="mini" v-model="topInfoForm.name" style="width: 50%;" ></el-input>
-                        <el-button type="success" size="mini">保存</el-button>
+                        <el-button type="success" size="mini" @click="handleSave(1)">保存</el-button>
                         <el-button type="warning" size="mini" @click="handleCloseEditName(1)">取消</el-button>
                     </div>
                 </div>
                 <div class="item">
                     所属商户：
                     <router-link to="">
-                        <el-link type="primary">测试商户</el-link>
+                        <el-link type="primary">{{dealnick}}</el-link>
                     </router-link>
                 </div>
                 <div class="item">
                     商户电话：
                     <router-link to="">
-                        <el-link type="primary">1553623236</el-link>
+                        <el-link type="primary">{{dealphon}}</el-link>
                     </router-link>
                 </div>
                 <div class="item">
                     会员数：
                     <router-link to="">
-                        <el-link type="primary">50</el-link>
+                        <el-link type="primary">{{areausernum}}</el-link>
                     </router-link>
                 </div>
                 <div class="item">
                     在线卡数：
                     <router-link to="">
-                        <el-link type="primary">50</el-link>
+                        <el-link type="primary">{{onlinenum}}</el-link>
+                    </router-link>
+                </div>
+                <div class="item">
+                    钱包充值金额：
+                    <router-link to="">
+                        <el-link type="primary">{{utopupbalance.toFixed(2)}}</el-link>
+                    </router-link>
+                </div>
+                 <div class="item">
+                    钱包赠送：
+                    <router-link to="">
+                        <el-link type="primary">{{usendmoney.toFixed(2)}}</el-link>
+                    </router-link>
+                </div>
+                <div class="item">
+                    在线卡充值金额：
+                    <router-link to="">
+                        <el-link type="primary">{{ctopupbalance.toFixed(2)}}</el-link>
+                    </router-link>
+                </div>
+                <div class="item">
+                    在线卡赠送金额：
+                    <router-link to="">
+                        <el-link type="primary">{{csendmoney.toFixed(2)}}</el-link>
                     </router-link>
                 </div>
                  <div class="item">
                     设备数：
                     <router-link to="">
-                        <el-link type="primary">50</el-link>
+                        <el-link type="primary">{{devicenum}}</el-link>
                     </router-link>
                 </div>
                 <div class="item">
                     小区地址:
                     <div class="editCon" v-show="!editAreaAddr">
                         <div class="testAddress">
-                            <span>测试地址测试地址测试地址测试地址测试地址测试地址测试地址测试地址测试地址测试地址测试地址测试地址</span>
+                            <span>{{address}}</span>
                         </div>
                         <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleEditName(2)"></el-button>
                     </div>
                     <div class="editCon" v-show="editAreaAddr">
-                        <el-input placeholder="请输入小区地址" size="mini" v-model="topInfoForm.name" style="width: 50%;" ></el-input>
-                        <el-button type="success" size="mini">保存</el-button>
+                        <el-input placeholder="请输入小区地址" size="mini" v-model="topInfoForm.address" style="width: 50%;" ></el-input>
+                        <el-button type="success" size="mini" @click="handleSave(2)">保存</el-button>
                         <el-button type="warning" size="mini" @click="handleCloseEditName(2)">取消</el-button>
                     </div>
                 </div>
@@ -61,7 +85,58 @@
 </template>
 
 <script>
+import { editAreaInfo } from '@/require/communManage'
+import { messageTip } from '@/utils/ele'
 export default {
+    props: {
+        aid: {
+            type: [String,Number]
+        },
+        name:{
+            type: String,
+            a: '— —'
+        },
+        address: {
+            type: String,
+            default: '— —'
+        },
+        dealnick: {
+            type: String,
+            default: '— —'
+        },
+        dealphon:{
+            type: String,
+            default: '— —'
+        },
+        areausernum: {
+            type: Number,
+            default: 0
+        },
+        onlinenum: {
+            type: Number,
+            default: 0
+        },
+        devicenum: {
+            type: Number,
+            default: 0
+        },
+        csendmoney: {
+            type: Number,
+            default: 0
+        },
+         ctopupbalance: {
+            type: Number,
+            default: 0
+        },
+         usendmoney: {
+            type: Number,
+            default: 0
+        },
+         utopupbalance: {
+            type: Number,
+            default: 0
+        }
+    },
     data(){
         return {
             editAreaName: false, //编辑小区名称
@@ -71,11 +146,15 @@ export default {
     },
     methods: {
         handleEditName(from){ //from 1名称 2地址 编辑名称
+            this.topInfoForm= {
+                name: this.name,
+                address: this.address
+            }
             switch(from){
                 case 1 : 
                     this.editAreaName= true 
                 break
-                case 2 : 
+                case 2 :
                     this.editAreaAddr= true 
                 break
             }
@@ -90,6 +169,20 @@ export default {
                     this.editAreaAddr= false 
                 break
             }
+        },
+        handleSave(from){
+            editAreaInfo({aid: this.aid,...this.topInfoForm}).then(res=>{
+                if(res.code === 200){
+                    messageTip('success',from == 1 ? '小区名修改成功' : '小区地址修改成功')
+                    this.$emit('handleEditAreaInfo',this.topInfoForm)
+                }else{
+                    messageTip('error',from == 1 ? '小区名修改成功' : '小区地址修改成功')
+                }
+            }).catch(e=>{
+
+            })
+            this.editAreaName= false
+            this.editAreaAddr= false
         }
     }
 }

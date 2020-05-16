@@ -1,33 +1,36 @@
 <template>
   <div class="comManageDetail">
         <!-- 顶部详情 -->
-        <TopInfo />
-        <!-- 小区名下用户数、在线卡数、设备数 -->
-        <!-- <el-card class="box-card card_content">
-            <div slot="header" class="clearfix">
-                <span>钱包系统模板</span>
-            </div>
-            <el-row>
-                <el-col :span="8">用户数: 50</el-col>
-                <el-col :span="8">在线卡数: 50</el-col>
-                <el-col :span="8">设备数: 50</el-col>
-            </el-row>
-        </el-card> -->
+        <TopInfo
+            :aid="aid"
+            :name="name"
+            :address="address"
+            :dealnick="dealnick"
+            :dealphon="dealphon"
+            :areausernum="areausernum"
+            :onlinenum="onlinenum"
+            :devicenum="devicenum"
+            :csendmoney="csendmoney"
+            :ctopupbalance="ctopupbalance"
+            :usendmoney="usendmoney"
+            :utopupbalance="utopupbalance"
+            @handleEditAreaInfo="handleEditAreaInfo"
+        />
         <!-- 合伙人和商户 -->
-        <PartnerAndDevice />
+        <PartnerAndDevice :partnerInfo="partnerInfo" :devicenumlist="devicenumlist" :aid="aid" @handleResetDeviceNum="handleResetDeviceNum" />
         <!-- 钱包模板 -->
         <el-card class="box-card card_content">
             <div slot="header" class="clearfix">
                 <span>钱包系统模板</span>
             </div>
-            <TemplateWallet :from="2" :list="temWalletList"/>
+            <TemplateWallet :from="2" :list="tempWallet"/>
         </el-card>
         <!-- 在线卡模板 -->
         <el-card class="box-card card_content">
             <div slot="header" class="clearfix">
                 <span>在线卡系统模板</span>
             </div>
-            <TemplateOffline :from="2" :list="temonline"/>
+            <TemplateOffline :from="2" :list="tempOnCard"/>
         </el-card>
   </div>
 </template>
@@ -37,108 +40,29 @@ import TopInfo from './components/TopInfo'
 import TemplateWallet from '@/components/common/TemplateWallet'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import PartnerAndDevice from './components/PartnerAndDevice'
+import { getAreaDetails } from '@/require/communManage'
+import { messageTip } from '@/utils/ele'
+import Util from '@/utils/util'
 export default {
     data(){
         return {
-            temWalletList: [ //钱包数据
-                   {   
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '10元',
-                                    remark: 10,
-                                    money:10, //付款金额
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '20元送5元',
-                                    remark: 25,
-                                    money:20, //付款金额
-                                    temChildId: 12,
-                                }
-                            ]
-                    }
-            ],
-            temonline: [{
-            "common1": null,
-            "common2": 1,
-            "chargeInfo": null,
-            "stairid": 0,
-            "pitchon": null,
-            "tempparList": null,
-            "remark": null,
-            "gather": [
-            {
-            "common1": null,
-            "common2": null,
-            "brandName": null,
-            "chargeTime": 0,
-            "chargeQuantity": 0,
-            "remark": 50,
-            "telephone": null,
-            "type": 0,
-            "common3": null,
-            "money": 50,
-            "createTime": "2019-05-24T02:41:34.000+0000",
-            "name": "50元",
-            "id": 955,
-            "status": 1,
-            "tempparid": 296
-            },
-            {
-            "common1": null,
-            "common2": null,
-            "brandName": null,
-            "chargeTime": 0,
-            "chargeQuantity": 0,
-            "remark": 100,
-            "telephone": null,
-            "type": 0,
-            "common3": null,
-            "money": 100,
-            "createTime": "2019-05-24T02:41:53.000+0000",
-            "name": "100元",
-            "id": 956,
-            "status": 1,
-            "tempparid": 296
-            },
-            {
-            "common1": null,
-            "common2": null,
-            "brandName": null,
-            "chargeTime": 0,
-            "chargeQuantity": 0,
-            "remark": 200,
-            "telephone": null,
-            "type": 0,
-            "common3": null,
-            "money": 200,
-            "createTime": "2019-05-24T02:42:10.000+0000",
-            "name": "200元",
-            "id": 957,
-            "status": 1,
-            "tempparid": 296
-            }
-            ],
-            "hasbagMonth": null,
-            "common3": "0",
-            "ifmonth": 2,
-            "createTime": "2019-05-24 10:36:59.0",
-            "merchantid": 0,
-            "grade": 2,
-            "name": "在线卡系统模板",
-            "permit": 1,
-            "rank": 1,
-            "id": 296,
-            "walletpay": 2,
-            "status": 4
-            }],
+            aid: -1, //小区id
+            loading: null, //加载图标实例对象
+            name: '', //小区名称
+            address: '', //小区地址
+            dealnick: '', // 商户名称
+            dealphon: '', //商户电话
+            areausernum: 0, //小区用户数量
+            onlinenum: 0, //小区在线卡数量
+            devicenum: 0, //小区设备数量
+            csendmoney: 0, //在线卡赠送金额
+            ctopupbalance: 0, //在线卡赠送金额
+            usendmoney: 0, //在线卡赠送金额
+            utopupbalance: 0, //在线卡赠送金额
+            tempWallet: [], //钱包数据
+            tempOnCard: [], //在线卡数据
+            partnerInfo: [], //合伙人list
+            devicenumlist: [] //设备list
         }
     },
     components:{
@@ -146,6 +70,66 @@ export default {
         PartnerAndDevice,
         TemplateWallet,
         TemplateOffline
+    },
+    created(){
+        this.loading= new Util.Hd_Loading()
+        let { aid }= this.$route.query
+        this.aid= aid
+        this.AsyGetAreaDetails({aid})
+    },
+    beforeDestroy(){
+        this.loading && this.loading.hide()
+    },
+    deactivated(){
+        this.loading && this.loading.hide()
+    },
+    methods: {
+        async AsyGetAreaDetails(data){
+            let _this= this
+            try{
+                _this.loading.show()
+                let info= await getAreaDetails(data)
+                if(info.code === 200){
+                    let { csendmoney,ctopupbalance,usendmoney,utopupbalance }= info
+                    let { resultarea,tempWallet,tempOnCard,devicenumlist,partnerInfo }= info
+                    let { address,name,dealnick,dealphon,areausernum,onlinenum,devicenum}= resultarea
+                    {
+                        _this.name= name
+                        _this.address= address
+                        _this.dealnick= dealnick
+                        _this.dealphon= dealphon
+                        _this.areausernum= areausernum
+                        _this.onlinenum= onlinenum
+                        _this.devicenum= devicenum
+                        _this.devicenumlist= devicenumlist
+                        _this.partnerInfo= partnerInfo
+                    }
+                    {
+                        _this.tempWallet= tempWallet ? [tempWallet] : []
+                        _this.tempOnCard= tempOnCard ? [tempOnCard] : []
+                    }
+                    {
+                        _this.csendmoney= csendmoney
+                        _this.ctopupbalance= ctopupbalance
+                        _this.usendmoney= usendmoney
+                        _this.utopupbalance= utopupbalance
+                    }
+                }else{
+                    messageTip('error','获取失败')
+                } 
+                _this.loading.hide()
+            }catch(e){
+                _this.loading.hide()
+            }
+        },
+        handleResetDeviceNum(devicenum){ //设备新增，删除之后修改设备数量
+            this.devicenum= devicenum
+        },
+        handleEditAreaInfo(data){
+            let { name,address }= data
+            this.name= name
+            this.address= address
+        }
     }
 }
 </script>

@@ -4,7 +4,7 @@
             <div class="clearfix item_c">
                 <div class="item">
                     小区名称：
-                    <el-button v-show="!editAreaName" type="primary" size="mini" icon="el-icon-edit" @click="handleEditName(1)">{{name}}</el-button>
+                    <el-button v-show="!editAreaName" type="primary" size="mini" icon="el-icon-edit" @click="handleEditName(1)">{{name ? name : '— —'}}</el-button>
                     <div v-show="editAreaName" class="editCon">
                         <el-input placeholder="请输入小区名称" size="mini" v-model="topInfoForm.name" style="width: 50%;" ></el-input>
                         <el-button type="success" size="mini" @click="handleSave(1)">保存</el-button>
@@ -13,57 +13,41 @@
                 </div>
                 <div class="item">
                     所属商户：
-                    <router-link to="">
+                    <router-link :to="`/usermanage/merInfo?phone=${dealphon}`">
                         <el-link type="primary">{{dealnick}}</el-link>
                     </router-link>
                 </div>
                 <div class="item">
                     商户电话：
-                    <router-link to="">
+                    <router-link :to="`/usermanage/merInfo?phone=${dealphon}`">
                         <el-link type="primary">{{dealphon}}</el-link>
                     </router-link>
                 </div>
                 <div class="item">
+                    设备数：
+                    <router-link :to="`/deviceManage/deviceList?phone=${dealphon}&areaname=${name}`">
+                        <el-link type="primary">{{devicenum}}</el-link>
+                    </router-link>
+                </div>
+                <div class="item">
                     会员数：
-                    <router-link to="">
+                    <router-link :to="`/usermanage/userInfo?mobile=${dealphon}&areaname=${name}&condition=2`">
                         <el-link type="primary">{{areausernum}}</el-link>
                     </router-link>
                 </div>
                 <div class="item">
                     在线卡数：
-                    <router-link to="">
+                    <router-link :to="`/iccardManage/onlineCardQuery?areaname=${name}&phone=${dealphon}`">
                         <el-link type="primary">{{onlinenum}}</el-link>
                     </router-link>
                 </div>
                 <div class="item">
-                    钱包充值金额：
-                    <router-link to="">
-                        <el-link type="primary">{{utopupbalance.toFixed(2)}}</el-link>
-                    </router-link>
-                </div>
-                 <div class="item">
-                    钱包赠送：
-                    <router-link to="">
-                        <el-link type="primary">{{usendmoney.toFixed(2)}}</el-link>
-                    </router-link>
+                    钱包¥（充/赠）：
+                    <el-link type="success" :underline="false" >{{utopupbalance.toFixed(2)}}</el-link> / <el-link type="success" :underline="false" >{{usendmoney.toFixed(2)}}</el-link>
                 </div>
                 <div class="item">
-                    在线卡充值金额：
-                    <router-link to="">
-                        <el-link type="primary">{{ctopupbalance.toFixed(2)}}</el-link>
-                    </router-link>
-                </div>
-                <div class="item">
-                    在线卡赠送金额：
-                    <router-link to="">
-                        <el-link type="primary">{{csendmoney.toFixed(2)}}</el-link>
-                    </router-link>
-                </div>
-                 <div class="item">
-                    设备数：
-                    <router-link to="">
-                        <el-link type="primary">{{devicenum}}</el-link>
-                    </router-link>
+                    在线卡¥（充/赠）：
+                    <el-link type="success" :underline="false" >{{ctopupbalance.toFixed(2)}}</el-link> / <el-link type="success" :underline="false" >{{csendmoney.toFixed(2)}}</el-link>
                 </div>
                 <div class="item">
                     小区地址:
@@ -94,7 +78,7 @@ export default {
         },
         name:{
             type: String,
-            a: '— —'
+            default: ''
         },
         address: {
             type: String,
@@ -196,12 +180,12 @@ export default {
     .item_c {
         display: flex;
         align-items: center;
-        margin-right: -20px;
+        margin-right: -30px;
         flex-wrap: wrap;
         margin-bottom: -10px;
         .item {
             font-size: 14px !important;
-            margin-right: 20px;
+            margin-right: 30px;
             height: 100%;
             margin-bottom: 10px;
         }

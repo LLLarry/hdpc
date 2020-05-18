@@ -20,6 +20,9 @@
                 <el-form-item label="商户电话" class="form_right25">
                     <el-input v-model="userInfoDetailForm.mobile" clearable placeholder="商户电话"  size="small"></el-input>
                 </el-form-item>
+                <el-form-item label="归属小区" class="form_right25">
+                    <el-input v-model="userInfoDetailForm.areaname" clearable placeholder="小区名称"  size="small"></el-input>
+                </el-form-item>
 
                 <el-form-item label="金额排序" class="form_right25">
                      <el-select v-model="userInfoDetailForm.moneySort"  placeholder="金额排序" clearable size="small">

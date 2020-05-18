@@ -80,7 +80,9 @@
                             min-width="80"
                         >
                             <template slot-scope="{row}">
-                                <div v-show="!row.edit">{{row.code}}</div>
+                                <router-link :to="`/deviceManage/deviceList?devicenum=${row.code}`" v-show="!row.edit">
+                                    <el-link :underline="false" type="primary">{{row.code}}</el-link>
+                                </router-link>
                                 <el-input v-show="row.edit" v-model="row.code" size="mini" placeholder="请输入设备号" />
                             </template>
                         </el-table-column>

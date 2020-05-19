@@ -125,6 +125,12 @@
                     </el-table>
                     <div class="add_parAndDevice">
                         <el-button type="primary" icon="el-icon-plus" size="mini" @click="addParOrDevice(2)" :disabled="(devicenumlist[devicenumlist.length-1] && devicenumlist[devicenumlist.length-1].edit)">添加设备</el-button>
+                         <div class="item deviceNum">
+                            设备数：
+                            <router-link :to="`/deviceManage/deviceList?phone=${dealphon}&areaname=${name}`">
+                                <el-link type="primary">{{devicenum}}</el-link>
+                            </router-link>
+                        </div>
                     </div>
                 </el-col>
             </el-row>
@@ -148,7 +154,17 @@ export default {
         },
         aid: {
             type: [String,Number]
-        }
+        },
+        dealphon: {
+            type: String
+        },
+        name: {
+            type: String
+        },
+        devicenum: {
+            type: Number,
+            defaulte: 0
+        },
     },
     data(){
         return {}
@@ -318,6 +334,10 @@ export default {
         padding-top: 15px;
         button {
             min-width: 120px;
+        }
+        .deviceNum {
+            float: right;
+            font-size: 14px;
         }
     }
 }

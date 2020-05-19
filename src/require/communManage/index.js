@@ -94,6 +94,42 @@ export const editAreaInfo= function (data){
         })
 }
 
+/*
+* 获取小区详情下的在线卡模板/钱包模板
+*/
+export const dealAllTemp= function (data){ 
+    return ajax({
+             url: '/areaData/dealAllTemp',
+             data: data
+        })
+}
+
+/*
+* 添加小区详情下的在线卡主模板
+*/
+export const addstaironline= function (data){ 
+    return ajax({
+             url: '/wctemplate/addstaironline',
+             data: data
+        })
+}
+
+/*
+* 添加小区详情下的钱包主模板
+*/
+export const addstairwallet= function (data){ 
+    return ajax({
+             url: '/wctemplate/addstairwallet',
+             data: data
+        })
+}
+
+
+
+
+
+
+
 
 
 

@@ -113,6 +113,29 @@ export const selectV3ChargeTem= function (data){
          })
 }
 
+/*
+* 删除钱包主模板
+*/
+export const deletestairwallet= function (data){ 
+    return ajax({
+             url: '/wctemplate/deletestairwallet',
+             data: data
+        })
+}
+
+
+/*
+* 小区选中钱包模板/在线卡模板
+*/
+export const areaTempChoose= function (data){ 
+    return ajax({
+             url: '/areaData/areaTempChoose',
+             data: data
+        })
+}
+
+
+
 
 
 

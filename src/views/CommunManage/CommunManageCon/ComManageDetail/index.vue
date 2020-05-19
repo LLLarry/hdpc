@@ -17,20 +17,38 @@
             @handleEditAreaInfo="handleEditAreaInfo"
         />
         <!-- 合伙人和商户 -->
-        <PartnerAndDevice :partnerInfo="partnerInfo" :devicenumlist="devicenumlist" :aid="aid" @handleResetDeviceNum="handleResetDeviceNum" />
+        <PartnerAndDevice 
+            :partnerInfo="partnerInfo" 
+            :devicenumlist="devicenumlist" 
+            :aid="aid"
+            :dealphon="dealphon" 
+            :name="name" 
+            :devicenum="devicenum"
+            @handleResetDeviceNum="handleResetDeviceNum" 
+        />
         <!-- 钱包模板 -->
         <el-card class="box-card card_content">
             <div slot="header" class="clearfix">
                 <span>钱包系统模板</span>
             </div>
-            <TemplateWallet :from="2" :list="tempWallet"/>
+            <TemplateWallet 
+                :from="2" 
+                :list="tempWallet" 
+                :aid="aid"
+                :merid="merid"
+            />
         </el-card>
         <!-- 在线卡模板 -->
         <el-card class="box-card card_content">
             <div slot="header" class="clearfix">
                 <span>在线卡系统模板</span>
             </div>
-            <TemplateOffline :from="2" :list="tempOnCard"/>
+            <TemplateOffline 
+                :from="2" 
+                :list="tempOnCard" 
+                :aid="aid"
+                :merid="merid"
+            />
         </el-card>
   </div>
 </template>
@@ -47,6 +65,7 @@ export default {
     data(){
         return {
             aid: -1, //小区id
+            merid: -1, //商户id
             loading: null, //加载图标实例对象
             name: '', //小区名称
             address: '', //小区地址
@@ -92,7 +111,7 @@ export default {
                 if(info.code === 200){
                     let { csendmoney,ctopupbalance,usendmoney,utopupbalance }= info
                     let { resultarea,tempWallet,tempOnCard,devicenumlist,partnerInfo }= info
-                    let { address,name,dealnick,dealphon,areausernum,onlinenum,devicenum}= resultarea
+                    let { address,name,dealnick,dealphon,areausernum,onlinenum,devicenum,merid}= resultarea
                     {
                         _this.name= name
                         _this.address= address
@@ -103,6 +122,7 @@ export default {
                         _this.devicenum= devicenum
                         _this.devicenumlist= devicenumlist
                         _this.partnerInfo= partnerInfo
+                        _this.merid= merid
                     }
                     {
                         _this.tempWallet= tempWallet ? [tempWallet] : []
@@ -144,6 +164,14 @@ export default {
         &:hover {
             -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
             box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+            .el-card__body {
+                .el-card.is-always-shadow {
+                    &:hover {
+                        -webkit-box-shadow: none;
+                        box-shadow: none;
+                    }
+                }
+            }
         }
         &.temCard {
             .el-card.is-always-shadow {

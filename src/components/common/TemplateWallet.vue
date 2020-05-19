@@ -1,6 +1,6 @@
 <template>
     <div class="templateWallet">
-        <el-card :class="['box-card','temTableTitle', (from==3 && item.isSelected==1) ? 'selectedTem' : '']" v-for="(item,i) in arr" :key="i">
+        <el-card :class="['box-card','temTableTitle', (from==3 && item.pitchon==1) ? 'selectedTem' : '']" v-for="(item,i) in arr" :key="i">
            <el-table
                 :data="[{}]"
                 border
@@ -64,9 +64,9 @@
                     </div>
                     <div style="margin-top: 15px">
                         <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit">编辑</el-button>
-                        <el-button type="danger" size="mini"  @click="handleDeleteTem(item)" v-if="!item.edit" 
-                        :disabled="from == 1 || from == 2 || (from==3 && item.isSelected ==1) " 
-                        :plain="from == 1 || from == 2 || (from==3 && item.isSelected ==1)"
+                        <el-button type="danger" size="mini"  @click="handleDeleteTem(item,i)" v-if="!item.edit" 
+                        :disabled="from == 1 || from == 2 || (from==3 && item.pitchon ==1) " 
+                        :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1)"
                         icon="el-icon-delete"
                         >删除</el-button>
                         <el-button type="success" size="mini" @click="handleSaveEditTem(item)" v-if="item.edit" icon="el-icon-folder-checked">保存</el-button>
@@ -120,7 +120,7 @@
             >
             <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit"  icon="el-icon-edit">编辑</el-button>
-                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.isSelected ==1 || from== 2" :plain="item.isSelected ==1 || from== 2" icon="el-icon-delete">删除</el-button>
+                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.pitchon ==1 || from== 2" :plain="item.pitchon ==1 || from== 2" icon="el-icon-delete">删除</el-button>
                 <el-button type="success" size="mini" @click="handleSaveEditChildTem(scope.row.id,scope.row)" v-if="scope.row.edit" icon="el-icon-folder-checked">保存</el-button>
                 <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.id,scope.row)"  v-if="scope.row.edit" icon="el-icon-folder-delete">取消</el-button>
             </template>
@@ -130,14 +130,15 @@
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
             </div>
             <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/communManage/communManageCon/tempdetail',query: {aid: 1234,temType: 1}})" icon="el-icon-view">查看更多</el-button>
+                <el-button type="primary" size="mini" @click="$router.push({path: '/communManage/communManageCon/tempdetail',query: {aid,merid,type:1,tempid: item.id}})" icon="el-icon-view">查看更多</el-button>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
             </div>
-            <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
+            <div style="margin-top: 20px;" class="clearfix bottomContral" v-else>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item.id)" icon="el-icon-plus">添加模板</el-button>
-                <el-link type="success" :underline="false" v-if="item.isSelected ==1"> 默认模板</el-link>
-                <el-button type="danger" size="mini" style="float:right;margin-right: 30%;" v-if="item.isSelected !=1" @click="handleSetDefault(item)">设为默认</el-button>
-                <el-button type="primary" size="mini" icon="el-icon-check" style="float:right;margin-right: 30%;" v-if="item.isSelected ==1" disabled plain>设为默认</el-button>
+                <el-link type="success" :underline="false" v-if="item.pitchon ==1"> 默认模板</el-link>
+                <el-link type="success" :underline="false" v-else>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</el-link>
+                <el-button type="primary" size="mini" v-if="item.pitchon !=1" @click="handleSetDefault(item)" icon="el-icon-check">设为默认</el-button>
+                <el-button type="primary" size="mini" icon="el-icon-check" v-if="item.pitchon ==1"  disabled plain >设为默认</el-button>
             </div>
              
         </el-card>
@@ -148,7 +149,7 @@
 import Vue from 'vue'
 import {confirDelete,messageTip} from '@/utils/ele'
 import TemMulDevice from '@/components/common/TemMulDevice'
-import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate } from '@/require/template'
+import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate,deletestairwallet,areaTempChoose} from '@/require/template'
 export default {
     data(){
         return {
@@ -184,7 +185,7 @@ export default {
     components:{
         TemMulDevice
     },
-    props: ['from','list'],
+    props: ['from','list','aid','merid'],
     computed: {
         arr(){
             return this.list
@@ -292,14 +293,18 @@ export default {
            this.isEditingChildTem= false
        },
      //删除主模板   
-      handleDeleteTem(item){
+      handleDeleteTem(item,i){
         //   发送请求，成功之后删除模板
         confirDelete('确认删除主模板吗？',function(){
-            let newArr= this.arr.filter((ktem,k)=>{
-            return ktem.id != item.id
+            deletestairwallet({id: item.id}).then(res=>{
+                if(res.code === 200){
+                    this.arr.splice(i,1)
+                    messageTip('success','主模板删除成功') //删除成功提示信息
+                }else{
+                    messageTip('error',res.message) //删除成功提示信息
+                }
             })
-            this.arr= newArr
-            messageTip() //删除成功提示信息
+            
         }.bind(this))
         
       },
@@ -345,20 +350,29 @@ export default {
         // type=3的时候的设为默认
        handleSetDefault(item){
         //  发送请求，成功了执行下面的
-        let newArr= this.arr.filter((jtem,j)=>{
-                        if(jtem.id == item.id){
-                            jtem.isSelected= 1
-                        }else{
-                            jtem.isSelected= undefined
-                        }
-                        return jtem
-                    })
-        this.arr= newArr
+        areaTempChoose({aid: this.aid,tempid: item.id,type: 1}).then(res=>{
+            if(res.code === 200){
+                this.arr.forEach((jtem,j)=>{
+                    if(jtem.id == item.id){
+                        // jtem.pitchon= 1
+                        this.$set(jtem,'pitchon',1)
+                    }else{
+                        this.$set(jtem,'pitchon',undefined)
+                    }
+                })
+                messageTip('success','选中成功')
+            }else{
+                messageTip('error','设置失败') 
+            }
+        })
        }   
     }
 }
 </script>
 
 <style lang="less" scope>
-
+    .bottomContral {
+        display: flex;
+        justify-content: space-around;
+    }
 </style>

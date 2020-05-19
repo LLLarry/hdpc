@@ -132,16 +132,15 @@
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus">添加模板</el-button>
              </div>
               <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '04',code: deviceInfo.code,merid: deviceInfo.merid}})" icon="el-icon-view">查看更多</el-button>
-               <!-- <el-button type="primary" size="mini" >此模板复用更多设备</el-button> -->
-               <TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))" :deviceInfo="deviceInfo" :tempid="item.id" />
+                <el-button type="primary" size="mini" @click="$router.push({path: '/communManage/communManageCon/tempdetail',query: {aid,merid,type:2,tempid: item.id}})" icon="el-icon-view">查看更多</el-button>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
              </div>
-             <div style="margin-top: 20px; text-align: center;" class="clearfix" v-else>
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item)" style="float:left;margin-left: 30%;" icon="el-icon-plus">添加模板</el-button>
+             <div style="margin-top: 20px;" class="clearfix bottomContral" v-else>
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item)"  icon="el-icon-plus">添加模板</el-button>
                 <el-link type="success" :underline="false" v-if="item.pitchon ==1"> 默认模板</el-link>
-                <el-button type="danger" size="mini" style="float:right;margin-right: 30%;" v-if="item.pitchon !=1" @click="handleSetSelect(item)">选中模板</el-button>
-                <el-button type="primary" size="mini" icon="el-icon-check" style="float:right;margin-right: 30%;" v-if="item.pitchon ==1" disabled plain>选中模板</el-button>
+                <el-link type="success" :underline="false" v-else >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</el-link>
+                <el-button type="primary" size="mini" v-if="item.pitchon !=1" @click="handleSetSelect(item)" icon="el-icon-check">选中模板</el-button>
+                <el-button type="primary" size="mini" icon="el-icon-check"  v-if="item.pitchon ==1" disabled plain>选中模板</el-button>
              </div>
              
         </el-card>
@@ -152,7 +151,7 @@
 import Vue from 'vue'
 import {confirDelete,messageTip} from '@/utils/ele'
 import TemMulDevice from '@/components/common/TemMulDevice'
-import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate,deleteTem,setSelectTem} from '@/require/template'
+import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate,deleteTem,setSelectTem,areaTempChoose} from '@/require/template'
 export default {
     data(){
         return {
@@ -160,35 +159,13 @@ export default {
             isEditingTem: false,//是否已存在正在编辑的主模板
             isEditingChildTem: false, //是否已存在正在编辑的子模板
             temForm: {},//存放编辑主模板的容器
-            childTemForm: {}, //存放编辑子模板的容器
-            options: [{
-                            value: '1',
-                            label: '是',
-                            children: [{
-                                    value: '1',
-                                    label: '时间和电量最小',
-                                },
-                                {
-                                    value: '2',
-                                    label: '时间最小',
-                                },
-                                {
-                                    value: '3',
-                                    label: '电量最小',
-                                }]
-                        },
-                        {
-                            value: '2',
-                            label: '否'
-                        }],
-                        // arr: this.list
-            
+            childTemForm: {}, //存放编辑子模板的容器      
         }
     },
     components:{
         TemMulDevice
     },
-    props: ['from','list','deviceInfo','source','arecode'],
+    props: ['from','list','aid','merid'],
     computed: {
         arr(){
             return this.list
@@ -349,40 +326,39 @@ export default {
        },
         // type=3的时候的设为选中模板
        handleSetSelect(item){
-         let temid= item.id
-        setSelectTem({source:this.source,obj: this.arecode,temid: temid}).then(res=>{
-           
-            if(res == 1){
-                for (const iterator of this.arr) {
-                    if(iterator.id == item.id){
-                        iterator.pitchon= 1
+         areaTempChoose({aid: this.aid,tempid: item.id,type: 2}).then(res=>{
+            if(res.code === 200){
+                this.arr.forEach((jtem,j)=>{
+                    if(jtem.id == item.id){
+                        this.$set(jtem,'pitchon',1)
                     }else{
-                        iterator.pitchon= undefined
+                        this.$set(jtem,'pitchon',undefined)
                     }
-                }
-                messageTip('success','选中成功（注： 选中成功会自动至于第一位）')
+                })
+                messageTip('success','选中成功')
             }else{
-                messageTip('warning','选中失败')
+                messageTip('error','设置失败') 
             }
-           }).catch(err=>{})
+        })
        }
-
     }
 }
 </script>
 
 <style lang="less" scope>
-.template {
-    .temTableTitle {
-       .top_span {
-           margin:0 10px;
-           &.red {
-               color: #F47378;
-           }
-           &.green {
-               color: #6BD089;
-           }
-       }
+.temTableTitle {
+    .top_span {
+        margin:0 10px;
+        &.red {
+            color: #F47378;
+        }
+        &.green {
+            color: #6BD089;
+        }
     }
+}
+.bottomContral {
+    display: flex;
+    justify-content: space-around;
 }
 </style>

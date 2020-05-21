@@ -474,7 +474,7 @@
          </el-row>
 
          <!-- 报警系统配置 -->
-         <AlarmConfig :code="code" />
+         <!-- <AlarmConfig :code="code" /> -->
 
         <!-- 设备新的主板信息 -->
          <el-row v-if="['07'].includes(hwVerson)">

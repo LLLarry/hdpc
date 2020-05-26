@@ -80,42 +80,6 @@
                 </el-table-column>
 
                 <el-table-column
-                prop="address"
-                label="地址"
-                min-width="220"
-                >
-                <template slot-scope="{row}">
-                   {{ row.address && row.address.length > 0 ?  row.address : '— —'}}
-                </template>
-                </el-table-column>
-
-                <el-table-column
-                prop="countdevice"
-                label="设备数量"
-                min-width="100"
-                >
-                <template slot-scope="scope">
-                    <span v-if="scope.row.countonlin == null">0</span>
-                    <router-link :to="`/deviceManage/deviceList?phone=${scope.row.uphonenum}`">
-                        <el-link type="primary" :underline="true">{{scope.row.countdevice}}</el-link>
-                    </router-link>
-                </template>
-                </el-table-column>
-
-                <el-table-column
-                prop="countonlin"
-                label="在线卡数量"
-                min-width="100"
-                >
-                <template slot-scope="scope">
-                    <span v-if="scope.row.countonlin == null">0</span>
-                    <router-link :to="`/iccardManage/onlineCardQuery?phone=${scope.row.uphonenum}`" v-else>
-                        <el-link type="primary" :underline="true">{{scope.row.countonlin}}</el-link>
-                    </router-link>
-                </template>
-                </el-table-column>
-
-                <el-table-column
                 prop="dealer"
                 label="商户名"
                 min-width="120"
@@ -140,35 +104,97 @@
                 </el-table-column>
 
                 <el-table-column
-                prop="manarealname"
-                label="合伙人"
-                min-width="120"
+                label="设备数"
+                min-width="80"
                 >
                 <template slot-scope="scope">
-                    <span v-if="scope.row.manarealname && scope.row.manarealname.length > 0">{{scope.row.manarealname}}</span>
-                    <span v-else>— —</span>
+                    <router-link :to="`/deviceManage/deviceList?phone=${scope.row.uphonenum}&areaname=${scope.row.name}`">
+                        <el-link type="primary" :underline="true">{{scope.row.devicenum== null ? 0 : scope.row.devicenum}}</el-link>
+                    </router-link>
                 </template>
                 </el-table-column>
 
                 <el-table-column
-                prop="manaphonenum"
-                label="合伙人电话"
-                min-width="120"
+                label="会员数"
+                min-width="80"
                 >
                 <template slot-scope="scope">
-                    <span v-if="scope.row.manaphonenum == null">— —</span>
-                    <el-link v-else>{{scope.row.manaphonenum}}</el-link>
+                    <router-link :to="`/usermanage/userInfo?condition=0&areaname=${scope.row.name}&mobile=${scope.row.uphonenum}`">
+                        <el-link type="primary" :underline="true">{{scope.row.areausernum == null ? 0 : scope.row.areausernum}}</el-link>
+                    </router-link>
                 </template>
                 </el-table-column>
+
                 <el-table-column
-                prop="create_time"
-                label="创建时间"
-                min-width="150"
+                label="在线卡数"
+                min-width="80"
+                >
+                <template slot-scope="scope">
+                    <router-link :to="`/iccardManage/onlineCardQuery?phone=${scope.row.uphonenum}&areaname=${scope.row.name}`" >
+                        <el-link type="primary" :underline="true">{{ scope.row.onlinenum == null ? 0 : scope.row.onlinenum}}</el-link>
+                    </router-link>
+                </template>
+                </el-table-column>
+
+                <el-table-column
+                label="在线卡余额"
+                min-width="140"
+                >
+                <template slot-scope="scope">
+                    <div>充值余额：<el-link type="success" :underline="true">{{ typeof scope.row.ctopupbalance === 'number' ? scope.row.ctopupbalance.toFixed(2) : 0.00 }}</el-link></div>
+                    <div>赠送余额：<el-link type="success" :underline="true">{{ typeof scope.row.csendmoney === 'number' ? scope.row.csendmoney.toFixed(2) : 0.00 }}</el-link></div>
+                </template>
+                </el-table-column>
+
+                <el-table-column
+                label="钱包余额"
+                min-width="140"
+                >
+                <template slot-scope="scope">
+                    <div>充值余额：<el-link type="success" :underline="true">{{ typeof scope.row.utopupbalance === 'number' ? scope.row.utopupbalance.toFixed(2) : 0.00 }}</el-link></div>
+                    <div>赠送余额：<el-link type="success" :underline="true">{{ typeof scope.row.usendmoney === 'number' ? scope.row.usendmoney.toFixed(2) : 0.00 }}</el-link></div>
+                </template>
+                </el-table-column>
+
+                <el-table-column
+                label="合伙人数"
+                min-width="80"
+                >
+                <template slot-scope="scope">
+                   <el-button 
+                        type="primary"
+                        size="mini" 
+                        plain 
+                        :disabled="scope.row.partnersize===0"
+                        @click="handleShowPartner(scope.row.partner)"
+                    >{{scope.row.partnersize}}人</el-button>
+                </template>
+                </el-table-column>
+
+                <el-table-column
+                    prop="create_time"
+                    label="创建时间"
+                    min-width="150"
                 >
                  <template slot-scope="scope">
                     {{scope.row.create_time | fmtDate}}
                  </template>
                 </el-table-column>
+
+                <el-table-column
+                    prop="address"
+                    label="地址"
+                    min-width="220"
+                >
+                <template slot-scope="{row}">
+
+                    <el-tooltip class="item" effect="dark" :content="row.address" placement="left-start" v-if="row.address && row.address.length >= 14">
+                        <div class="text-eclipe" v-text="row.address"></div>
+                    </el-tooltip>
+                    <div v-else>{{ row.address ? row.address : '— —' }}</div>
+                </template>
+                </el-table-column>
+
                 <el-table-column
                 label="详情"
                 min-width="90"
@@ -182,11 +208,52 @@
             </el-table>
         </el-card>
         <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage" />
+        <DialogWrapper 
+            title="合伙人信息" 
+            width="500px" 
+            :dialogVisible="partnerInfo.dialogVisible"
+            :handleClose="handleClose"
+            :handleSubmit="handleClose"
+            :handleCancen="handleClose"
+        >
+            <el-table 
+                :data="partnerInfo.partnerList"
+                border
+                style="width: 100%;"
+                :header-cell-style="{background:'#f5f7fa',color:'#666'}"
+            >
+                 <el-table-column
+                    prop="realname"
+                    label="合伙人姓名"
+                    min-width="120">
+                    <template slot-scope="{row}">
+                        {{ row.realname ? row.realname : '— —' }}
+                    </template>
+                </el-table-column>
+                 <el-table-column
+                    prop="phone"
+                    label="合伙人电话"
+                    min-width="120">
+                    <template slot-scope="{row}">
+                        {{ row.phone ? row.phone : '— —' }}
+                    </template>
+                </el-table-column>
+                 <el-table-column
+                    prop="percent"
+                    label="分成比"
+                    min-width="120">
+                    <template slot-scope="{row}">
+                        {{ row.percent*100 }}%
+                    </template>
+                </el-table-column>
+            </el-table>
+        </DialogWrapper>
     </div>
 </template>
 
 <script>
  import MyPagination from '@/components/common/MyPagination'
+ import DialogWrapper from '@/components/DialogWrapper'
  import dateTimeJS from '@/utils/dateTime'
  import { getCommunInfo } from '@/require/communManage'
 export default {
@@ -194,27 +261,19 @@ export default {
         return {
             communManageConForm: {},
             pickerOptions: dateTimeJS,
-            tableData: [
-               {
-                  index: 1,
-                  communName: '测试小区',
-                  communAddress: '小区地址',
-                  deviceNum : 6,
-                  onlineCardNum: 5,
-                  merName: '任志超',
-                  merPhone: '15538065633',
-                  partent: '任志超',
-                  partentPhone: '15538065633',
-                  createTime: '2019-08-07 14:06:00'
-              }
-            ],
+            tableData: [],
             totalPage: 1,
             loading: false,
-            nowPage: 1
+            nowPage: 1,
+            partnerInfo: {
+                dialogVisible: false,
+                partnerList: [] //合伙人列表
+            }
         }
     },
     components: {
-        MyPagination
+        MyPagination,
+        DialogWrapper
     },
      created(){
         if(JSON.stringify(this.$route.query) != "{}"){
@@ -255,11 +314,24 @@ export default {
         },
         goTo({id,merid}){ //跳转小区详情
             this.$router.push({path: '/communManage/communManageCon/comManageDetail',query: {aid: id} }) 
+        },
+        handleShowPartner(partner){
+            this.partnerInfo.partnerList= partner
+            this.partnerInfo.dialogVisible= true
+        },
+        handleClose(){
+           this.partnerInfo.dialogVisible= false,
+           this.partnerInfo.partnerList= []
         }
     }
 }
 </script>
 
 <style lang="less">
-
+    .text-eclipe {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 </style>

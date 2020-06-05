@@ -381,6 +381,14 @@ export const constantRouterMapSuperAdmin= [
         }
       },
       {
+        path: '/settlement/wechartOrder',
+        name: '微信订单',
+        component: ()=> import('@/views/Settlement/WechartOrder'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
+      {
         path: '*',
         component: ()=> import('@/components/NoFind/NoFind'),
         meta: {

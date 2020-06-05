@@ -197,10 +197,14 @@ export const superAdminMenuList= [
                 title: '结算收益',
                 link: '/settlement/index',
                 index: '7-0'
+            },
+            {
+                title: '微信订单',
+                link: '/settlement/wechartOrder',
+                index: '7-1'
             }
         ]
     },
-
 ]
 
 // 普通管理员菜单列表

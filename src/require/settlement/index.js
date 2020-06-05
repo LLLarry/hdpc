@@ -20,3 +20,14 @@ export const settlementAllEarn= function (data){
              data: data
          })
 }
+
+
+/**
+ * 微信订单
+ */
+export const getWechartList= function (data){ 
+    return ajax({
+             url: '/wxpay/downloadbillShow',
+             data: data
+         })
+}

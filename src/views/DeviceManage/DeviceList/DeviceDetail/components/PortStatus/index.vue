@@ -32,7 +32,11 @@
       <el-table-column prop="elec" label="剩余电量（度）" min-width="80">
         <template slot-scope="{row}">{{ row.elec/100 }}</template>
       </el-table-column>
-      <el-table-column prop="surp" label="可回收余额" min-width="80"></el-table-column>
+      <el-table-column prop="surp" label="可回收余额" min-width="80">
+        <template slot-scope="{row}">
+          {{ (row.surp == null || typeof row.surp == 'undefined') ? 0 : row.surp }}
+        </template>
+      </el-table-column>
       <el-table-column prop="updateTime" label="更新时间" min-width="100">
         <template slot-scope="{row}">{{ row.updateTime | fmtDate }}</template>
       </el-table-column>

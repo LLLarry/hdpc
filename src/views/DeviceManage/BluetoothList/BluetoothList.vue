@@ -170,7 +170,7 @@
         custom-class="dialog"
        >
         <div class="qeCodeContent">
-            <QRCode :alertDeviceCode="alertDeviceCode" v-if="dialogVisible" />
+            <QRCode :alertDeviceCode="alertDeviceCode" v-if="dialogVisible" :from="2" />
         </div>
         </el-dialog>
 

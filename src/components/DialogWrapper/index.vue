@@ -6,7 +6,7 @@
         :width="width"
         :before-close="handleClose">
          <slot></slot>
-        <span slot="footer" class="dialog-footer">
+        <span slot="footer" class="dialog-footer" v-if="!footerHide">
             <el-button @click="handleCancen">取 消</el-button>
             <el-button type="primary" @click="handleSubmit">确 定</el-button>
         </span>
@@ -40,6 +40,10 @@ export default {
         handleSubmit: {
             type: Function,
             default: ()=>{}
+        },
+        footerHide: {
+            type: Boolean,
+            default: false
         }
     }
 }

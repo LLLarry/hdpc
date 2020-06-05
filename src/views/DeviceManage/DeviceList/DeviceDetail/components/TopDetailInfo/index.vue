@@ -68,8 +68,21 @@
                             <el-button type="warning" size="mini" @click="()=>{ this.isShowChangeCode= false; this.isShowChangeCode= ''; }"  icon="el-icon-folder-delete">取消</el-button>
                         </span>
                     </div>
+                     <div class="colCon" v-if="userInfo.classify== 'superAdmin'">
+                        下载日志：
+                       <el-date-picker
+                            v-model="downLoadTime"
+                            type="date"
+                            size="mini"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期时间">
+                           
+                        </el-date-picker>
+                        <el-button type="primary" size="mini"  @click="handleDownloadIfram">下载</el-button>
+                    </div>
             </el-row>
         </el-card>
+        
         <bindMerOrArea :bindInfo="bindInfo" @backFn="backFn"/> 
         <!-- 修改设备到期日期 -->
         <el-dialog
@@ -100,6 +113,18 @@
                     <el-button type="primary" @click="setDeviceExpiration" size="middle">确 定</el-button>
                 </span>
             </el-dialog>
+            <!-- iframe 弹框 -->
+            <DialogWrapper 
+                title="下载日志"
+                :dialogVisible="dialogVisible"
+                :handleClose="handleClose"
+                :footerHide="true"
+            >
+                <iframe :src="iframeSrc" frameborder="0" ref='downloadIfram' v-if="dialogVisible"></iframe>
+                <div class="button_btn">
+                    <el-button type="primary" size="mini" @click="dialogVisible= false">关闭</el-button>
+                </div>
+            </DialogWrapper>
     </div>
 </template>
 
@@ -108,9 +133,9 @@
 import { mapState } from 'vuex'
 import { updateDeviceExpire,changeDeviceIMEI,changeDeviceCode,updateDeviceName } from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
-// import { unbindDevice } from '@/require/deviceManage'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
+import DialogWrapper from '@/components/DialogWrapper'
 export default {
     props: {
         bindtype: Number,
@@ -136,13 +161,17 @@ export default {
             resetRemark: '', //修改设备名
             changeIMEI: '', //更换IMEI号
             changeCode: '',//更换code
+            downLoadTime: '', //下载日期
+            dialogVisible: false, //日志弹框是否显示
+            iframeSrc: ''
         }
     },
     computed: {
         ...mapState(['userInfo'])
     },
     components: {
-        bindMerOrArea
+        bindMerOrArea,
+        DialogWrapper
     },
     methods: {
         handleTaggleBind(type){ //绑定或解绑设备
@@ -255,6 +284,13 @@ export default {
                 this.expirationVisable= false
             } 
         },
+        handleDownloadIfram(){ //下载日志
+            this.iframeSrc= `http://www.he360.com.cn/fileDispose/download?fileFullName=device${this.code}-${this.downLoadTime}.log`
+            this.dialogVisible= true
+        },
+        handleClose(){ //日志弹框
+            this.dialogVisible= false
+        },
         backFn(){
             this.$emit('backFn') //调用父组件的方法，重新请求
         }
@@ -271,6 +307,12 @@ export default {
         padding: 0 20px;
         float: left;
         margin-bottom: 20px;
+    }
+    .button_btn {
+        overflow: hidden;
+        button {
+            float: right;
+        }
     }
 }
     

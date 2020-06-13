@@ -72,15 +72,22 @@
                                         </el-radio-group>
                                     </div> 
                                 </div>
-
+                                <div>
                                     <div class="temContent" style="width: 33%; float: left; min-width: 295px;">
                                         <div>
                                             <strong>售后电话:</strong>
                                             <span v-if="!item.edit" class="top_span">{{item.common1}}</span>
                                             <el-input v-else size="mini" v-model="temForm.common1" style="width: 70%; display: inline-block" placeholder="请输入售后电话"></el-input>
                                         </div>
-                                        <div style="margin-top: 15px">&nbsp;
-                                        </div> 
+                                        <div style="margin-top: 15px">
+                                            <strong>是否支持支付宝充电:  </strong>
+                                            <span v-if="!item.edit" :class="['top_span', item.ifalipay ==1 ? 'green' : 'red']">{{item.ifalipay ==1 ? '是' : '否'}}</span>
+                                            <el-radio-group v-model="temForm.ifalipay"  v-else >
+                                                <el-radio :label="1">是</el-radio>
+                                                <el-radio :label="2">否</el-radio>
+                                            </el-radio-group>
+                                        </div>
+                                    </div> 
                                 </div>
                         </div>
                         <div class="tem_text" style="margin-top: 15px">
@@ -277,6 +284,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapState } from 'vuex'
 import {confirDelete,messageTip} from '@/utils/ele'
 import TemMulDevice from '@/components/common/TemMulDevice'
 import { addTemplateChild,deleteTemplateChild,editTemplateChild,updateTemplate,setSelectTem,deleteTem,getChargeInfo} from '@/require/template'
@@ -317,6 +325,7 @@ export default {
     },
     props: ['from','list','grade','deviceInfo','source','arecode','gradeId','gradePitchon'], //grade是只有设备详情中的分等级模板才会传进来 ,source是from=3的时候传进来的，判断选中默认
     computed:{
+        ...mapState(['userInfo']),
         arr(){ //监听 传过来的list变化，如果变化则直接赋值给arr
             return this.list
         }
@@ -443,7 +452,7 @@ export default {
             this.$message.warning('请先保存或取消其他的编辑操作！')
             return 
         }
-        let {name,remark,common1,permit,walletpay,common2,chargeInfo} = item
+        let {name,remark,common1,permit,walletpay,common2,chargeInfo,ifalipay} = item
         if(common2== '' || typeof common2 == 'undefined' || common2 == null){
             if(permit== 1){
                 permit=['1','1'] 
@@ -454,18 +463,18 @@ export default {
         }else{
             permit=[permit.toString(),common2.toString()]
         }
-        this.temForm= {name,remark,common1,walletpay,permit,chargeInfo}
+        this.temForm= {name,remark,common1,walletpay,permit,chargeInfo,ifalipay}
          Vue.set(item,'edit',true)
          this.isEditingTem= true
        },
        //保存编辑主模板
        handleSaveEditTem(item){
            //校验，发送请求
-           let{name,remark,common1,walletpay,chargeInfo}= this.temForm
+           let{name,remark,common1,walletpay,chargeInfo,ifalipay}= this.temForm
            let [permit,common2='']= this.temForm.permit
            console.log( this.temForm.permit,common2)
            //注： 充电模板的status为0
-           updateTemplate({id: item.id,status: 0, name,remark,common1,common2,walletpay,permit,chargeInfo}).then(res=>{ 
+           updateTemplate({id: item.id,status: 0, name,remark,common1,common2,walletpay,permit,chargeInfo,ifalipay}).then(res=>{ 
                if(res.code === 200){
                     item.name= name
                     item.remark= remark
@@ -474,6 +483,7 @@ export default {
                     item.permit= permit
                     item.common2= common2
                     item.chargeInfo= chargeInfo
+                    item.ifalipay= ifalipay
                     Vue.set(item,'edit',false)
                     this.isEditingTem= false
                     messageTip('success','主模板修改成功')

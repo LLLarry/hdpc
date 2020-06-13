@@ -138,14 +138,14 @@
                            </td>
                         </tr>                     
                         <tr>
-                            <td>设备缴费金额</td>
+                            <!-- <td>设备缴费金额</td>
                             <td>
                                 <router-link :to="`/tradeRecord/feescaleRecord`">
                                     <el-link type="primary">
                                         {{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.paymentmoney}}
                                     </el-link>
                                 </router-link>
-                            </td>
+                            </td> -->
                             <td>待提现金额</td>
                             <td>
                                  <router-link :to="`/tradeRecord/cashManage?status=0`">
@@ -203,7 +203,10 @@
                                     </el-link>
                                 </router-link>
                            </td>
-                         
+                           <td>微信缴费金额</td>
+                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.wxFeescale}}</td>
+                           <td>钱包缴费金额</td>
+                           <td>{{dataStatisInfo.totaldatainfo && dataStatisInfo.totaldatainfo.wallentFeescale}}</td>
                        </tr>
                    </tbody>
 

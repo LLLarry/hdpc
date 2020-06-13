@@ -1139,10 +1139,10 @@ export default {
                 if(hwVerson != '03' && hwVerson != '04' && hwVerson != '08'){
                     if(deviceInfo.temp != null){ //temp存在，说明此模板不是分等级模板
                         //十路智慧款
-                        let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo}= deviceInfo.temp //merchantid是模板所属商户的id，可以通过它来判断是否是系统模板
+                        let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo,ifalipay}= deviceInfo.temp //merchantid是模板所属商户的id，可以通过它来判断是否是系统模板
                             common2= common2 == null ? 1 : common2
                             // console.log(id,name,remark,common1,permit,walletpay,common2,gather)
-                        _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo}]
+                        _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo,ifalipay}]
                 
                     }else{ //分等级模板
                         _this.isGrade= true  //将分等级设为true

@@ -104,23 +104,11 @@
                     <UpLoadFile :baseURL="baseURL" />
                 </el-card>
             </el-col>
-            <el-col :xs="{span: 24}" :sm="{span: 11, offset: 2}">
-                 <ConfigChangeParmars :sysTime="sysTime" @handleReLoad="handleReLoad" />
+            <el-col :xs="{span: 24}" :sm="{span: 11, offset: 2}"> &nbsp;
+                 <!-- <ConfigChangeParmars :sysTime="sysTime" @handleReLoad="handleReLoad" /> -->
             </el-col>
         </el-row>
-        <!-- <el-row>
-            <el-col :xs="{span: 24}" :sm="{span: 11}">
-                <el-card class="box-card card_content">
-                    <div slot="header" class="clearfix">
-                        <span>下载日志</span>
-                    </div>
-                    <el-link type="primary"><a href="http://www.he360.com.cn/fileupload.html" class="downloadLog" target="_blank">下载日志</a></el-link>
-                </el-card>
-            </el-col>
-            <el-col :xs="{span: 24}" :sm="{span: 11, offset: 2}">
-                 &nbsp;
-            </el-col>
-        </el-row> -->
+    
     </div>
 </template>
 
@@ -299,16 +287,16 @@ export default {
                     callback && callback()
                     {
                         //十路智慧款
-                        let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.tempcharge
+                        let {id,name,remark,common1,permit,walletpay,common2,gather,ifalipay}= systemTemInfo.tempcharge
                          common2= common2 == null ? 1 : common2
-                        _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather}]
+                        _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,ifalipay}]
                     }
                    
                     {    
                         // 电轿款
-                         let {id,name,remark,common1,permit,walletpay,common2,gather}= systemTemInfo.temelectriccar
+                         let {id,name,remark,common1,permit,walletpay,common2,gather,ifalipay}= systemTemInfo.temelectriccar
                          common2= common2 == null ? 1 : common2
-                        _this.temelectriccar= [{id,name,remark,common1,permit,walletpay,common2,gather}]
+                        _this.temelectriccar= [{id,name,remark,common1,permit,walletpay,common2,gather,ifalipay}]
 
                     }
                    

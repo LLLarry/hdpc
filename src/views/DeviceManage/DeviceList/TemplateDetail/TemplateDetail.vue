@@ -61,6 +61,12 @@
                             <el-radio :label="2">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
+                <el-form-item label="是否支持支付宝充电" label-width="150px"  v-if="$route.query.hw != '04' && $route.query.hw != '03'">
+                    <el-radio-group v-model="hwForm.ifalipay">
+                            <el-radio :label="1">是</el-radio>
+                            <el-radio :label="2">否</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <el-form-item label="是否创建分等级模板" label-width="150px"  v-if="$route.query.hw != '04' && $route.query.hw != '03'">
                     <el-radio-group v-model="hwForm.grade" :disabled="tempgather.length > 0">
                             <el-radio :label="1">是</el-radio>
@@ -109,7 +115,8 @@ export default {
                 common1: '',
                 permitObj: ["1","1"],
                 walletpay: 2,
-                grade: 2
+                grade: 2,
+                ifalipay: 1
             },//版本号为01的模板form表单容器
             rule1:{
                 name: [{required: true,message: '模板名称不能为空', trigger: 'change'}]
@@ -122,6 +129,7 @@ export default {
                     common1: '',
                     walletpay: 1,  //是否支持退费 1为支持，否则不支持
                     permit: 1, //是否临时充电开启 1为开启，否则不开启
+                    ifalipay: 1,
                     gather1: [
                         { id: -1, money: 1, common1: 0,common2: 200 }
                     ],
@@ -208,7 +216,8 @@ export default {
                                         remark: '',
                                         common1: '',
                                         walletpay: 1,  //是否支持退费 1为支持，否则不支持
-                                        permit: 1, //是否临时充电开启 1为开启，否则不开启
+                                        permit: 1, //是否临时充电开启 1为开启，否则不开启,
+                                        ifalipay: 1,//是否支持支付宝充电
                                         gather1: [
                                             { id: -1, money: 1, common1: 0,common2: 200 }
                                         ],
@@ -252,7 +261,7 @@ export default {
 
                     }else{
                         status= 0
-                         const {name,remark,common1,walletpay,grade,permit: permitObj}= this.hwForm
+                         const {name,remark,common1,walletpay,grade,permit: permitObj,ifalipay}= this.hwForm
                         let permit= this.hwForm.permitObj[0]
                         let common2= ''
                         if(this.hwForm.permitObj.length == 2){
@@ -267,7 +276,8 @@ export default {
                                 walletpay,
                                 grade,
                                 status, //0充电模板
-                                merid: this.merid
+                                merid: this.merid,
+                                ifalipay
                             }
                             addTemplate(data).then(res=>{
                                 if(res.code === 200){

@@ -18,7 +18,14 @@
                             <el-input v-if="editId === item.id" size="mini" v-model="temForm.name" style="width: 70%; display: inline-block" placeholder="请输入模板名称"></el-input>
                             <span v-else class="top_span">{{item.name}}</span>
                         </div>
-                        <div style="margin-top: 15px">&nbsp;</div> 
+                       <div style="margin-top: 15px">
+                            <strong>是否支持支付宝充电:  </strong>
+                            <span v-if="editId !== item.id" :class="['top_span', item.ifalipay ==1 ? 'green' : 'red']">{{item.ifalipay ==1 ? '是' : '否'}}</span>
+                            <el-radio-group v-model="temForm.ifalipay"  v-else >
+                                <el-radio :label="1">是</el-radio>
+                                <el-radio :label="2">否</el-radio>
+                            </el-radio-group>
+                        </div>
                     </template>
                 </el-table-column>
                  <el-table-column
@@ -385,7 +392,6 @@ export default {
     methods: {
         handleEdit(item){ //点击编辑模板
             this.temForm = JSON.parse(JSON.stringify(item))
-            console.log(this.temForm)
             this.editId= item.id
         },
         handleSave(index){ //点击保存按钮

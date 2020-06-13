@@ -264,7 +264,7 @@ export default {
                 let _this= this
                 try {
                     _this.loading= true
-                    let deviceInfo= await handleGetDeviceEarn(data)
+                    let deviceInfo= await handleGetDeviceEarn({...data,exportType:1})
                     _this.loading= false
                     _this.tableData= deviceInfo.listdata
                     _this.gatherData= deviceInfo.totaldata

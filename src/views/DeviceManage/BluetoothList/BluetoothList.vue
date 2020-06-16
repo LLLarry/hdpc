@@ -149,10 +149,22 @@
                    </el-button>
                 </template>
                </el-table-column>
+                <el-table-column
+                prop="qrCode"
+                label="操作	"
+                min-width="100"
+                fixed="right"
+                >
+                <template slot-scope="scope">
+                    <el-button type="primary" size="mini" @click="$router.push({ path: '/deviceManage/bluetoothList/deviceDetail',query:{ code: scope.row.code }})">详情</el-button>
+                </template>
+               </el-table-column>
+              
                <el-table-column
                 prop="qrCode"
                 label="二维码	"
                 min-width="100"
+                fixed="right"
                 >
                 <template slot-scope="scope">
                     <el-button type="primary" size="mini" @click="handleCreateQrCode(scope.row.code)">生成</el-button>

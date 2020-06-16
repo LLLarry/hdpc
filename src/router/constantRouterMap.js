@@ -292,6 +292,14 @@ export const constantRouterMapSuperAdmin= [
         }
       },
       {
+        path: '/deviceManage/bluetoothList/deviceDetail',
+        name: '蓝牙设备详情',
+        component: ()=> import('@/views/DeviceManage/BluetoothList/DeviceDetail/DeviceDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
         path: '/deviceManage/deviceList/temperhistory',
         name: '历史温度',
         component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/components/AlarmConfig/TemperHistory'),
@@ -632,6 +640,14 @@ export const constantRouterMapAdmin= [
         }
       },
       {
+        path: '/deviceManage/bluetoothList/deviceDetail',
+        name: '蓝牙设备详情',
+        component: ()=> import('@/views/DeviceManage/BluetoothList/DeviceDetail/DeviceDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
         path: '/deviceManage/deviceList/temperhistory',
         name: '历史温度',
         component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/components/AlarmConfig/TemperHistory'),
@@ -927,6 +943,14 @@ export const constantRouterMapAgent= [
       path: '/deviceManage/deviceList/deviceDetail',
       name: '设备详情',
       component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/DeviceDetail'),
+      meta: {
+        role: ['superAdmin','admin']
+      }
+    },
+    {
+      path: '/deviceManage/bluetoothList/deviceDetail',
+      name: '蓝牙设备详情',
+      component: ()=> import('@/views/DeviceManage/BluetoothList/DeviceDetail/DeviceDetail'),
       meta: {
         role: ['superAdmin','admin']
       }

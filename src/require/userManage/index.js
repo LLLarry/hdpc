@@ -238,6 +238,20 @@ export const configMchidapi= function (data){
 }
 
 
+/**
+ * 商户实名认证接口
+ */
+
+export const setMername= function (data){
+    return ajax({
+             url: 'AccountInfo/setMername',
+             data: data,
+             method: 'post'
+         })
+}
+
+
+
 
 
 

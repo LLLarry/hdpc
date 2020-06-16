@@ -27,6 +27,7 @@
                         <el-option label="有效商户" value="1" ></el-option>
                         <el-option label="无效商户" value="2" ></el-option>
                         <el-option label="特约商户" value="3" ></el-option>
+                        <el-option label="开启自动提现" value="4" ></el-option>
                     </el-select>
                 </el-form-item>
             
@@ -121,10 +122,9 @@
                 <el-table-column
                 prop="handle"
                 label="操作"
-                v-if="userInfo.classify && userInfo.classify === 'superAdmin'"
                 min-width="100">
                   <template slot-scope="scope">
-                      <el-button size="mini" icon="el-icon-setting" @click="handleSetButton(scope.row.id)">设置</el-button>
+                      <el-button size="mini" icon="el-icon-setting" @click="handleSetButton(scope.row)">设置</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -300,7 +300,44 @@
                     </el-form>
                 </div>
                 <div  class="dialog_right">
-                    <el-form :model="ruleSetForm" class="setForm" label-position="center" label-width="100px">
+                    <el-form :model="ruleSetForm" class="setForm" label-position="center" label-width="160px">
+                        <el-form-item label="是否开启分摊通知" prop="apportion">
+                            <el-radio-group v-model="ruleSetForm.apportion">
+                                <el-radio :label="1">开启</el-radio>
+                                <el-radio :label="0">关闭</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                       <el-row>
+                           <el-col class="autoWithw-wrapper">
+                                <el-form-item label="是否开启自动提现" prop="autoWithdraw">
+                                    <el-radio-group v-model="ruleSetForm.autoWithdraw">
+                                        <el-radio :label="1">开启</el-radio>
+                                        <el-radio :label="2">关闭</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                                <div class="mask-warp" v-if="!realname">
+                                    <el-popover
+                                        placement="top"
+                                        width="300"
+                                        v-model="tipvisible"
+                                        >
+                                        <p style="text-align: center;">只有实名认证的商户才能开启自动提现</p>
+                                        <div style="padding: 10px 0; ">
+                                            <p style="margin-bottom:4px; ">请输入真实姓名</p>
+                                            <el-input placeholder="请输入真实姓名" v-model="merRealName" clearable size="small"></el-input>
+                                        </div>
+                                        <div style="text-align: right; margin: 0">
+                                            <el-button size="mini" type="text" @click="tipvisible = false">取消</el-button>
+                                            <el-button type="primary" size="mini" @click="handleAddMerRealName">确定</el-button>
+                                        </div>
+                                        <el-button slot="reference" size="mini">提示</el-button>
+                                    </el-popover>
+                                </div>
+                           </el-col>
+                           <el-col>
+                    
+                           </el-col>
+                       </el-row>
                         <el-form-item label="客服电话">
                             <el-input v-model="ruleSetForm.servephone" placeholder="客服电话" size="small"></el-input>
                         </el-form-item>
@@ -437,7 +474,7 @@
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
-import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem,updatesetAgent } from '@/require/userManage'
+import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem,updatesetAgent,setMername } from '@/require/userManage'
 import { messageTip , alertPassword , confirDelete} from '@/utils/ele'
 import { merUnbindAgent } from '@/require'
 import { mapState, mapMutations } from 'vuex'
@@ -497,6 +534,9 @@ export default {
             merRankVersionForm: {}, //商户授权容器
             changeMerRankRow: {}, //商户授权存储row的容器
             bindInfo: {show: false},
+            tipvisible: false, //展示未实名认证的用户，不能自动提现
+            realname: '', //点击设置的时候获取用户的真实姓名
+            merRealName: '', //用户输入的真实姓名
        }
    },
     components: {
@@ -510,7 +550,13 @@ export default {
         if(JSON.stringify(this.$route.query) != "{}"){
             this.merInfoForm= {...this.$route.query}
         }
-        this.handleMerInfoData(this.merInfoForm)
+        if(this.merInfoForm.type != 4){
+            this.handleMerInfoData(this.merInfoForm)
+        }else{
+            let autoWithdraw= 1
+            this.$router.push({query: this.merInfoForm})
+            this.handleMerInfoData({...this.merInfoForm,type: 1,autoWithdraw})
+        }
     },
     computed: {
         //agentSelectMerId 代理商选择名下的商户的id
@@ -527,8 +573,9 @@ export default {
         handleSetClose(){ //set模态框关闭之前
             this.dialogSetVisible = false
         },
-        async handleSetButton(merid){ //获取设置框信息
+        async handleSetButton({id:merid,realname}){ //获取设置框信息
             try{
+                this.realname= realname
                 let setInfo= await handleMerInfoSet({merid})
                 let result= setInfo.result
                 let setObj= {}
@@ -536,19 +583,21 @@ export default {
 				setObj.ordermess= result.ordermess ? result.ordermess : 2
 				setObj.equipmess= result.equipmess ? result.equipmess : 2
                 setObj.incoinrefund= result.incoinrefund ? result.incoinrefund : 1
-                setObj.showincoins= result.showincoins !== 2 ? result.showincoins : 2
-                let {withmess,ordermess,equipmess,incoinrefund,showincoins} = setObj
+                setObj.showincoins= result.showincoins === 2 ? 2 : 1
+                setObj.autoWithdraw= result.autoWithdraw ? result.autoWithdraw : 2
+                setObj.apportion= result.apportion ? result.apportion : 0
+                let {withmess,ordermess,equipmess,incoinrefund,showincoins,autoWithdraw,apportion} = setObj
                 let { servephone= ""}= setInfo.dealer
-                this.ruleSetForm= {withmess,ordermess,equipmess,incoinrefund,merid,showincoins,servephone}
+                this.ruleSetForm= {withmess,ordermess,equipmess,incoinrefund,merid,showincoins,servephone,autoWithdraw,apportion}
                 this.dialogSetVisible= true
             }catch(error){
 
             }
         },
         async submitSetInfo(){ //设置设置框信息
-            const {merid, withmess,ordermess: order, equipmess: equip,incoinrefund,showincoins,servephone}= this.ruleSetForm
+            const {merid, withmess,ordermess: order, equipmess: equip,incoinrefund,showincoins,servephone,autoWithdraw,apportion}= this.ruleSetForm
             try{
-                let info= await setMerInfoSetInfo({merid,withmess,order,equip,incoinrefund,showincoins,servephone})
+                let info= await setMerInfoSetInfo({merid,withmess,order,equip,incoinrefund,showincoins,servephone,autoWithdraw,apportion})
                 if(info.code === 200){
                     messageTip(undefined,'设置成功')
                 }
@@ -638,8 +687,14 @@ export default {
            })
         },
         handleSearch(){ //点击搜索查询
-            this.$router.push({query: this.merInfoForm})
-            this.handleMerInfoData(this.merInfoForm)
+            if(this.merInfoForm.type != 4){
+                this.$router.push({query: this.merInfoForm})
+                this.handleMerInfoData(this.merInfoForm)
+            }else{
+                let autoWithdraw= 1
+                this.$router.push({query: this.merInfoForm})
+                this.handleMerInfoData({...this.merInfoForm,type: 1,autoWithdraw})
+            }
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },
         handleScanPayTem(row){ //点击缴费模板
@@ -752,6 +807,24 @@ export default {
         },
         backFn(){
             this.handleMerInfoData(this.merInfoForm)
+        },
+        handleAddMerRealName(){ //处理用户点击输入真实姓名
+            
+            setMername({merId: this.ruleSetForm.merid, realName: this.merRealName}).then(res=>{
+                if(res.code === 200){
+                    this.realname= this.merRealName
+                    // 成功之后重新设置数据
+                    for(let [index,value] of Object.entries(this.tableData)){
+                        if(value.id === this.ruleSetForm.merid){
+                            this.$set(value,'realname',this.merRealName)
+                            break
+                        }
+                    }
+                }else{
+                    messageTip('error',res.message)
+                }
+            })
+            this.tipvisible= false
         }
     }
 }
@@ -802,6 +875,20 @@ export default {
     }
     .el-table tbody tr:hover>td { 
         background-color:transparent !important;
+    }
+    .autoWithw-wrapper {
+        position: relative;
+        .mask-warp {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            display: flex;
+            justify-content: flex-end;
+            background-color: rgba(255,255,255,.65);
+            margin-top: 5px;
+        }
     }
 }
 </style>

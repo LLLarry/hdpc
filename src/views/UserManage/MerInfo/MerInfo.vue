@@ -307,37 +307,43 @@
                                 <el-radio :label="0">关闭</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                       <el-row>
-                           <el-col class="autoWithw-wrapper">
-                                <el-form-item label="是否开启自动提现" prop="autoWithdraw">
-                                    <el-radio-group v-model="ruleSetForm.autoWithdraw">
-                                        <el-radio :label="1">开启</el-radio>
-                                        <el-radio :label="2">关闭</el-radio>
-                                    </el-radio-group>
-                                </el-form-item>
-                                <div class="mask-warp" v-if="!realname">
-                                    <el-popover
-                                        placement="top"
-                                        width="300"
-                                        v-model="tipvisible"
-                                        >
-                                        <p style="text-align: center;">只有实名认证的商户才能开启自动提现</p>
-                                        <div style="padding: 10px 0; ">
-                                            <p style="margin-bottom:4px; ">请输入真实姓名</p>
-                                            <el-input placeholder="请输入真实姓名" v-model="merRealName" clearable size="small"></el-input>
-                                        </div>
-                                        <div style="text-align: right; margin: 0">
-                                            <el-button size="mini" type="text" @click="tipvisible = false">取消</el-button>
-                                            <el-button type="primary" size="mini" @click="handleAddMerRealName">确定</el-button>
-                                        </div>
-                                        <el-button slot="reference" size="mini">提示</el-button>
-                                    </el-popover>
-                                </div>
-                           </el-col>
-                           <el-col>
-                    
-                           </el-col>
-                       </el-row>
+                        <el-form-item label="是否开启收益通知" prop="incomemess">
+                            <el-radio-group v-model="ruleSetForm.incomemess">
+                                <el-radio :label="1">开启</el-radio>
+                                <el-radio :label="2">关闭</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-row>
+                            <el-col class="autoWithw-wrapper">
+                                    <el-form-item label="是否开启自动提现" prop="autoWithdraw">
+                                        <el-radio-group v-model="ruleSetForm.autoWithdraw">
+                                            <el-radio :label="1">开启</el-radio>
+                                            <el-radio :label="2">关闭</el-radio>
+                                        </el-radio-group>
+                                    </el-form-item>
+                                    <div class="mask-warp" v-if="!realname">
+                                        <el-popover
+                                            placement="top"
+                                            width="300"
+                                            v-model="tipvisible"
+                                            >
+                                            <p style="text-align: center;">只有实名认证的商户才能开启自动提现</p>
+                                            <div style="padding: 10px 0; ">
+                                                <p style="margin-bottom:4px; ">请输入真实姓名</p>
+                                                <el-input placeholder="请输入真实姓名" v-model="merRealName" clearable size="small"></el-input>
+                                            </div>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="mini" type="text" @click="tipvisible = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="handleAddMerRealName">确定</el-button>
+                                            </div>
+                                            <el-button slot="reference" size="mini">提示</el-button>
+                                        </el-popover>
+                                    </div>
+                            </el-col>
+                            <el-col>
+                        
+                            </el-col>
+                        </el-row>
                         <el-form-item label="客服电话">
                             <el-input v-model="ruleSetForm.servephone" placeholder="客服电话" size="small"></el-input>
                         </el-form-item>
@@ -550,13 +556,9 @@ export default {
         if(JSON.stringify(this.$route.query) != "{}"){
             this.merInfoForm= {...this.$route.query}
         }
-        if(this.merInfoForm.type != 4){
-            this.handleMerInfoData(this.merInfoForm)
-        }else{
-            let autoWithdraw= 1
-            this.$router.push({query: this.merInfoForm})
-            this.handleMerInfoData({...this.merInfoForm,type: 1,autoWithdraw})
-        }
+        let page= parseInt(this.$route.query.currentPage)
+        this.nowPage= isNaN(page) ?  1 : page
+        this.handleMerInfoData(this.merInfoForm)
     },
     computed: {
         //agentSelectMerId 代理商选择名下的商户的id
@@ -585,19 +587,20 @@ export default {
                 setObj.incoinrefund= result.incoinrefund ? result.incoinrefund : 1
                 setObj.showincoins= result.showincoins === 2 ? 2 : 1
                 setObj.autoWithdraw= result.autoWithdraw ? result.autoWithdraw : 2
+                setObj.incomemess= result.incomemess ? result.incomemess : 2
                 setObj.apportion= result.apportion ? result.apportion : 0
-                let {withmess,ordermess,equipmess,incoinrefund,showincoins,autoWithdraw,apportion} = setObj
+                let {withmess,ordermess,equipmess,incoinrefund,showincoins,autoWithdraw,apportion,incomemess} = setObj
                 let { servephone= ""}= setInfo.dealer
-                this.ruleSetForm= {withmess,ordermess,equipmess,incoinrefund,merid,showincoins,servephone,autoWithdraw,apportion}
+                this.ruleSetForm= {withmess,ordermess,equipmess,incoinrefund,merid,showincoins,servephone,autoWithdraw,apportion,incomemess}
                 this.dialogSetVisible= true
             }catch(error){
 
             }
         },
         async submitSetInfo(){ //设置设置框信息
-            const {merid, withmess,ordermess: order, equipmess: equip,incoinrefund,showincoins,servephone,autoWithdraw,apportion}= this.ruleSetForm
+            const {merid, withmess,ordermess: order, equipmess: equip,incoinrefund,showincoins,servephone,autoWithdraw,apportion,incomemess}= this.ruleSetForm
             try{
-                let info= await setMerInfoSetInfo({merid,withmess,order,equip,incoinrefund,showincoins,servephone,autoWithdraw,apportion})
+                let info= await setMerInfoSetInfo({merid,withmess,order,equip,incoinrefund,showincoins,servephone,autoWithdraw,apportion,incomemess})
                 if(info.code === 200){
                     messageTip(undefined,'设置成功')
                 }
@@ -687,14 +690,8 @@ export default {
            })
         },
         handleSearch(){ //点击搜索查询
-            if(this.merInfoForm.type != 4){
-                this.$router.push({query: this.merInfoForm})
-                this.handleMerInfoData(this.merInfoForm)
-            }else{
-                let autoWithdraw= 1
-                this.$router.push({query: this.merInfoForm})
-                this.handleMerInfoData({...this.merInfoForm,type: 1,autoWithdraw})
-            }
+            this.$router.push({query: { ...this.merInfoForm,currentPage: 1}})
+            this.handleMerInfoData({ ...this.merInfoForm,currentPage: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },
         handleScanPayTem(row){ //点击缴费模板

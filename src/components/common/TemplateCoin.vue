@@ -139,7 +139,13 @@
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus">添加模板</el-button>
              </div>
               <div style="margin-top: 20px; text-align: center ;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '03',code: deviceInfo.code,merid: deviceInfo.merid }})" icon="el-icon-view">查看更多</el-button>
+                <el-button 
+                    type="primary" 
+                    size="mini" 
+                    @click="$router.push({
+                        path: fromType === 2 ? '/deviceManage/bluetoothList/templateDetail' : '/deviceManage/deviceList/templateDetail',
+                        query: {hw: '03',code: deviceInfo.code,merid: deviceInfo.merid }
+                    })" icon="el-icon-view">查看更多</el-button>
                <!-- <el-button type="primary" size="mini" >此模板复用更多设备</el-button> -->
                <TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))" :deviceInfo="deviceInfo" :tempid="item.id" />
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
@@ -195,7 +201,7 @@ export default {
     components:{
         TemMulDevice
     },
-    props: ['from','list','deviceInfo','source','arecode'],
+    props: ['from','list','deviceInfo','source','arecode','fromType'],
     computed: {
         arr(){
             console.log(this.list)

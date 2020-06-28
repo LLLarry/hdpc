@@ -310,7 +310,15 @@ export const constantRouterMapSuperAdmin= [
       {
         path: '/deviceManage/deviceList/templateDetail',
         name: '模板详情',
-        component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
+        component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/bluetoothList/templateDetail',
+        name: '蓝牙模板详情',
+        component: ()=> import('@/views/DeviceManage/bluetoothList/TemplateDetail'),
         meta: {
           role: ['superAdmin','admin']
         }
@@ -658,7 +666,15 @@ export const constantRouterMapAdmin= [
       {
         path: '/deviceManage/deviceList/templateDetail',
         name: '模板详情',
-        component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
+        component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+      {
+        path: '/deviceManage/bluetoothList/templateDetail',
+        name: '蓝牙模板详情',
+        component: ()=> import('@/views/DeviceManage/bluetoothList/TemplateDetail'),
         meta: {
           role: ['superAdmin','admin']
         }
@@ -966,7 +982,15 @@ export const constantRouterMapAgent= [
     {
       path: '/deviceManage/deviceList/templateDetail',
       name: '模板详情',
-      component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail/TemplateDetail'),
+      component: ()=> import('@/views/DeviceManage/DeviceList/TemplateDetail'),
+      meta: {
+        role: ['superAdmin','admin']
+      }
+    },
+    {
+      path: '/deviceManage/bluetoothList/templateDetail',
+      name: '蓝牙模板详情',
+      component: ()=> import('@/views/DeviceManage/bluetoothList/TemplateDetail'),
       meta: {
         role: ['superAdmin','admin']
       }

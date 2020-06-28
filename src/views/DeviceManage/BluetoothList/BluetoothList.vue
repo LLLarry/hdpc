@@ -103,6 +103,21 @@
                    <span v-else>— —</span>
                 </template>
                 </el-table-column>
+                
+                <el-table-column
+                prop="expiration_time"
+                label="到期日期"
+                min-width="125"
+                v-if="userInfo.classify== 'superAdmin'" 
+                >
+                <template slot-scope="{row}">
+                    <el-link :type="contrastData(row.expiration_time)" :underline="false" >
+                        <span v-if="row.expiration_time == null">&nbsp;&nbsp;&nbsp;&nbsp;{{ '— —' }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span v-else>{{ row.expiration_time | fmtDate('YYYY-MM-DD') }}</span>
+                    </el-link>
+                </template>
+                </el-table-column>
+
                 <el-table-column
                 prop="device_id_android"
                 label="android设备id"
@@ -249,6 +264,17 @@ export default {
         this.asyGetBluetoothList(this.bluetoothListForm)
     },
     methods: {
+        contrastData(data){
+            const dataTime= new Date(moment(data).format('YYYY-MM-DD')).getTime()
+            const nowTime= new Date(moment(new Date()).format('YYYY-MM-DD')).getTime()
+            if(dataTime- nowTime <= 0){
+                return 'danger'
+            }else if((dataTime- nowTime) > 0 && (dataTime- nowTime) <= 15*1000*60*60*24){
+                return 'warning'
+            }else{
+                return 'primary'
+            }
+        },
         getPage(page){
             this.bluetoothListForm= {...this.bluetoothListForm,currentPage:page}
             this.$router.push({query: this.bluetoothListForm})

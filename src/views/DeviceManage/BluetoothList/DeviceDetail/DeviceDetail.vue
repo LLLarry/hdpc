@@ -9,15 +9,16 @@
             :remark="remark"
             :expirationTime="expirationTime"
             :totalOnlineEarn="totalOnlineEarn"
+            :fromType="2"
             @backFn="backFn"
              />
         <!-- 模块信息 -->
-                <!-- <ModuleInfo v-if="userInfo.classify== 'superAdmin'" :moduleInfo="moduleInfo" :code="code" :mapInfo="mapInfo" /> -->
+                <ModuleInfo v-if="userInfo.classify== 'superAdmin'" :moduleInfo="moduleInfo" :code="code" :mapInfo="mapInfo" :fromType="2" />
         <!-- 模板信息 -->
         <el-card class="box-card temCard" id="template_card">
-            <!-- <div slot="header" class="clearfix">
+            <div slot="header" class="clearfix">
                 <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : hwVerson== '08' ? 'V3充电模板' :'充电模板'}}）</span>
-            </div> -->
+            </div>
             <!-- 十路智慧款 -->
             <div v-if=" hwVerson != '03' && hwVerson != '04' && hwVerson != '08'" >
                 <!-- 正常模板 -->
@@ -27,7 +28,7 @@
             </div>
             <!-- 脉冲模板 -->
             <div v-else-if="hwVerson == '03'">
-                <!-- <TemplateCoin :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" /> -->
+                <TemplateCoin :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" :fromType="2" />
             </div>
             <!-- 离线充值机模板 -->
             <div v-else-if="hwVerson == '04'">
@@ -108,12 +109,8 @@ export default {
             totalOnlineEarn: 0, //总在线收益
             dialogVisible: false, //地图默认隐藏
             moduleInfo: [ 
-                {title1: '硬件版本',content1: '', title2: '主板版本',content2: '',title3: '经度',content3: ''},
-                {title1: '硬件版本号',content1: '', title2: '主板硬件版本',content2: '',title3: '纬度',content3: ''},
-                {title1: '软件版本号',content1: '', title2: '主版软件版本',content2: '',title3: '查看地图',content3: ''},
-                {title1: 'CCID',content1: '', title2: '主板ID',content2: '',title3: '更新经纬度',content3: ''},
-                {title1: 'IMEI',content1: '',  title2: '升级通知',content2: '',title3: '',content3: ''},
-                {title1: '信号强度',content1: '', title2: '',content2: '发送升级程序',title3: '',content3: ''}
+                {title1: '硬件版本',content1: '', title2: '硬件版本号',content2: '',title3: '软件版本号',content3: ''},
+                {title1: '安卓设备ID',content1: '', title2: 'IOS设备Id',content2: '',title3: '',content3: ''},
             ],
             mapInfo: [
                 {title: '经度', content: ''},
@@ -179,16 +176,12 @@ export default {
                 _this.username= deviceInfo.username
                 _this.merid= deviceInfo.merid
                 let  {code,ccid:CCID,imei:IMEI,hardversion:hwVerson,hardversionnum:hwVersonNum,softversionnum:sfVerson,
-                csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid,mainType,mainHardver,mainSoftver,totalOnlineEarn }= deviceInfo.equipment
+                csq:single,lat:latitude,lon:longitude,remark,expirationTime,mainid,mainType,mainHardver,mainSoftver,totalOnlineEarn,deviceIdAndroid,deviceIdIos }= deviceInfo.equipment
                 this.deviceInfo= {merid: deviceInfo.merid,hwVerson,code}
                _this.remark= remark 
                 _this.moduleInfo=[ //设备信息  
-                    {title1: '硬件版本',content1: hwVerson, title2: '主板版本',content2: mainType,title3: '经度',content3: longitude},
-                    {title1: '硬件版本号',content1: hwVersonNum, title2: '主板硬件版本',content2: mainHardver,title3: '纬度',content3: latitude},
-                    {title1: '软件版本号',content1: sfVerson, title2: '主版软件版本',content2: mainSoftver,title3: '查看地图',content3: ''},
-                    {title1: 'CCID',content1: CCID, title2: '主板ID',content2: mainid,title3: '更新经纬度',content3: ''},
-                    {title1: 'IMEI',content1: IMEI,  title2: '升级通知',content2: '',title3: '',content3: ''},
-                    {title1: '信号强度',content1: single, title2: '发送升级程序',content2: '',title3: '',content3: ''}
+                    {title1: '硬件版本',content1: hwVerson, title2: '硬件版本号',content2: hwVersonNum,title3: '软件版本号',content3: sfVerson},
+                    {title1: '安卓设备ID',content1: deviceIdAndroid, title2: 'IOS设备Id',content2: deviceIdIos,title3: '',content3: ''},
                 ],
                 _this.mapInfo= [ //经纬度信息
                     {title: '经度', content: longitude},

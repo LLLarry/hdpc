@@ -43,7 +43,7 @@
                             <el-button type="warning" size="mini" @click="handleCancelDeleteName()"  icon="el-icon-folder-delete">取消</el-button>
                         </span>
                     </div>
-                    <div class="colCon">
+                    <div class="colCon" v-if="fromType !== 2">
                         更换模块：
                         <span v-if="!isShowIMEI">
                             <el-button  type="primary" icon="el-icon-edit" size="mini" plain @click="()=>{this.isShowIMEI= !this.isShowIMEI}">输入要更换的设备号</el-button>
@@ -68,7 +68,7 @@
                             <el-button type="warning" size="mini" @click="()=>{ this.isShowChangeCode= false; this.isShowChangeCode= ''; }"  icon="el-icon-folder-delete">取消</el-button>
                         </span>
                     </div>
-                     <div class="colCon" v-if="userInfo.classify== 'superAdmin'">
+                     <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
                         下载日志：
                        <el-date-picker
                             v-model="downLoadTime"
@@ -144,6 +144,7 @@ export default {
         expirationTime: [String,Number],
         remark: [String,Number],
         totalOnlineEarn: Number,
+        fromType: Number // 2是蓝牙设备，其他是普通设备
     },
     data(){
         return {

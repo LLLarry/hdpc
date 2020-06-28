@@ -2,7 +2,8 @@
   <div>
     <el-card class="box-card" id="module_card">
       <div slot="header" class="clearfix">
-        <span>模块信息（硬件，软件，IMEI, +CCID）</span>
+        <span v-if="fromType !== 2">模块信息（硬件，软件，IMEI, +CCID）</span>
+        <span v-else>模块信息（硬件，软件）</span>
       </div>
       <el-table
         :data="moduleInfo"
@@ -45,6 +46,7 @@
               size="mini"
               plain
               @click="getBoardInfo(scope.column)"
+              v-if="fromType !== 2"
             >更新</el-button>
           </template>
           <template slot-scope="{row}">
@@ -152,6 +154,7 @@ export default {
       moduleInfo: Array,
       code: String,
       mapInfo: Array,
+      fromType: Number //2是蓝牙设备，其他是非蓝牙设备
   },
   created() {
     Vue.use(VueAMap);

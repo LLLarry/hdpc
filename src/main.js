@@ -6,6 +6,8 @@ import router from './router'
 import store from './store'
 import Navigation from 'vue-navigation'
 import '@/filters'
+import VueCompositionApi from '@vue/composition-api';
+Vue.use(VueCompositionApi)
 Vue.use(Navigation, {router})
 // import ElementUI from 'element-ui'; 这是加载全部
 // import { Button, Select,Col,Row,Progress,MessageBox,Message,Notification,} from 'element-ui';

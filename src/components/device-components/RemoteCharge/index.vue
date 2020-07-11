@@ -184,6 +184,7 @@ export default {
                 Vue.set(row,'loading',false)
                 if(res.wolfcode == '1000'){
                     messageTip('success',`远程充电设置成功`)
+                    Vue.set(row,'portStatus',2)
                 }else{
                     messageTip('error',`远程充电设置失败`)
                 }
@@ -198,6 +199,7 @@ export default {
                  Vue.set(row,'loading1',false)
                 if(res.wolfcode == '1000'){
                     messageTip('success',`远程断电设置成功`)
+                    Vue.set(row,'portStatus',1)
                 }else{
                      messageTip('error',`远程断电设置失败`)
                 }

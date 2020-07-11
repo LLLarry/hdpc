@@ -132,7 +132,13 @@
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus">添加模板</el-button>
              </div>
               <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
-                <el-button type="primary" size="mini" @click="$router.push({path: '/communManage/communManageCon/tempdetail',query: {aid,merid,type:2,tempid: item.id}})" icon="el-icon-view">查看更多</el-button>
+                <el-button type="primary" size="mini" @click="()=>{
+                    if(aid){
+                        $router.push({path: '/communManage/communManageCon/tempdetail',query: {aid: aid,merid: merid,type:2,tempid: item.id}})
+                    }else{
+                        $router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '04',code: deviceInfo.code,merid: deviceInfo.merid}})
+                    }
+                }" icon="el-icon-view">查看更多</el-button>
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
              </div>
              <div style="margin-top: 20px;" class="clearfix bottomContral" v-else>
@@ -165,11 +171,11 @@ export default {
     components:{
         TemMulDevice
     },
-    props: ['from','list','aid','merid'],
+    props: ['from','list','aid','merid','deviceInfo'],
     computed: {
         arr(){
             return this.list
-        }
+        }  
     },
     methods: {
         // 删除子模板
@@ -326,20 +332,37 @@ export default {
        },
         // type=3的时候的设为选中模板
        handleSetSelect(item){
-         areaTempChoose({aid: this.aid,tempid: item.id,type: 2}).then(res=>{
-            if(res.code === 200){
-                this.arr.forEach((jtem,j)=>{
-                    if(jtem.id == item.id){
-                        this.$set(jtem,'pitchon',1)
-                    }else{
-                        this.$set(jtem,'pitchon',undefined)
-                    }
-                })
-                messageTip('success','选中成功')
-            }else{
-                messageTip('error','设置失败') 
-            }
-        })
+         if(this.aid){
+             areaTempChoose({aid: this.aid,tempid: item.id,type: 2}).then(res=>{
+                if(res.code === 200){
+                    this.arr.forEach((jtem,j)=>{
+                        if(jtem.id == item.id){
+                            this.$set(jtem,'pitchon',1)
+                        }else{
+                            this.$set(jtem,'pitchon',undefined)
+                        }
+                    })
+                    messageTip('success','选中成功')
+                }else{
+                    messageTip('error','设置失败') 
+                }
+            })
+         }else{
+             setSelectTem({temid: item.id,obj:this.$route.query.code,source:1}).then(res=>{
+                if(res == 1){
+                    this.arr.forEach((jtem,j)=>{
+                        if(jtem.id == item.id){
+                            this.$set(jtem,'pitchon',1)
+                        }else{
+                            this.$set(jtem,'pitchon',undefined)
+                        }
+                    })
+                   messageTip('success','选中成功')
+                }else{
+                    messageTip('warning','选中失败')
+                }
+            })
+         }
        }
     }
 }

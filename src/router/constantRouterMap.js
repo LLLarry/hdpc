@@ -151,6 +151,14 @@ export const constantRouterMapSuperAdmin= [
         }
       },
       {
+        path: '/usermanage/subAccount',
+        name: '子账号信息',
+        component: ()=> import('@/views/UserManage/SubAccount'),
+        meta: {
+          role: ['superAdmin']
+        }
+      },
+      {
         path: '/usermanage/agentManage/agentManageDetail',
         name: '代理商详情',
         component: ()=> import('@/views/UserManage/AgentManage/AgentManageDetail/AgentManageDetail'),

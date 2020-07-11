@@ -121,7 +121,7 @@ export default {
         handleBindMer(merid){ //绑定商户
             this.bindInfo.show= false
             if(this.bindInfo.page && this.bindInfo.page.id){ //来自用户页面的绑定
-                let data= userBindMer({id:this.bindInfo.page.id,merid})
+                let data= userBindMer({id:this.bindInfo.page.id,merid,type:this.bindInfo.page.type})
                 data.then(res=>{
                     if(res.code== 200){
                         messageTip('success','绑定成功')

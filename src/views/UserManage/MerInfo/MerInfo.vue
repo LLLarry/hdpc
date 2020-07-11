@@ -464,6 +464,7 @@
                         <el-select v-model="merRankVersionForm.rank"  placeholder="选择商户权限"  style="width: 100%;">
                             <el-option label="商户" :value="2" ></el-option>
                             <el-option label="代理商" :value="3" ></el-option>
+                            <el-option label="子账号" :value="6" ></el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>

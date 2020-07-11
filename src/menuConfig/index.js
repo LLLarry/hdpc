@@ -60,6 +60,11 @@ export const superAdminMenuList= [
                 link: '/usermanage/agentManage',
                 index: '1-3'
             },
+            {
+                title: '子账号信息',
+                link: '/usermanage/subAccount',
+                index: '1-3'
+            },
         ]
     },
      {

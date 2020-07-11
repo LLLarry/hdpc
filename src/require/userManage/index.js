@@ -244,15 +244,35 @@ export const configMchidapi= function (data){
 
 export const setMername= function (data){
     return ajax({
-             url: 'AccountInfo/setMername',
+             url: '/AccountInfo/setMername',
              data: data,
              method: 'post'
          })
 }
 
+/**
+ * 获取子账户列表
+ */
 
+export const getSubAccountList= function (data){
+    return ajax({
+             url: '/AccountInfo/getBypassAccountData',
+             data: data,
+             method: 'post'
+         })
+}
 
+/**
+ * 操作子商户
+ */
 
+export const handleSubAccount= function (data){
+    return ajax({
+             url: '/AccountInfo/addOrDelChileUser',
+             data: data,
+             method: 'post'
+         })
+}
 
 
 

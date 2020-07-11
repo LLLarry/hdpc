@@ -28,9 +28,9 @@ export default {
     watch:{
         'nowPage':{
             handler: function(newValue,oldValue){
-            this.nowPage1= newValue
+                this.nowPage1= newValue
             },
-             immediate: true, 
+             immediate: true, //watch创建完成就执行，而不是创建完成不执行，等到数据变化时再执行
         }
     },
     methods: {

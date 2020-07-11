@@ -361,7 +361,8 @@
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
-import dateTimeJS from '@/utils/dateTime'
+// import dateTimeJS from '@/utils/dateTime'
+import configDisabledDate from '@/utils/configDisabledDate'
 import { getTradeRecord,getPartnerIncomeDetail } from '@/require/tradeRecord'
 import { messageTip , confirDelete } from '@/utils/ele'
 import Util from '@/utils/util'
@@ -371,7 +372,7 @@ export default {
         return {
             tradeRecordConForm: {},
             diaOrderNum: '',
-            pickerOptions: dateTimeJS,
+            pickerOptions: configDisabledDate(15552000000),
             tableData: [],
             totalData: [],
             totalRows: 0, //数据总条数
@@ -407,8 +408,9 @@ export default {
     },
     methods: {
         getPage(page){
-            this.tradeRecordConForm= {...this.tradeRecordConForm,currentPage:page}
-            this.$router.push({query: this.tradeRecordConForm})
+            let VNK= this.$route.query.VNK
+            this.tradeRecordConForm= {...this.tradeRecordConForm,currentPage:page,VNK}
+            this.$router.push({query: this.tradeRecordConForm,VNK})
             this.asyGetTradeRecord(this.tradeRecordConForm)
             this.nowPage = page
         },
@@ -459,7 +461,8 @@ export default {
             }
         },
         handleSearch(){
-            this.$router.push({query:{... this.tradeRecordConForm,currentPage: 1}})
+            let VNK= this.$route.query.VNK
+            this.$router.push({query:{... this.tradeRecordConForm,currentPage: 1,VNK}})
             this.asyGetTradeRecord({... this.tradeRecordConForm,currentPage: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },

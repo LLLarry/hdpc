@@ -185,11 +185,11 @@
                     </div>
                     <div style="margin-top: 15px">
                         <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit"
-                        :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)"  
+                        :disabled="(from == 2 && (item.merchantid == 0 || item.merchantid == null)) || (from != 1 && item.merchantid== 0)"  
                         >编辑</el-button>
                         <el-button type="danger" size="mini"  @click="handleDeleteTem(item,i)" v-if="!item.edit" 
-                        :disabled="from == 1 || from == 2 || (from==3 && item.pitchon ==1) || (from==3 && [2,3].includes(grade))" 
-                        :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1) || (from==3 && [2,3].includes(grade))"
+                        :disabled="from == 1 || from == 2 || (from==3 && item.pitchon ==1) || (from==3 && [2,3].includes(grade)) || (from !=1 && item.merchantid== 0)" 
+                        :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1) || (from==3 && [2,3].includes(grade)) || (from !=1 && item.merchantid== 0)"
                         icon="el-icon-delete"
                         >删除</el-button>
                         <el-button type="success" size="mini" @click="handleSaveEditTem(item)" v-if="item.edit" icon="el-icon-folder-checked">保存</el-button>
@@ -252,8 +252,8 @@
             width="200"
             >
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit" icon="el-icon-edit" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >编辑</el-button>
-                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.pitchon ==1 || from== 2 " :plain="item.pitchon ==1 || from== 2" icon="el-icon-delete">删除</el-button>
+                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit" icon="el-icon-edit" :disabled="(from == 2 && (item.merchantid == 0 || item.merchantid == null)) || (from !=1 && item.merchantid== 0)" >编辑</el-button>
+                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.pitchon ==1 || from== 2 || (from !=1 && item.merchantid== 0)" :plain="item.pitchon ==1 || from== 2 || (from !=1 && item.merchantid== 0)" icon="el-icon-delete">删除</el-button>
                 <el-button type="success" size="mini" @click="handleSaveEditChildTem(scope.row.id,scope.row)" v-if="scope.row.edit" icon="el-icon-folder-checked">保存</el-button>
                 <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.id,scope.row)"  v-if="scope.row.edit" icon="el-icon-folder-delete">取消</el-button>
             </template>
@@ -268,10 +268,10 @@
                 :disabled="deviceInfo.merid== 0 || deviceInfo.merid== undefined || deviceInfo.merid == null"
                 >查看更多</el-button>
                 <div v-if="!([1,2,3].includes(grade))"><TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))" :deviceInfo="deviceInfo" :tempid="item.id"/></div>
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
+                <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="(from == 2 && (item.merchantid == 0 || item.merchantid == null)) || (from !=1 && item.merchantid== 0)" >添加模板</el-button>
              </div>
              <div style="margin-top: 20px; text-align: center; " class="clearfix" v-else>
-                <el-button type="primary" size="mini" style="float:left;margin-left: 30%;" icon="el-icon-plus" @click="handleAddChildTem(item)" >添加模板</el-button>
+                <el-button type="primary" size="mini" style="float:left;margin-left: 30%;" icon="el-icon-plus" @click="handleAddChildTem(item)" :disabled="(from !=1 && item.merchantid== 0)">添加模板</el-button>
                 <el-link type="danger" :underline="false" v-if="(item.pitchon ==1 && ![1,2,3].includes(grade)) || (item.pitchon ==1 && grade== 3) || (gradePitchon == 1 && ![1,2].includes(grade))"> {{source == 0 ? '默认模板' : '选中模板'}}</el-link>
                 
                 <!-- <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="source == 0 && ![1,2].includes(grade)" :disabled="item.pitchon ==1" :plain="item.pitchon ==1" @click="handleSetDefault(item,gradeId)" >设为默认</el-button> -->

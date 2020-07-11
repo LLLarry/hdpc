@@ -139,6 +139,7 @@ export default {
                     gather3: [
                         { id: -1, name: '1元',money: 1 }
                     ],
+                    chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
                 }
             ],
             getFrom: false //父组件时候向子组件获取值
@@ -227,6 +228,7 @@ export default {
                                         gather3: [
                                             { id: -1, name: '1元',money: 1 }
                                         ],
+                                        chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
                                     }
                                 ]
                 this.getFrom= false
@@ -326,6 +328,7 @@ export default {
                                         gather3: [
                                             { id: -1, name: '1元',money: 1 }
                                         ],
+                                        chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
                                     }
                                 ]
                     this.getFrom= false

@@ -224,8 +224,8 @@ export default {
 	},
 	created(){
 		this.time= this.$fmtDate(new Date()-24*60*60*1000,'YYYY-MM-DD')
-		let sendTime= this.time.replace(/-/g,'')
-		this.asyGetWechartList({time:sendTime})
+		// let sendTime= this.time.replace(/-/g,'')
+		this.asyGetWechartList({time:this.time})
 	},
     methods: {
 		async asyGetWechartList(data){
@@ -274,11 +274,11 @@ export default {
         },
         handleSearch(){
 			this.time= this.time || ''
-			let sendTime= this.time.replace(/-/g,'')
-			if(!/^\d+$/.test(sendTime)){
-				sendTime= this.$fmtDate(new Date()-24*60*60*1000,'YYYYMMDD')
-			}
-			this.asyGetWechartList({time:sendTime})
+			// let sendTime= this.time.replace(/-/g,'')
+			// if(!/^\d+$/.test(sendTime)){
+			// 	sendTime= this.$fmtDate(new Date()-24*60*60*1000,'YYYY-MM-DD')
+			// }
+			this.asyGetWechartList({time:this.time})
         }
     }
 }

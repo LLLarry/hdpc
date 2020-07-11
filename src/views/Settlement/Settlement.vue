@@ -63,14 +63,34 @@
             </el-tab-pane>
         </el-tabs>
     </el-card>
-   
   </div>
 </template>
 
 <script>
 import { settlementTotalEarn,settlementAllEarn } from '@/require/settlement'
 import {messageTip} from '@/utils/ele'
+/**
+ *  总结： 
+ *  reactive 一般时创建对象响应式的，对象中每个属性都具有响应式，对象不具有响应式（注意：初始化对象时没有的，后来添加的属性不具有响应式）
+ *  eg: let student=  reactive({ name: 'zs' })   student.name= 'ls' 是响应式;  student.age= 18 不是响应式 ; student= { name: 'ww' } 不是响应式的
+ * 
+ *  ref  一般是监听基本类型的值的，如果传的值为对象，那么将会调用 reactive, 
+ *  eg:  let student=  ref({ name: 'zs' })   student.value.name= 'ls' 是响应式，但是   student.value.age= 18 不是响应式 ； student.value.= { name: 'ww' } 是响应式的
+ * 
+ *  toRef : toRef 可以用来为一个 reactive 对象的属性创建一个 ref。这个 ref 可以被传递并且能够保持响应性,也可以将 props属性转化为ref
+ *  eg: let student=  reactive({ name: 'zs' }) ; let refNmae= toRef(student,'name') ; console.log(refNmae.value+='p') //zsp ; console.log(student.name+='p') //zspp
+ *      setup(props) {
+            useSomeFeature(toRef(props, 'foo'))
+        },
+    toRefs: 把一个响应式对象转换成普通对象，该普通对象的每个 property 都是一个 ref ，和响应式对象 property 一一对应。
+    eg: let student=  reactive({ name: 'zs' }) ;  let newStudent= toRefs(student)  此时就相当于`普通`对象内部的每个属性都相当于一个ref,所以可以 return { ...newStudent };
+        newStudent.name.value= 'ww' 响应式;  newStudent= { name: 'll'  } 不是响应式,因为newStudent就相当于`普通`对象内部的每个属性都相当于一个ref
+
+    unref: 如果参数是一个 ref 则返回它的 value，否则返回参数本身。它是 val = isRef(val) ? val.value : val 的语法糖
+    *   
+**/
 export default {
+ 
     data(){
         return {
             settlementForm1: {

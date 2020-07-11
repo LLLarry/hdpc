@@ -322,6 +322,7 @@
 <script>
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
+import configDisabledDate from '@/utils/configDisabledDate'
 import { getChargeRecord,withdrawEntrance,tradeRefEntrance,getWolfchargeInfo } from '@/require/tradeRecord'
 import Util from '@/utils/util'
 import VerifiCode from '@/components/common/VerifiCode'
@@ -374,8 +375,9 @@ export default {
     },
     methods: {
         getPage(page){
-            this.chargeRecordForm= {...this.chargeRecordForm,currentPage:page}
-            this.$router.push({query: this.chargeRecordForm})
+            let VNK= this.$route.query.VNK
+            this.chargeRecordForm= {...this.chargeRecordForm,currentPage:page,VNK}
+            this.$router.push({query: this.chargeRecordForm,VNK})
             this.asyGetChargeRecord(this.chargeRecordForm)
             this.nowPage = page
         },
@@ -466,7 +468,8 @@ export default {
                     }
         },
         handleSearch(){
-            this.$router.push({query:{... this.chargeRecordForm,currentPage: 1}})
+            let VNK= this.$route.query.VNK
+            this.$router.push({query:{... this.chargeRecordForm,currentPage: 1,VNK}})
             this.asyGetChargeRecord({... this.chargeRecordForm,currentPage: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },

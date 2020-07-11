@@ -9,23 +9,85 @@
                 :show-header="false"
                 :cell-style="{'background-color': 'rgba(0,211,255,0.06)', 'font-size': '13px',color: '#666'}"
             >
-                <el-table-column
+            <el-table-column>
+                <template slot-scope="scope">
+                    <div class="tem_p">
+                        <div class="tem_parent clearfix" style="width: calc(100% - 200px); min-width: 590px;float: left;">
+                            <div class="clearfix">
+                                <div class="temContent" style="width: 49%; float: left; min-width: 295px;">
+                                    <div>
+                                        <strong>模板名称: </strong>
+                                        <el-input v-if="editId === item.id" size="mini" v-model="temForm.name" style="width: 70%; display: inline-block" placeholder="请输入模板名称"></el-input>
+                                        <span v-else class="top_span">{{item.name}}</span>
+                                    </div>
+                                    <div style="margin-top: 15px">
+                                        <strong>是否支持支付宝充电:  </strong>
+                                        <span v-if="editId !== item.id" :class="['top_span', item.ifalipay ==1 ? 'green' : 'red']">{{item.ifalipay ==1 ? '是' : '否'}}</span>
+                                        <el-radio-group v-model="temForm.ifalipay"  v-else >
+                                            <el-radio :label="1">是</el-radio>
+                                            <el-radio :label="2">否</el-radio>
+                                        </el-radio-group>
+                                    </div>
+                                </div>
+                                <div class="temContent" style="width: 49%; float: left; min-width: 295px;">
+                                    <div>
+                                        <strong>售后电话:</strong>
+                                        <el-input v-if="editId === item.id" size="mini" v-model="temForm.common1" style="width: 60%; display: inline-block" placeholder="请输入售后电话"></el-input>
+                                        <span v-else class="top_span">{{item.common1}}</span>
+                                    </div>
+                                    <div style="margin-top: 15px">&nbsp;
+                                    </div> 
+                                </div>
+                            </div>
+                           <div class="tem_text" style="margin-top: 15px">
+                                <strong>收费说明:</strong>
+                                <div v-if="editId === item.id">
+                                    <div style="width: calc(100% - 200px); float: left;" >
+                                        <el-input
+                                            type="textarea"
+                                            :rows="4"
+                                            placeholder="请输入收费说明"
+                                            v-model="temForm.chargeInfo">
+                                        </el-input>
+                                    </div>
+                                </div>
+                                <span v-else>{{item.chargeInfo}}</span>
+                           </div>
+                        </div>
+                        <div style="width: 180px; float: right; min-width: 180px;">
+                            <div>
+                                <strong>操作</strong>
+                            </div>
+                            <div style="margin-top: 15px" v-if="editId !== item.id">
+                                <el-button 
+                                    type="primary" 
+                                    size="mini" 
+                                    icon="el-icon-edit" 
+                                    @click="handleEdit(item)"
+                                    :disabled="(from ==2 && item.merchantid == 0) || (from != 1  && item.merchantid == 0)"
+                                >编辑</el-button>
+                                <el-button 
+                                    type="danger" 
+                                    size="mini" 
+                                    icon="el-icon-delete"
+                                    :plain="from === 1"
+                                    :disabled="from === 1 || from === 2 || item.pitchon === 1 || (from != 1  && item.merchantid == 0)"
+                                    @click="handleDeleteTem(item,i)"
+                                >删除</el-button>
+                            </div>
+                            <div style="margin-top: 15px" v-else>
+                                <el-button type="success" size="mini" icon="el-icon-folder-checked" @click="handleSave(i)" >保存</el-button>
+                                <el-button type="warning" size="mini" icon="el-icon-folder-delete" @click="handleCancel(item)" >取消</el-button>
+                            </div> 
+                        </div>
+                    </div>
+                </template>
+            </el-table-column>
+                <!-- <el-table-column
                     min-width="260"
                 >
                     <template slot-scope="scope">
-                        <div>
-                            <strong>模板名称: </strong>
-                            <el-input v-if="editId === item.id" size="mini" v-model="temForm.name" style="width: 70%; display: inline-block" placeholder="请输入模板名称"></el-input>
-                            <span v-else class="top_span">{{item.name}}</span>
-                        </div>
-                       <div style="margin-top: 15px">
-                            <strong>是否支持支付宝充电:  </strong>
-                            <span v-if="editId !== item.id" :class="['top_span', item.ifalipay ==1 ? 'green' : 'red']">{{item.ifalipay ==1 ? '是' : '否'}}</span>
-                            <el-radio-group v-model="temForm.ifalipay"  v-else >
-                                <el-radio :label="1">是</el-radio>
-                                <el-radio :label="2">否</el-radio>
-                            </el-radio-group>
-                        </div>
+                       
                     </template>
                 </el-table-column>
                  <el-table-column
@@ -85,7 +147,7 @@
                             <el-button type="warning" size="mini" icon="el-icon-folder-delete" @click="handleCancel(item)" >取消</el-button>
                         </div> 
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
             <el-row>
                 <el-col :span="8">
@@ -157,14 +219,14 @@
                                         type="danger" 
                                         size="mini" 
                                         @click="handleDeleteItem(item,i,'gather1',scope.row.id)" 
-                                        :disabled="from ==2 && item.merchantid == 0 "
+                                        :disabled="(from ==2 && item.merchantid == 0) || (from != 1  && item.merchantid == 0)"
                                     > <i class="el-icon-delete"></i> {{ (from === 4 && (screenWidth < 1400)) ?  '' : '删除'}}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table-column>    
                     </el-table>
                     <div class="addItem">
-                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather1')">添加</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather1')" :disabled="(from != 1  && item.merchantid == 0)" >添加</el-button>
                     </div>
                 </el-col>
                 <el-col :span="8">
@@ -229,14 +291,14 @@
                                         type="danger" 
                                         size="mini"
                                         @click="handleDeleteItem(item,i,'gather2',scope.row.id)" 
-                                        :disabled="from ==2 && item.merchantid == 0 "
+                                        :disabled="(from ==2 && item.merchantid == 0) || (from != 1  && item.merchantid == 0)"
                                     ><i class="el-icon-delete"></i> {{ (from === 4 && (screenWidth < 1400)) ?  '' : '删除'}}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table-column>    
                     </el-table>
                     <div class="addItem">
-                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather2')">添加</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather2')" :disabled="(from != 1  && item.merchantid == 0)">添加</el-button>
                     </div>
                 </el-col>
                 <el-col :span="8">
@@ -325,13 +387,13 @@
                                         size="mini" 
                                         @click="handleDeleteItem(item,i,'gather3',scope.row.id)"  
                                         v-if="!scope.row.edit"
-                                        :disabled="from ==2 && item.merchantid == 0 "
+                                        :disabled="(from ==2 && item.merchantid == 0) || (from != 1  && item.merchantid == 0)"
                                     ><i class="el-icon-delete"></i> {{(from === 4 && (screenWidth < 1400)) ?  '' : '删除'}}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
                         <div class="addItem">
-                            <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather3')">添加</el-button>
+                            <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather3')" :disabled="(from != 1  && item.merchantid == 0)">添加</el-button>
                         </div>
                     </div>
                 </el-col>
@@ -413,6 +475,8 @@ export default {
         }, 
         handleAddItem(item,from){
             let newItem
+            let isUpdateChargeInfo //是都更新充电信息，1 更新， 否则不更新
+            let chargeInfo= ''
             if(from === 'gather1'){
                 if(item['gather1'].length > 0){ //根据最后一项数据计算
                     let lastItem= item['gather1'][item['gather1'].length-1]
@@ -423,7 +487,14 @@ export default {
                     newItem= { name: new Date().getTime(), money:newMoney,common1: lastItem.common2,common2: newPowerEnd ,type: 1 }
                 }else{ //使用默默人的
                     newItem= {  name: new Date().getTime(), money:1,common1: 0,common2: 200 ,type: 1}
-                }  
+                }
+                let newGather1= JSON.parse(JSON.stringify(item.gather1))
+                newGather1.push(newItem)
+                chargeInfo= newGather1.reduce((acc,item,index)=>{
+                   return acc+= `${item.money}元/小时，功率区间：${item.common1}-${item.common2}瓦\n`
+                },'').trim()
+                isUpdateChargeInfo= 1
+                
             }else if(from === 'gather2'){
                 if(item['gather2'].length > 0){ //根据最后一项数据计算
                     let lastItem= item['gather2'][item['gather2'].length-1]
@@ -447,15 +518,23 @@ export default {
             }
             if(this.from === 4){
                 let gatherCopy= JSON.parse(JSON.stringify(this.temForm[from]))
-                gatherCopy.push({id: new Date().getTime(),...newItem})
+                gatherCopy.push({id: new Date().getTime(),...newItem,chargeInfo})
                 this.$set(this.temForm,from,gatherCopy)
+                 if(from === 'gather1'){
+                     this.$set(this.temForm,'chargeInfo',chargeInfo)
+                 }
             }else{
-                addTemplateChild({...newItem,tempid: item.id}).then(res=>{
+                addTemplateChild({...newItem,tempid: item.id,isUpdateChargeInfo,chargeInfo}).then(res=>{
                     if(res.code === 200){
                         let itemCopy= JSON.parse(JSON.stringify(item))
                         itemCopy[from].push(res.tempson)
                         this.temForm= itemCopy
                         this.$set(item,from,itemCopy[from])
+                        if(from === 'gather1'){
+                             this.$set(item,'chargeInfo',chargeInfo)
+                             this.$set(this.temForm,'chargeInfo',chargeInfo)
+
+                        }
                         messageTip('success','子模板添加成功！')
                     }else{
                         messageTip('error','子模板添加失败！')
@@ -470,20 +549,39 @@ export default {
          * @param cid 子元素id
          */
         handleDeleteItem(item,index,from,cid){
+            let chargeInfo= ''
+            let isUpdateChargeInfo
+             if(from === 'gather1'){
+                chargeInfo= item[from].reduce((acc,item,i)=>{
+                    if(item.id === cid){
+                        return acc
+                    }else{
+                        return acc+= `${item.money}元/小时，功率区间：${item.common1}-${item.common2}瓦\n`
+                    }
+                },'')
+                isUpdateChargeInfo= 1
+            }
             confirDelete('确认删除子模板吗？',()=>{
                 if(this.from === 4){
                     let itemCopy= JSON.parse(JSON.stringify(item))
                     let newGather= itemCopy[from].filter((val)=> val.id !== cid )
                     // 深度设置值的，需要使用vue实例提供的方法来修改 this.$set || Vue.set
                     this.$set(this.arr[index],from,newGather)
+                    if(from === 'gather1'){
+                        this.$set(this.arr[index],'chargeInfo',chargeInfo)
+                    }
                     return
                 }
-                deleteTemplateChild({id:cid}).then(res=>{
+                
+                deleteTemplateChild({id:cid,chargeInfo,isUpdateChargeInfo,tempid: item.id}).then(res=>{
                     if(res.code === 200){
                         let itemCopy= JSON.parse(JSON.stringify(item))
                         let newGather= itemCopy[from].filter((val)=> val.id !== cid )
                         // 深度设置值的，需要使用vue实例提供的方法来修改 this.$set || Vue.set
                         this.$set(this.arr[index],from,newGather)
+                        if(from === 'gather1'){
+                            this.$set(this.arr[index],'chargeInfo',chargeInfo)
+                        }
                         messageTip('success','子模板删除成功！')
                     }else{
                         messageTip('error','子模板删除失败！')
@@ -593,6 +691,11 @@ export default {
         justify-content: space-around; 
         padding-top: 20px; 
         border-top: 1px solid #EBEEF5;
+    }
+    .tem_text {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 }
 </style>

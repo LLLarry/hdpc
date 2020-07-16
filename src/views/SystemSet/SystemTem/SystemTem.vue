@@ -105,7 +105,7 @@
                 </el-card>
             </el-col>
             <el-col :xs="{span: 24}" :sm="{span: 11, offset: 2}"> &nbsp;
-                 <!-- <ConfigChangeParmars :sysTime="sysTime" @handleReLoad="handleReLoad" /> -->
+                 <ConfigChangeParmars :sysTime="sysTime" @handleReLoad="handleReLoad" />
             </el-col>
         </el-row>
     

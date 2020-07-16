@@ -119,6 +119,7 @@
 </template>
 
 <script>
+let loading= null
 import {
   getBoardInfoRotate,
   updateMapPosition,
@@ -128,6 +129,7 @@ import {
 import { alertPassword, messageTip, confirDelete } from "@/utils/ele";
 import VueAMap from "vue-amap";
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
+import Utils from '@/utils/util'
 export default {
   data() {
     return {
@@ -179,6 +181,11 @@ export default {
       // });
     });
   },
+  mounted(){
+    loading= new Utils.Hd_Loading({
+      text: '发送中'
+    })
+  },
 	methods: {
 		getBoardInfo(row) {
 		//获取主板信息
@@ -227,24 +234,34 @@ export default {
 				.catch(err => {});
 		},
 		handleUpdateTip() {
-			//设备升级通知
-			sendUpdataTip({ code: this.code }).then(res => {
+      //设备升级通知
+      loading.show()
+      sendUpdataTip({ code: this.code })
+      .then(res => {
 				if (res.wolfcode == 1000) {
 					messageTip("success", "通知成功");
 				} else {
 					messageTip("error", "通知失败");
-				}
-			});
+        }
+          loading.hide()
+      }).catch(e=>{
+          loading.hide()
+      })  
 		},
 		handleSendUpdateInfo() {
-			//发送升级程序
-			sendUpdataInfo().then(res => {
+      //发送升级程序
+      loading.show()
+      sendUpdataInfo()
+      .then(res => {
 				if (res.wolfcode == 1000) {
 					messageTip("success", "发送升级程序成功");
 				} else {
 					messageTip("error", "发送升级程序失败");
-				}
-			});
+        }
+        loading.hide()
+			}).catch(e=>{
+        loading.hide()
+      })
 		}
 	}
 };

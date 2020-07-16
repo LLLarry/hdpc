@@ -31,3 +31,23 @@ export const getWechartList= function (data){
              data: data
          })
 }
+
+/**
+ * 微信订单list
+ */
+export const inquireWeChatLostOrder=  function (data){
+    return ajax({
+        url: '/orderData/inquireWeChatLostOrder',
+        data: data
+    })
+}
+
+/**
+ * 微信订单退费
+ */
+export const lostDoReturn=  function (data){
+    return ajax({
+        url: '/wxpay/lostDoReturn',
+        data: data
+    })
+}

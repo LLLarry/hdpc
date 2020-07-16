@@ -274,5 +274,29 @@ export const handleSubAccount= function (data){
          })
 }
 
+/**
+ * 检验商户是否有设备或是合伙人
+ */
+
+export const verifyMerchIsUser= function (data){
+    return ajax({
+             url: '/merchant/verifyMerchIsUser',
+             data: data,
+             method: 'post'
+         })
+}
+
+
+/**
+ * 更改商户权限
+ */
+
+export const editAccountType= function (data){
+    return ajax({
+             url: '/merchant/editAccountType',
+             data: data,
+             method: 'post'
+         })
+}
 
 

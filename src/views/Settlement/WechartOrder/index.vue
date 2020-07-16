@@ -2,9 +2,15 @@
     <div class="wechartOrder">
         <el-card class="box-card card_bottom0 cardForm">
             <el-form :inline="true"  class="demo-form-inline"  size="mini">
+                <el-form-item label="商户订单号" class="form_right25">
+                    <el-input v-model="wechartOrderForm.order" placeholder="商户订单号" clearable  size="small"></el-input>
+                </el-form-item>
+                <el-form-item label="微信订单号" class="form_right25">
+                    <el-input v-model="wechartOrderForm.number" placeholder="微信订单号" clearable  size="small"></el-input>
+                </el-form-item>
                 <el-form-item label="选择时间" class="form_right25 w200">
                      <el-date-picker
-                        v-model="time"
+                        v-model="wechartOrderForm.time"
                         size="small"
                         type="date"
                         placeholder="选择开始时间"
@@ -20,7 +26,7 @@
             </el-form>
          </el-card>
 
-		 <el-card class="box-card">
+		 <!-- <el-card class="box-card">
             <el-table
                 :data="totalContent"
                 border
@@ -31,25 +37,25 @@
                 >
                 <el-table-column
                 prop="a"
-                label="应结订单总金额"
+                label="总交易单数"
                 min-width="80"
                 >
                 </el-table-column>
 				<el-table-column
                 prop="b"
-                label="退款总金额"
+                label="应结订单总金额"
                 min-width="80"
                 >
                 </el-table-column>
 				<el-table-column
                 prop="c"
-                label="充值券退款总金额"
+                label="退款总金额"
                 min-width="80"
                 >
                 </el-table-column>
 				<el-table-column
                 prop="d"
-                label="手续费总金额"
+                label="充值券退款总金额"
                 min-width="80"
                 >
                 </el-table-column>
@@ -65,18 +71,15 @@
                 min-width="80"
                 >
                 </el-table-column>
-				
+				<el-table-column
+                prop="g"
+                label="申请退款总金额"
+                min-width="80"
+                >
+                </el-table-column>
             </el-table>
-        </el-card>
+        </el-card> -->
 
-         <!-- <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <span>丢失订单</span>
-            </div>
-            <div>
-                {{ listlost.length > 0 ? listlost.join(',') : '无' }}
-            </div>
-         </el-card> -->
 
          <el-card class="box-card">
             <el-table
@@ -114,10 +117,13 @@
                 </el-table-column>
 
 				<el-table-column
-	                prop="newBusinessName"
+	                prop="BusinessName"
 	                label="类型"
 	                min-width="200"
 	            >
+                <template slot-scope="scope">
+                    {{ scope.row.BusinessName | fmtType }}
+                </template>
                 </el-table-column>
 				
 				<el-table-column
@@ -167,15 +173,28 @@
 	                min-width="150"
 	                >
                 </el-table-column>
+                <el-table-column
+	                label="操作"
+	                min-width="100"
+                    fixed="right"
+	            >
+                    <template slot-scope="scope">
+                        <el-button type="danger" size="mini" @click="handleRef(scope.row)" :disabled="scope.row.RefundStatus === 'SUCCESS'">退款</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
         </el-card>
+
+        <MyPagination :totalPage="totalPage" @getPage="getPage" :nowPage="nowPage"/>
     </div>
 </template>
 
 <script>
-import { getWechartList } from '@/require/settlement'
+
+import { inquireWeChatLostOrder,lostDoReturn } from '@/require/settlement'
+import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
-import {messageTip} from '@/utils/ele'
+import {messageTip,alertPassword} from '@/utils/ele'
 // const tabList= {
 // 	   	creattime: "交易时间",
 // 	   	commonId: "公众账号ID",
@@ -214,58 +233,45 @@ export default {
     data(){
         return {
             pickerOptions: dateTimeJS,
-            time: '',
+            wechartOrderForm: {},
             tableData: [],
-			loading: false,
-			totalHeader: [],
-            totalContent: [],
-            listlost: []
+            loading: false,
+            totalPage: 1, //共1条数据
+            nowPage: 1, //当前页数 
+			// totalHeader: [],
+            // totalContent: [],
+            // listlost: []
         }
-	},
+    },
+    components: {
+        MyPagination
+    },
 	created(){
-		this.time= this.$fmtDate(new Date()-24*60*60*1000,'YYYY-MM-DD')
-		// let sendTime= this.time.replace(/-/g,'')
-		this.asyGetWechartList({time:this.time})
+        let {VNK,...query}= this.$route.query
+        if(Object.keys(query).length > 0){
+             this.wechartOrderForm= {...this.$route.query}
+             let page= parseInt(this.$route.query.currentPage)
+             this.nowPage= isNaN(page) ? 1  :page
+        }else {
+             this.nowPage=  1
+             this.wechartOrderForm= {...this.$route.query,time: this.$route.query.time || this.$fmtDate(new Date()-24*60*60*1000,'YYYY-MM-DD')}
+        }
+        this.asyGetWechartList({... this.wechartOrderForm,currentPage: this.nowPage})
 	},
     methods: {
 		async asyGetWechartList(data){
 			let _this= this
-			this.loading= true
-			try{
-                let info= await getWechartList(data)
-                let listLost= []
-				if(info.code === 200){
-                    _this.listlost= info.listlost || []
-					let list= info.listcontent.filter(item=>{
-                        item.newBusinessName= item.BusinessName.match(reg)[1]
-                        if(!_this.listlost.includes(item.BusinessOrderNo)){
-						    return item
-                        }else{
-                            item.isLost= true
-                            listLost.push(item)
-                        }
-                    })
-                    _this.tableData= [...listLost,...list]
-					let content= info.totalcontent.split(',')
-					let ContentList= {}
-					
-					content.forEach((item,i)=>{
-						ContentList[map[i]]= content[i]
-					})
-					 _this.totalContent= [ContentList]
-				}else{
-					messageTip('error',info.message)
-					_this.tableData= []
-					_this.totalContent= []
-				}
-				
-			}catch(e){
-                console.log(e)
-				_this.tableData= []
-				_this.totalContent= []
-			}finally{
-				this.loading= false
-			}
+            this.loading= true
+            try {
+                let info= await inquireWeChatLostOrder(data)
+                if(info.code === 200){
+                    this.tableData= info.listdata
+                    this.totalPage= info.totalRows
+                }
+            }
+            finally {
+                this.loading= false
+            }
         },
         rowClass({row,rowIndex}){ //改变选中行的颜色
             if(row.isLost){
@@ -273,12 +279,37 @@ export default {
             }
         },
         handleSearch(){
-			this.time= this.time || ''
-			// let sendTime= this.time.replace(/-/g,'')
-			// if(!/^\d+$/.test(sendTime)){
-			// 	sendTime= this.$fmtDate(new Date()-24*60*60*1000,'YYYY-MM-DD')
-			// }
-			this.asyGetWechartList({time:this.time})
+            this.nowPage= 1
+            this.$router.push({query: {...this.wechartOrderForm,VNK: this.$route.query.VNK,currentPage: 1}})
+			this.asyGetWechartList({...this.wechartOrderForm,currentPage: 1})
+        },
+        handleRef(row){ //退费接口
+            try {
+                alertPassword(async ()=>{
+                    let info= await lostDoReturn({ordernum: row.BusinessOrderNo,id: row.id})
+                    if(info.code === 200){
+                        this.asyGetWechartList({time:this.time,currentPage: this.nowPage})
+                        messageTip('success','退款成功')
+                    }else{
+                        messageTip('error',info.message)
+                    }
+                }) 
+            }
+            catch(e){
+                console.log(e)
+            }
+        },
+        getPage(page){ //分页发改变时，触发回调
+            this.nowPage = page
+            this.wechartOrderForm= { ...this.$route.query, currentPage: page }
+            this.$router.push({query: {...this.wechartOrderForm,VNK: this.$route.query.VNK}})
+            this.asyGetWechartList(this.wechartOrderForm)
+        }
+    },
+    filters: {
+        fmtType(value){
+            if(!value) return ''
+            return value.replace(/(.+)?\((.+)\)(.+)?/,'$2')
         }
     }
 }

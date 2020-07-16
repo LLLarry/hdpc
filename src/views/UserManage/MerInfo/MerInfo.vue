@@ -464,7 +464,8 @@
                         <el-select v-model="merRankVersionForm.rank"  placeholder="选择商户权限"  style="width: 100%;">
                             <el-option label="商户" :value="2" ></el-option>
                             <el-option label="代理商" :value="3" ></el-option>
-                            <el-option label="子账号" :value="6" ></el-option>
+                            <!-- <el-option label="子账号" :value="6" ></el-option> -->
+                            <el-option label="普通用户" :value="1" ></el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
@@ -481,7 +482,7 @@
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
-import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem,updatesetAgent,setMername } from '@/require/userManage'
+import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem,updatesetAgent,setMername,verifyMerchIsUser,editAccountType} from '@/require/userManage'
 import { messageTip , alertPassword , confirDelete} from '@/utils/ele'
 import { merUnbindAgent } from '@/require'
 import { mapState, mapMutations } from 'vuex'
@@ -737,19 +738,33 @@ export default {
               this.merRankVersion= true
             })
         },
-        HandlemerRankVersion(){ //点击提交商户权限修改
+        async HandlemerRankVersion(){ //点击提交商户权限修改
             let {id,rank}= this.merRankVersionForm
-            updatesetAgent({merId: id,rank}).then(res=>{
-                this.merRankVersion= false
-                if(res.code == 200){
-                    messageTip('success', '设置成功')
-                    this.changeMerRankRow.rank= rank
-                }else{
-                    messageTip('error', res.result || '设置失败')
+            if(rank == 1 ||  rank== 3){
+                let info= await verifyMerchIsUser({merid: id})
+                if(info.code !== 200){
+                    return messageTip('error',info.message)
                 }
-            }).catch(err=>{
-                this.merRankVersion= false
-            })
+            }
+            let res= await editAccountType({id,rank})
+            if(res.code == 200){
+                messageTip('success', '设置成功')
+                this.changeMerRankRow.rank= rank
+            }else{
+                messageTip('error', res.message || '设置失败')
+            }
+            this.merRankVersion= false
+            // updatesetAgent({merId: id,rank}).then(res=>{
+            //     this.merRankVersion= false
+            //     if(res.code == 200){
+            //         messageTip('success', '设置成功')
+            //         this.changeMerRankRow.rank= rank
+            //     }else{
+            //         messageTip('error', res.result || '设置失败')
+            //     }
+            // }).catch(err=>{
+            //     this.merRankVersion= false
+            // })
         },
         handleBindAgent(row){
             this.bindInfo= {show: true,from: 2,page: {id: row.id}}

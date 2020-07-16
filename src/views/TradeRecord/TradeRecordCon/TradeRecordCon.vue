@@ -361,8 +361,8 @@
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
-// import dateTimeJS from '@/utils/dateTime'
-import configDisabledDate from '@/utils/configDisabledDate'
+import dateTimeJS from '@/utils/dateTime'
+// import configDisabledDate from '@/utils/configDisabledDate'
 import { getTradeRecord,getPartnerIncomeDetail } from '@/require/tradeRecord'
 import { messageTip , confirDelete } from '@/utils/ele'
 import Util from '@/utils/util'
@@ -372,7 +372,7 @@ export default {
         return {
             tradeRecordConForm: {},
             diaOrderNum: '',
-            pickerOptions: configDisabledDate(15552000000),
+            pickerOptions: dateTimeJS,
             tableData: [],
             totalData: [],
             totalRows: 0, //数据总条数

@@ -6,7 +6,7 @@
                     <el-input v-model="subAccountForm.nick" placeholder="商户昵称" clearable  size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" class="form_right25">
-                    <el-input v-model="subAccountForm.phone" placeholder="商户ID" clearable  size="small"></el-input>
+                    <el-input v-model="subAccountForm.phone" placeholder="电话" clearable  size="small"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名" class="form_right25">
                     <el-input v-model="subAccountForm.name" placeholder="商户姓名" clearable  size="small"></el-input>

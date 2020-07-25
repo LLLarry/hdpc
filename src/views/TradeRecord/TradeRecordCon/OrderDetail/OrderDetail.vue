@@ -197,7 +197,7 @@
                         </div>
 
                         <div v-if="paysource ==2">
-                            <el-button type="danger" size="mini" v-if="[1,2,6,8,10].includes(row.handletype)"
+                            <el-button type="danger" size="mini" v-if="[1,2,6,8,10,12].includes(row.handletype)"
                             @click="refundMoneyBtn(row.id,2,row.handletype)"
                             >退款</el-button>
                             <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
@@ -1087,9 +1087,9 @@ export default {
                 obj.orderNum= ordernum
                 obj.num= coinNum
                 console.log(handletype)
-                obj.payType= [1,4].includes(handletype) ? '微信' : [2,5].includes(handletype) ? '支付宝' : [3].includes(handletype) ? '投币' : [6,7].includes(handletype) ? '钱包': [8,9].includes(handletype) ? '微信小程序' : [10,11].includes(handletype) ? '支付宝小程序' : '— —'
+                obj.payType= [1,4].includes(handletype) ? '微信' : [2,5].includes(handletype) ? '支付宝' : [3].includes(handletype) ? '投币' : [6,7].includes(handletype) ? '钱包': [8,9].includes(handletype) ? '微信小程序' : [10,11].includes(handletype) ? '支付宝小程序' : [12].includes(handletype) ? '银联' : '— —'
                 obj.handleTime= beginTime
-                obj.status= [1,2,3,6,8,10].includes(handletype) ? '正常' : [4].includes(handletype) ? '微信已退费' :  [5].includes(handletype) ? '支付宝已退费' : [7].includes(handletype) ? '已退款到钱包' : [9].includes(handletype) ? '微信小程序已退费' : [11].includes(handletype) ? '支付宝小程序已退费' : '— —'
+                obj.status= [1,2,3,6,8,10,12].includes(handletype) ? '正常' : [4].includes(handletype) ? '微信已退费' :  [5].includes(handletype) ? '支付宝已退费' : [7].includes(handletype) ? '已退款到钱包' : [9].includes(handletype) ? '微信小程序已退费' : [11].includes(handletype) ? '支付宝小程序已退费' : [13].includes(handletype) ? '银联已退费' : '— —'
                 obj.handletype= handletype
                 this.tableData= [obj]
             }else if(this.paysource == 3){
@@ -1233,6 +1233,9 @@ export default {
                 }else if(paytype==10){
                     url = "/alipay/aliDoRefund";
                     data ={id : orderid,refundState : refundState,pwd : '',utype : utype,wolfkey:4};
+                }else if(paytype==12){
+                    url = "/unionpay/doRefund";
+                    data ={id : orderid,refundState : refundState,pwd : '',utype : utype};
                 }
             }else if(paysource==3){//离线充值机 1-wx、2-alipay、3-wx refund、4-alipay refund、5-wallet、6-wallet refund*/
                 refundState = 2;
@@ -1287,7 +1290,7 @@ export default {
                     messageTip('error','退款失败')
                 }
             }).catch(error=>{
-
+                messageTip('error','退款出错')
             })
         }
     }

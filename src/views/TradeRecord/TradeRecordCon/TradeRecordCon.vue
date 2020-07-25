@@ -292,7 +292,7 @@
                 min-width="80"
                 >
                  <template slot-scope="{row}">
-                    {{ row.paytype == 1 ? '钱包' : row.paytype == 2 ? '微信' : row.paytype == 3 ? '支付宝' : row.paytype == 4 ? '微信小程序' : row.paytype == 5 ? '支付宝小程序' : row.paytype == 6 ? '虚拟充值' : '— —'}}
+                    {{ row.paytype == 1 ? '钱包' : row.paytype == 2 ? '微信' : row.paytype == 3 ? '支付宝' : row.paytype == 4 ? '微信小程序' : row.paytype == 5 ? '支付宝小程序' : row.paytype == 6 ? '虚拟充值' : row.paytype == 12 ? '银联支付' : '— —'}}
                  </template>
                 </el-table-column>
                 <el-table-column

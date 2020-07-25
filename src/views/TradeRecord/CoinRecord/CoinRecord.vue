@@ -146,8 +146,13 @@
                 label="订单状态"
                 >
                  <template slot-scope="{row}">
-                     <el-link type="danger" :underline="false" v-if="row.handletype == 4 || row.handletype == 5">退款</el-link>
-                     <el-link type="success" :underline="false" v-else>正常</el-link>
+                     <div v-if="row.status === 1">
+                         <el-link type="danger" :underline="false" v-if="row.handletype == 4 || row.handletype == 5">退款</el-link>
+                         <el-link type="success" :underline="false" v-else>正常</el-link>
+                     </div>
+                     <div v-else-if="row.status === 0">
+                        <el-link type="warning" :underline="false">预订单</el-link>
+                     </div>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -156,7 +161,7 @@
                 min-width="100"
                 >
                 <template slot-scope="{row}">
-                    {{[1,4].includes(row.handletype) ? '微信' :  [2,5].includes(row.handletype) ? '支付宝' :[6,7].includes(row.handletype) ? '钱包' : [8,9].includes(row.handletype) ? '微信小程序': [10,11].includes(row.handletype) ? '支付宝小程序': '— —'}}
+                    {{[1,4].includes(row.handletype) ? '微信' : [3].includes(row.handletype) ? '投币器' : [2,5].includes(row.handletype) ? '支付宝' :[6,7].includes(row.handletype) ? '钱包' : [8,9].includes(row.handletype) ? '微信小程序': [10,11].includes(row.handletype) ? '支付宝小程序': [12].includes(row.handletype) ? '银联支付': '— —'}}
                 </template>
                 </el-table-column>
 
@@ -194,8 +199,8 @@
                 fixed="right"
                 >
                 <template slot-scope="{row}">
-                    <el-button type="danger" size="mini" plain disabled v-if="[3,4,5,7,9,11].includes(row.handletype)">退款</el-button>
-                    <el-button type="danger" size="mini" v-if="[1,2,6,8,10].includes(row.handletype)" @click="handleRefBtn(row)">退款</el-button>
+                    <el-button type="danger" size="mini" plain disabled v-if="[3,4,5,7,9,11,13].includes(row.handletype)">退款</el-button>
+                    <el-button type="danger" size="mini" v-if="[1,2,6,8,10,12].includes(row.handletype)" @click="handleRefBtn(row)">退款</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -329,7 +334,7 @@ export default {
             //utype= 3超级管理员  2普通管理员
             let  wolfkey= 0  
              wolfkey=  this.row.handletype == 8 ?  3 : this.row.handletype == 10 ?  4 : 0
-            let url =  this.row.handletype == 1 ? '/wxpay/doRefund' : this.row.handletype == 2 ? '/alipay/alipayRefund' : this.row.handletype == 6 ? '/wxpay/doWalletReturn' : this.row.handletype == 8 ? '/wxpay/doRefund' : this.row.handletype == 10 ? '/alipay/alipayRefund' : ''
+            let url =  this.row.handletype == 1 ? '/wxpay/doRefund' : this.row.handletype == 2 ? '/alipay/alipayRefund' : this.row.handletype == 6 ? '/wxpay/doWalletReturn' : this.row.handletype == 8 ? '/wxpay/doRefund' : this.row.handletype == 10 ? '/alipay/alipayRefund' : this.row.handletype == 12 ? '/unionpay/doRefund' : ''
     
             let data= {
                 id: this.row.id,

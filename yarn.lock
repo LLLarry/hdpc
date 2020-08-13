@@ -10,6 +10,13 @@
     "@babel/types" "7.0.0-beta.35"
     lodash "^4.2.0"
 
+"@babel/runtime@^7.5.5":
+  version "7.11.2"
+  resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.11.2.tgz?cache=0&sync_timestamp=1596637783157&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
+  integrity sha1-9UnBPHVMxAuHZEufqfCaapX+BzY=
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/types@7.0.0-beta.35":
   version "7.0.0-beta.35"
   resolved "https://registry.npm.taobao.org/@babel/types/download/@babel/types-7.0.0-beta.35.tgz#cf933a9a9a38484ca724b335b88d83726d5ab960"
@@ -18,6 +25,53 @@
     esutils "^2.0.2"
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
+
+"@jiaminghi/bezier-curve@*":
+  version "0.0.9"
+  resolved "https://registry.npm.taobao.org/@jiaminghi/bezier-curve/download/@jiaminghi/bezier-curve-0.0.9.tgz#5196aca93c8b061a612b4c3eabcedf9490cef6ee"
+  integrity sha1-UZasqTyLBhphK0w+q87flJDO9u4=
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+
+"@jiaminghi/c-render@*":
+  version "0.4.3"
+  resolved "https://registry.npm.taobao.org/@jiaminghi/c-render/download/@jiaminghi/c-render-0.4.3.tgz#982ebd8f71b443bb9507834227834973ebd9b6d8"
+  integrity sha1-mC69j3G0Q7uVB4NCJ4NJc+vZttg=
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    "@jiaminghi/bezier-curve" "*"
+    "@jiaminghi/color" "*"
+    "@jiaminghi/transition" "*"
+
+"@jiaminghi/charts@*":
+  version "0.2.17"
+  resolved "https://registry.npm.taobao.org/@jiaminghi/charts/download/@jiaminghi/charts-0.2.17.tgz#de32d846b8e1209795c0720e32f76a916705dda3"
+  integrity sha1-3jLYRrjhIJeVwHIOMvdqkWcF3aM=
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    "@jiaminghi/c-render" "*"
+
+"@jiaminghi/color@*":
+  version "0.1.1"
+  resolved "https://registry.npm.taobao.org/@jiaminghi/color/download/@jiaminghi/color-0.1.1.tgz#bddf9012dfce6982d3829a983ffeb91ee9dda7b6"
+  integrity sha1-vd+QEt/OaYLTgpqYP/65Hundp7Y=
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+
+"@jiaminghi/data-view@^2.9.6":
+  version "2.9.6"
+  resolved "https://registry.npm.taobao.org/@jiaminghi/data-view/download/@jiaminghi/data-view-2.9.6.tgz#2ffd067a79e88c3acc2f6dfc1597f2855e21b94d"
+  integrity sha1-L/0GennojDrML238FZfyhV4huU0=
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    "@jiaminghi/charts" "*"
+
+"@jiaminghi/transition@*":
+  version "1.1.11"
+  resolved "https://registry.npm.taobao.org/@jiaminghi/transition/download/@jiaminghi/transition-1.1.11.tgz#576d8af092434b34201eba5eaecc79dd33c8ad8c"
+  integrity sha1-V22K8JJDSzQgHrpersx53TPIrYw=
+  dependencies:
+    "@babel/runtime" "^7.5.5"
 
 "@types/q@^1.5.1":
   version "1.5.4"
@@ -2499,12 +2553,19 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-echarts@^4.4.0:
-  version "4.7.0"
-  resolved "https://registry.npm.taobao.org/echarts/download/echarts-4.7.0.tgz#5b3875a4c2f91e3929425fabab9eace7e4098b3f"
-  integrity sha1-Wzh1pML5HjkpQl+rq56s5+QJiz8=
+"echarts2@yarn:echarts@2.2.8":
+  version "2.2.8"
+  resolved "https://registry.npm.taobao.org/echarts/download/echarts-2.2.8.tgz#81a86694c4e5e917e6fdd39d52989002a685f5e7"
+  integrity sha1-gahmlMTl6Rfm/dOdUpiQAqaF9ec=
   dependencies:
-    zrender "4.3.0"
+    zrenderjs "~2.1.1-amd-beta1"
+
+"echarts4@yarn:echarts@4.4.0":
+  version "4.4.0"
+  resolved "https://registry.npm.taobao.org/echarts/download/echarts-4.4.0.tgz#d5260566cef0b98f5a00baf1b5010e92c1c23661"
+  integrity sha1-1SYFZs7wuY9aALrxtQEOksHCNmE=
+  dependencies:
+    zrender "4.1.1"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -6191,6 +6252,11 @@ regenerator-runtime@^0.11.0:
   resolved "https://registry.npm.taobao.org/regenerator-runtime/download/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
   integrity sha1-vgWtf5v30i4Fb5cmzuUBf78Z4uk=
 
+regenerator-runtime@^0.13.4:
+  version "0.13.7"
+  resolved "https://registry.npm.taobao.org/regenerator-runtime/download/regenerator-runtime-0.13.7.tgz?cache=0&sync_timestamp=1595456224955&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fregenerator-runtime%2Fdownload%2Fregenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
+  integrity sha1-ysLazIoepnX+qrrriugziYrkb1U=
+
 regenerator-transform@^0.10.0:
   version "0.10.1"
   resolved "https://registry.npm.taobao.org/regenerator-transform/download/regenerator-transform-0.10.1.tgz#1e4996837231da8b7f3cf4114d71b5691a0680dd"
@@ -7876,7 +7942,12 @@ yargs@~3.10.0:
     decamelize "^1.0.0"
     window-size "0.1.0"
 
-zrender@4.3.0:
-  version "4.3.0"
-  resolved "https://registry.npm.taobao.org/zrender/download/zrender-4.3.0.tgz?cache=0&sync_timestamp=1588758718490&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fzrender%2Fdownload%2Fzrender-4.3.0.tgz#9f056121b20bbae44414d287bf6a119ff7042661"
-  integrity sha1-nwVhIbILuuREFNKHv2oRn/cEJmE=
+zrender@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npm.taobao.org/zrender/download/zrender-4.1.1.tgz?cache=0&sync_timestamp=1596718989769&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fzrender%2Fdownload%2Fzrender-4.1.1.tgz#201e58a55cf1a7e973e1dbad3c15596ef8779f54"
+  integrity sha1-IB5YpVzxp+lz4dutPBVZbvh3n1Q=
+
+zrenderjs@~2.1.1-amd-beta1:
+  version "2.1.1"
+  resolved "https://registry.npm.taobao.org/zrenderjs/download/zrenderjs-2.1.1.tgz#e6ecf8d8c48e1f7af3f487f17d7e59e507a832cb"
+  integrity sha1-5uz42MSOH3rz9IfxfX5Z5QeoMss=

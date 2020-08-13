@@ -741,7 +741,7 @@ export default {
         async HandlemerRankVersion(){ //点击提交商户权限修改
             let {id,rank}= this.merRankVersionForm
             if(rank == 1 ||  rank== 3){
-                let info= await verifyMerchIsUser({merid: id})
+                let info= await verifyMerchIsUser({merid: id,rank})
                 if(info.code !== 200){
                     return messageTip('error',info.message)
                 }

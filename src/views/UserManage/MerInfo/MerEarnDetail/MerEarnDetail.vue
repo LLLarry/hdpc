@@ -103,6 +103,7 @@
                         <el-link  type="success" :underline="false" v-if="scope.row.paytype==1">钱包支付</el-link>
                         <el-link  type="success" :underline="false" v-if="scope.row.paytype==2">微信支付</el-link>
                         <el-link  type="success" :underline="false" v-if="scope.row.paytype==3">支付宝支付</el-link>
+                        <el-link  type="success" :underline="false" v-if="scope.row.paytype==4">银联支付</el-link>
                     </template>
                  </el-table-column>
                 <el-table-column

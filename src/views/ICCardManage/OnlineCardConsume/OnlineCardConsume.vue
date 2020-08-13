@@ -150,8 +150,8 @@
                 <template slot-scope="scope">
                     <div>
                     充值金额：
-                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.money.toFixed(2)}}</el-link>
-                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.money.toFixed(2)}}</el-link>
+                    <el-link v-if="[1,5,7,9,11].includes(scope.row.type)" type="danger" :underline="false">-{{scope.row.money.toFixed(2)}}</el-link>
+                    <el-link v-else-if="[2,3,6,8,10].includes(scope.row.type)" type="success" :underline="false">+{{scope.row.money.toFixed(2)}}</el-link>
                     <!-- <el-link v-else-if="[8].includes(scope.row.type)" :type="scope.row.money >= 0 ? 'success': 'danger'" :underline="false">
                         {{(scope.row.money >= 0 ? '+' : '')+scope.row.money.toFixed(2)}}
                     </el-link> -->
@@ -175,8 +175,8 @@
                 min-width="100"
                 >
                 <template slot-scope="scope">
-                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">{{(0-scope.row.accountmoney).toFixed(2)}}</el-link>
-                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">
+                    <el-link v-if="[1,5,7,9,11].includes(scope.row.type)" type="danger" :underline="false">{{(0-scope.row.accountmoney).toFixed(2)}}</el-link>
+                    <el-link v-else-if="[2,3,6,8,10].includes(scope.row.type)" type="success" :underline="false">
                         {{ scope.row.accountmoney.toFixed(2)}}
                     </el-link>
                     <!-- <el-link v-else-if="[8].includes(scope.row.type)" :type="scope.row.accountmoney >= 0 ? 'success': 'danger'" :underline="false">{{(scope.row.accountmoney >= 0 ? '+' : '') +scope.row.accountmoney.toFixed(2)}}</el-link> -->
@@ -212,11 +212,11 @@
                 min-width="120"
                 >
                 <template slot-scope="scope">
-                    <el-link v-if="[1,5,7,9].includes(scope.row.type)" type="danger" :underline="false">
-                        {{scope.row.type == 1 ? "消费" : scope.row.type == 5 ? "微信退费": scope.row.type == 7 ? "支付宝退费" :  scope.row.type == 9 ? "虚拟退费" : "— —" }}
+                    <el-link v-if="[1,5,7,9,11].includes(scope.row.type)" type="danger" :underline="false">
+                        {{scope.row.type == 1 ? "消费" : scope.row.type == 5 ? "微信退费": scope.row.type == 7 ? "支付宝退费" :  scope.row.type == 9 ? "虚拟退费" : scope.row.type == 11 ? "支付宝小程序退费" : "— —" }}
                     </el-link>
-                    <el-link v-else-if="[2,3,6,8].includes(scope.row.type)" type="success" :underline="false">
-                        {{ scope.row.type == 2 ? "余额回收" : scope.row.type == 3 ? "微信充值": scope.row.type == 6 ? "支付宝充值" :  scope.row.type == 8 ? "虚拟充值"  : "— —" }}
+                    <el-link v-else-if="[2,3,6,8,10].includes(scope.row.type)" type="success" :underline="false">
+                        {{ scope.row.type == 2 ? "余额回收" : scope.row.type == 3 ? "微信充值": scope.row.type == 6 ? "支付宝充值" :  scope.row.type == 8 ? "虚拟充值" : scope.row.type == 10 ? "支付宝小程序充值"  : "— —" }}
                     </el-link>
                     <el-link v-else :underline="false" type="info">卡操作</el-link>
                  </template>

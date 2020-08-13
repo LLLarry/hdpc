@@ -46,6 +46,7 @@
                         <el-option label="远程断电" value="4" ></el-option>
                         <el-option label="被迫停止" value="11" ></el-option>
                         <el-option label="日志结束" value="255" ></el-option>
+                        <el-option label="无" value="-1" ></el-option>
                     </el-select>
                 </el-form-item>
 
@@ -197,7 +198,7 @@
                 min-width="85"
                 >
                 <template slot-scope="{row}">
-                    {{row.paytype == 1 ? "钱包" : row.paytype == 2 ? "微信" : row.paytype == 3 ? "支付宝": row.paytype == 4 ? "包月下发数据" : row.paytype == 5 ? "投币" : row.paytype == 6 ? "刷卡" : row.paytype == 7 ? "刷卡" : "— —"}}
+                    {{row.paytype == 1 ? "钱包" : row.paytype == 2 ? "微信" : row.paytype == 3 ? "支付宝": row.paytype == 4 ? "包月下发数据" : row.paytype == 5 ? "投币" : row.paytype == 6 ? "刷卡" : row.paytype == 7 ? "刷卡" : row.paytype == 8 ? "支付宝小程序" : row.paytype == 12 ? "银联" : "— —"}}
                     <el-popover
                         v-if="row.paytype == 6 || row.paytype == 7"
                         placement="right"
@@ -265,7 +266,7 @@
                 >
                 <template slot-scope="{row}">
                    {{row.resultinfo==0?" 充电完成":row.resultinfo==1?"空载断电":row.resultinfo==2?"充满":
-					    row.resultinfo==3?"超功率自停":row.resultinfo==4?"远程断电" :row.resultinfo==5?"刷卡断电" :row.resultinfo==11?"被迫停止":row.resultinfo==255?"日志结束":"— —"}}
+					    row.resultinfo==3?"超功率自停":row.resultinfo==4?"远程断电" :row.resultinfo==5?"刷卡断电" :row.resultinfo==11?"被迫停止":row.resultinfo==255?"日志结束":"无"}}
                 </template>
                 </el-table-column>
 
@@ -437,7 +438,7 @@ export default {
         handleRefAndWidth(utype){ //处理退费或 撤回 逻辑
             //utype= 3超级管理员  2普通管理员
                     if(this.row.number == 0){ //全额退款
-                        let url =  this.row.paytype == 1 ? '/wxpay/doWalletReturn' : this.row.paytype == 2 ? '/wxpay/doRefund' : this.row.paytype == 3 ? '/alipay/aliDoRefund' : ''
+                        let url =  this.row.paytype == 1 ? '/wxpay/doWalletReturn' : this.row.paytype == 2 ? '/wxpay/doRefund' : [3,8].includes(this.row.paytype) ? '/alipay/aliDoRefund' : [12].includes(this.row.paytype) ? '/unionpay/doRefund' : ''
                         let data= {
                             id: this.row.id,
                             refundState : 1,

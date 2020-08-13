@@ -75,7 +75,7 @@
                     >
                     <template slot-scope="{row}">
                         <div v-if="paysource ==1">
-                            <el-button type="danger" size="mini" v-if="row.number == 0 && [2,3].includes(row.paytype)"
+                            <el-button type="danger" size="mini" v-if="row.number == 0 && [2,3,8,12].includes(row.paytype)"
                             @click="refundMoneyBtn(row.id,1,row.paytype)"
                             >退款</el-button>
                             <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
@@ -315,7 +315,7 @@
                         </div>
 
                         <div v-if="paysource ==3">
-                            <el-button type="danger" size="mini" v-if="[1,2].includes(row.paytype)"
+                            <el-button type="danger" size="mini" v-if="[1,2,8].includes(row.paytype)"
                             @click="refundMoneyBtn(row.id,3,row.paytype)"
                             >退款</el-button>
                             <el-button type="danger" size="mini" disabled plain v-else>退款</el-button>
@@ -1073,7 +1073,7 @@ export default {
                 obj.payMoney= [1,2].includes(number) ? (0-expenditure).toFixed(2) : expenditure.toFixed(2) 
                 obj.chargeTime= durationtime
                 obj.quantity= quantity/100
-                obj.payType= paytype == 1 ? "钱包" : paytype == 2 ? "微信" : paytype == 3 ? "支付宝" : paytype == 4 ? "包月" : "— —" 
+                obj.payType= paytype == 1 ? "钱包" : paytype == 2 ? "微信" : paytype == 3 ? "支付宝" : paytype == 4 ? "包月" :  paytype == 8 ? "支付宝小程序" :  paytype == 12 ? "银联" : "— —" 
                 obj.date= begintime
                 obj.status= number == 1 ? '全额退款' : number == 0 ? '正常' : number == 2 ?  `部分退款(<span style="color: red;">${refundMoney}</span>)` : '— —'
                 obj.number= number
@@ -1098,9 +1098,9 @@ export default {
                 obj.orderNum= ordernum
                 obj.cardNum= cardID
                 obj.cardMoney= balance.toFixed(2)
-                obj.payType= [1,3].includes(paytype) ? '微信' : [2,4].includes(paytype) ? '支付宝' :  '查询'
+                obj.payType= [1,3].includes(paytype) ? '微信' : [2,4].includes(paytype) ? '支付宝' : [8].includes(paytype) ? '支付宝小程序' : '查询'
                 obj.time= beginTime
-                obj.status= [1,2,5].includes(paytype) ? '正常' : [3,4,6].includes(paytype) ? '退款' :  '— —'
+                obj.status= [1,2,5,8].includes(paytype) ? '正常' : [3,4,6,9].includes(paytype) ? '退款' :  '— —'
                 obj.paytype= paytype
                 this.tableData= [obj]
             }else if(this.paysource == 4){
@@ -1129,7 +1129,8 @@ export default {
                 obj.cardMoney= balance.toFixed(2)
                 obj.money= money
                 obj.money2= accountmoney.toFixed(2)
-                obj.handleType= type == 1 ? "消费" : type == 2 ? "余额回收": type == 3 ? "微信充值" : type == 4 ? "卡操作" : type == 5 ? "微信退款" : type == 6 ? "支付宝充值" : type == 7 ? "支付宝退款" : type == 8 ? "虚拟充值" : type == 9 ? "虚拟充值退款" : "其它"
+                obj.handleType= type == 1 ? "消费" : type == 2 ? "余额回收": type == 3 ? "微信充值" : type == 4 ? "卡操作" : type == 5 ? "微信退款" : type == 6 ? "支付宝充值" :
+                 type == 7 ? "支付宝退款" : type == 8 ? "虚拟充值" : type == 9 ? "虚拟充值退款" : type == 10 ? "支付宝小程序充值": type == 11 ? "支付宝小程序退款" : "其它"
                 let payType= ''
                 if(flag == 1){
                    payType=  status==1 ? "正常" : status==2 ? "激活" : status==3 ? "绑定" : 
@@ -1209,11 +1210,14 @@ export default {
                 }else if(paytype==2){
                     url = "/wxpay/doRefund";
                     data ={id : orderid,refundState : refundState,pwd : '',utype : utype}
-                }else if(paytype==3){
+                }else if(paytype==3 || paytype==8){
                     url = "/alipay/alipayRefund";
                     data ={id : orderid,refundState : refundState,pwd : '',utype : utype}
                 }else if(paytype==4){
                     url = "/wxpay/wxDoRefund";
+                    data ={id : orderid,refundState : refundState,pwd : '',utype : utype}
+                }else if(paytype==12){
+                    url = "/unionpay/doRefund";
                     data ={id : orderid,refundState : refundState,pwd : '',utype : utype}
                 }
             }else if(paysource==2){//脉冲模块 1微信、2支付宝、3投币、4 微信退款、5 支付宝退款、6 钱包、7钱包退款、8微信小程序、9微信小程序退款、10支付宝小程序、11支付宝小程序退款*/
@@ -1242,7 +1246,7 @@ export default {
                 if(paytype==1){
                     url = "/wxpay/doRefund";
                     data ={id : orderid,refundState : refundState,pwd : '',utype : utype}
-                }else if(paytype==2){
+                }else if([2,8].includes(paytype)){
                     url = "/alipay/alipayRefund";
                     data ={id : orderid,refundState : refundState,pwd : '',utype : utype}
                 }else if(paytype==5){
@@ -1266,7 +1270,7 @@ export default {
                 if(paytype==3){//微信
                     url = "/wxpay/doRefund";
                     data ={id : orderid,refundState : refundState,pwd : '',utype : utype}
-                }else if(paytype==6){//支付宝
+                }else if([6,10].includes(paytype)){//支付宝
                     url = "/alipay/alipayRefund";
                     data ={id : orderid,refundState : refundState,pwd : '',utype : utype}
                 }else if(paytype==8){

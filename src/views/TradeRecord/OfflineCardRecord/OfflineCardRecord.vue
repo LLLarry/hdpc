@@ -198,7 +198,7 @@
                 min-width="80"
                 >
                 <template slot-scope="{row}">
-                    {{row.paytype==1 ? "微信" : row.paytype==2 ? "支付宝" : row.paytype==3 ? "微信退款" : row.paytype==4?"支付宝退款": row.paytype==7 ?"刷卡":"— —" }}
+                    {{row.paytype==1 ? "微信" : row.paytype==2 ? "支付宝" : row.paytype==3 ? "微信退款" : row.paytype==4?"支付宝退款": row.paytype==7 ?"刷卡": row.paytype==8 ?"支付宝小程序" : row.paytype==9 ?"支付宝小程序退款" : "— —" }}
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -387,7 +387,7 @@ export default {
         },
         handleRef(utype){ //处理退费 逻辑
             //utype= 3超级管理员  2普通管理员       
-            let url =  this.row.handletype == 1 ? '/wxpay/doRefund' : this.row.handletype == 2 ? '/alipay/alipayRefund' : ''
+            let url =  this.row.paytype == 1 ? '/wxpay/doRefund' :  [2,8].includes(this.row.paytype) ? '/alipay/alipayRefund' : ''
             let data= {
                 id: this.row.id,
                 refundState : 2,

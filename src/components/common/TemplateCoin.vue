@@ -108,7 +108,7 @@
             min-width="200"
             >
             <template slot-scope="scope">
-                <div v-if="scope.row.edit"> <el-input-number size="mini" v-model="childTemForm.remark" style="width: 85%;margin-right: 10px;" placeholder="请输入投币个数"></el-input-number>个</div>
+                <div v-if="scope.row.edit"> <el-input-number :precision="0" size="mini" v-model="childTemForm.remark" style="width: 85%;margin-right: 10px;" placeholder="请输入投币个数"></el-input-number>个</div>
                 <span v-else> {{scope.row.remark}}个</span>
             </template>
             </el-table-column>
@@ -118,7 +118,7 @@
             min-width="200"
             >
             <template slot-scope="scope">
-               <div v-if="scope.row.edit"> <el-input-number size="mini" v-model="childTemForm.money" :precision="1" style="width: 85%;margin-right: 10px;" placeholder="请输入付款金额"></el-input-number>元</div>
+               <div v-if="scope.row.edit"> <el-input-number :precision="0"  size="mini" v-model="childTemForm.money" style="width: 85%;margin-right: 10px;" placeholder="请输入付款金额"></el-input-number>元</div>
                 <span v-else> {{scope.row.money}}元</span>
             </template>
             </el-table-column>

@@ -234,7 +234,12 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @click="handleScanPortQrcode(scope.row)">查看</el-button>
+                    <el-button 
+                        type="primary" 
+                        size="mini" 
+                        @click="handleScanPortQrcode(scope.row)" 
+                        :disabled="['03','04'].indexOf(scope.row.hardversion) !== -1"
+                    >查看</el-button>
                 </template>
                 </el-table-column>
 
@@ -414,7 +419,8 @@ export default {
         },
         handleScanPortQrcode({code,hardversion}){ //查看端口二维码
             const  hvToRort=  {
-                2: ['02','07'],
+                1: ['07'],
+                2: ['02'],
                 10: ['00','01','08'],
                 16: ['05'],
                 20: ['06']
@@ -547,5 +553,14 @@ export default {
             padding: 15px 20px;
         }
     }
+    
+}
+.el-scrollbar,
+.el-select-dropdown__wrap ,
+.el-scrollbar__wrap {
+    height: 100% !important;
+}
+.el-select-dropdown__wrap {
+    max-height: 400px !important;
 }
 </style>

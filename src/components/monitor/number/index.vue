@@ -1,20 +1,26 @@
 <template>
   <dv-decoration-7 style="width:150px;height:50px;">
       <div class="number-box">
+          <div class="title">{{title}}</div>
           <div class="num">
-              5623.36
+              {{count}}
             </div>
-          <div class="title">历史收益</div>
       </div>
   </dv-decoration-7>
 </template>
 
 <script>
 export default {
-    data(){
-        return {
+    props: {
+        title: {
+            type: String,
+            default: ''
+        },
+        count: {
+            type: [Number, String],
+            default: 0
         }
-    }
+    },
 }
 </script>
 

@@ -35,6 +35,7 @@
                         <el-option label="微信" value="2" ></el-option>
                         <el-option label="支付宝" value="3" ></el-option>
                         <el-option label="包月" value="4" ></el-option>
+                        <el-option label="银联" value="12" ></el-option>
                     </el-select>
                 </el-form-item>
                  <el-form-item label="结束原因" class="form_right25">
@@ -289,8 +290,8 @@
                     <router-link :to="`/tradeRecord/chargeRecord/chargeRecordDetail?orderid=${row.id}`"  style="color: #fff;margin-right: 10px;">
                         <el-button type="primary" size="mini">详情</el-button>
                     </router-link>
-                    <el-button type="danger" size="mini" v-if="row.number==0" @click="handleRef(row)">退款</el-button>
-                    <el-button type="warning" size="mini" v-else-if="row.number==2"  @click="handleRef(row)">撤回</el-button>
+                    <el-button type="danger" size="mini" v-if="row.number==0 && row.paytype != 7" @click="handleRef(row)">退款</el-button>
+                    <el-button type="warning" size="mini" v-else-if="row.number==2 && row.paytype != 7"  @click="handleRef(row)">撤回</el-button>
                     <el-button type="danger" size="mini" plain disabled v-else >退款</el-button>
                 </template>
                 </el-table-column>  

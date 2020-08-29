@@ -30,7 +30,8 @@ import {
   decoration2,
   decoration10,
   digitalFlop,
-  scrollBoard
+  scrollBoard,
+  capsuleChart
 } from '@jiaminghi/data-view'
 
 Vue.use(fullScreenContainer)
@@ -43,6 +44,8 @@ Vue.use(decoration2)
 Vue.use(decoration10)
 Vue.use(digitalFlop)
 Vue.use(scrollBoard)
+Vue.use(capsuleChart)
+
 Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.use(Button);
 Vue.use(Checkbox);

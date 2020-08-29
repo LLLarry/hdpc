@@ -34,3 +34,23 @@ export const handleExportMerEarn= function (data){ //导出商户收益
              data: data
          })
 }
+
+export const getDevicesPosition= function (data){ //获取商户位置信息
+    return ajax({
+             url: '/dataCollectInfo/locationData',
+             data: data,
+             method: 'post'
+         })
+}
+
+
+
+/*查询昨日设备收益记录 排行*/ 
+
+export const deviceEvenRank= function (data){ //获取商户位置信息
+    return ajax({
+             url: '/dataCollectInfo/inquireDeviceIncomeInfo',
+             data: data,
+             method: 'post'
+         })
+}

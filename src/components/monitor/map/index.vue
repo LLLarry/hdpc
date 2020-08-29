@@ -5,18 +5,21 @@
 <script>
 import echarts2 from 'echarts2'
 import map from 'echarts2/chart/map'
+import { getDevicesPosition } from '@/require/datastatis'
+
 export default {
     mounted(){
-        this.handleLoadData()
+        getDevicesPosition().then(res=>{
+             this.handleLoadData(res)
+        })
+       
     },
     methods: {
-        async handleLoadData(){
-            const {default:BMapLib}= await import('@/vendor/map/BMapLib.js')
-            const {default:CreateChinaMapLine}= await import('@/vendor/map/chinaMap.js')
-            const {default:placeList}= await import('@/vendor/map/data.js')
-            console.log(BMapLib)
-            console.log(CreateChinaMapLine)
-            console.log(placeList)
+        async handleLoadData(placeList){
+            const {default:BMapLib}= await import(/* webpackPrefetch: true */'@/vendor/map/BMapLib.js')
+            const {default:CreateChinaMapLine}= await import(/* webpackPrefetch: true */'@/vendor/map/chinaMap.js')
+            // let {default:placeList}= await import('@/vendor/map/data.js')
+            // const {default:hdData}= await import('@/vendor/map/hd.js')
             this.$nextTick(()=>{
                 this.init(echarts2,placeList,CreateChinaMapLine)
             })
@@ -54,93 +57,111 @@ export default {
                             show: false
                         },
                         series: [
-                            {
-                                name: '弱',
-                                type: 'map',
-                                mapType: 'china',
-                                itemStyle: {
-                                    normal: {
-                                        borderColor: 'rgba(100,149,237,1)',
-                                        borderWidth: 1.5,
-                                        areaStyle: {
-                                            color:'rgba(0,0,0,.1)'
-                                        }
-                                    }
-                                },
-                                data: [],
-                                markPoint: {
-                                    symbolSize: 2,
-                                    large: true,
-                                    effect: {
-                                        show: true
-                                    },
-                                    data: (function () {
-                                        var data = [];
-                                        var len = 3000;
-                                        var geoCoord
-                                        while (len--) {
-                                            geoCoord = placeList[len % placeList.length].geoCoord;
-                                            var x = geoCoord[0] + Math.random() * 1 - 0.5;
-                                            var y = geoCoord[1] + Math.random() * 2 - 0;
-                                            if (that.ptInPolygon(x, y)) {
-                                                data.push({
-                                                    name: placeList[len % placeList.length].name + len,
-                                                    value: 50,
-                                                    geoCoord: [
-                                                        x,
-                                                        y
-                                                    ]
-                                                })
-                                            }
-                                        }
-                                        return data;
-                                    })()
-                                }
-                            },
-                            {
-                                name: '中',
-                                type: 'map',
-                                mapType: 'china',
-                                data: [],
-                                markPoint: {
-                                    symbolSize: 3,
-                                    large: true,
-                                    effect: {
-                                        show: true
-                                    },
-                                    data: (function () {
-                                        var data = [];
-                                        var len = 1000;
-                                        var geoCoord
-                                        while (len--) {
-                                            geoCoord = placeList[len % placeList.length].geoCoord;
-                                            var x = geoCoord[0] + Math.random() * 5 - 2.5;
-                                            var y = geoCoord[1] + Math.random() * 3 - 1.5;
-                                            if (that.ptInPolygon(x, y)) {
-                                                data.push({
-                                                    name: placeList[len % placeList.length].name + len,
-                                                    value: 50,
-                                                    geoCoord: [
-                                                        x,
-                                                        y
-                                                    ]
-                                                })
-                                            }
-                                        }
-                                        return data;
-                                    })()
-                                }
-                            },
+                            // {
+                            //     name: '弱',
+                            //     type: 'map',
+                            //     mapType: 'china',
+                            //     itemStyle: {
+                            //         normal: {
+                            //             borderColor: 'rgba(100,149,237,1)',
+                            //             borderWidth: 1.5,
+                            //             areaStyle: {
+                            //                 color:'rgba(0,0,0,.1)'
+                            //             }
+                            //         }
+                            //     },
+                            //     data: [],
+                            //     markPoint: {
+                            //         symbolSize: 2,
+                            //         large: true,
+                            //         effect: {
+                            //             show: true
+                            //         },
+                            //         data: (function () {
+                            //             var data = [];
+                            //             var len = 3000;
+                            //             var geoCoord
+                            //             while (len--) {
+                            //                 geoCoord = placeList[len % placeList.length].geoCoord;
+                            //                 // var x = geoCoord[0]-0 + Math.random() * 1 - 0.5;
+                            //                 // var y = geoCoord[1]-0 + Math.random() * 2 - 0;
+                            //                 var x = geoCoord[0]-0 + Math.random() * 0.5 - 0.25;
+                            //                 var y = geoCoord[1]-0 + Math.random() * 2 - 0;
+                            //                 if (that.ptInPolygon(x, y)) {
+                            //                     data.push({
+                            //                         name: placeList[len % placeList.length].name + len,
+                            //                         value: 50,
+                            //                         geoCoord: [
+                            //                             x,
+                            //                             y
+                            //                         ]
+                            //                     })
+                            //                 }
+                            //             }
+                            //             // console.log('若',data)
+                            //             return data;
+                            //         })()
+                            //     }
+                            // },
+                            // {
+                            //     name: '中',
+                            //     type: 'map',
+                            //     mapType: 'china',
+                            //     data: [],
+                            //     markPoint: {
+                            //         // symbolSize: 3,
+                            //         symbolSize: 2,
+                            //         large: true,
+                            //         effect: {
+                            //             show: true
+                            //         },
+                            //         data: (function () {
+                            //             var data = [];
+                            //             var len = 1000;
+                            //             var geoCoord
+                            //             while (len--) {
+                            //                 geoCoord = placeList[len % placeList.length].geoCoord;
+                            //                 // var x = geoCoord[0]-0 + Math.random() * 5 - 2.5;
+                            //                 // var y = geoCoord[1]-0 + Math.random() * 3 - 1.5;
+                            //                 var x = geoCoord[0]-0 + Math.random() * 1 - 0.5;
+                            //                 var y = geoCoord[1]-0 + Math.random() * 1 - 0.5;
+                            //                 if (that.ptInPolygon(x, y)) {
+                            //                     data.push({
+                            //                         name: placeList[len % placeList.length].name + len,
+                            //                         // value: 50,
+                            //                         value: 20,
+                            //                         geoCoord: [
+                            //                             x,
+                            //                             y
+                            //                         ]
+                            //                     })
+                            //                 }
+                            //             }
+                            //             // console.log('中',data)
+                            //             return data;
+                            //         })()
+                            //     }
+                            // },
                             {
                                 name: '强',
                                 type: 'map',
                                 mapType: 'china',
                                 hoverable: false,
                                 roam: true,
+                                    itemStyle: {
+                                        normal: {
+                                            borderColor: 'rgba(100,149,237,1)',
+                                            borderWidth: 1.5,
+                                            areaStyle: {
+                                                color:'rgba(0,0,0,.1)'
+                                            }
+                                        }
+                                    },
                                 data: [],
                                 markPoint: {
                                     symbol: 'diamond',
-                                    symbolSize: 6,
+                                    // symbolSize: 6,
+                                    symbolSize: 5,
                                     large: true,
                                     effect: {
                                         show: true
@@ -155,6 +176,7 @@ export default {
                                                 geoCoord: placeList[len].geoCoord
                                             })
                                         }
+                                        // console.log('强',data)
                                         return data;
                                     })()
                                 }

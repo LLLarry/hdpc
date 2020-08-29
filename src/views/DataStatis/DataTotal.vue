@@ -1,24 +1,31 @@
 <template>
    <div class="dataTotal">
        <!-- dataTotal -->
-       <dv-full-screen-container class="screen-container">content
+       <dv-full-screen-container class="screen-container">
            <header>
-             <!-- <section class="header-container">
+             <headerTitle />
+             <section class="header-container">
                <dv-decoration-10 style="width:100%;height:5px;" :color="['#00b4ff']" />
                <div class="num-container">
-                 <div class="num-box" v-for="(item,index) in 9"  :key="index"><monitorNunber /></div>
+                  <div class="num-box" v-for="(item,index) in totalList"  :key="index">
+                   <monitorNunber :title="item.title" :count="item.count" />
+                  </div>
                </div>
                <dv-decoration-10  style="width:100;height:5px;" :color="['#00b4ff']" class="rotate-d" />
-             </section> -->
+             </section>
            </header>
            <main>
                <section class="main-section">
                     <div class="section-box">
-                        <dv-border-box-1>dv-border-box-1</dv-border-box-1>
+                        <dv-border-box-1>
+                          <!-- 每日收益排行 -->
+                          <daylyEvenRank :screenWidth="screenWidth" />
+                        </dv-border-box-1>
                     </div>
                     <div class="section-box">
                         <dv-border-box-1>
-                            <!-- <dv-scroll-ranking-board :config="config" style="width:80%;height:300px;margin: 0 auto;" /> -->
+                          <!-- 设备收益排行 -->
+                          <revenRank :deviceEvenRankData="deviceEvenRankData" />
                         </dv-border-box-1>
                     </div>
                </section>
@@ -26,17 +33,21 @@
                   <div class="map-mask">
                     <monitorMap />
                   </div>
+                  <!-- 地图覆盖物 -->
                   <div class="map-mask">
-                    <dv-flyline-chart-enhanced :config="config2" :dev="true" style="width: 100%; height: 100%;" />
+                      <!-- <mapCover /> -->
                   </div>
                </section>
                <section class="main-section">
                    <div class="section-box">
-                        <dv-border-box-1>dv-border-box-1</dv-border-box-1>
+                        <dv-border-box-1>
+                          <payTypeRate :screenWidth="screenWidth" />  
+                        </dv-border-box-1>
                     </div>
                     <div class="section-box">
                         <dv-border-box-1>
-                            <!-- <dv-scroll-board :config="config3" style="width:500px;height:220px" /> -->
+                          <!-- 轮播展示订单 -->
+                            <orderautoplay />
                         </dv-border-box-1>
                     </div>
                </section>
@@ -47,12 +58,19 @@
 </template>
 
 <script>
-import monitorMap from '@/components/monitor/map'
-import monitorNunber from '@/components/monitor/number'
+import monitorMap from '@/components/monitor/map' /*地图组件*/
+import monitorNunber from '@/components/monitor/number' /*数据数字组件*/
+import orderautoplay from '@/components/monitor/orderautoplay' /*订单收益展示*/
+//import mapCover from '@/components/monitor/map-cover' /*地图覆盖物*/
+import revenRank from '@/components/monitor/reven-rank' /*站点收益展示*/
+import daylyEvenRank from '@/components/monitor/dayly-even-rank' /*每日收益排行*/
+import payTypeRate from '@/components/monitor/pay-type-rate' /*支付占比*/
+import headerTitle from '@/components/monitor/header-title' /*支付占比*/
+import { deviceEvenRank } from '@/require/datastatis'
 export default {
-   
    data(){
        return {
+           screenWidth: 1920,
            config: {
                data: [
                         {
@@ -86,181 +104,7 @@ export default {
                 ],
 
            },
-            config2: {
-                points: [
-    {
-      name: '郑州',
-      coordinate: [0.64, 0.53],
-      halo: {
-        show: true,
-      },
-      icon: {
-        src: '/img/flylineChart/mapCenterPoint.png',
-        width: 30,
-        height: 30
-      },
-      text: {
-        show: false
-      }
-    },
-    {
-      name: '新乡',
-      coordinate: [0.52, 0.23]
-    },
-    {
-      name: '焦作',
-      coordinate: [0.43, 0.29]
-    },
-    {
-      name: '开封',
-      coordinate: [0.59, 0.35]
-    },
-    {
-      name: '许昌',
-      coordinate: [0.53, 0.47]
-    },
-    {
-      name: '平顶山',
-      coordinate: [0.45, 0.54]
-    },
-    {
-      name: '洛阳',
-      coordinate: [0.36, 0.38]
-    },
-    {
-      name: '周口',
-      coordinate: [0.62, 0.55],
-      halo: {
-        show: true,
-        color: '#8378ea'
-      }
-    },
-    {
-      name: '漯河',
-      coordinate: [0.56, 0.56]
-    },
-    {
-      name: '南阳',
-      coordinate: [0.37, 0.66],
-      halo: {
-        show: true,
-        color: '#37a2da'
-      }
-    },
-    {
-      name: '信阳',
-      coordinate: [0.55, 0.81]
-    },
-    {
-      name: '驻马店',
-      coordinate: [0.55, 0.67]
-    },
-    {
-      name: '济源',
-      coordinate: [0.37, 0.29]
-    },
-    {
-      name: '三门峡',
-      coordinate: [0.20, 0.36]
-    },
-    {
-      name: '商丘',
-      coordinate: [0.76, 0.41]
-    },
-    {
-      name: '鹤壁',
-      coordinate: [0.59, 0.18]
-    },
-    {
-      name: '濮阳',
-      coordinate: [0.68, 0.17]
-    },
-    {
-      name: '安阳',
-      coordinate: [0.59, 0.10]
-    }
-  ],
-  lines: [
-    {
-      source: '新乡',
-      target: '郑州'
-    },
-    {
-      source: '焦作',
-      target: '郑州'
-    },
-    {
-      source: '开封',
-      target: '郑州'
-    },
-    {
-      source: '周口',
-      target: '郑州',
-      color: '#fb7293',
-      width: 2
-    },
-    {
-      source: '南阳',
-      target: '郑州',
-      color: '#fb7293',
-      width: 2
-    },
-    {
-      source: '济源',
-      target: '郑州'
-    },
-    {
-      source: '三门峡',
-      target: '郑州'
-    },
-    {
-      source: '商丘',
-      target: '郑州'
-    },
-    {
-      source: '鹤壁',
-      target: '郑州'
-    },
-    {
-      source: '濮阳',
-      target: '郑州'
-    },
-    {
-      source: '安阳',
-      target: '郑州'
-    },
-    {
-      source: '许昌',
-      target: '南阳',
-      color: '#37a2da'
-    },
-    {
-      source: '平顶山',
-      target: '南阳',
-      color: '#37a2da'
-    },
-    {
-      source: '洛阳',
-      target: '南阳',
-      color: '#37a2da'
-    },
-    {
-      source: '驻马店',
-      target: '周口',
-      color: '#8378ea'
-    },
-    {
-      source: '信阳',
-      target: '周口',
-      color: '#8378ea'
-    },
-    {
-      source: '漯河',
-      target: '周口',
-      color: '#8378ea'
-    }
-  ],
-            },
+            
           config3: {
              header: ['列1', '列2', '列3'],
               data: [
@@ -277,46 +121,77 @@ export default {
               ],
               index: true,
               columnWidth: [50],
-              align: ['center'],
-              updateRows(row,index){
-                console.log(row)
-              }
-          }
+              align: ['center']
+          },
+         totalList: [ /* number顶部数据 */
+           {
+             title: '用户总数',
+             count: 351256
+           },
+           {
+             title: '本月新增用户',
+             count: 15632
+           },
+           {
+             title: '今日新增用户',
+             count: 563
+           },
+           {
+             title: '总营业额',
+             count: 69631256
+           },
+           {
+             title: '昨日营业额',
+             count: 25634
+           },
+           {
+             title: '设备总数',
+             count: 12412
+           },
+         ],
+         deviceEvenRankData: []
        }
    },
   mounted(){
-    let i= 0
-    // setInterval(()=>{
-    //   i++
-    //   if(i>2) return
-    //    this.config3={
-    //          header: ['列1', '列2', '列3'],
-    //           data: [
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //             [i+'-1', i+'-2', i+'-3'],
-    //           ],
-    //           index: true,
-    //           columnWidth: [50],
-    //           align: ['center']
-    //       }
-    // },2000)
+    this.handleInit() //初始化获取屏幕高度
+    this.handleFullScreen() //初始化时全屏显示
+    this.handleGetData()
   },
   components: {
     monitorMap,
-    monitorNunber
+    monitorNunber,
+    orderautoplay,
+    // mapCover,
+    revenRank,
+    daylyEvenRank,
+    payTypeRate,
+    headerTitle
   },
   methods: {
-    
-  }
+    handleInit(){
+       this.screenWidth= document.documentElement.offsetWidth || document.body.offsetWidth
+    },
+    handleFullScreen(){ //切换全屏
+        if (!screenfull.isEnabled) { // 如果不允许进入全屏，发出不允许提示
+            messageTip("warning","您的浏览器暂时不支持全屏模式"); 
+            return 
+        }else{
+            if(screenfull && !screenfull.isFullscreen){ //判断页面是否全屏（仅支持js触发的全屏，f11触发的全屏检测不到）
+               screenfull.toggle();
+            }
+        }
+        
+    },
+    async handleGetData(){
+      try {
+        const derPromise= deviceEvenRank()
+        const info= await Promise.all([derPromise])
+        
+      }catch(err){
+
+      }
+    }
+  },
 }
 </script>
 
@@ -325,17 +200,25 @@ export default {
     // background: url(../../assets/images/4.png);
     background-color: #000;
     header {
-        height: 240px;
+         height: 25vh;
          display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+         .dv-decoration-7 {
+           width: 190px !important;
+         }
         .header-container {
           width: 100%;
-          align-self: flex-end;
-          margin-bottom: 35px;
+          margin-bottom: 3.2vh;
+          // margin-bottom: 35px;
           .num-container {
             width: 100%;
             display: flex;
-            justify-content: space-around;
-            padding: 20px 0;
+            justify-content: center;
+            padding: 1vh 0;
+            .num-box {
+              margin: 0 0.5vw;
+            }
           }
           .rotate-d {
               transform: rotate(180deg);
@@ -347,10 +230,14 @@ export default {
         }
     }
     main {
+        height: 72vh;
         width: 100%;
         display: flex;
         .main-section {
+            display: flex;
             flex: 2;
+            flex-direction: column;
+            justify-content: space-between;
             &:nth-child(2){
                 flex: 3;
                 position: relative;
@@ -363,11 +250,18 @@ export default {
                 }
             }
             .section-box {
-                height: 380px;
-                margin-bottom: 30px;
+                height: 35.158vh;
+                overflow: hidden;
+                // margin-bottom: 2.77777vh;
             }
         }
     }
 }
-    
+@media screen and (max-width: 1400px) {
+  .screen-container {
+      header {
+        height: 27vh;
+      }
+  }
+}
 </style>

@@ -46,10 +46,27 @@ export const getDevicesPosition= function (data){ //获取商户位置信息
 
 
 /*查询昨日设备收益记录 排行*/ 
-
 export const deviceEvenRank= function (data){ //获取商户位置信息
     return ajax({
              url: '/dataCollectInfo/inquireDeviceIncomeInfo',
+             data: data,
+             method: 'post'
+         })
+}
+
+/*查询最近十五天平台交易金额*/ 
+export const formIncomeInfo= function (data){ //获取商户位置信息
+    return ajax({
+             url: '/dataCollectInfo/inquirePlatformIncomeInfo',
+             data: data,
+             method: 'post'
+         })
+}
+
+/*昨日支付占比*/ 
+export const paymentratioInfo= function (data){ //获取商户位置信息
+    return ajax({
+             url: '/dataCollectInfo/inquirePaymentratioInfo',
              data: data,
              method: 'post'
          })

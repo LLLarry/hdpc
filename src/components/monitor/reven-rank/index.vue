@@ -1,7 +1,7 @@
 <template>
   <sectionBox>
       <div class="section-title">昨日设备收入排行榜</div>
-      <dv-capsule-chart :config="config" style="width:100%;height:100%" />
+      <dv-capsule-chart :config="deviceEvenRankDataConfig" style="width:100%;height:100%" />
   </sectionBox>
 </template>
 
@@ -14,25 +14,36 @@ export default {
             default: []
         }
     },
-    data(){
-        return {
-            config: {
-                data: [
-                    { name: '000001', value: 156.36 },
-                    { name: '000002', value: 153.16 },
-                    { name: '000003', value: 149.02 },
-                    { name: '000004', value: 143.95 },
-                    { name: '000005', value: 142.00 },
-                    { name: '000006', value: 115.76 },
-                    { name: '000007', value: 105.43 },
-                    { name: '000008', value: 104.71 }
-                ],
+    computed: {
+        deviceEvenRankDataConfig(){
+            return {
+                data: this.deviceEvenRankData,
                 colors: ['#37a2da', '#32c5e9', '#67e0e3', '#9fe6b8', '#ffdb5c', '#ff9f7f', '#fb7293'],
                 unit: '元',
                 showValue: true
-            } 
+            }
         }
     },
+    // data(){
+    //     return {
+    //         config: {
+    //             data: [
+    //                 { name: '000001', value: 156.36 },
+    //                 { name: '000002', value: 153.16 },
+    //                 { name: '000003', value: 149.02 },
+    //                 { name: '000004', value: 143.95 },
+    //                 { name: '000005', value: 142.00 },
+    //                 { name: '000006', value: 115.76 },
+    //                 { name: '000007', value: 105.43 },
+    //                 { name: '000008', value: 104.71 }
+    //             ],
+    //             data: [],
+    //             colors: ['#37a2da', '#32c5e9', '#67e0e3', '#9fe6b8', '#ffdb5c', '#ff9f7f', '#fb7293'],
+    //             unit: '元',
+    //             showValue: true
+    //         } 
+    //     }
+    // },
     components:{
         sectionBox
     },

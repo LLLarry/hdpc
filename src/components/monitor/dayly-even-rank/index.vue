@@ -13,6 +13,15 @@ export default {
     props: {
         screenWidth: {
             type: Number,
+        },
+        latelyTotalEvenData: {
+            type: Object,
+            default: ()=> (
+                {
+                    times: [],
+                    values: []
+                }
+            )
         }
     },
     mounted(){
@@ -24,10 +33,19 @@ export default {
     components:{
         sectionBox
     },
+    watch: {
+        latelyTotalEvenData: {
+            handler(){
+                console.log(778)
+                myChart.setOption(this.getOptions())
+            },
+            deep: true
+        }
+    },
     methods: {
         handleInit(){
             myChart= echarts.init(document.getElementById('evem_rank'));
-            myChart.setOption(this.getOptions())
+            // myChart.setOption(this.getOptions())
         },
         getOptions(){
             return {
@@ -49,11 +67,13 @@ export default {
                                 axisLine: {
                                     show: true,
                                 },
-                                data: [ 1, 9, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+                                // data: [ 1, 9, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+                                data: this.latelyTotalEvenData.times
                             },
                             {
                                 show: false,
-                                data: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+                                // data: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+                                data: this.latelyTotalEvenData.times
                             }
                         ],
                     visualMap: {
@@ -126,8 +146,9 @@ export default {
                         {
                             name: 'front',
                             type: 'bar',
-                            data: [ 25631, 18696, 35623, 25636,24365, 18963, 25631, 18696, 35623, 25636,24365, 18963,18963, 25631, 18696,18696],
-                            xAxisIndex: 1,
+                            // data: [ 25631, 18696, 35623, 25636,24365, 18963, 25631, 18696, 35623, 25636,24365, 18963,18963, 25631, 18696,18696],
+                           data: this.latelyTotalEvenData.values,
+                           xAxisIndex: 1,
                             z: 3,
                             itemStyle: {
                                 normal: {

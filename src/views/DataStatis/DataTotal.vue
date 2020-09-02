@@ -19,7 +19,7 @@
                     <div class="section-box">
                         <dv-border-box-1>
                           <!-- 每日收益排行 -->
-                          <daylyEvenRank :screenWidth="screenWidth" />
+                          <daylyEvenRank :screenWidth="screenWidth" :latelyTotalEvenData="latelyTotalEvenData" />
                         </dv-border-box-1>
                     </div>
                     <div class="section-box">
@@ -66,63 +66,11 @@ import revenRank from '@/components/monitor/reven-rank' /*站点收益展示*/
 import daylyEvenRank from '@/components/monitor/dayly-even-rank' /*每日收益排行*/
 import payTypeRate from '@/components/monitor/pay-type-rate' /*支付占比*/
 import headerTitle from '@/components/monitor/header-title' /*支付占比*/
-import { deviceEvenRank } from '@/require/datastatis'
+import { deviceEvenRank,formIncomeInfo,paymentratioInfo } from '@/require/datastatis'
 export default {
    data(){
        return {
            screenWidth: 1920,
-           config: {
-               data: [
-                        {
-                        name: '周口',
-                        value: 55
-                        },
-                        {
-                        name: '南阳',
-                        value: 120
-                        },
-                        {
-                        name: '西峡',
-                        value: 78
-                        },
-                        {
-                        name: '驻马店',
-                        value: 66
-                        },
-                        {
-                        name: '新乡',
-                        value: 80
-                        },
-                        {
-                        name: '信阳',
-                        value: 45
-                        },
-                        {
-                        name: '漯河',
-                        value: 29
-                        }
-                ],
-
-           },
-            
-          config3: {
-             header: ['列1', '列2', '列3'],
-              data: [
-                ['<span style="color:#37a2da;">行1列1</span>', '行1列2', '行1列3'],
-                ['行2列1', '<span style="color:#32c5e9;">行2列2</span>', '行2列3'],
-                ['行3列1', '行3列2', '<span style="color:#67e0e3;">行3列3</span>'],
-                ['行4列1', '<span style="color:#9fe6b8;">行4列2</span>', '行4列3'],
-                ['<span style="color:#ffdb5c;">行5列1</span>', '行5列2', '行5列3'],
-                ['行6列1', '<span style="color:#ff9f7f;">行6列2</span>', '行6列3'],
-                ['行7列1', '行7列2', '<span style="color:#fb7293;">行7列3</span>'],
-                ['行8列1', '<span style="color:#e062ae;">行8列2</span>', '行8列3'],
-                ['<span style="color:#e690d1;">行9列1</span>', '行9列2', '行9列3'],
-                ['行10列1', '<span style="color:#e7bcf3;">行10列2</span>', '行10列3']
-              ],
-              index: true,
-              columnWidth: [50],
-              align: ['center']
-          },
          totalList: [ /* number顶部数据 */
            {
              title: '用户总数',
@@ -149,7 +97,8 @@ export default {
              count: 12412
            },
          ],
-         deviceEvenRankData: []
+         deviceEvenRankData: [], //设备昨日收益统计
+         latelyTotalEvenData: { times: [], values: [] }, //最近15天收益统计
        }
    },
   mounted(){
@@ -185,10 +134,20 @@ export default {
     async handleGetData(){
       try {
         const derPromise= deviceEvenRank()
-        const info= await Promise.all([derPromise])
-        
+        const incomeInfo= formIncomeInfo()
+        const payRank= paymentratioInfo()
+        const info= await Promise.all([derPromise,incomeInfo,payRank])
+        console.log(info)
+        if(info){
+          this.deviceEvenRankData= info[0].deviceIncome.map(item=> ({...item, name: item.name.toString().padStart(6,'0') }))
+          this.latelyTotalEvenData= {
+            times: info[1].platform.map(item=> item.countTime.match(/(?<=\-)\d+$/g)[0]),
+            values: info[1].platform.map(item=> item.moneytotal),
+          }
+          console.log( this.latelyTotalEvenData)
+        }
       }catch(err){
-
+        console.log(err)
       }
     }
   },

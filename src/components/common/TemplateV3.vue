@@ -303,7 +303,7 @@
                 </el-col>
                 <el-col :span="8">
                     <div class="v3MaskWrapper">
-                        <div class="v3Mask" v-show="editId === item.id ? (temForm.permit === 1 ? false : true) : (item.permit === 1 ? false : true)">
+                        <div class="v3Mask" v-show="editId === item.id ? (temForm.walletpay === 1 ? false : true) : (item.walletpay === 1 ? false : true)">
                             暂未开启临时充电
                         </div>
                         <div class="v3Child3header">
@@ -311,22 +311,22 @@
                             <el-col :span="8">
                                     <strong>是否支持临时充电:  </strong>
                                     <div>
-                                        <el-radio-group v-model="temForm.permit" v-if="editId === item.id">
+                                        <el-radio-group v-model="temForm.walletpay" v-if="editId === item.id">
                                             <el-radio :label="1">是</el-radio>
                                             <el-radio :label="2">否</el-radio>
                                         </el-radio-group>
-                                        <span v-else :class="[item.permit === 1  ? 'green': 'red']">{{item.permit === 1 ? '是': '否'}}</span>
+                                        <span v-else :class="[item.walletpay === 1  ? 'green': 'red']">{{item.walletpay === 1 ? '是': '否'}}</span>
                                     </div>
                             </el-col>
                             <el-col :span="8">按照金额充电 <br/>（临时充电）</el-col>
                             <el-col :span="8">
                                     <strong>是否支持退费:  </strong>
                                     <div>
-                                        <el-radio-group v-model="temForm.walletpay" v-if="editId === item.id">
+                                        <el-radio-group v-model="temForm.permit" v-if="editId === item.id">
                                             <el-radio :label="1">是</el-radio>
                                             <el-radio :label="2">否</el-radio>
                                         </el-radio-group>
-                                        <span v-else :class="[item.walletpay === 1  ? 'green': 'red']">{{item.walletpay === 1 ? '是': '否'}}</span>
+                                        <span v-else :class="[item.permit === 1  ? 'green': 'red']">{{item.permit === 1 ? '是': '否'}}</span>
                                     </div>
                             </el-col>
                         </el-row>
@@ -399,7 +399,7 @@
                 </el-col>
             </el-row>
             <div class="bottomMenu" v-if="from === 2">
-                <router-link :to="`/deviceManage/deviceList/templateDetail?hw=${deviceInfo.hwVerson}&code=${deviceInfo.code}&merid=${deviceInfo.merid}`">
+                <router-link :to="`/deviceManage/deviceList/templateDetail?hw=08&code=${deviceInfo.code}&merid=${deviceInfo.merid}`">
                     <el-button type="primary" style="width: 160px;" icon="el-icon-view" size="mini">查看更多</el-button>
                 </router-link>
                <!-- <el-button type="primary" style="width: 160px;" size="mini">此模板复用更多设备</el-button> -->
@@ -442,7 +442,6 @@ export default {
         this.editId= this.from === 4 ? -1 : 0 //当添加模板时，editId设置为-1，否则默认为0
         this.temForm= this.from === 4 ? JSON.parse(JSON.stringify(this.list[0])) : {}
         this.screenWidth= document.documentElement.offsetWidth || document.body.offsetWidth
-        console.log(this.screenWidth)
     },
     watch: {
         getFrom(newVal){

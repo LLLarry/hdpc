@@ -162,12 +162,15 @@ export default {
     },
     mounted(){
         // 获取topContent距顶部的距离，滚动让其定位，离开组件时销毁
-       
-        this.topHeight= parseFloat(Util.getAttr(this.$refs.topContent,'top'))
-        document.getElementsByClassName('main')[0].addEventListener('scroll',this.handleTopTitle)
-    },
-    beforeDestroy(){
-       document.getElementsByClassName('main')[0].removeEventListener('scroll',this.handleTopTitle)
+        const mainElement= document.getElementsByClassName('main')[0]
+        if(mainElement){
+            this.topHeight= parseFloat(Util.getAttr(this.$refs.topContent,'top'))
+            mainElement.addEventListener('scroll',this.handleTopTitle)
+            // 组件销毁时移除滚动
+            this.$once('hook:beforeDestroy',()=>{
+                mainElement.removeEventListener('scroll',this.handleTopTitle)
+            })
+        }
     },
     computed: {
         ...mapState(['temDetail'])
@@ -201,10 +204,11 @@ export default {
             e= e || window.event
             let target= e.target || e.srcElement
             let scrollTop= target.scrollTop
+            let topContent= this.$refs.topContent
             if(this.topHeight-scrollTop > 80){
-                this.$refs.topContent.style.top= (this.topHeight-scrollTop)+'px'
+                topContent.style.top= (this.topHeight-scrollTop)+'px'
             }else{
-                this.$refs.topContent.style.top= '80px'
+                topContent.style.top= '80px'
             }
         },
         // 添加主模板

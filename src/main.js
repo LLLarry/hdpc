@@ -31,9 +31,11 @@ import {
   decoration10,
   digitalFlop,
   scrollBoard,
-  capsuleChart
+  capsuleChart,
+  loading as datavLoading
 } from '@jiaminghi/data-view'
 
+Vue.use(datavLoading)
 Vue.use(fullScreenContainer)
 Vue.use(borderBox1)
 Vue.use(borderBox10)
@@ -117,7 +119,10 @@ function handleSlide(){
   }
 }
 
- Vue.config.productionTip = false
+
+Vue.prototype.$bus= new Vue() /*创建一个新的事件总成*/
+
+Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

@@ -36,8 +36,13 @@ export default {
     watch: {
         latelyTotalEvenData: {
             handler(){
-                console.log(778)
-                myChart.setOption(this.getOptions())
+                if(myChart){
+                    myChart.setOption(this.getOptions())
+                }else{
+                    setTimeout(()=>{
+                         myChart && myChart.setOption(this.getOptions())
+                    },1000)
+                }
             },
             deep: true
         }
@@ -67,12 +72,10 @@ export default {
                                 axisLine: {
                                     show: true,
                                 },
-                                // data: [ 1, 9, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
                                 data: this.latelyTotalEvenData.times
                             },
                             {
                                 show: false,
-                                // data: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
                                 data: this.latelyTotalEvenData.times
                             }
                         ],
@@ -83,7 +86,6 @@ export default {
                         dimension: 0,
                         inRange: {
                             color: ['#4a657a', '#308e92', '#b1cfa5', '#f5d69f', '#f5898b', '#ef5055']
-                            // color: ['#ffffff', '#ffff00', '#ff00ff', '#00ffff', '#f5898b', '#ef5055']
                         }
                     },
                     yAxis: {
@@ -92,7 +94,6 @@ export default {
                         },
                         axisLabel: {
                             textStyle: {
-                                // color: '#4a657a'
                                 color: '#ffffff'
                             }
                         },
@@ -146,7 +147,6 @@ export default {
                         {
                             name: 'front',
                             type: 'bar',
-                            // data: [ 25631, 18696, 35623, 25636,24365, 18963, 25631, 18696, 35623, 25636,24365, 18963,18963, 25631, 18696,18696],
                            data: this.latelyTotalEvenData.values,
                            xAxisIndex: 1,
                             z: 3,

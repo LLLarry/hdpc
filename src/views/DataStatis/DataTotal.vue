@@ -2,11 +2,12 @@
    <div class="dataTotal">
        <!-- dataTotal -->
        <dv-full-screen-container class="screen-container">
+         <dv-loading v-if="loading">Loading...</dv-loading>
            <header>
              <headerTitle />
              <section class="header-container">
                <dv-decoration-10 style="width:100%;height:5px;" :color="['#00b4ff']" />
-               <div class="num-container">
+               <div class="num-container" >
                   <div class="num-box" v-for="(item,index) in totalList"  :key="index">
                    <monitorNunber :title="item.title" :count="item.count" />
                   </div>
@@ -41,13 +42,14 @@
                <section class="main-section">
                    <div class="section-box">
                         <dv-border-box-1>
-                          <payTypeRate :screenWidth="screenWidth" />  
+                          <!-- 昨日支付占比 -->
+                          <payTypeRate :screenWidth="screenWidth" :yesterDayPayRank="yesterDayPayRank" />  
                         </dv-border-box-1>
                     </div>
                     <div class="section-box">
                         <dv-border-box-1>
                           <!-- 轮播展示订单 -->
-                            <orderautoplay />
+                            <orderautoplay @monitorOrderList="monitorOrderList" :tradeList="tradeList" />
                         </dv-border-box-1>
                     </div>
                </section>
@@ -66,7 +68,7 @@ import revenRank from '@/components/monitor/reven-rank' /*站点收益展示*/
 import daylyEvenRank from '@/components/monitor/dayly-even-rank' /*每日收益排行*/
 import payTypeRate from '@/components/monitor/pay-type-rate' /*支付占比*/
 import headerTitle from '@/components/monitor/header-title' /*支付占比*/
-import { deviceEvenRank,formIncomeInfo,paymentratioInfo } from '@/require/datastatis'
+import { deviceEvenRank,formIncomeInfo,paymentratioInfo,inquireGraphInfo,tradeRealtimeInfo } from '@/require/datastatis'
 export default {
    data(){
        return {
@@ -74,31 +76,34 @@ export default {
          totalList: [ /* number顶部数据 */
            {
              title: '用户总数',
-             count: 351256
+             count: 0
            },
            {
              title: '本月新增用户',
-             count: 15632
-           },
-           {
-             title: '今日新增用户',
-             count: 563
+             count: 0
            },
            {
              title: '总营业额',
-             count: 69631256
+             count: 0
            },
            {
              title: '昨日营业额',
-             count: 25634
+             count: 0
+           },
+           {
+             title: '今日营业额',
+             count: 0
            },
            {
              title: '设备总数',
-             count: 12412
+             count: 0
            },
          ],
+         loading: false, //是否加载
          deviceEvenRankData: [], //设备昨日收益统计
          latelyTotalEvenData: { times: [], values: [] }, //最近15天收益统计
+         yesterDayPayRank: {}, //昨日支付占比
+         tradeList: [], //初始化15条实时数据
        }
    },
   mounted(){
@@ -119,45 +124,97 @@ export default {
   methods: {
     handleInit(){
        this.screenWidth= document.documentElement.offsetWidth || document.body.offsetWidth
+      //  setInterval(()=>{
+      //    this.numWidth= this.numWidth == 100 ? 99 : 100
+      //  },500)
     },
     handleFullScreen(){ //切换全屏
         if (!screenfull.isEnabled) { // 如果不允许进入全屏，发出不允许提示
             messageTip("warning","您的浏览器暂时不支持全屏模式"); 
             return 
         }else{
-            if(screenfull && !screenfull.isFullscreen){ //判断页面是否全屏（仅支持js触发的全屏，f11触发的全屏检测不到）
-               screenfull.toggle();
-            }
+            // if(screenfull && !screenfull.isFullscreen){ //判断页面是否全屏（仅支持js触发的全屏，f11触发的全屏检测不到）
+            //    screenfull.toggle();
+            // }
+            screenfull.request();
         }
         
     },
     async handleGetData(){
       try {
+        this.loading= true
         const derPromise= deviceEvenRank()
         const incomeInfo= formIncomeInfo()
         const payRank= paymentratioInfo()
-        const info= await Promise.all([derPromise,incomeInfo,payRank])
-        console.log(info)
+        const topDataPromise= inquireGraphInfo()
+        const tradePromise= tradeRealtimeInfo()
+        const info= await Promise.all([derPromise,incomeInfo,payRank,topDataPromise,tradePromise])
         if(info){
           this.deviceEvenRankData= info[0].deviceIncome.map(item=> ({...item, name: item.name.toString().padStart(6,'0') }))
           this.latelyTotalEvenData= {
             times: info[1].platform.map(item=> item.countTime.match(/(?<=\-)\d+$/g)[0]),
             values: info[1].platform.map(item=> item.moneytotal),
           }
-          console.log( this.latelyTotalEvenData)
+          this.yesterDayPayRank= info[2]
+          // 顶部汇总数据开始
+          this.fmtTopData({...info[3],earningsnowmoney: info[2].earningsnowmoney}) // info[2]中的earningsnowmoney，是最新的数据
+          // 顶部汇总数据结束
+          this.tradeList= info[4].resulttrade && info[4].resulttrade.slice(0,10)
+          
         }
+        console.log(info)
       }catch(err){
         console.log(err)
+      }finally {
+        this.loading= false
       }
+    },
+    fmtTopData(data){ /*格式化顶部请求过来的数据*/
+        let list= JSON.parse(JSON.stringify(this.totalList))
+        for(let key in data){
+          switch(key){
+            case 'alltourist': list[0].count= data[key]; break;
+            case 'monthtourist': list[1].count= data[key]; break;
+            case 'earningsmoney': list[2].count= data[key]; break;
+            case 'earningsyesmoney': list[3].count= data[key]; break;
+            case 'earningsnowmoney': list[4].count= data[key]; break;
+            case 'devicetotal': list[5].count= data[key]; break;
+          }
+        }
+        this.totalList= list
+        if(data.refresh == 2){ /*如果数据已过期，将会重新加载*/
+          inquireGraphInfo({type: 1})
+          .then(res=>{
+            if(res.code === 200){
+              this.fmtTopData(res)
+            }
+          })
+          .catch(e=>{
+            console.error(e)
+          })
+        }
+    },
+    /*接收实时滚动的订单发过来的数据*/ 
+    monitorOrderList(money){
+      if(isNaN(money)) return
+      const todayItem= this.totalList[4]
+      this.$set(todayItem,'count',Math.round((todayItem.count+money)*100)/100)
     }
+
   },
 }
 </script>
 
 <style lang="less" scoped>
 .screen-container {
-    // background: url(../../assets/images/4.png);
     background-color: #000;
+    .dv-loading {
+          position: absolute;
+          background: rgba(0,0,0,.4);
+          z-index: 9999;
+          font-family: MyFontName;
+          color: rgba(255,252,255,1);
+    }
     header {
          height: 25vh;
          display: flex;
@@ -169,7 +226,6 @@ export default {
         .header-container {
           width: 100%;
           margin-bottom: 3.2vh;
-          // margin-bottom: 35px;
           .num-container {
             width: 100%;
             display: flex;

@@ -46,6 +46,7 @@ export default {
                             }
                         },
                         legend: {
+                            show: false,
                             orient: 'vertical',
                             x: 'left',
                             data: ['强', '中', '弱'],

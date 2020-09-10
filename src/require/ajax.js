@@ -12,7 +12,6 @@ let baseURL= window.location.origin || 'http://www.he360.com.cn'
 if (process.env.NODE_ENV === "development"){ //开发环境
   baseURL= 'http://localhost'
 }
-
  const filterUrlList= ['/dataCollectInfo/deviceEarningsData','/dataCollectInfo/dealerEarningsData','/AccountInfo/getAccountListInfo',
 '/AccountInfo/accountOperateInfo','/orderData/orderTradeRecordData','/orderData/orderChargeRecordData','/orderData/orderOfflineRecordData',
 '/orderData/orderinCoinsRecordData','/orderData/orderPackageMonthData','/deviceData/getDeviceData','/deviceData/getBluetoothDeviceData','/deviceData/inquireDeviceLogData',

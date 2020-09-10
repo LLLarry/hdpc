@@ -202,10 +202,10 @@
         <!-- 模板信息 -->
         <el-card class="box-card temCard" id="template_card">
             <div slot="header" class="clearfix">
-                <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : hwVerson== '08' ? 'V3充电模板' :'充电模板'}}）</span>
+                <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : ['08','09','10'].includes(hwVerson) ? 'V3充电模板' :'充电模板'}}）</span>
             </div>
             <!-- 十路智慧款 -->
-            <div v-if=" hwVerson != '03' && hwVerson != '04' && hwVerson != '08'" >
+            <div v-if=" hwVerson != '03' && hwVerson != '04' &&  !['08','09','10'].includes(hwVerson)" >
                 <!-- 正常模板 -->
                  <TemplateCharge :from="2" :list="temChargeList" v-if="!isGrade" :deviceInfo="{code:this.code,merid: this.merid, hwVerson: hwVerson}" /> 
                  <!-- 分等级模板 -->
@@ -220,7 +220,7 @@
                 <TemplateOffline :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
             <!-- V3充电模板 -->
-            <div v-else-if="hwVerson == '08'">
+            <div v-else-if="['08','09','10'].includes(hwVerson)">
                 <TemplateV3 :from="2" :list="temChargeList" @handleReLoad="handleReLoad" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
            

@@ -59,8 +59,8 @@ import BreadCrumbNav from './BreadCrumbNav'
     .bottomBar {
         color: #d7d7d7;
         text-align: center;
-        height: 100px;
-        line-height: 100px;
+        padding: 40px 0;
+        line-height: 1.3;
     }
     .list-item {
     display: inline-block;

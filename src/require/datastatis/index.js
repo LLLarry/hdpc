@@ -55,7 +55,7 @@ export const deviceEvenRank= function (data){ //获取商户位置信息
 }
 
 /*查询最近十五天平台交易金额*/ 
-export const formIncomeInfo= function (data){ //获取商户位置信息
+export const formIncomeInfo= function (data){ 
     return ajax({
              url: '/dataCollectInfo/inquirePlatformIncomeInfo',
              data: data,
@@ -64,10 +64,31 @@ export const formIncomeInfo= function (data){ //获取商户位置信息
 }
 
 /*昨日支付占比*/ 
-export const paymentratioInfo= function (data){ //获取商户位置信息
+export const paymentratioInfo= function (data){ 
     return ajax({
              url: '/dataCollectInfo/inquirePaymentratioInfo',
              data: data,
              method: 'post'
          })
 }
+
+/*监控页面顶部数据*/ 
+export const inquireGraphInfo= function (data){ 
+    return ajax({
+             url: '/dataCollectInfo/inquireGraphInfo',
+             data: data,
+             method: 'post'
+         })
+}
+
+/*最近15条实时订单*/ 
+export const tradeRealtimeInfo= function (data){ 
+    return ajax({
+             url: '/dataCollectInfo/tradeRealtimeInfo',
+             data: data,
+             method: 'post'
+         })
+}
+
+
+

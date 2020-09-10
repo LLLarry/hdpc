@@ -31,6 +31,8 @@
                         <el-option label="06二十路智慧款" value="06" ></el-option>
                         <el-option label="07单路交流桩" value="07" ></el-option>
                         <el-option label="08新版10路智慧款V3" value="08" ></el-option>
+                        <el-option label="09新版2路智慧款V3" value="09" ></el-option>
+                        <el-option label="10新版20路智慧款V3" value="10" ></el-option>
                     </el-select>
                 </el-form-item>
 
@@ -305,6 +307,8 @@
                     <el-option label="06二十路智慧款" value="06" ></el-option>
                     <el-option label="07单路交流桩" value="07" ></el-option>
                     <el-option label="08新版10路智慧款V3" value="08" ></el-option>
+                    <el-option label="09新版2路智慧款V3" value="09" ></el-option>
+                    <el-option label="10新版20路智慧款V3" value="10" ></el-option>
                 </el-select>
             </el-form-item>
         </el-form>
@@ -418,12 +422,12 @@ export default {
             this.dialogVisible= true
         },
         handleScanPortQrcode({code,hardversion}){ //查看端口二维码
-            const  hvToRort=  {
+            const  hvToRort=  { /* key:对应端口数量，val[]:对应硬件版本号 */
                 1: ['07'],
-                2: ['02'],
+                2: ['02','09'],
                 10: ['00','01','08'],
                 16: ['05'],
-                20: ['06']
+                20: ['06','10']
             }
             const keyArr= Object.keys(hvToRort)
             const valArr= Object.values(hvToRort)

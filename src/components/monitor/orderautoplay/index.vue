@@ -10,24 +10,15 @@
               <div class="tb-col">来源</div>
           </div>
           <div class="tb-body">
-              <!-- <div class="tb-row">
-                    <div class="tb-col-first">000001</div>
-                    <div class="tb-col">2元</div>
-                    <div class="tb-col">微信</div>
-                    <div class="tb-col">4563</div>
-                    <div class="tb-col">充电</div>
-              </div> -->
-
               <div class="tb-row" v-for="(item,index) in list" 
                 :key="index" 
-                :style="'height:'+(index== 0 ? dynamicHieght : height)+'px' "
-                :class="[hasAnimation? 'ani' : '',item.num == 1 ? 'odd' : 'even']"
+                :class="[item.num == 1 ? 'odd' : 'even',(index === 0 && hasAnimation) ? 'ani' : '']"
               >
-                    <div class="tb-col-first">{{item.code}}</div>
+                    <div class="tb-col-first"><span>{{item.code}}</span></div>
                     <div class="tb-col">{{item.money}}元</div>
-                    <div class="tb-col">{{item.paytype == 1 ? '微信' : '支付宝'}}</div>
+                    <div class="tb-col">{{item.paytype == 1 ? '钱包' : item.paytype == 2 ? '微信' : item.paytype == 3 ? '支付宝' : item.paytype == 4 ? '微信小程序' : item.paytype == 5 ? '支付宝小程序' : item.paytype == 6 ? '虚拟充值' : item.paytype == 12 ? '银联支付' : '— —'}}</div>
                     <div class="tb-col">{{item.order}}</div>
-                    <div class="tb-col">{{item.type == 1 ? '充电':'充值'}}</div>
+                    <div class="tb-col">{{item.type == 1 ? "充电" : item.type == 2 ? "投币" : item.type == 3 ? "离线充值" : item.type == 4 ? "钱包" : item.type == 5 ? "在线卡" : item.type == 6 ? "包月卡" : "— —"}}</div>
               </div>
           </div>
       </div>
@@ -37,97 +28,97 @@
 <script>
 let timer= null
 let timeoutEnd= false
-const ws = new WebSocket("ws://47.93.203.50:8081/wolfwebsocket");
+const wsBaseUrl= window.location.origin.indexOf('tengfuchong') !== -1 ?  'ws://47.93.203.50:8081' : 'ws://49.233.68.158:8081'
+// const ws = new WebSocket("ws://47.93.203.50:8081/wolfwebsocket"); /*测试接口*/
+// const ws = new WebSocket("ws://49.233.68.158:8081/wolfwebsocket"); /*正式接口*/
+const ws = new WebSocket(`${wsBaseUrl}/wolfwebsocket`); /*动态接口*/
 export default {
+    props: {
+        tradeList: {
+            type: Array,
+            default: []
+        }
+    },
+    computed: {
+        list(){
+            return this.tradeList.map((item,index)=>{
+                item.num= index % 2 == 0 ? 2 : 1
+                return item
+            })
+        }
+    },
     data(){
         return {
             height: 35, //默认行高
-            dynamicHieght: 35, //动态行高
+            // dynamicHieght: 35, //动态行高
             rowClass: '',
             hasAnimation: true, //是否有动画
-            list: [
-                {code: '000001',money: 1,paytype: 1,order: 4563,type: 1,num:1},
-                {code: '000001',money: 2,paytype: 1,order: 4563,type: 1,num:2},
-                {code: '000001',money: 3,paytype: 1,order: 4563,type: 1,num:1},
-                {code: '000001',money: 4,paytype: 1,order: 4563,type: 1,num:2},
-                {code: '000001',money: 5,paytype: 1,order: 4563,type: 1,num:1},
-                {code: '000001',money: 6,paytype: 1,order: 4563,type: 1,num:2},
-                {code: '000001',money: 7,paytype: 1,order: 4563,type: 1,num:1},
-                {code: '000001',money: 8,paytype: 1,order: 4563,type: 1,num:2},
-                {code: '000001',money: 2,paytype: 1,order: 4563,type: 1,num:1},
-                {code: '000001',money: 2,paytype: 1,order: 4563,type: 1,num:2},
-                {code: '000001',money: 2,paytype: 1,order: 4563,type: 1,num:1},
-                {code: '000001',money: 2,paytype: 1,order: 4563,type: 1,num:2},
-                {code: '000001',money: 2,paytype: 1,order: 4563,type: 1,num:1},
-                {code: '000001',money: 2,paytype: 1,order: 4563,type: 1,num:2},
-                {code: '000001',money: 2,paytype: 1,order: 4563,type: 1,num:1},
-            ]
+            newOrderDetail: null
         }
     },
     mounted(){
         this.height= this.$refs.tbheader.offsetHeight
-        this.dynamicHieght= this.height
-        this.handinit()
-        this.initWebSoket()
+        // this.dynamicHieght= this.height
+        this.handleSetStyle()  /**设置样式到页面中 */
+        this.initWebSoket()  /**初始化WebSoket*/
+        this.$once('hook:beforeDestroy',()=> ws.close()) /*页面关闭时，关掉ws连接*/
+    },
+    watch: {
+        newOrderDetail: {
+            handler(val){
+                this.handleBumd()
+            },
+            deep: true
+        }
     },
     methods: {
-        handinit(){
-            setInterval(this.debounce(this.handleBumd,350),100)
-        },
         handleBumd(){
-            this.list.push({code: '000009',money: 2.5,paytype: 1,order: 4563,type: 1,num: this.list[this.list.length-1].num == 1 ? 2 : 1})
+            // this.list.unshift(this.newOrderDetail)
+            // console.log(JSON.stringify(this.list,null,2))
+            // this.hasAnimation= true
+            // this.dynamicHieght= 0
+            // setTimeout(()=>{
+            //     this.$delete(this.list,0)
+            //     this.hasAnimation= false
+            //     this.dynamicHieght= this.height
+            // },250)
+            this.list.unshift(this.newOrderDetail)
             this.hasAnimation= true
-            this.dynamicHieght= 0
+            this.$emit('monitorOrderList',Number(this.newOrderDetail.money))
             setTimeout(()=>{
-                this.$delete(this.list,0)
+                this.$delete(this.list,this.list.length-1)
                 this.hasAnimation= false
-                this.dynamicHieght= this.height
             },250)
         },
-        /*节流函数*/ 
-        debounce(fn,wait){
-            var endTime 
-            return function(){
-                var startTime= new Date()
-                if(startTime- endTime > wait || endTime == void 0){
-                    fn && fn()
-                    endTime= startTime
-                }
-            }
-        },
+         /**初始化WebSoket*/
         initWebSoket(){
-            ws.onopen= function(e){
+            ws.onopen= (e)=>{ /**连接成功回调*/
                 console.log(e)
             }
-            ws.onmessage = function (e){ 
-                  var received_msg = e.data;
-                  console.log("数据已接收...");
+            ws.onmessage = (e)=>{   /**接收WebSoket发送的信息*/
+                  let received_msg = e.data;
+                  console.log("received_msg",JSON.parse(received_msg));
+                  if(this.list.length > 0){
+                      this.newOrderDetail= {...JSON.parse(received_msg),num: this.list[0].num == 1 ? 2 : 1}
+                  }
             };
+        },
+        /**设置样式到页面中 */
+        handleSetStyle(){
+            const styleStr=`
+                @keyframes scrollKey {
+                    0% {
+                        height: 0;
+                    }
+                    100% {
+                        height: ${this.height}px;
+                    }
+                }
+            `
+            const style= document.createElement('style')
+            style.innerHTML= styleStr
+            document.head.appendChild(style)
         }
-        // handinit(){
-        //     this.height= this.$refs.tbheader.offsetHeight //设置行高
-        //     this.handleInterVal(this.handleCallBack)
-        // },
-        // handleInterVal(callBack){
-        //     console.log(this.dynamicHieght)
-        //     timer= setInterval(()=>{
-        //         this.dynamicHieght= this.dynamicHieght-2
-        //         if(this.dynamicHieght <= 0){
-        //             console.log(123)
-        //             clearInterval(timer)
-        //             callBack && callBack()
-        //         }
-        //     },10)
-        // },
-        // handleCallBack(){ //设置第一个元素的高度为0
-        //     this.$delete(this.list,0)
-        //     console.log(this.height)
-        //     this.dynamicHieght= this.height
-        //     setTimeout(()=>{
-        //         this.handleInterVal(this.handleCallBack)
-        //     },2000)
-        // }
-
     },
 }
 </script>
@@ -158,10 +149,18 @@ export default {
             width: 80px;
             text-align: center;
             overflow: hidden;
+            // span {
+            //     display: inline-block;
+            //     background-color: rgb(0, 186, 255);
+            //     color: #ffffff;
+            //     padding: 2px;
+            //     border-radius: 4px;
+            // }
         }
         .tb-col {
             flex: 1;
             overflow: hidden;
+            white-space: nowrap;
         }
         .tb-header {
             height: 35px;
@@ -188,7 +187,8 @@ export default {
                     background-color: rgb(0,59,81);
                 }
                 &.ani {
-                    transition: all .2s;
+                    transform-origin: top center;
+                    animation: scrollKey .2s linear;
                 }
             }
         }
@@ -206,4 +206,12 @@ export default {
         }
     } 
 }
+// @keyframes scrollKey {
+//     0% {
+//         height: 0;
+//     }
+//     100% {
+//         height: 36px;
+//     }
+// }
 </style>

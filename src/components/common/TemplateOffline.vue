@@ -64,11 +64,11 @@
                     </div>
                     <div style="margin-top: 15px">
                         <el-button type="primary" size="mini" @click="handleEditTem(item)" v-if="!item.edit"  icon="el-icon-edit"
-                        :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" 
+                        :disabled="from != 1 && (item.merchantid == 0 || item.merchantid == null)" 
                         >编辑</el-button>
                         <el-button type="danger" size="mini"  @click="handleDeleteTem(item,i)" v-if="!item.edit" 
-                        :disabled="from == 1 || from == 2 || (from==3 && item.pitchon ==1) " 
-                        :plain="from == 1 || from == 2 || (from==3 && item.pitchon ==1)"
+                        :disabled="from == 1 || from == 2 || ((from==3 && item.pitchon ==1) || (from==3 && item.merchantid ==0)) " 
+                        :plain="from == 1 || from == 2 || ((from==3 && item.pitchon ==1) || (from==3 && item.merchantid ==0)) "
                         icon="el-icon-delete"
                         >删除</el-button>
                         <el-button type="success" size="mini" @click="handleSaveEditTem(item)" v-if="item.edit" icon="el-icon-folder-checked">保存</el-button>
@@ -121,8 +121,23 @@
             width="200"
             >
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="handleEditChildTem(item.id,scope.row.id,scope.row)" v-if="!scope.row.edit"  icon="el-icon-edit" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >编辑</el-button>
-                <el-button type="danger" size="mini" @click="handleDeleteChildTem(item.id,scope.row.id)"  v-if="!scope.row.edit" :disabled="item.pitchon ==1 || from== 2" :plain="item.pitchon ==1 || from== 2" icon="el-icon-delete">删除</el-button>
+                <el-button 
+                    type="primary" 
+                    size="mini" 
+                    @click="handleEditChildTem(item.id,scope.row.id,scope.row)" 
+                    v-if="!scope.row.edit"  
+                    icon="el-icon-edit" 
+                    :disabled="from != 1 && (item.merchantid == 0 || item.merchantid == null)" 
+                >编辑</el-button>
+                <el-button 
+                    type="danger" 
+                    size="mini" 
+                    @click="handleDeleteChildTem(item.id,scope.row.id)"  
+                    v-if="!scope.row.edit" 
+                    :disabled="from == 2 || ((from==3 && item.pitchon ==1) || (from==3 && item.merchantid ==0)) " 
+                    :plain="from == 2 || ((from==3 && item.pitchon ==1) || (from==3 && item.merchantid ==0)) " 
+                    icon="el-icon-delete"
+                >删除</el-button>
                 <el-button type="success" size="mini" @click="handleSaveEditChildTem(scope.row.id,scope.row)" v-if="scope.row.edit" icon="el-icon-folder-checked">保存</el-button>
                 <el-button type="warning" size="mini" @click="handleCancelDeleteChildTem(item.id,scope.row.id,scope.row)"  v-if="scope.row.edit" icon="el-icon-folder-delete">取消</el-button>
             </template>
@@ -142,7 +157,13 @@
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="from == 2 && (item.merchantid == 0 || item.merchantid == null)" >添加模板</el-button>
              </div>
              <div style="margin-top: 20px;" class="clearfix bottomContral" v-else>
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item)"  icon="el-icon-plus">添加模板</el-button>
+                <el-button 
+                    type="primary" 
+                    size="mini" 
+                    @click="handleAddChildTem(item)"  
+                    icon="el-icon-plus"
+                    :disabled="item.merchantid == 0 || item.merchantid == null"
+                >添加模板</el-button>
                 <el-link type="success" :underline="false" v-if="item.pitchon ==1"> 默认模板</el-link>
                 <el-link type="success" :underline="false" v-else >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</el-link>
                 <el-button type="primary" size="mini" v-if="item.pitchon !=1" @click="handleSetSelect(item)" icon="el-icon-check">选中模板</el-button>

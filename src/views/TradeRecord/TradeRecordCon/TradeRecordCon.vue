@@ -465,7 +465,7 @@ export default {
         handleSearch(){
             let VNK= this.$route.query.VNK
             this.$router.push({query:{... this.tradeRecordConForm,currentPage: 1,VNK}})
-            this.asyGetTradeRecord({... this.tradeRecordConForm,currentPage: 1})
+            this.asyGetTradeRecord({... this.tradeRecordConForm,currentPage: 1,click: 1})
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },
         export2Excel() {

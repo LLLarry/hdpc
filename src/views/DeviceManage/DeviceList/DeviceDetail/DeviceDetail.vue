@@ -220,10 +220,10 @@
                 <TemplateOffline :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
             <!-- V3充电模板 -->
-            <div v-else-if="['08','09','10'].includes(hwVerson)">
+           
+            <div v-else-if="['08','09','10'].indexOf(hwVerson) !== -1">
                 <TemplateV3 :from="2" :list="temChargeList" @handleReLoad="handleReLoad" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
-           
         </el-card>
        
         <!-- 00 01 02 03 04 05 06 端口状态 --> 
@@ -1135,7 +1135,7 @@ export default {
                 _this.expirationTime= expirationTime
                 _this.totalOnlineEarn= totalOnlineEarn
                 _this.bindtype= deviceInfo.bindtype
-                if(hwVerson != '03' && hwVerson != '04' && hwVerson != '08'){
+                if(['03','04','08','09','10'].indexOf(hwVerson) === -1){
                     if(deviceInfo.temp != null){ //temp存在，说明此模板不是分等级模板
                         //十路智慧款
                         let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo,ifalipay}= deviceInfo.temp //merchantid是模板所属商户的id，可以通过它来判断是否是系统模板
@@ -1147,7 +1147,7 @@ export default {
                         _this.isGrade= true  //将分等级设为true
                          _this.temChargeList= deviceInfo.templist || []
                     }
-                }else if(hwVerson == '08'){
+                }else if(['08','09','10'].includes(hwVerson)){
                     _this.temChargeList= [ deviceInfo.templatev3 ]
                 }else{ //其他模板
                      let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid}= deviceInfo.temp

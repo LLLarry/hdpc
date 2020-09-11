@@ -35,7 +35,19 @@
                                         <el-input v-if="editId === item.id" size="mini" v-model="temForm.common1" style="width: 60%; display: inline-block" placeholder="请输入售后电话"></el-input>
                                         <span v-else class="top_span">{{item.common1}}</span>
                                     </div>
-                                    <div style="margin-top: 15px">&nbsp;
+                                    <div style="margin-top: 15px">
+                                        <strong>刷卡最大充电时间:</strong>
+                                        <el-input-number 
+                                            v-if="editId === item.id"
+                                            size="mini" v-model="temForm.rank" 
+                                            style="width: 50%; display: inline-block" 
+                                            :step="10"
+                                            :min="0"
+                                            :precision="0"
+                                            placeholder="请输入最大充电时间"
+                                        ></el-input-number>
+                                        <span v-else class="top_span">{{item.rank}}</span>
+                                        分钟
                                     </div> 
                                 </div>
                             </div>
@@ -54,7 +66,7 @@
                                 <span v-else>{{item.chargeInfo}}</span>
                            </div>
                         </div>
-                        <div style="width: 180px; float: right; min-width: 180px;">
+                        <div style="width: 180px; float: right; min-width: 180px;" v-if="from !== 4">
                             <div>
                                 <strong>操作</strong>
                             </div>

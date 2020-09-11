@@ -251,7 +251,7 @@
                 >
                 <template slot-scope="scope">
                     <div v-if="scope.row.handletype == 1">
-                        <el-button type="danger" size="mini" plain disabled v-if="scope.row.paytype == 3 || scope.row.paytype == 4">退款</el-button>
+                        <el-button type="danger" size="mini" plain disabled v-if="scope.row.paytype == 3  || scope.row.paytype == 9">退款</el-button>
                         <el-button type="danger" size="mini" v-else @click="handleRefBtn(scope.row)">退款</el-button>
                     </div>
                     <div v-else><el-button  size="mini" plain disabled >退款</el-button></div>

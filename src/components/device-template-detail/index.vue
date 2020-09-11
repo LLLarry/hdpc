@@ -130,6 +130,7 @@ export default {
                     walletpay: 1,  //是否支持退费 1为支持，否则不支持
                     permit: 1, //是否临时充电开启 1为开启，否则不开启
                     ifalipay: 1,
+                    rank: 720,
                     gather1: [
                         { id: -1, money: 1, common1: 0,common2: 200 }
                     ],
@@ -223,6 +224,7 @@ export default {
                                         walletpay: 1,  //是否支持退费 1为支持，否则不支持
                                         permit: 1, //是否临时充电开启 1为开启，否则不开启,
                                         ifalipay: 1,//是否支持支付宝充电
+                                        rank: 720,
                                         gather1: [
                                             { id: -1, money: 1, common1: 0,common2: 200 }
                                         ],

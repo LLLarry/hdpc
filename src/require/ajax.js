@@ -7,18 +7,20 @@ import store from '@/store'
 // 加载进度条插件及样式
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import hdConfig from '../../hd.config' //配置文件
 
 let baseURL= window.location.origin || 'http://www.he360.com.cn'
 if (process.env.NODE_ENV === "development"){ //开发环境
   baseURL= 'http://localhost'
 }
- const filterUrlList= ['/dataCollectInfo/deviceEarningsData','/dataCollectInfo/dealerEarningsData','/AccountInfo/getAccountListInfo',
-'/AccountInfo/accountOperateInfo','/orderData/orderTradeRecordData','/orderData/orderChargeRecordData','/orderData/orderOfflineRecordData',
-'/orderData/orderinCoinsRecordData','/orderData/orderPackageMonthData','/deviceData/getDeviceData','/deviceData/getBluetoothDeviceData','/deviceData/inquireDeviceLogData',
-'/deviceData/inquireDeviceOperationData','/orderData/orderOnlineCardData','/orderData/orderOnlineOperateData','/orderData/orderOnlineCardRecordData',
-'/areaData/areaManageData'
-]
-
+//  const filterUrlList= ['/dataCollectInfo/deviceEarningsData','/dataCollectInfo/dealerEarningsData','/AccountInfo/getAccountListInfo',
+// '/AccountInfo/accountOperateInfo','/orderData/orderTradeRecordData','/orderData/orderChargeRecordData','/orderData/orderOfflineRecordData',
+// '/orderData/orderinCoinsRecordData','/orderData/orderPackageMonthData','/deviceData/getDeviceData','/deviceData/getBluetoothDeviceData','/deviceData/inquireDeviceLogData',
+// '/deviceData/inquireDeviceOperationData','/orderData/orderOnlineCardData','/orderData/orderOnlineOperateData','/orderData/orderOnlineCardRecordData',
+// '/areaData/areaManageData'
+// ]
+const whiteUrlList= hdConfig.axios.whiteUrlList //不进行拦截的url
+const filterUrlList= hdConfig.axios.filterUrlList //代理商需要加上商户id的url
 const service = axios.create({ // 创建axios实例           
         timeout: 120000, // 请求超时时间
         headers: {
@@ -31,10 +33,12 @@ const service = axios.create({ // 创建axios实例
 
 service.interceptors.request.use(config => { //请求拦截器
         NProgress.start()
-        let cancelTokenArr=  store.state.cancelTokenArr
-        for(let i=0; i < cancelTokenArr.length ; i++){ //在请求之前，拦截、判断前面有没有相同路径正在发送请求，如果有，进行拦截，取消发送
-          if(cancelTokenArr[i].url === config.url){
-            cancelTokenArr[i].cancelToken('多次请求取消')
+        if(!whiteUrlList.includes(config.url)){ /*当请求的地址在配置文件中配置，则多次请求也不会被拦截*/
+          let cancelTokenArr=  store.state.cancelTokenArr
+          for(let i=0; i < cancelTokenArr.length ; i++){ //在请求之前，拦截、判断前面有没有相同路径正在发送请求，如果有，进行拦截，取消发送
+            if(cancelTokenArr[i].url === config.url){
+              cancelTokenArr[i].cancelToken('多次请求取消')
+            }
           }
         }
         // 这里是筛选地址 代理商需要

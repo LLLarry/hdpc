@@ -267,7 +267,7 @@
                 >
                 <template slot-scope="{row}">
                    {{row.resultinfo==0?" 充电完成":row.resultinfo==1?"空载断电":row.resultinfo==2?"充满":
-					    row.resultinfo==3?"超功率自停":row.resultinfo==4?"远程断电" :row.resultinfo==5?"刷卡断电" :row.resultinfo==11?"被迫停止":row.resultinfo==255?"日志结束":"无"}}
+					    row.resultinfo==3?"超功率自停":row.resultinfo==4?"远程断电" :row.resultinfo==5?"刷卡断电" :row.resultinfo==6?"设备离线" :row.resultinfo==11?"被迫停止":row.resultinfo==255?"日志结束":"无"}}
                 </template>
                 </el-table-column>
 

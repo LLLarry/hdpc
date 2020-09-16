@@ -340,8 +340,9 @@
  import QRCode from '@/components/common/QRCode'
  import QRCodeForPort from '@/components/common/QRCodeForPort'
  import exportExcel from '@/utils/excel'
- import { getDeviceList,setHardversion,resetDeviceTestTime } from '@/require/deviceManage'
+ import { getDeviceList,setHardversion,resetDeviceTestTime,exportDeviceData } from '@/require/deviceManage'
  import { mapState } from 'vuex'
+ const MAX_EXPORT_COUNT= 2000
  const tableTitle= { //导出配置
 	code: '设备号',
 	remark: '设备名',
@@ -466,7 +467,6 @@ export default {
                     for(const item of this.tableData){
                         if(item.code === this.modifyHversonForm.code){
                             item.hardversion= this.modifyHversonForm.hardversion
-                            
                             return
                         }
                     }
@@ -496,18 +496,27 @@ export default {
         },
         handleExportExcel(){ //导出excel
             confirDelete('确定导出设备列表吗？',async ()=>{
-                let info= await getDeviceList({...this.deviceListForm,export: 1})
-                if(info.code === 200){
-                    const list= info.listdata
-                    exportExcel({
-                        tHeader: Object.values(tableTitle),
-                        filterVal: Object.keys(tableTitle),
-                        list: info.deviceData,
-                        filename: `设备列表`,
-                        formatJson: this.formatJson
-                    })
-                }else{
-                    messageTip('error',info.message)
+                try{
+                    const listPromise= []
+                    const times= Math.ceil(this.totalPage / MAX_EXPORT_COUNT) //请求次数
+                    for(let i=0; i< times; i++){
+                        listPromise.push(exportDeviceData({...this.deviceListForm,typeIndex: i}))
+                    }
+                    let info= await Promise.all(listPromise)
+                    if(info && info.length > 0){
+                        const list= Array.prototype.concat.apply([],info)
+                        exportExcel({
+                            tHeader: Object.values(tableTitle),
+                            filterVal: Object.keys(tableTitle),
+                            list: list,
+                            filename: `设备列表`,
+                            formatJson: this.formatJson
+                        })
+                    }else{
+                        messageTip('error','导出失败')
+                    }
+                }catch(e){
+                     messageTip('error','导出错误！')
                 }
             })
         },

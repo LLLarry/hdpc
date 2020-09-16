@@ -80,6 +80,11 @@
                         </el-date-picker>
                         <el-button type="primary" size="mini"  @click="handleDownloadIfram">下载</el-button>
                     </div>
+                    <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
+                        Test：
+                        <el-input v-model="testval" placeholder="输入参数" size="mini" style="width: 60vw;"></el-input> 
+                        <el-button type="primary" size="mini"  @click="testMethod">提交</el-button>
+                    </div>
             </el-row>
         </el-card>
         
@@ -131,7 +136,7 @@
 <script>
 
 import { mapState } from 'vuex'
-import { updateDeviceExpire,changeDeviceIMEI,changeDeviceCode,updateDeviceName } from '@/require/deviceManage'
+import { updateDeviceExpire,changeDeviceIMEI,changeDeviceCode,updateDeviceName,wolfConstomSendData } from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
@@ -164,7 +169,8 @@ export default {
             changeCode: '',//更换code
             downLoadTime: '', //下载日期
             dialogVisible: false, //日志弹框是否显示
-            iframeSrc: ''
+            iframeSrc: '',
+            testval: '', //测试
         }
     },
     computed: {
@@ -294,6 +300,24 @@ export default {
         },
         backFn(){
             this.$emit('backFn') //调用父组件的方法，重新请求
+        },
+        // 测试方法
+        testMethod(){
+            const reg= /^[0-9a-fA-F]{1,}$/
+            if(!reg.test(this.testval)){
+                 return messageTip('warning','请输入0-9a-fA-F的字符串')
+            }
+            wolfConstomSendData({devicenum:this.code,param: this.testval})
+            .then(res=>{
+                if(res.code===200){
+                    messageTip('success','成功')
+                }else{
+                    messageTip('error','失败')
+                }
+            })
+            .catch(err=>{
+                messageTip('error','出错')
+            })
         }
     }
 }

@@ -587,7 +587,7 @@ export default {
 				setObj.ordermess= result.ordermess ? result.ordermess : 2
 				setObj.equipmess= result.equipmess ? result.equipmess : 2
                 setObj.incoinrefund= result.incoinrefund ? result.incoinrefund : 1
-                setObj.showincoins= result.showincoins === 2 ? 2 : 1
+                setObj.showincoins= result.showincoins === 1 ? 1 : 2
                 setObj.autoWithdraw= result.autoWithdraw ? result.autoWithdraw : 2
                 setObj.incomemess= result.incomemess ? result.incomemess : 2
                 setObj.apportion= result.apportion ? result.apportion : 0

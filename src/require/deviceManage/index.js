@@ -319,6 +319,28 @@ export const getDeviceSetAlarm= function (data){
          })
 }
 
+/**
+ * 获取设置的报警系统值
+ */
+export const wolfConstomSendData= function (data){ 
+    return ajax({
+             url: '/wolfConstomSendData',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * 导出设备列表
+ */
+export const exportDeviceData= function (data){ 
+    return ajax({
+             url: '/deviceData/exportDeviceData',
+             data: data,
+             method: 'post'
+         })
+}
+
 
 
 

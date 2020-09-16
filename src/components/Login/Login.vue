@@ -84,10 +84,23 @@ export default {
         }
       },
       handleWxLogin(){
-          let origin= window.location.origin
-          let originList= origin.split(/:\/\//g)
-          originList[1]=  originList[1].includes('localhost') ? 'www.tengfuchong.com.cn' : originList[1]
-          let appid= originList[1].includes('tengfuchong') ? "wx695275de73b7dad4" : "wx003f63d4791f497d"
+          let originList= ['http','www.he360.cn']
+          let appid= 'wx003f63d4791f497d'
+          try {
+            let origin= window.location.origin
+            originList= origin.split(/:\/\//g)
+            originList[1]=  originList[1].includes('localhost') ? 'www.tengfuchong.com.cn' : originList[1]
+            appid= originList[1].includes('tengfuchong') ? "wx695275de73b7dad4" : "wx003f63d4791f497d"
+          }catch(e){
+            originList= ['http','www.he360.cn'],
+            appid= 'wx003f63d4791f497d'
+          }finally{
+              if(['www.he360.cn','www.he360.com.cn','www.tengfuchong.com.cn'].indexOf(originList[1]) === -1 || ["wx695275de73b7dad4","wx003f63d4791f497d"].indexOf(appid) === -1){
+                  originList= ['http','www.he360.cn'],
+                  appid= 'wx003f63d4791f497d'
+              }
+          }
+          
           let wxLogin=new WxLogin({
                 id:"login_ewm", 
                 appid: appid, 

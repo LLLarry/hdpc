@@ -20,7 +20,8 @@ if (process.env.NODE_ENV === "development"){ //开发环境
 // '/areaData/areaManageData'
 // ]
 const whiteUrlList= hdConfig.axios.whiteUrlList //不进行拦截的url
-const filterUrlList= hdConfig.axios.filterUrlList //代理商需要加上商户id的url
+const filterUrlList= hdConfig.axios.agentTransformId //代理商需要加上商户id的url
+console.log(hdConfig)
 const service = axios.create({ // 创建axios实例           
         timeout: 120000, // 请求超时时间
         headers: {
@@ -52,7 +53,6 @@ service.interceptors.request.use(config => { //请求拦截器
         config.cancelToken = new axios.CancelToken(function (cancel) { //将请求的cancelToken存到 vuex中的pushToken中
           store.commit('pushToken', {cancelToken: cancel,url:config.url})
         })
-        
         return config
       }, error => {
         Promise.reject(error)

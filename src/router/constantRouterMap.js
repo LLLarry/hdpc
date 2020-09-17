@@ -309,8 +309,8 @@ export const constantRouterMapSuperAdmin= [
       },
       {
         path: '/deviceManage/deviceList/temperhistory',
-        name: '历史温度',
-        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/components/AlarmConfig/TemperHistory'),
+        name: '历史数据',
+        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/components/AlarmConfig/AlarmHistory'),
         meta: {
           role: ['superAdmin','admin']
         }
@@ -665,8 +665,8 @@ export const constantRouterMapAdmin= [
       },
       {
         path: '/deviceManage/deviceList/temperhistory',
-        name: '历史温度',
-        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/components/AlarmConfig/TemperHistory'),
+        name: '历史数据',
+        component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/components/AlarmConfig/AlarmHistory'),
         meta: {
           role: ['superAdmin','admin']
         }
@@ -981,8 +981,8 @@ export const constantRouterMapAgent= [
     },
     {
       path: '/deviceManage/deviceList/temperhistory',
-      name: '历史温度',
-      component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/components/AlarmConfig/TemperHistory'),
+      name: '历史数据',
+      component: ()=> import('@/views/DeviceManage/DeviceList/DeviceDetail/components/AlarmConfig/AlarmHistory'),
       meta: {
         role: ['superAdmin','admin']
       }

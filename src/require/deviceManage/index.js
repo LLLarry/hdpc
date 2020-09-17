@@ -341,6 +341,18 @@ export const exportDeviceData= function (data){
          })
 }
 
+/**
+ * 获取历史报警温度/电量
+ */
+export const inquireWebWarnData= function (data){ 
+    return ajax({
+             url: '/equipment/inquireWebWarnData',
+             data: data,
+             method: 'post'
+         })
+}
+
+
 
 
 

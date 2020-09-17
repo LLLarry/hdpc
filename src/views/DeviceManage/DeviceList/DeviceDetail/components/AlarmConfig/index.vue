@@ -102,7 +102,7 @@
                                         <div v-show="!row.edit" class="edit_item">
                                             <el-link :underline="false" :type="warnGrad(row)">{{row.value}}℃</el-link>
                                             <div>
-                                            <router-link :to="`/deviceManage/deviceList/temperhistory`">
+                                                <router-link :to="`/deviceManage/deviceList/temperhistory?code=${this.code}&merid=${this.merid}&type=1`">
                                                     <el-link type="primary" size="mini" style="margin-right: 10px;">历史温度</el-link>
                                                 </router-link>
                                                 <el-button type="success" size="mini" :icon="row.loading ? 'el-icon-loading' : ''" @click="getNowDeviceAlarmFn(row)">获取</el-button>
@@ -121,6 +121,7 @@
                                         <div v-show="!row.edit" class="edit_item">
                                             <el-link :underline="false" :type="warnGrad(row)">{{row.value}}W</el-link>
                                             <div>
+                            
                                                 <el-button type="success" size="mini" :icon="row.loading ? 'el-icon-loading' : ''"  @click="getNowDeviceAlarmFn(row)">获取</el-button>
                                             </div>
                                         </div>

@@ -47,7 +47,7 @@
                                             </div>
                                         </div>
                                         <div v-show="row.edit"  class="edit_item">
-                                            <el-input size="mini" class="edit_input" v-model="alarmConfigFrom[row.type]"></el-input>℃
+                                            <el-input size="mini" class="edit_input" v-model="alarmConfigFrom[row.type]"></el-input>
                                             <div>
                                                 <el-button type="success" :icon="row.editloading ? 'el-icon-loading' : 'el-icon-folder-checked'" size="mini" @click="handleSave(row)">保存</el-button>
                                                 <el-button type="warning" size="mini" @click="handleClose(row)">取消</el-button>
@@ -267,7 +267,6 @@ export default {
     },
     methods:{
         handleSet(row){  //设置
-           let newRow= {...row}
            this.alarmConfigFrom= {...this.alarmConfigFrom,[row.type]: row.value}
            this.$set(row,'edit',true) 
         },
@@ -300,6 +299,7 @@ export default {
                 messageTip('error',"设置报警阈值异常")
             }finally{
                 this.$set(row,'editloading',false)
+                this.handleClose(row)
             }
         },
         async getDeviceAlarmCallBack(row){ //获取设置的参数

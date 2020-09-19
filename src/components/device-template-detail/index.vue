@@ -356,6 +356,9 @@ export default {
 
 <style lang="less">
 .templateDetail {
+    table {
+        width: 100% !important;
+    }
     position: relative;
     padding: 69px 20px 0 20px;
     .topContent {

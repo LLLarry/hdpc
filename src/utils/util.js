@@ -87,6 +87,21 @@ export default {
       this.hide= ()=>{
         this.loading && this.loading.close()
       }
-    }
+    },
 
+
+    //过滤掉请求参数中的undefined 空字符串""
+    fmtParams(params){
+      if(params.toString && params.toString() == "[object Object]"){
+        let newParams= {}
+        for(let key in params){
+          if(params[key] !== void 0 && params[key] !== ""){
+            newParams[key]= params[key]
+          }
+        }
+        return newParams
+      }else {
+        return {}
+      }
+    }
 }

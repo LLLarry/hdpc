@@ -127,7 +127,7 @@
          </el-row>
 
          <!-- 报警系统配置 -->
-        <AlarmConfig :code="code" :merid="merid" :alarmdata="alarmdata" />
+        <AlarmConfig :code="code" :merid="merid" :alarmdata="alarmdata" v-if="hwVerson == '08'" />
 
         <!-- 设备新的主板信息 -->
          <el-row v-if="['07'].includes(hwVerson)">
@@ -519,6 +519,9 @@ export default {
 <style lang="less">
 
 .deviceDetail {
+    table {
+        width: 100% !important;
+    }
     background-color: #F8F8F9;
     .code_handle {
         float: left;

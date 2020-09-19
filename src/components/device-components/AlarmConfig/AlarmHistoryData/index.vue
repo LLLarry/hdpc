@@ -47,6 +47,7 @@ export default {
             type: 1,
             merid: -1,
             code: '',
+            hotDoorsill: 0, //报警温度
         }
     },
     created(){
@@ -75,6 +76,7 @@ export default {
                 if(info.code){
                     this.listtime= info.listtime
                     this.listvalue= info.listvalue
+                    this.hotDoorsill= info.hotDoorsill
                     this.tableData= this.listtime.map((item,index)=>({time: item,value:info.listvalue[index] }))
                     this.myChart.setOption(this.getOptions())
                 }
@@ -158,14 +160,11 @@ export default {
                                 },
                             },
                             data: [{
-                                yAxis: 62
+                                yAxis: this.hotDoorsill
                             }],
                             label: {
                                 show: this.type == 1,
                                 formatter: '报警温度',           // 这儿设置安全基线
-                                // normal: {
-                                //     formatter: '报警温度',           // 这儿设置安全基线
-                                // }
                             },
                         },
                         data: this.listvalue

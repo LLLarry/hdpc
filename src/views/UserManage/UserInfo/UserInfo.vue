@@ -211,6 +211,8 @@ import { userUnbindMer, userUnbindArea } from '@/require'
 import { getUserMonthlyInfo } from '@/require/userManage'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
 import { mapState } from 'vuex'
+import Utils from '@/utils/util'
+
 export default {
     data(){
         return {
@@ -280,8 +282,15 @@ export default {
             }
           
         },
-        async asyGetUserInfo(data){ //获取用户信息
+        async asyGetUserInfo(data, isClickSearch){ //获取用户信息 isClickSearch 是否时点击搜索
             let _this= this
+            if(isClickSearch){
+                let {VNK,condition,currentPage, ...params}= data
+                const fmtParams= Utils.fmtParams(params) //格式化之后的参数
+                if(Object.keys(fmtParams).length <= 0 ){
+                    return messageTip("warning","请先输入条件后再进行搜索！")
+                }
+            }
             try{
                  _this.loading= true
                  let userInfo= await getUserInfo(data)
@@ -314,7 +323,7 @@ export default {
          handleSearch(){ //点击搜索查询
             this.$router.push({query:{... this.userInfoDetailForm,currentPage: 1,condition: 0}})
             this.userInfoDetailForm= this.$route.query
-            this.asyGetUserInfo(this.userInfoDetailForm)
+            this.asyGetUserInfo(this.userInfoDetailForm,true)
             this.nowPage= 1 //搜索完之后将nowPage置为1
         },
         backFn(data){ //绑定商户或小区回调，修改自己的值

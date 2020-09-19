@@ -33,20 +33,22 @@ export default {
 
 <style lang="less" scoped>
 .wscn-http404-container{
-  transform: translate(-50%,-50%);
+  position: relative;
+  transform: translate(calc(-50% + 240px),-50%);
   position: absolute;
   top: 40%;
   left: 50%;
 }
 .wscn-http404 {
   position: relative;
-  width: 1200px;
+  width: calc(100vw - 240px);
   padding: 0 50px;
   overflow: hidden;
   .pic-404 {
     position: relative;
     float: left;
-    width: 600px;
+    width: 50%;
+    max-width: 600px;
     overflow: hidden;
     &__parent {
       width: 100%;

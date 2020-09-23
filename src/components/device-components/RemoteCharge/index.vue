@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- <SelectMachine /> -->
         <el-card class="box-card" v-if="!['03','04','07'].includes(hwVerson)" id="originCharcge_card">
             <div slot="header" class="clearfix">
                 <span>远程充电</span>
@@ -168,6 +169,7 @@
 
 <script>
 import { remoteChargeByPort,remoteChargeBreakOff,getWolftestpay  } from '@/require/deviceManage'
+// import SelectMachine from '@/components/device-components/SelectMachine'
 import {messageTip} from '@/utils/ele'
 export default {
     props: {

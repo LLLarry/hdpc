@@ -353,6 +353,17 @@ export const inquireWebWarnData= function (data){
 }
 
 
+/**
+ * 获取所有的从机地址通过设备号
+ */
+export const queryAllAddress= function (data){ 
+    return ajax({
+             url: '/wolfNewSendData/queryAllAddr',
+             data: data,
+             method: 'post'
+         })
+}
+
 
 
 

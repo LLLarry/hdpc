@@ -33,6 +33,7 @@
                         <el-option label="08新版10路智慧款V3" value="08" ></el-option>
                         <el-option label="09新版2路智慧款V3" value="09" ></el-option>
                         <el-option label="10新版20路智慧款V3" value="10" ></el-option>
+                        <el-option label="11一拖多" value="11" ></el-option>
                     </el-select>
                 </el-form-item>
 

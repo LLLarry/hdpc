@@ -50,7 +50,12 @@
             @handleLockPortStatusCallback="handleLockPortStatusCallback"
         />
         <!-- 远程充电 -->
-        <RemotoCharge :remoteCharge="remoteCharge" :chargeSendList="chargeSendList" :hwVerson="hwVerson" :code="code" />
+        <RemotoCharge 
+            :remoteCharge="remoteCharge" 
+            :chargeSendList="chargeSendList" 
+            :hwVerson="hwVerson" 
+            :code="code"
+        />
          <!-- 远程充电 -->
          <el-row v-if="!['03','04','07'].includes(hwVerson) &&  userInfo.classify== 'superAdmin' ">
              <el-col :xs="24" :sm="12" >
@@ -215,7 +220,7 @@ import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
 remoteChargeBreakOff,updateMapPosition,updateDeviceName,updateDeviceExpire,getWolfsetsys,
-getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo,changeDeviceCode} from '@/require/deviceManage'
+getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo,changeDeviceCode,queryAllAddress} from '@/require/deviceManage'
 import Vue from 'vue'
 import { mapState,mapMutations } from 'vuex'
 export default {
@@ -322,7 +327,9 @@ export default {
                         },
                     ],
             deviceInfo: {},//模板复用的信息
-            alarmdata: {} //报警系统容器
+            alarmdata: {}, //报警系统容器
+            addrlist: [],//从机地址，
+            selectIndex: 0 // 选中的从机
         }
     },
     components: {
@@ -344,16 +351,21 @@ export default {
         const warpHeight= (document.documentElement.clientHeight - 80)*0.75
         this.warpHeight= warpHeight
         
+        // this.$bus.$on('changeSelectIndex',(index)=>{ //监听修改selectInde
+        //     this.selectIndex= index
+        //     this.sendMessageToMachine('selectIndex',index)
+        // })
     },
     mounted(){
         document.getElementsByClassName('main')[0].scrollTop= '0px'
-       
     },
     beforeDestroy(){
         this.Loading && this.Loading.close()
+        // this.$bus.$off('changeSelectIndex')
     },
     deactivated(){
        this.Loading && this.Loading.close()
+    //    this.$bus.$off('changeSelectIndex')
     },
     computed: {
         ...mapState(['userInfo'])
@@ -445,6 +457,7 @@ export default {
                     item.val= sysparam[item.type_key]== null ? item.val : sysparam[item.type_key]
                     return item
                 })
+                this.sendMessageToMachine('addrlist',this.addrlist) //machine
                 loading.close()
             }
             catch(error){
@@ -511,7 +524,30 @@ export default {
         },
         handleReLoad(callback){ //v3模板的回调函数
             this.asyGetDeviceDetailInfo({code: this.code},callback)
-        }
+        },
+        sendMessageToMachine(type,data){ //发送数据到选择主机组件
+            this[type]= data
+            this.$bus.$emit('machine-data',{type,data})
+        },
+        getAddrList(type,data){ //获取从机地址
+            this[type]= data
+            this.$bus.$emit('machine-data',{type,data})
+        },
+        async handleQueryAllAddr(){ //查询所有的从机地址
+          try{
+            let info= await queryAllAddress({code:this.code})
+            if(info.code == 200){
+              this.addrlist= info.addrlist
+              this.sendMessageToMachine('addrlist',this.addrlist)
+            }else{
+                messageTip('error',info.message)
+            }
+          }catch(e){
+            messageTip('error','获取异常')
+            console.log(e)
+          }
+        },
+
     }
 }
 </script>

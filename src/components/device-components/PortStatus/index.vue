@@ -79,6 +79,7 @@
 <script>
 import { getDeviceStatus,lockDevicePort } from '@/require/deviceManage'
 import {Loading, Button} from 'element-ui'
+import {messageTip} from '@/utils/ele'
 export default {
     props: {
         portStatusList: Array,
@@ -87,9 +88,9 @@ export default {
     },
     data(){
         return {
-            loading: null
+            loading: null,
         }
-	},
+  },
 	beforeDestroy(){
 		this.Loading && this.Loading.close()
 	},
@@ -182,6 +183,10 @@ export default {
                 loading.close()
             })
         },
+        handleQueryAllAddrFn(){
+          this.$emit('handleQueryAllAddr')
+        }
+
     }
 };
 </script>

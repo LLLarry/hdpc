@@ -80,11 +80,11 @@
                         </el-date-picker>
                         <el-button type="primary" size="mini"  @click="handleDownloadIfram">下载</el-button>
                     </div>
-                    <!-- <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
+                    <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
                         Test：
                         <el-input v-model="testval" placeholder="输入参数" size="mini" style="width: 60vw;"></el-input> 
                         <el-button type="primary" size="mini"  @click="testMethod">提交</el-button>
-                    </div> -->
+                    </div>
             </el-row>
         </el-card>
         

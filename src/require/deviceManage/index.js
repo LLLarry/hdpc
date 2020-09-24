@@ -364,6 +364,17 @@ export const queryAllAddress= function (data){
          })
 }
 
+/**
+ * 添加或移除端口地址
+ */
+export const addOrRemoveAddr= function (data){ 
+    return ajax({
+             url: '/wolfNewSendData/addOrRemoveAddr',
+             data: data,
+             method: 'post'
+         })
+}
+
 
 
 

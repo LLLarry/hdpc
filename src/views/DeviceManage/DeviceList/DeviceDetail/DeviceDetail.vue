@@ -17,10 +17,10 @@
         <!-- 模板信息 -->
         <el-card class="box-card temCard" id="template_card">
             <div slot="header" class="clearfix">
-                <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : ['08','09','10'].includes(hwVerson) ? 'V3充电模板' :'充电模板'}}）</span>
+                <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : ['08','09','10','11'].includes(hwVerson) ? 'V3充电模板' :'充电模板'}}）</span>
             </div>
             <!-- 十路智慧款 -->
-            <div v-if=" hwVerson != '03' && hwVerson != '04' &&  !['08','09','10'].includes(hwVerson)" >
+            <div v-if=" hwVerson != '03' && hwVerson != '04' &&  !['08','09','10','11'].includes(hwVerson)" >
                 <!-- 正常模板 -->
                  <TemplateCharge :from="2" :list="temChargeList" v-if="!isGrade" :deviceInfo="{code:this.code,merid: this.merid, hwVerson: hwVerson}" /> 
                  <!-- 分等级模板 -->
@@ -36,11 +36,14 @@
             </div>
             <!-- V3充电模板 -->
            
-            <div v-else-if="['08','09','10'].indexOf(hwVerson) !== -1">
+            <div v-else-if="['08','09','10','11'].indexOf(hwVerson) !== -1">
                 <TemplateV3 :from="2" :list="temChargeList" @handleReLoad="handleReLoad" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
         </el-card>
-       
+
+        <!-- 端口地址 -->
+            <PortAddr :code="code" />
+        <!-- 端口地址 -->
         <!-- 00 01 02 03 04 05 06 端口状态 --> 
          <PortStatus 
             :portStatusList="portStatusList" 
@@ -48,6 +51,7 @@
             :code="code" 
             @handleGetPortStatusCallback="handleGetPortStatusCallback"
             @handleLockPortStatusCallback="handleLockPortStatusCallback"
+            v-if="hwVerson != '11'"
         />
         <!-- 远程充电 -->
         <RemotoCharge 
@@ -55,9 +59,10 @@
             :chargeSendList="chargeSendList" 
             :hwVerson="hwVerson" 
             :code="code"
+            v-if="hwVerson != '11'"
         />
          <!-- 远程充电 -->
-         <el-row v-if="!['03','04','07'].includes(hwVerson) &&  userInfo.classify== 'superAdmin' ">
+         <el-row v-if="!['03','04','07','11'].includes(hwVerson) &&  userInfo.classify== 'superAdmin' ">
              <el-col :xs="24" :sm="12" >
                   <!-- 查看消费总金额 -->
                  <el-card class="box-card">
@@ -173,7 +178,7 @@
              </el-col>
          </el-row>
         <!-- 系统参数 -->
-        <SystemParma :systemParamer="systemParamer" :hwVerson="hwVerson" :code="code" :deviceInfo="deviceInfo" :elecTimeFirst="elecTimeFirst" @changeSystemParamerCallBack="changeSystemParamerCallBack" />
+        <SystemParma v-if="hwVerson != '11'" :systemParamer="systemParamer" :hwVerson="hwVerson" :code="code" :deviceInfo="deviceInfo" :elecTimeFirst="elecTimeFirst" @changeSystemParamerCallBack="changeSystemParamerCallBack" />
         <div class="nav_tag">
             <div class="nav_tag_item">
                 <a href="#module_card">
@@ -216,6 +221,7 @@ import RemotoCharge from '@/components/device-components/RemoteCharge'
 import SystemParma from '@/components/device-components/SystemParma' 
 import TopDetailInfo from '@/components/device-components/TopDetailInfo' 
 import AlarmConfig from '@/components/device-components/AlarmConfig' 
+import PortAddr from '@/components/device-components/PortAddr' 
 import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
@@ -343,7 +349,8 @@ export default {
         RemotoCharge,
         SystemParma,
         TopDetailInfo,
-        AlarmConfig
+        AlarmConfig,
+        PortAddr
     },
     created(){
         this.code= this.$route.query.code

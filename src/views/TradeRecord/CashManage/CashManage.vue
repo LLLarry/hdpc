@@ -154,6 +154,13 @@
                     </el-link>
                 </template>
                 </el-table-column>
+                
+                <el-table-column
+                prop="earningsbalance"
+                label="剩余金额"
+                min-width="80"
+                >
+                </el-table-column>
 
                 <el-table-column
                 prop="servicecharge"

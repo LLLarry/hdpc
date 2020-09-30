@@ -3,7 +3,11 @@
       <el-card>
           <div slot="header" class="clearfix">
             <span>从机地址</span>
-            <el-button style="float: right;" type="primary" size="mini" @click="handleQueryAllAddr">获取从机地址</el-button>
+            <div style="float: right;">
+                <el-button type="primary" size="mini" @click="handleSycnAllAddr" :icon="updateAllLoading ? 'el-icon-loading': 'el-icon-refresh'">同步所有从机地址</el-button>
+                <el-button type="primary" size="mini" @click="handleQueryAllAddr" :icon="updateLoading ? 'el-icon-loading': 'el-icon-refresh'">更新从机地址</el-button>
+            </div>
+            
         </div>
         <div class="addrBox">
             <el-row class="thead">
@@ -15,73 +19,55 @@
                 <el-collapse-item 
                     title="一致性" 
                     :name="item.addr" 
-                    disabled v-for="(item,index) in tableData"
+                    disabled v-for="(item,index) in addrlist"
                     :key="item.addr"
                 >
                     <template slot="title">
                         <el-row class="tbody">
                             <el-col :span="16" class="tbody-cell">{{item.addr}}</el-col>
                             <el-col :span="4"  class="tbody-cell">
-                                <el-button type="danger" size="mini" icon="el-icon-delete-solid" @click="handleDelete(item,index)">删除此地址</el-button>
+                                <el-button 
+                                    type="danger" 
+                                    size="mini" 
+                                    icon="el-icon-delete-solid" 
+                                    @click="handleDelete(item,index)"
+                                >删除此地址</el-button>
                             </el-col>
                             <el-col :span="4"  class="tbody-cell" >
-                                <el-button type="primary" size="mini" @click="handleScan(item)">查看详情</el-button>
+                                <el-button 
+                                    type="primary" 
+                                    size="mini" 
+                                    @click="handleScan(item)"
+                                    :icon="item.loading ? 'el-icon-loading' : 'el-icon-menu'"
+                                    :plain="!activeNames.includes(item.addr)"
+                                >查看详情</el-button>
                             </el-col>
                         </el-row>
                     </template>
                     <div class="addrBox-sub">
                         <PortStatus  
-                            :portStatusList="portStatusList" 
+                            :portStatusList="item.portStatusList" 
                             :hwVerson="'11'" 
                             :code="code" 
-                            @handleGetPortStatusCallback="()=>{}"
+                            :addr="item.addr"
+                            @handleGetPortStatusCallback="handleGetPortStatusCallback"
                             @handleLockPortStatusCallback="()=>{}"
                         />
                     </div>
                     
                     <div class="addrBox-sub">
                        <RemotoCharge 
-                            :remoteCharge="portStatusList" 
-                            :hwVerson="'01'" 
+                            :remoteCharge="item.portStatusList" 
+                            :hwVerson="'11'" 
                             :code="code"
+                            :addr="item.addr"
+                            @handleUpDatePortStatus="handleUpDatePortStatus"
                         />
                     </div>
-
-                    <!-- <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
-                    <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div> -->
                 </el-collapse-item>
                 
             </el-collapse>
         </div>
-         <!-- <el-table
-            :data="tableData"
-            border
-            fit
-            v-loading="loading"
-            :header-cell-style="{background:'#f5f7fa',color:'#666'}"
-            :max-height="height*.65"
-            style="width: 100%">
-            <el-table-column
-                prop="addr"
-                label="地址"
-                min-width="180"
-                >
-            </el-table-column>
-            <el-table-column
-                label="删除"
-                width="200">
-                <template slot-scope="{row,$index}">
-                    <el-button type="danger" size="mini" icon="el-icon-delete-solid" @click="handleDelete(row,$index)">删除此地址</el-button>
-                </template> 
-            </el-table-column>
-            <el-table-column
-                label="查看详情"
-                width="200">
-                <template slot-scope="{row}">
-                    <el-link type="primary" :underline="false">查看详情</el-link>
-                </template> 
-            </el-table-column>
-        </el-table> -->
         <div class="bottom-add">
             <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddAddr">添加从机地址</el-button>
         </div>
@@ -101,13 +87,13 @@
                 label="设备号"
                 prop="code"
             >
-                <el-input type="code" v-model.number="addrFrom.code" autocomplete="off" disabled></el-input>
+                <el-input type="code" v-model="addrFrom.code"  disabled></el-input>
             </el-form-item>
             <el-form-item
                 label="从机地址"
                 prop="addr"
             >
-                <el-input type="addr" v-model.number="addrFrom.addr" autocomplete="off" ></el-input>
+                <el-input type="addr" v-model="addrFrom.addr"  ></el-input>
             </el-form-item>
         </el-form>
         </DialogWrapper>
@@ -116,27 +102,29 @@
 </template>
 
 <script>
-import { queryAllAddress,addOrRemoveAddr} from '@/require/deviceManage'
+import { queryAllAddress,addOrRemoveAddr,queryRedisPort,sycnAllAddr} from '@/require/deviceManage'
 import DialogWrapper from '@/components/DialogWrapper'
 import PortStatus from '@/components/device-components/PortStatus' 
 import RemotoCharge from '@/components/device-components/RemoteCharge' 
 import {messageTip,confirDelete} from '@/utils/ele'
-let height=document.documentElement.clientHeight
+// let height=document.documentElement.clientHeight
 export default {
     props:{
-        code: String
+        code: String,
+        addrlist: { //端口地址list
+            type: Array,
+            default: ()=>[]
+        },
+        hwVerson: String //硬件版本号
     },
     data(){
         return {
             loading: false,
-            tableData: [{addr: '000001'},{addr:'000002'},{addr:'000003'},{addr: '000004'}],
             dialogVisible: false, //弹出层是否显示
-            height: height, //浏览器高度
+            // height: height, //浏览器高度
+            updateLoading: false, //是否正在更新从机地址
+            updateAllLoading: false, //同步所有从机端口地址
             activeNames: [],
-            portStatusList: [
-                {elec: "0",port: "1",portStatus: "1",power: "0",time: "0",updateTime: "2020-09-19 11:47:05"},
-                {elec: "0",port: "1",portStatus: "1",power: "0",time: "0",updateTime: "2020-09-19 11:47:05"},
-            ],
             addrFrom: { 
                 code: this.code
             }
@@ -150,29 +138,47 @@ export default {
     methods: {
         async handleQueryAllAddr(){ //查询所有的从机地址
             try{
-                this.loading= true
+                this.updateLoading= true
                 let info= await queryAllAddress({code:this.code})
                 if(info.code == 200){
-                    this.tableData= info.addrlist.map(item=> {addr: item})
+                    const addrlist= info.addrlist.map(item=> ({addr: item}))
+                    this.$emit('upDateAddrList',addrlist)
                 }else{
                     messageTip('error',info.message)
                 }
             }catch(e){
                 console.log(e)
             }
-            this.loading= false
+            this.updateLoading= false
         },
         async asyAddOrRemoveAddr(data,index){ //添加或移除端口地址 data请求参数  index删除的元素的索引
+         this.addrlist.splice(index,1)
             try{
                 this.loading= true
                 let info= await addOrRemoveAddr(data)
                 if(info.code == 200){
                     if(data.type == 1){ //添加
-                        this.tableData.push({addr: data.addr})
-                        messageTip('success','添加成功')
+                        if(info.res == 0){
+                            this.addrlist.push({addr: data.addr})
+                            this.$emit('upDateAddrList',this.addrlist)
+                            messageTip('success','添加成功')
+                        }else if(info.res == 1){
+                            messageTip('danger',`新增已达到最大数`)
+                        }else if(info.res == 2){
+                            messageTip('danger',`${data.addr}从机地址已存在`)
+                        }
+                        
                     }else if(data.type == 2){ //删除
-                         this.tableData.splice(index,1)
-                         messageTip('success','删除成功')
+                        if(info.res == 0){
+                           this.addrlist.splice(index,1)
+                           this.$emit('upDateAddrList',this.addrlist)
+                            messageTip('success','删除成功')
+                        }else if(info.res == 1){
+                            messageTip('danger',`从机数为0，删除失败`)
+                        }else if(info.res == 2){
+                            messageTip('danger',`该从机地址不存在，删除失败`)
+                        }
+ 
                     }
                 }else{
                     messageTip('error',info.message)
@@ -188,7 +194,7 @@ export default {
         },
         handleDelete(row,index){
             confirDelete("确认删除此从机地址吗？",()=>{
-                this.asyAddOrRemoveAddr({code: this.code,addr:row,type:2},index)
+                this.asyAddOrRemoveAddr({code: this.code,addr:row.addr,type:2},index)
             })
         },
         handleSubmit(){ //添加从机端口，点击确认按钮
@@ -203,9 +209,65 @@ export default {
         handleClose(){ //关闭弹框
             this.dialogVisible= false
         },
-        handleScan({addr}){
-            addr= this.activeNames[0] === addr ? '' : addr
-            this.activeNames= [addr]
+        async handleScan(item){
+            if(this.activeNames[0] == item.addr) return this.activeNames= [] //如果点击的元素正在展开，那么将不再请求，直接关闭
+            try{
+                this.$set(item,'loading',true)
+                let info= await queryRedisPort({code: this.code,addr: item.addr})
+                this.$delete(item,'loading')
+                if(info.code == 200){
+                    this.$set(item,'portStatusList',info.portlist)
+                    this.activeNames= [item.addr]
+                }else{
+                    messageTip('error',info.message)
+
+                }
+            }catch(e){
+               this.$delete(item,'loading')
+            }
+        },
+        handleGetPortStatusCallback({addr,index,copeRow}){ //更新端口状态 callback
+            const i= this.tableData.findIndex(item=> item.addr == addr)
+            if(i >= 0){
+                this.$set(this.tableData[i].portStatusList,index,copeRow) //从新修改更新过来的值
+            }
+        },
+        async handleSycnAllAddr(){  //同步所有从机地址
+          try{
+            this.updateAllLoading= true
+            let info= await sycnAllAddr({code: this.code})
+            if(info.code == 200){
+              if(info.res == 0){
+                messageTip('success',"同步所有从机地址成功")
+              }else if(info.res == 1){
+                messageTip('error',"同步所有从机地址失败")
+              }else if(info.res == 2){
+                messageTip('warning',"写入个数NUM为零")
+              }else if(info.res == 3){
+                messageTip('warning',"写入个数NUM超过设定最大值(MAX=50)")
+              }
+            }else{
+              messageTip('error',res.message)
+            }
+          }catch(e){
+            console.log(e)
+          }
+          this.updateAllLoading= false
+        },
+        handleUpDatePortStatus({addr,portlist}){ //远程充电返回指定从机端口状态
+            for(let i=0; i<this.addrlist.length;i++){
+                if(this.addrlist[i].addr == addr){
+                    let portStatusList= this.addrlist[i].portStatusList
+                    const newPortStatusList= portStatusList.map((item)=>{
+                        if(portlist && portlist[item.port] !== void 0){ //说明portlist找到返回的端口信息
+                            item.portStatus= portlist[item.port]
+                        }
+                        return item
+                    })
+                    this.$set(this.addrlist[i],'portStatusList',newPortStatusList)
+                    break
+                }
+            }
         }
     }
 }

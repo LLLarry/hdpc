@@ -40,7 +40,7 @@
     </el-dialog>
     <!-- 绑定小区 -->
     <el-dialog title="绑定小区" :visible.sync="bindInfo.show" width="700px" custom-class="bindDialog" :modal="false" v-if="bindInfo.from == 2">
-        <el-table :data="gridData" height="70vh"  v-loading="loading" border>
+        <el-table :data="gridData" :max-height="warpHeight"  v-loading="loading" border>
             <el-table-column property="name" label="小区名称" min-width="150">
                 <template slot-scope="{row}">
                     {{row.name ? row.name : '— —'}}

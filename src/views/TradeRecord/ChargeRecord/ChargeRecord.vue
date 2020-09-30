@@ -45,6 +45,9 @@
                         <el-option label="满电自停" value="2" ></el-option>
                         <el-option label="超功率自停" value="3" ></el-option>
                         <el-option label="远程断电" value="4" ></el-option>
+                        <el-option label="刷卡断电" value="5" ></el-option>
+                        <el-option label="设备离线" value="6" ></el-option>
+                        <el-option label="余额不足" value="7" ></el-option>
                         <el-option label="被迫停止" value="11" ></el-option>
                         <el-option label="日志结束" value="255" ></el-option>
                         <el-option label="无" value="-1" ></el-option>
@@ -267,7 +270,7 @@
                 >
                 <template slot-scope="{row}">
                    {{row.resultinfo==0?" 充电完成":row.resultinfo==1?"空载断电":row.resultinfo==2?"充满":
-					    row.resultinfo==3?"超功率自停":row.resultinfo==4?"远程断电" :row.resultinfo==5?"刷卡断电" :row.resultinfo==6?"设备离线" :row.resultinfo==11?"被迫停止":row.resultinfo==255?"日志结束":"无"}}
+					    row.resultinfo==3?"超功率自停":row.resultinfo==4?"远程断电" :row.resultinfo==5?"刷卡断电" :row.resultinfo==6?"设备离线" :row.resultinfo==7?"余额不足" :row.resultinfo==11?"被迫停止":row.resultinfo==255?"日志结束":"无"}}
                 </template>
                 </el-table-column>
 

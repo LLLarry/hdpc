@@ -42,7 +42,13 @@
         </el-card>
 
         <!-- 端口地址 -->
-            <PortAddr :code="code" />
+        <PortAddr 
+            :code="code"
+            :addrlist="addrlist"
+            :hwVerson= "hwVerson"
+            @upDateAddrList="upDateAddrList"
+            v-if="hwVerson == '11'" 
+        />
         <!-- 端口地址 -->
         <!-- 00 01 02 03 04 05 06 端口状态 --> 
          <PortStatus 
@@ -226,7 +232,7 @@ import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
 remoteChargeBreakOff,updateMapPosition,updateDeviceName,updateDeviceExpire,getWolfsetsys,
-getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo,changeDeviceCode,queryAllAddress} from '@/require/deviceManage'
+getWolfreadsys,getWolftestpay ,sendUpdataTip,changeDeviceIMEI,sendUpdataInfo,changeDeviceCode} from '@/require/deviceManage'
 import Vue from 'vue'
 import { mapState,mapMutations } from 'vuex'
 export default {
@@ -335,7 +341,7 @@ export default {
             deviceInfo: {},//模板复用的信息
             alarmdata: {}, //报警系统容器
             addrlist: [],//从机地址，
-            selectIndex: 0 // 选中的从机
+            selectIndex: 0, // 选中的从机
         }
     },
     components: {
@@ -357,22 +363,15 @@ export default {
         this.asyGetDeviceDetailInfo({code: this.code})
         const warpHeight= (document.documentElement.clientHeight - 80)*0.75
         this.warpHeight= warpHeight
-        
-        // this.$bus.$on('changeSelectIndex',(index)=>{ //监听修改selectInde
-        //     this.selectIndex= index
-        //     this.sendMessageToMachine('selectIndex',index)
-        // })
     },
     mounted(){
         document.getElementsByClassName('main')[0].scrollTop= '0px'
     },
     beforeDestroy(){
         this.Loading && this.Loading.close()
-        // this.$bus.$off('changeSelectIndex')
     },
     deactivated(){
        this.Loading && this.Loading.close()
-    //    this.$bus.$off('changeSelectIndex')
     },
     computed: {
         ...mapState(['userInfo'])
@@ -445,29 +444,45 @@ export default {
                  _this.remoteCharge= JSON.parse(JSON.stringify(deviceInfo.allPortStatusList || [] ))// 非07设备的远程充电
                  _this.chargeSendList= JSON.parse(JSON.stringify(deviceInfo.allPortStatusList || [] ))  //07设备的远程充电
                  _this.remoteCharge= _this.remoteCharge.map((item,i)=>{ //给remoteCharge的键赋值
-                      item.chargeTime= 240
-                      item.elePower= 1.0
-                      return item
+                      if(item !== null && item != void 0){
+                        item.chargeTime= 240
+                        item.elePower= 1.0
+                        return item
+                      }
+                      return {}
                 })
                  _this.chargeSendList= _this.remoteCharge.map((item,i)=>{ //给remoteCharge的键赋值
-                      item.chargeTime= 60
-                      item.elePower= 1.0
-                      item.money= 1.0
-                      return item
+                      if(item !== null && item != void 0){
+                        item.chargeTime= 60
+                        item.elePower= 1.0
+                        item.money= 1.0
+                        return item
+                      }
+                      return {}
                 })
 
-                let sysparam= deviceInfo.sysparam
-                let systemParamer=  _this.systemParamer
-                this.elecTimeFirst= sysparam && sysparam.elecTimeFirst ? sysparam.elecTimeFirst : 0 //设置参数需要传递的值
+                let sysparam= deviceInfo.sysparam 
+                if(sysparam instanceof Array){ //只有 sysparam 为数组的时候才进行计算
+                    let systemParamer=  _this.systemParamer
+                    this.elecTimeFirst= sysparam && sysparam.elecTimeFirst ? sysparam.elecTimeFirst : 0 //设置参数需要传递的值
 
-                _this.systemParamer= systemParamer.map((item,i)=>{
-                    item.val= sysparam[item.type_key]== null ? item.val : sysparam[item.type_key]
-                    return item
-                })
-                this.sendMessageToMachine('addrlist',this.addrlist) //machine
+                    _this.systemParamer= systemParamer.map((item,i)=>{
+                        item.val= sysparam[item.type_key]== null ? item.val : sysparam[item.type_key]
+                        return item
+                    })
+                }
+               if(deviceInfo.addrlist instanceof Array){  //从机列表
+                   _this.addrlist= deviceInfo.addrlist.map(item=>{
+                       if(item !== null && item != void 0){
+                           return { addr: item }
+                       }
+                       return {}
+                   })
+               }
                 loading.close()
             }
             catch(error){
+                console.log(error)
                  loading.close()
             }
         },
@@ -540,19 +555,8 @@ export default {
             this[type]= data
             this.$bus.$emit('machine-data',{type,data})
         },
-        async handleQueryAllAddr(){ //查询所有的从机地址
-          try{
-            let info= await queryAllAddress({code:this.code})
-            if(info.code == 200){
-              this.addrlist= info.addrlist
-              this.sendMessageToMachine('addrlist',this.addrlist)
-            }else{
-                messageTip('error',info.message)
-            }
-          }catch(e){
-            messageTip('error','获取异常')
-            console.log(e)
-          }
+        upDateAddrList(addrList){ //查询更新从机地址
+            this.addrlist= addrList
         },
 
     }

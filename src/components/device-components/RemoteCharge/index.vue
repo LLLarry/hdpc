@@ -6,11 +6,22 @@
                 <span>远程充电</span>
             </div>
             <div class="remoteChargeTit" style="margin-bottom: 15px;">
-                <el-button type="primary" size="mini" disabled >查询空闲端口</el-button>
-                <el-button type="primary" size="mini" disabled >查询端口状态</el-button>
+                <el-button 
+                    type="primary" 
+                    size="mini" 
+                    disabled
+                    icon="el-icon-refresh"
+                >查询空闲端口</el-button>
+                <el-button 
+                    type="primary" 
+                    size="mini" 
+                    :icon="updatePortStatusLoading ? 'el-icon-loading' : 'el-icon-refresh' "
+                    :disabled="hwVerson != '11'" 
+                    @click="handleQueryAddrAllPortStatus" 
+                >查询端口状态</el-button>
             </div>
             <el-table
-                :data="remoteCharge"
+                :data="dataList"
                 border
                 fit
                 style="width: 100%"
@@ -29,7 +40,7 @@
                 >
                 <template slot-scope="{row}">
                     <el-link :type="row.portStatus== 1 ? 'success': row.portStatus== 2 ? 'danger': 'default' " size="mini" :underline="false" >
-                        {{row.portStatus== 1 ? '空闲': row.portStatus== 2 ? '使用':  row.portStatus== 3 ? '锁定' : '故障'}}
+                        {{row.portStatus== 1 ? '空闲': row.portStatus== 2 ? '使用': row.portStatus== 3 ? '锁定' : row.portStatus== 4 ? '故障' : row.portStatus== 5 ? '充满、浮充' : '— —'}}
                         <!-- 自己设置的  portStatus 等于3时为锁定-->
                     </el-link>
                 </template>
@@ -168,46 +179,99 @@
 </template>
 
 <script>
-import { remoteChargeByPort,remoteChargeBreakOff,getWolftestpay  } from '@/require/deviceManage'
+import { remoteChargeByPort,remoteChargeBreakOff,getWolftestpay,remoteStartCharge,remoteStopCharge,queryAddrAllPortStatus  } from '@/require/deviceManage'
 // import SelectMachine from '@/components/device-components/SelectMachine'
 import {messageTip} from '@/utils/ele'
 export default {
     props: {
-        remoteCharge: Array,
-        hwVerson: String,
-        code: String,
-        chargeSendList: Array
+        remoteCharge: {
+            type: Array,
+            default: ()=> []
+        }, //远程端口数据
+        hwVerson: String, //硬件版本号
+        code: String, //设备号
+        chargeSendList: Array, //07设备端口数据
+        addr: { // 11、一拖二设备从机地址
+            type: String,
+            defaule: ''
+        }
+    },
+    data(){
+        return {
+            updatePortStatusLoading: false, //更新端口状态加载
+        }
+    },
+    computed: { // 11一拖二设备增加一个 0号 端口的远程充电
+        dataList(){
+            let list= JSON.parse(JSON.stringify(this.remoteCharge))
+            if(this.hwVerson == '11'){
+                list.unshift({elec: "0",port: "0",portStatus: "1",power: "0",time: "0",updateTime: ""})
+            }
+            return list
+        }
     },
     methods: {
         handleRemoteCharge(index,row){ //远程充电
-            let {port:payport,chargeTime:time,elePower:elec }= row
-            Vue.set(row,'loading',true)
-            remoteChargeByPort({payport,time,elec,code: this.code}).then(res=>{
-                Vue.set(row,'loading',false)
-                if(res.wolfcode == '1000'){
-                    messageTip('success',`远程充电设置成功`)
-                    Vue.set(row,'portStatus',2)
-                }else{
-                    messageTip('error',`远程充电设置失败`)
-                }
-            }).catch(err=>{
-                Vue.set(row,'loading',false)
-            })
+            if(this.hwVerson == '11'){ //一拖二设备
+                let {port,chargeTime:time,elePower:elec }= row
+                Vue.set(row,'loading',true)
+                remoteStartCharge({port,time,elec,code: this.code,money:1.0,addr: this.addr}).then(res=>{
+                    Vue.set(row,'loading',false)
+                    if(res.code == 200){
+                        messageTip('success',`远程充电设置成功`)
+                        Vue.set(row,'portStatus',2)
+                    }else{
+                        messageTip('error',res.message)
+                    }
+                }).catch(err=>{
+                    Vue.set(row,'loading',false)
+                })
+            }else{ //非一拖二设备
+                let {port:payport,chargeTime:time,elePower:elec }= row
+                Vue.set(row,'loading',true)
+                remoteChargeByPort({payport,time,elec,code: this.code}).then(res=>{
+                    Vue.set(row,'loading',false)
+                    if(res.wolfcode == '1000'){
+                        messageTip('success',`远程充电设置成功`)
+                        Vue.set(row,'portStatus',2)
+                    }else{
+                        messageTip('error',`远程充电设置失败`)
+                    }
+                }).catch(err=>{
+                    Vue.set(row,'loading',false)
+                })
+            }
         },
         handleRemoteBreakOff(row){ //远程断电
-            let {port}= row
-             Vue.set(row,'loading1',true)
-            remoteChargeBreakOff({port,code: this.code}).then(res=>{
-                 Vue.set(row,'loading1',false)
-                if(res.wolfcode == '1000'){
-                    messageTip('success',`远程断电设置成功`)
-                    Vue.set(row,'portStatus',1)
-                }else{
-                     messageTip('error',`远程断电设置失败`)
-                }
-            }).catch(err=>{
-                 Vue.set(row,'loading1',false)
-            })  
+           if(this.hwVerson == '11'){ //一拖二设备
+                let {port}= row
+                Vue.set(row,'loading1',true)
+                remoteStopCharge({port,code: this.code,addr: this.addr}).then(res=>{
+                    Vue.set(row,'loading1',false)
+                    if(res.code == 200){
+                        messageTip('success',`远程断电设置成功`)
+                        Vue.set(row,'portStatus',1)
+                    }else{
+                        messageTip('error',res.message)
+                    }
+                }).catch(err=>{
+                    Vue.set(row,'loading1',false)
+                })  
+           }else{ //非一拖二设备
+                let {port}= row
+                Vue.set(row,'loading1',true)
+                remoteChargeBreakOff({port,code: this.code}).then(res=>{
+                    Vue.set(row,'loading1',false)
+                    if(res.wolfcode == '1000'){
+                        messageTip('success',`远程断电设置成功`)
+                        Vue.set(row,'portStatus',1)
+                    }else{
+                        messageTip('error',`远程断电设置失败`)
+                    }
+                }).catch(err=>{
+                    Vue.set(row,'loading1',false)
+                })  
+           }
         },
         getBoardStart(row){ //07 开始充电
             let {port,money,chargeTime:time,elePower:elec}= row
@@ -217,6 +281,21 @@ export default {
 
             })
         },
+        async handleQueryAddrAllPortStatus(){ //查询与一推二设备的指定从机下的端口状态
+            try{
+                this.updatePortStatusLoading= true
+                let info= await queryAddrAllPortStatus({code: this.code,addr: this.addr})
+                if(info.code == 200){
+                    const portlist= info.portlist
+                   this.$emit('handleUpDatePortStatus',{addr:this.addr,portlist})
+                }else{
+                    messageTip('error',info.message)
+                }
+            }catch(e){
+                console.log(e)
+            }
+            this.updatePortStatusLoading= false
+        }
     }
 }
 </script>

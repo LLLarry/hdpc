@@ -8,10 +8,14 @@ import store from '@/store'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import hdConfig from '../../hd.config' //配置文件
-
+let proxyUrl= ''
 let baseURL= window.location.origin || 'http://www.he360.com.cn'
 if (process.env.NODE_ENV === "development"){ //开发环境
   baseURL= 'http://localhost'
+  if(hdConfig.proxy.open){
+    baseURL= ''
+    proxyUrl='/api'
+  }
 }
 //  const filterUrlList= ['/dataCollectInfo/deviceEarningsData','/dataCollectInfo/dealerEarningsData','/AccountInfo/getAccountListInfo',
 // '/AccountInfo/accountOperateInfo','/orderData/orderTradeRecordData','/orderData/orderChargeRecordData','/orderData/orderOfflineRecordData',
@@ -87,7 +91,7 @@ export default function (obj){
                 let data= obj.data || {}
                if(method== 'get'){
                 return  new Promise((resolve,reject)=>{
-                    service.get(url,{params:{...params,isolate: 1}}).then(res=>{
+                    service.get(proxyUrl+url,{params:{...params,isolate: 1}}).then(res=>{
                         if(res.status == 200){
                             resolve(res.data)   
                         }else{
@@ -101,7 +105,7 @@ export default function (obj){
                }else{
                  data=  Qs.stringify({...data,isolate: 1}) //post请求，转化格式
                 return  new Promise((resolve,reject)=>{
-                     service.post(url,data).then(res=>{
+                     service.post(proxyUrl+url,data).then(res=>{
                         if(res.status == 200){
                             resolve(res.data)   
                         }else{

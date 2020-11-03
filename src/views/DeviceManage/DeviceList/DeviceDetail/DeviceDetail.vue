@@ -183,6 +183,8 @@
                 </el-card>
              </el-col>
          </el-row>
+
+        
         <!-- 系统参数 -->
         <SystemParma v-if="hwVerson != '11'" :systemParamer="systemParamer" :hwVerson="hwVerson" :code="code" :deviceInfo="deviceInfo" :elecTimeFirst="elecTimeFirst" @changeSystemParamerCallBack="changeSystemParamerCallBack" />
         <div class="nav_tag">
@@ -228,6 +230,8 @@ import SystemParma from '@/components/device-components/SystemParma'
 import TopDetailInfo from '@/components/device-components/TopDetailInfo' 
 import AlarmConfig from '@/components/device-components/AlarmConfig' 
 import PortAddr from '@/components/device-components/PortAddr' 
+
+
 import {Loading, Button} from 'element-ui'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import { getDeviceDetailInfo,getsystemParma,savesystemParma,getDeviceStatus,lockDevicePort,remoteChargeByPort,
@@ -558,7 +562,7 @@ export default {
         upDateAddrList(addrList){ //查询更新从机地址
             this.addrlist= addrList
         },
-
+        
     }
 }
 </script>

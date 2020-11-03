@@ -241,7 +241,7 @@
                         type="primary" 
                         size="mini" 
                         @click="handleScanPortQrcode(scope.row)" 
-                        :disabled="['03','04'].indexOf(scope.row.hardversion) !== -1"
+                        :disabled="['03','04','11'].indexOf(scope.row.hardversion) !== -1"
                     >查看</el-button>
                 </template>
                 </el-table-column>
@@ -263,7 +263,12 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @click="handleCreateQrCode(scope.row.code)">生成</el-button>
+                    <el-button 
+                        type="primary" 
+                        size="mini" 
+                        @click="handleCreateQrCode(scope.row.code)"
+                        :disabled="['11'].indexOf(scope.row.hardversion) !== -1"
+                    >生成</el-button>
                 </template>
                 </el-table-column>
                 

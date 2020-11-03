@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === "development"){ //开发环境
 // ]
 const whiteUrlList= hdConfig.axios.whiteUrlList //不进行拦截的url
 const filterUrlList= hdConfig.axios.agentTransformId //代理商需要加上商户id的url
-console.log(hdConfig)
+
 const service = axios.create({ // 创建axios实例           
         timeout: 120000, // 请求超时时间
         headers: {

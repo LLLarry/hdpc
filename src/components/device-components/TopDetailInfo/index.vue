@@ -81,6 +81,9 @@
                         <el-button type="primary" size="mini"  @click="handleDownloadIfram">下载</el-button>
                     </div>
                     <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
+                        查看日志：<el-button type="primary" size="mini"  @click="deviceLogShow= true">查看</el-button>
+                    </div>
+                    <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
                         Test：
                         <el-input v-model="testval" placeholder="输入参数" size="mini" style="width: 60vw;"></el-input> 
                         <el-button type="primary" size="mini"  @click="testMethod">提交</el-button>
@@ -130,6 +133,18 @@
                     <el-button type="primary" size="mini" @click="dialogVisible= false">关闭</el-button>
                 </div>
             </DialogWrapper>
+
+
+            <!-- 设备输出日志弹框 -->
+            <el-dialog
+                :title="code+'实时日志'"
+                :visible.sync="deviceLogShow"
+                width="80%"
+                style="margin-top: -10vh;"
+                :before-close="handleCloseDeviceLog">
+                <DeviceLog v-if="deviceLogShow" :code="code" /> 
+            </el-dialog>
+        <!-- 设备输出日志弹框 -->
     </div>
 </template>
 
@@ -141,6 +156,7 @@ import { unbindDevice } from '@/require'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
 import DialogWrapper from '@/components/DialogWrapper'
+import DeviceLog from '@/components/device-components/DeviceLog' 
 export default {
     props: {
         bindtype: Number,
@@ -171,6 +187,7 @@ export default {
             dialogVisible: false, //日志弹框是否显示
             iframeSrc: '',
             testval: '', //测试
+            deviceLogShow: false , //设备日志是否显示
         }
     },
     computed: {
@@ -178,7 +195,8 @@ export default {
     },
     components: {
         bindMerOrArea,
-        DialogWrapper
+        DialogWrapper,
+        DeviceLog
     },
     methods: {
         handleTaggleBind(type){ //绑定或解绑设备
@@ -318,7 +336,13 @@ export default {
             .catch(err=>{
                 messageTip('error','出错')
             })
+        },
+        handleCloseDeviceLog(){ //点击关闭设备日志打印弹框
+            confirDelete("确定关闭当前日志弹框吗？",()=>{
+                this.deviceLogShow= false
+            })
         }
+
     }
 }
 </script>

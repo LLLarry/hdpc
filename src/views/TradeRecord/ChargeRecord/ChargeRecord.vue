@@ -147,12 +147,13 @@
 
                  <el-table-column
                 prop="equipmentnum"
-                label="设备号"
-                min-width="80"
+                label="设备号-从机地址"
+                min-width="100"
                 >
                 <template slot-scope="{row}">
                     <router-link :to="`/deviceManage/deviceList?devicenum=${row.equipmentnum}`">
                         <el-link type="primary">{{row.equipmentnum}}</el-link>
+                        <div v-if="row.addr"><el-link type="primary">({{row.addr}})</el-link></div>
                     </router-link>
                 </template>
                 </el-table-column>

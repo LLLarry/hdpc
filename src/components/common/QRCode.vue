@@ -4,7 +4,7 @@
       
          </div>
          <div class="deviceCode">
-             设备号：{{alertDeviceCode}}
+             {{from === 3 ? "从机号" : "设备号"}}：{{alertDeviceCode}}
          </div>
     </div>
 </template>
@@ -13,14 +13,25 @@
 import QRCode from 'qrcodejs2'  // 引入qrcode
 export default {
     name : 'QRcode',
-    props: ['alertDeviceCode','from'], //from: 2为蓝牙设备
+    props: ['alertDeviceCode','from'], //from: 2为蓝牙设备  3:为一拖二设备
     mounted () {
         this.qrcode();
     },
     methods: {
         qrcode() {
             let origin= window.location.origin || 'http://www.he360.com.cn'
-            let text= this.from === 2 ? `https://www.tengfuchong.cn/applet/${this.alertDeviceCode}` : `${origin}/oauth2pay?code=${this.alertDeviceCode}`
+            let text= ""
+            switch(this.from){
+                case 2: //蓝牙地址
+                    text= `https://www.tengfuchong.cn/applet/${this.alertDeviceCode}`;
+                    break;
+                case 3: //一拖二地址
+                    text= `${origin}/oauth2Addrpay?addrnum=${this.alertDeviceCode}`;
+                    break;
+                default : 
+                    text= `${origin}/oauth2pay?code=${this.alertDeviceCode}`;
+            }
+            // let text= this.from === 2 ? `https://www.tengfuchong.cn/applet/${this.alertDeviceCode}` : `${origin}/oauth2pay?code=${this.alertDeviceCode}`
             let qrcode = new QRCode('qrcode', {
                 width: 260,  
                 height: 250,

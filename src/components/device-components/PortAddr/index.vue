@@ -11,20 +11,20 @@
         </div>
         <div class="addrBox">
             <el-row class="thead">
-                <el-col :span="16" class="thead-cell">地址</el-col>
+                <el-col :span="12" class="thead-cell">地址</el-col>
                 <el-col :span="4"  class="thead-cell">删除</el-col>
                 <el-col :span="4"  class="thead-cell">查看详情</el-col>
+                <el-col :span="4"  class="thead-cell">二维码</el-col>
             </el-row>
             <el-collapse v-model="activeNames" >
                 <el-collapse-item 
-                    title="一致性" 
                     :name="item.addr" 
                     disabled v-for="(item,index) in addrlist"
                     :key="item.addr"
                 >
                     <template slot="title">
                         <el-row class="tbody">
-                            <el-col :span="16" class="tbody-cell">{{item.addr}}</el-col>
+                            <el-col :span="12" class="tbody-cell">{{item.addr}}</el-col>
                             <el-col :span="4"  class="tbody-cell">
                                 <el-button 
                                     type="danger" 
@@ -41,6 +41,14 @@
                                     :icon="item.loading ? 'el-icon-loading' : 'el-icon-menu'"
                                     :plain="!activeNames.includes(item.addr)"
                                 >查看详情</el-button>
+                            </el-col>
+                            <el-col :span="4"  class="tbody-cell" >
+                                <el-button 
+                                    type="primary" 
+                                    size="mini" 
+                                    @click="handleShowQrCode(item)"
+                                    icon="el-icon-menu"
+                                >二维码</el-button>
                             </el-col>
                         </el-row>
                     </template>
@@ -98,6 +106,21 @@
         </el-form>
         </DialogWrapper>
       <!-- 添加从机地址 -->
+
+      <!-- 显示二维码 -->
+        <el-dialog
+            :show-close="false"
+            :visible.sync="qrCodeDialogVisible"
+            width="300px"
+            :modal="false"
+            custom-class="dialog"
+            :destroy-on-close="true"
+        >
+        <div class="qeCodeContent">
+            <!-- from 3 代表一拖二设备 -->
+            <QRCode :alertDeviceCode="alertDeviceCode" :from="3" v-if="qrCodeDialogVisible" /> 
+        </div>
+        </el-dialog>
   </div>
 </template>
 
@@ -105,7 +128,8 @@
 import { queryAllAddress,addOrRemoveAddr,queryRedisPort,sycnAllAddr} from '@/require/deviceManage'
 import DialogWrapper from '@/components/DialogWrapper'
 import PortStatus from '@/components/device-components/PortStatus' 
-import RemotoCharge from '@/components/device-components/RemoteCharge' 
+import RemotoCharge from '@/components/device-components/RemoteCharge'
+import QRCode from '@/components/common/QRCode' 
 import {messageTip,confirDelete} from '@/utils/ele'
 // let height=document.documentElement.clientHeight
 export default {
@@ -127,13 +151,16 @@ export default {
             activeNames: [],
             addrFrom: { 
                 code: this.code
-            }
+            },
+            qrCodeDialogVisible: false, //二维码是否显示
+            alertDeviceCode: "", //从机地址
         }
     },
     components: {
         DialogWrapper,
         PortStatus,
-        RemotoCharge
+        RemotoCharge,
+        QRCode
     },
     methods: {
         async handleQueryAllAddr(){ //查询所有的从机地址
@@ -152,7 +179,6 @@ export default {
             this.updateLoading= false
         },
         async asyAddOrRemoveAddr(data,index){ //添加或移除端口地址 data请求参数  index删除的元素的索引
-         this.addrlist.splice(index,1)
             try{
                 this.loading= true
                 let info= await addOrRemoveAddr(data)
@@ -268,7 +294,14 @@ export default {
                     break
                 }
             }
-        }
+        },
+        /**
+         * 点击展示从机二维码
+         */
+        handleShowQrCode({addr}){
+           this.alertDeviceCode= addr //设置展示的从机地址
+           this.qrCodeDialogVisible= true //展示二维码
+        }   
     }
 }
 </script>
@@ -323,6 +356,16 @@ export default {
     .addrBox-sub {
         .el-card {
             box-shadow: none !important;
+        }
+    }
+    .dialog {
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+        .el-dialog__header {
+            padding: 0;
+        }
+        .el-dialog__body {
+            padding: 15px 20px;
         }
     }
 }

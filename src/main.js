@@ -14,11 +14,12 @@ import { Button,Checkbox,Col,Row,Progress,MessageBox,Message,Notification,Card,T
   RadioGroup,
   RadioButton,Cascader,Switch,Loading,Breadcrumb,
   BreadcrumbItem,Popover,Steps,Step,Upload,Divider} from 'element-ui'
-// import 'element-ui/lib/theme-chalk/index.css';
+import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import 'element-ui/lib/theme-chalk/display.css';
 import 'default-passive-events'
 import '../static/style/icon.less'
+// cdn的方式引入Element折叠展开动画
 
 Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.use(Button);
@@ -93,7 +94,7 @@ function handleSlide(){
 
 
 Vue.prototype.$bus= new Vue() /*创建一个新的事件总成*/
-// Vue.config.productionTip = false
+Vue.config.productionTip = false
 // Vue.config.devtools= process.env.NODE_ENV !== "development" /**开发环境下可以调试 */
 Vue.config.devtools= false /**开发环境下可以调试 */
 Vue.config.errorHandler= function(err, vm, info){

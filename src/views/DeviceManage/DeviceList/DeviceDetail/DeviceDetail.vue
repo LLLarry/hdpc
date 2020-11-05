@@ -425,7 +425,7 @@ export default {
                     resultData: deviceInfo.resultData,
                     resultDoorsill: deviceInfo.resultDoorsill
                 }
-                if(['03','04','08','09','10'].indexOf(hwVerson) === -1){
+                if(['03','04','08','09','10','11'].indexOf(hwVerson) === -1){
                     if(deviceInfo.temp != null){ //temp存在，说明此模板不是分等级模板
                         //十路智慧款
                         let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo,ifalipay}= deviceInfo.temp //merchantid是模板所属商户的id，可以通过它来判断是否是系统模板
@@ -437,7 +437,7 @@ export default {
                         _this.isGrade= true  //将分等级设为true
                          _this.temChargeList= deviceInfo.templist || []
                     }
-                }else if(['08','09','10'].includes(hwVerson)){
+                }else if(['08','09','10','11'].includes(hwVerson)){
                     _this.temChargeList= [ deviceInfo.templatev3 ]
                 }else{ //其他模板
                      let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid}= deviceInfo.temp

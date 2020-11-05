@@ -74,7 +74,7 @@ export default {
             let perEle=  this.$refs['perEle']
             let perEleMaxHeight= clientHeight*0.75 //per元素最大高度
             //  ws= new WebSocket(`ws://140.143.36.205/devicewebsocket`)
-            ws= new WebSocket(`ws://140.143.36.205/devicewebsocket`)
+            ws= new WebSocket(`ws://www.he360.com.cn/devicewebsocket`)
              ws.onopen= (e)=>{ /**连接成功回调*/
                 console.log(e)
                 ws.send(this.code) //发送设备号

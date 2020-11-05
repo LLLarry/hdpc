@@ -5,7 +5,7 @@
             <span>从机地址</span>
             <div style="float: right;">
                 <el-button type="primary" size="mini" @click="handleSycnAllAddr" :icon="updateAllLoading ? 'el-icon-loading': 'el-icon-refresh'">同步所有从机地址</el-button>
-                <el-button type="primary" size="mini" @click="handleQueryAllAddr" :icon="updateLoading ? 'el-icon-loading': 'el-icon-refresh'">更新从机地址</el-button>
+                <el-button type="primary" size="mini" @click="handleQueryAllAddr" :icon="updateLoading ? 'el-icon-loading': 'el-icon-refresh'">读取从机地址</el-button>
             </div>
             
         </div>
@@ -337,6 +337,9 @@ export default {
             background-color: rgb(245, 247, 250);
             color: #606266;
             font-weight: 600;
+        }
+        .tbody {
+            width: 100%;
         }
         .el-collapse-item__arrow {
             display: none;

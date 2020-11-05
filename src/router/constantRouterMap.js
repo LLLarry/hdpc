@@ -20,14 +20,7 @@ export const constantRouterMapSuperAdmin= [
         path: '/',
         redirect: '/datastatis/index'
       },
-      // {
-      //   path: '/datastatis/total',
-      //   name: '数据监控',
-      //   component: ()=> import('@/views/DataStatis/DataTotal'),
-      //   meta: {
-      //     role: ['superAdmin']
-      //   }
-      // },
+      
       {
         path: '/datastatis/index',
         name: '数据汇总',

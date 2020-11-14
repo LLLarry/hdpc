@@ -253,9 +253,9 @@ export default {
             }
         },
         handleGetPortStatusCallback({addr,index,copeRow}){ //更新端口状态 callback
-            const i= this.tableData.findIndex(item=> item.addr == addr)
+            const i= this.addrlist.findIndex(item=> item.addr == addr)
             if(i >= 0){
-                this.$set(this.tableData[i].portStatusList,index,copeRow) //从新修改更新过来的值
+                this.$set(this.addrlist[i].portStatusList,index,copeRow) //从新修改更新过来的值
             }
         },
         async handleSycnAllAddr(){  //同步所有从机地址

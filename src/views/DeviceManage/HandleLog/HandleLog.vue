@@ -97,7 +97,7 @@
                   <el-link type="success">{{ JSON.parse(row.remark)[2]}}</el-link>&nbsp;&nbsp;({{ JSON.parse(row.remark)[3]}})
               </div>
             </div>
-            <div v-if="row.sort === 6">
+            <div v-if="row.sort === 6 || row.sort === 1">
               {{ row.remark }}
             </div>
           </template>

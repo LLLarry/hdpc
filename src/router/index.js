@@ -1,8 +1,10 @@
  import Vue from 'vue'
-//import VueRouter from 'vue-router' // cdn模式
+
 import store from '../store' //引入store调用getters方法
 import Util from '@/utils/util'
 import {constantRouterMapSuperAdmin,constantRouterMapAdmin,constantRouterMapAgent} from './constantRouterMap' 
+
+// import './routeMap'
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {

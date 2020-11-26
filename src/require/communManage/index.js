@@ -126,7 +126,15 @@ export const addstairwallet= function (data){
 
 
 
-
+/*
+* 添加小区名称、地址信息
+*/
+export const editAreaInfoAndName= function (data){ 
+    return ajax({
+             url: '/areaData/editAreaInfo',
+             data: data
+        })
+}
 
 
 

@@ -68,7 +68,12 @@ export default {
             merid: -1, //商户id
             loading: null, //加载图标实例对象
             name: '', //小区名称
-            address: '', //小区地址
+            address: {
+                province: "",//省份
+                city: "", //市
+                county: "", //县
+                street: "" //详细地址
+            }, //小区地址
             dealnick: '', // 商户名称
             dealphon: '', //商户电话
             areausernum: 0, //小区用户数量
@@ -111,10 +116,15 @@ export default {
                 if(info.code === 200){
                     let { csendmoney,ctopupbalance,usendmoney,utopupbalance }= info
                     let { resultarea,tempWallet,tempOnCard,devicenumlist,partnerInfo }= info
-                    let { address,name,dealnick,dealphon,areausernum,onlinenum,devicenum,merid}= resultarea
+                    let { address,name,dealnick,dealphon,areausernum,onlinenum,devicenum,merid,province,city,county}= resultarea
                     {
                         _this.name= name
-                        _this.address= address
+                        _this.address= {
+                            province,//省份
+                            city, //市
+                            county, //县
+                            street:address //详细地址
+                        }
                         _this.dealnick= dealnick
                         _this.dealphon= dealphon
                         _this.areausernum= areausernum
@@ -146,9 +156,14 @@ export default {
             this.devicenum= devicenum
         },
         handleEditAreaInfo(data){
-            let { name,address }= data
+            let {name,province,city,county,street}= data
             this.name= name
-            this.address= address
+            this.address= {
+                province, //省份
+                city, //市
+                county, //县
+                street //详细地址
+            }
         }
     }
 }

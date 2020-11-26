@@ -132,7 +132,7 @@ export default {
     if (JSON.stringify(routerKey) != "{}") {
       if (Util.checkKeyOnlyObj("devicenum", routerKey)) {
         //从设备管理进来的 栏没有参数的时候（第一次进入的时候）
-        let [startTime, endTime] = Util.formatTimeArr();
+        let [startTime, endTime] = Util.formatTimeArr(); 
         this.handleLogForm = { startTime, endTime, ...routerKey };
       } else {
         this.handleLogForm = { ...routerKey };
@@ -140,7 +140,7 @@ export default {
       }
     } else {
       //直接点击进来的
-      let [startTime, endTime] = Util.formatTimeArr();
+      let [startTime, endTime] = Util.formatTimeArr("YYYY-MM-DD HH:mm:ss",0.16667); // 默认查询4个小时
       this.handleLogForm = { startTime, endTime };
     }
     this.asyGetDeviceHandleLogInfo(this.handleLogForm);
@@ -171,7 +171,7 @@ export default {
       }
     },
     handleSearch() {
-      this.$router.push({ query: { ...this.handleLogForm, currentPage: 1 } });
+      this.$router.push({ query: { ...this.handleLogForm, currentPage: 1,VNK: this.$route.query.VNK } });
       this.asyGetDeviceHandleLogInfo({ ...this.handleLogForm, currentPage: 1 });
       this.nowPage = 1; //搜索完之后将nowPage置为1
     }

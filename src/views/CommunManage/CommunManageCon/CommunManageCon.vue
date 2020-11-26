@@ -14,6 +14,38 @@
                 <el-form-item label="商户电话" class="form_right25 w120" >
                     <el-input v-model="communManageConForm.phone" placeholder="商户电话" clearable size="small"></el-input>
                 </el-form-item>
+                <el-form-item label="所属省份" class="form_right25 w120" >
+                    <el-select v-model="communManageConForm.province" placeholder="请选择省份" size="small" clearable>
+                        <el-option
+                        v-for="item in this.cityContent.lv1"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="所属市" class="form_right25 w120" >
+                    <el-select v-model="communManageConForm.city" placeholder="请选择市" size="small" clearable>
+                        <el-option
+                        v-for="item in this.cityContent.lv2"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="所属区/县" class="form_right25 w120" >
+                    <el-select v-model="communManageConForm.county" placeholder="请选择区/县" size="small" clearable>
+                        <el-option
+                        v-for="item in this.cityContent.lv3"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <!-- <el-form-item label="合伙人" class="form_right25 w120" >
                     <el-input v-model="communManageConForm.partent" placeholder="设备号"  size="small"></el-input>
                 </el-form-item>
@@ -188,10 +220,10 @@
                 >
                 <template slot-scope="{row}">
 
-                    <el-tooltip class="item" effect="dark" :content="row.address" placement="left-start" v-if="row.address && row.address.length >= 14">
+                    <!-- <el-tooltip class="item" effect="dark" :content="row.address" placement="left-start" v-if="row.address && row.address.length >= 14">
                         <div class="text-eclipe" v-text="row.address"></div>
-                    </el-tooltip>
-                    <div v-else>{{ row.address ? row.address : '— —' }}</div>
+                    </el-tooltip> -->
+                    <div>{{ row.addresspath }}{{ row.address }}</div>
                 </template>
                 </el-table-column>
 
@@ -256,6 +288,9 @@
  import DialogWrapper from '@/components/DialogWrapper'
  import dateTimeJS from '@/utils/dateTime'
  import { getCommunInfo } from '@/require/communManage'
+ // 引入城市选择器构造函数
+import { SelectCity } from '@/vendor/selectCity'
+const selectCity= new SelectCity()
 export default {
     data(){
         return {
@@ -268,6 +303,11 @@ export default {
             partnerInfo: {
                 dialogVisible: false,
                 partnerList: [] //合伙人列表
+            },
+            cityContent:{
+                lv1: [], //省级
+                lv2: [], //市级
+                lv3: [] //县/区级
             }
         }
     },
@@ -281,6 +321,34 @@ export default {
             this.nowPage= parseInt(this.communManageConForm.currentPage) || 1
         }
        this.asyGetCommunInfo(this.communManageConForm)
+        //获取省级列表
+       this.handleGetCityListById(1,0)
+    },
+    watch: {
+        'communManageConForm.province': {
+            handler(id,oldId){
+                // 当id没有改变
+                if(oldId === id) return
+                // 只有id存在时，才进行请求，获取列表
+                if(id !== void 0){
+                    // 请求市级列表
+                    this.handleGetCityListById(2,id)
+                }
+                this.$delete(this.communManageConForm,'city')
+                this.$delete(this.communManageConForm,'county')
+            }
+        },
+        'communManageConForm.city': {
+            handler(id,oldId){
+                if(oldId === id) return
+                // 只有id存在时，才进行请求，获取列表
+                if(id !== void 0){
+                    // 请求县/区的列表
+                    this.handleGetCityListById(3,id)
+                }
+                this.$delete(this.communManageConForm,'county')
+            }
+        }
     },
     methods: {
        getPage(page){
@@ -322,6 +390,15 @@ export default {
         handleClose(){
            this.partnerInfo.dialogVisible= false,
            this.partnerInfo.partnerList= []
+        },
+        // 通过id获取城市列表 获取的城市level等级，父id
+        handleGetCityListById(level,pid){   
+            pid= pid === "" ? "-1" : pid
+            const {list}= selectCity.selectMenu({ level, pid })
+            this.cityContent['lv'+level]= list
+            for(let i=level+1;i<=3;i++ ){
+                 this.cityContent['lv'+i]= [] //每次设置之后都要清空下一项数据
+            }
         }
     }
 }

@@ -277,7 +277,6 @@ export default {
 						messageTip("success", "参数获取获取成功");
 						let systemParamer = JSON.parse(JSON.stringify(this.systemParamer));
 						let newSystemParmamer = systemParamer.map((item, i) => {
-						console.log(res["param" + (i + 1)] / 10);
 						if (i == 2 || i == 3 || i == 4) {
 							item.val = isNaN(res["param" + (i + 1)] / 10)
 							? undefined
@@ -393,7 +392,6 @@ export default {
 					}
 					if(this.index*trHeight >= wrapHeight/2){
 						this.topIndex++
-						console.log(this.topIndex,this.topIndex*trHeight)
 						wrapEle.scrollTop= this.topIndex*trHeight
 					}
 					this.index++
@@ -419,7 +417,7 @@ export default {
 					if(this.index <= this.list.length-1){
 						this.requireSystemByCode()
 					}else{ //结束请求
-					this.msgboxVis= true
+					  this.msgboxVis= true
 					}
 				})
 			},

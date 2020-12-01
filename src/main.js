@@ -11,7 +11,7 @@ Vue.use(VueCompositionApi)
 Vue.use(Navigation, {router})
 // import ElementUI from 'element-ui'; 这是加载全部
 import { Button,Checkbox,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,InputNumber,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination,Radio,
-  RadioGroup,
+  RadioGroup,ButtonGroup,
   RadioButton,Cascader,Switch,Loading,Breadcrumb,
   BreadcrumbItem,Popover,Steps,Step,Upload,Divider} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
@@ -52,6 +52,7 @@ Vue.use(TabPane)
 Vue.use(Pagination)
 Vue.use(Radio)
 Vue.use(RadioGroup)
+Vue.use(ButtonGroup)
 Vue.use(RadioButton)
 Vue.use(Cascader)
 Vue.use(Switch)

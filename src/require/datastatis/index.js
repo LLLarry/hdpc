@@ -90,5 +90,14 @@ export const tradeRealtimeInfo= function (data){
          })
 }
 
+/*收益明细*/ 
+export const dealerIncomeDatainfo= function (data){ 
+    return ajax({
+             url: '/dataCollectInfo/dealerIncomeData',
+             data: data,
+             method: 'post'
+         })
+}
+
 
 

@@ -464,9 +464,10 @@ export default {
                       }
                       return {}
                 })
-
+            
+                // 设置系统参数开始
                 let sysparam= deviceInfo.sysparam 
-                if(sysparam instanceof Array){ //只有 sysparam 为数组的时候才进行计算
+                if(sysparam && Object.keys(sysparam).length > 0){ //只有 sysparam 为数组的时候才进行计算
                     let systemParamer=  _this.systemParamer
                     this.elecTimeFirst= sysparam && sysparam.elecTimeFirst ? sysparam.elecTimeFirst : 0 //设置参数需要传递的值
 
@@ -475,6 +476,8 @@ export default {
                         return item
                     })
                 }
+                // 设置系统参数结束
+                // 设置从机列表开始
                if(deviceInfo.addrlist instanceof Array){  //从机列表
                    _this.addrlist= deviceInfo.addrlist.map(item=>{
                        if(item !== null && item != void 0){
@@ -483,6 +486,7 @@ export default {
                        return {}
                    })
                }
+               // 设置从机列表结束
                 loading.close()
             }
             catch(error){

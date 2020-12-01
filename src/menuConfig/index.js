@@ -31,6 +31,11 @@ export const superAdminMenuList= [
                 title: '商户收益',
                 link: '/datastatis/merearn',
                 index: '0-4'
+            },
+            {
+                title: '收益明细',
+                link: '/datastatis/earndetail',
+                index: '0-5'
             }
         ]
     },
@@ -234,6 +239,11 @@ export const adminMenuList= [
                 title: '商户收益',
                 link: '/datastatis/merearn',
                 index: '0-2'
+            },
+            {
+                title: '收益明细',
+                link: '/datastatis/earndetail',
+                index: '0-3'
             }
         ]
     },
@@ -389,6 +399,11 @@ export const agentMenuList= [
                 title: '商户收益',
                 link: '/datastatis/merearn',
                 index: '0-2'
+            },
+            {
+                title: '收益明细',
+                link: '/datastatis/earndetail',
+                index: '0-3'
             }
         ]
     },

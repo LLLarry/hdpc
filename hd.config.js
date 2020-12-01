@@ -27,7 +27,8 @@ const hdConfig= {
         ], //代理商，当选中名下的商户时，访问以下路径会在请求参数中添加 params 参数，params参数为选中商户的id
     },
     proxy: { 
-        open: false, //是否开启代理
+        // open: false, //是否开启代理
+        open: true, //是否开启代理
     }
 }
 export default hdConfig

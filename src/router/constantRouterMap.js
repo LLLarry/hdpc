@@ -53,6 +53,15 @@ export const constantRouterMapSuperAdmin= [
           role: ['superAdmin','admin']
         }
       },
+      {
+        path: '/datastatis/earndetail',
+        name: '收益明细',
+        component: ()=> import('@/views/DataStatis/EarnDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+
        // 用户管理==================>
       {
         path: '/usermanage/merInfo',
@@ -454,6 +463,15 @@ export const constantRouterMapAdmin= [
         }
       },
       {
+        path: '/datastatis/earndetail',
+        name: '收益明细',
+        component: ()=> import('@/views/DataStatis/EarnDetail'),
+        meta: {
+          role: ['superAdmin','admin']
+        }
+      },
+
+      {
         path: '/usermanage/merInfo',
         name: '商户信息',
         component: ()=> import('@/views/UserManage/MerInfo/MerInfo'),
@@ -785,6 +803,15 @@ export const constantRouterMapAgent= [
         role: ['superAdmin','admin']
       }
     },
+    {
+      path: '/datastatis/earndetail',
+      name: '收益明细',
+      component: ()=> import('@/views/DataStatis/EarnDetail'),
+      meta: {
+        role: ['superAdmin','admin']
+      }
+    },
+
     {
       path: '/usermanage/merInfo',
       name: '商户信息',

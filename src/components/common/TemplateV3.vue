@@ -28,6 +28,14 @@
                                             <el-radio :label="2">否</el-radio>
                                         </el-radio-group>
                                     </div>
+                                    <div style="margin-top: 15px">
+                                        <strong>是否默认按金额充电:  </strong>
+                                        <span v-if="editId !== item.id" :class="['top_span', item.grade ==1 ? 'green' : 'red']">{{item.grade ==1 ? '是' : '否'}}</span>
+                                        <el-radio-group v-model="temForm.grade"  v-else >
+                                            <el-radio :label="1">是</el-radio>
+                                            <el-radio :label="2">否</el-radio>
+                                        </el-radio-group>
+                                    </div>
                                 </div>
                                 <div class="temContent" style="width: 49%; float: left; min-width: 295px;">
                                     <div>
@@ -223,22 +231,31 @@
                             <el-table-column
                                 prop="handle"
                                 label="操作"
-                                :min-width="from === 4 ? ((screenWidth < 1400) ? 35: 90) : 90"
-                                v-if="from === 4 || (from !==4 && editId !== item.id)"
+                                :min-width="(screenWidth < 1400) ? 35: 90"
+                                v-if="editId == item.id" 
                             >
+                            <!-- :min-width="from === 4 ? ((screenWidth < 1400) ? 35: 90) : 90" -->
+                            <!-- v-if="from === 4 || (from !==4 && editId !== item.id)" -->
                                 <template slot-scope="scope">
                                     <el-button 
                                         type="danger" 
                                         size="mini" 
                                         @click="handleDeleteItem(item,i,'gather1',scope.row.id)" 
                                         :disabled="(from ==2 && item.merchantid == 0) || (from != 1  && item.merchantid == 0)"
-                                    > <i class="el-icon-delete"></i> {{ (from === 4 && (screenWidth < 1400)) ?  '' : '删除'}}</el-button>
+                                    > <i class="el-icon-delete"></i> {{ screenWidth < 1400 ?  '' : '删除'}}</el-button>
+                                    <!-- (from === 4 && (screenWidth < 1400)) ?  '' : '删除' -->
                                 </template>
                             </el-table-column>
                         </el-table-column>    
                     </el-table>
-                    <div class="addItem">
-                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather1')" :disabled="(from != 1  && item.merchantid == 0)" >添加</el-button>
+                    <div class="addItem" v-if="editId === item.id">
+                        <el-button 
+                            type="primary" 
+                            size="mini" 
+                            icon="el-icon-plus" 
+                            @click="handleAddItem(item,'gather1')" 
+                            :disabled="(from != 1  && item.merchantid == 0)" 
+                        >添加</el-button>
                     </div>
                 </el-col>
                 <el-col :span="8">
@@ -295,22 +312,31 @@
                             <el-table-column
                                 prop="handle"
                                 label="操作"
-                                :min-width="from === 4 ? ((screenWidth < 1400) ? 40: 90) : 90"
-                                v-if="from === 4 || (from !==4 && editId !== item.id)"
+                                :min-width="(screenWidth < 1400) ? 35: 90"
+                                v-if="editId == item.id" 
+                               
                             >
+                                <!-- :min-width="from === 4 ? ((screenWidth < 1400) ? 40: 90) : 90"
+                                v-if="from === 4 || (from !==4 && editId !== item.id)" -->
                                 <template slot-scope="scope">
                                     <el-button 
                                         type="danger" 
                                         size="mini"
                                         @click="handleDeleteItem(item,i,'gather2',scope.row.id)" 
                                         :disabled="(from ==2 && item.merchantid == 0) || (from != 1  && item.merchantid == 0)"
-                                    ><i class="el-icon-delete"></i> {{ (from === 4 && (screenWidth < 1400)) ?  '' : '删除'}}</el-button>
+                                    ><i class="el-icon-delete"></i> {{ screenWidth < 1400 ?  '' : '删除'}}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table-column>    
                     </el-table>
-                    <div class="addItem">
-                        <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather2')" :disabled="(from != 1  && item.merchantid == 0)">添加</el-button>
+                    <div class="addItem" v-if="editId === item.id">
+                        <el-button 
+                            type="primary"
+                            size="mini" 
+                            icon="el-icon-plus" 
+                            @click="handleAddItem(item,'gather2')" 
+                            :disabled="(from != 1  && item.merchantid == 0)"
+                        >添加</el-button>
                     </div>
                 </el-col>
                 <el-col :span="8">
@@ -390,8 +416,8 @@
                             <el-table-column
                                 prop="handle"
                                 label="操作"
-                                :min-width="from === 4 ? ((screenWidth < 1400) ? 40: 90) : 90"
-                                v-if="from === 4 || (from !==4 && editId !== item.id)"
+                                :min-width="(screenWidth < 1400) ? 35: 90"
+                                v-if="editId == item.id" 
                             >
                                 <template slot-scope="scope">
                                     <el-button 
@@ -400,12 +426,18 @@
                                         @click="handleDeleteItem(item,i,'gather3',scope.row.id)"  
                                         v-if="!scope.row.edit"
                                         :disabled="(from ==2 && item.merchantid == 0) || (from != 1  && item.merchantid == 0)"
-                                    ><i class="el-icon-delete"></i> {{(from === 4 && (screenWidth < 1400)) ?  '' : '删除'}}</el-button>
+                                    ><i class="el-icon-delete"></i> {{screenWidth < 1400 ?  '' : '删除'}}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <div class="addItem">
-                            <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddItem(item,'gather3')" :disabled="(from != 1  && item.merchantid == 0)">添加</el-button>
+                        <div class="addItem" v-if="editId === item.id">
+                            <el-button 
+                                type="primary" 
+                                size="mini" 
+                                icon="el-icon-plus" 
+                                @click="handleAddItem(item,'gather3')" 
+                                :disabled="(from != 1  && item.merchantid == 0)"
+                            >添加</el-button>
                         </div>
                     </div>
                 </el-col>

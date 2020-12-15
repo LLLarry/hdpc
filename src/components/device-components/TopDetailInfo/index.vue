@@ -83,6 +83,11 @@
                     <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
                         查看日志：<el-button type="primary" size="mini"  @click="deviceLogShow= true">查看</el-button>
                     </div>
+                    
+                    <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
+                        断开连接：<el-button type="primary" size="mini"  @click="removeClient">立即断开</el-button>
+                    </div>
+
                     <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
                         Test：
                         <el-input v-model="testval" placeholder="输入参数" size="mini" style="width: 60vw;"></el-input> 
@@ -144,14 +149,14 @@
                 :before-close="handleCloseDeviceLog">
                 <DeviceLog v-if="deviceLogShow" :code="code" /> 
             </el-dialog>
-        <!-- 设备输出日志弹框 -->
+            <!-- 设备输出日志弹框 -->
     </div>
 </template>
 
 <script>
 
 import { mapState } from 'vuex'
-import { updateDeviceExpire,changeDeviceIMEI,changeDeviceCode,updateDeviceName,wolfConstomSendData } from '@/require/deviceManage'
+import { updateDeviceExpire,changeDeviceIMEI,changeDeviceCode,updateDeviceName,wolfConstomSendData,removeDeviceClient } from '@/require/deviceManage'
 import { unbindDevice } from '@/require'
 import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
@@ -340,6 +345,16 @@ export default {
         handleCloseDeviceLog(){ //点击关闭设备日志打印弹框
             confirDelete("确定关闭当前日志弹框吗？",()=>{
                 this.deviceLogShow= false
+            })
+        },
+        removeClient(){ //断开设备连接
+            confirDelete(`确定断开 ${this.code} 设备连接吗？`,async ()=>{
+                let info= await removeDeviceClient({code: this.code})
+                if(info.code === 200){
+                    messageTip("success","断开成功")
+                }else{
+                     messageTip("error",info.msg)
+                }
             })
         }
 

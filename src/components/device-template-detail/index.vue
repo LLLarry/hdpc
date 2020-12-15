@@ -130,6 +130,7 @@ export default {
                     walletpay: 1,  //是否支持退费 1为支持，否则不支持
                     permit: 1, //是否临时充电开启 1为开启，否则不开启
                     ifalipay: 1,
+                    grade: 2, // 1、默认按时间充电  2、默认按金额充电
                     rank: 720,
                     gather1: [
                         { id: -1, money: 1, common1: 0,common2: 200 }
@@ -224,6 +225,7 @@ export default {
                                         walletpay: 1,  //是否支持退费 1为支持，否则不支持
                                         permit: 1, //是否临时充电开启 1为开启，否则不开启,
                                         ifalipay: 1,//是否支持支付宝充电
+                                        grade: 2,
                                         rank: 720,
                                         gather1: [
                                             { id: -1, money: 1, common1: 0,common2: 200 }
@@ -318,25 +320,28 @@ export default {
                         messageTip('error','添加失败')
                     }
                     this.addV3Tem=[ //添加v3模板占位符
-                                    {
-                                        id: -1,
-                                        name: '',
-                                        remark: '',
-                                        common1: '',
-                                        walletpay: 1,  //是否支持退费 1为支持，否则不支持
-                                        permit: 1, //是否临时充电开启 1为开启，否则不开启
-                                        gather1: [
-                                            { id: -1, money: 1, common1: 0,common2: 200 }
-                                        ],
-                                        gather2: [
-                                            { id: -1, name: '1小时', chargeTime: 60 }
-                                        ],
-                                        gather3: [
-                                            { id: -1, name: '1元',money: 1 }
-                                        ],
-                                        chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
-                                    }
-                                ]
+                        {
+                            id: -1,
+                            name: '',
+                            remark: '',
+                            common1: '',
+                            walletpay: 1,  //是否支持退费 1为支持，否则不支持
+                            permit: 1, //是否临时充电开启 1为开启，否则不开启
+                            ifalipay: 1,
+                            grade: 2, // 1、默认按时间充电  2、默认按金额充电
+                            rank: 720,
+                            gather1: [
+                                { id: -1, money: 1, common1: 0,common2: 200 }
+                            ],
+                            gather2: [
+                                { id: -1, name: '1小时', chargeTime: 60 }
+                            ],
+                            gather3: [
+                                { id: -1, name: '1元',money: 1 }
+                            ],
+                            chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
+                        }
+                    ]
                     this.getFrom= false
                     this.visiblesHw01= false
                 }else{

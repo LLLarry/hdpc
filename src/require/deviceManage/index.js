@@ -376,7 +376,7 @@ export const addOrRemoveAddr= function (data){
 }
 
 /**
- * 一推二远程充电
+ * 一拖二远程充电
  */
 export const remoteStartCharge= function (data){ 
     return ajax({
@@ -387,7 +387,7 @@ export const remoteStartCharge= function (data){
 }
 
 /**
- * 一推二远程断电
+ * 一拖二远程断电
  */
 export const remoteStopCharge= function (data){ 
     return ajax({
@@ -398,7 +398,7 @@ export const remoteStopCharge= function (data){
 }
 
 /**
- * 获取一推二端口list
+ * 获取一拖二端口list
  */
 export const queryRedisPort= function (data){ 
     return ajax({
@@ -409,7 +409,7 @@ export const queryRedisPort= function (data){
 }
 
 /**
- * 一推二端口更新端口状态
+ * 一拖二端口更新端口状态
  */
 export const queryPortStatus= function (data){ 
     return ajax({
@@ -420,7 +420,7 @@ export const queryPortStatus= function (data){
 }
 
 /**
- * 一推二 锁定或解锁端口
+ * 一拖二 锁定或解锁端口
  */
 export const lockOrUnlockPort= function (data){ 
     return ajax({
@@ -431,7 +431,7 @@ export const lockOrUnlockPort= function (data){
 }
 
 /**
- * 一推二 同步所有从机地址
+ * 一拖二 同步所有从机地址
  */
 export const sycnAllAddr= function (data){ 
     return ajax({
@@ -443,11 +443,22 @@ export const sycnAllAddr= function (data){
 
 
 /**
- * 一推二 查询指定从机下的所有端口状态
+ * 一拖二 查询指定从机下的所有端口状态
  */
 export const queryAddrAllPortStatus= function (data){ 
     return ajax({
              url: '/wolfNewSendData/queryAddrAllPortStatus',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * 移除设备连接
+ */
+export const removeDeviceClient= function (data){ 
+    return ajax({
+             url: '/deviceData/removeClient  ',
              data: data,
              method: 'post'
          })

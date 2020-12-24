@@ -300,3 +300,14 @@ export const editAccountType= function (data){
 }
 
 
+/**
+ * 修改用户或商户所属公众号
+ */
+export const editUserIsplatform= function (data){
+    return ajax({
+             url: '/AccountInfo/editUserIsplatform',
+             data: data,
+             method: 'post'
+         })
+}
+

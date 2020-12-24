@@ -232,7 +232,7 @@
                                 prop="handle"
                                 label="操作"
                                 :min-width="(screenWidth < 1400) ? 35: 90"
-                                v-if="editId == item.id" 
+                                v-if="from === 4 || editId == item.id" 
                             >
                             <!-- :min-width="from === 4 ? ((screenWidth < 1400) ? 35: 90) : 90" -->
                             <!-- v-if="from === 4 || (from !==4 && editId !== item.id)" -->
@@ -313,7 +313,7 @@
                                 prop="handle"
                                 label="操作"
                                 :min-width="(screenWidth < 1400) ? 35: 90"
-                                v-if="editId == item.id" 
+                                v-if="from === 4 || editId == item.id" 
                                
                             >
                                 <!-- :min-width="from === 4 ? ((screenWidth < 1400) ? 40: 90) : 90"
@@ -417,7 +417,7 @@
                                 prop="handle"
                                 label="操作"
                                 :min-width="(screenWidth < 1400) ? 35: 90"
-                                v-if="editId == item.id" 
+                                v-if="from === 4 || editId == item.id" 
                             >
                                 <template slot-scope="scope">
                                     <el-button 
@@ -606,6 +606,7 @@ export default {
             }
             confirDelete('确认删除子模板吗？',()=>{
                 if(this.from === 4){
+                    
                     let itemCopy= JSON.parse(JSON.stringify(item))
                     let newGather= itemCopy[from].filter((val)=> val.id !== cid )
                     // 深度设置值的，需要使用vue实例提供的方法来修改 this.$set || Vue.set

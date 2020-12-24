@@ -83,6 +83,457 @@
 </template>
 
 <script>
+const time= new Date().getTime() // 当前时间的时间戳
+const tempv3= [
+    {
+        "common1": "",
+        "chargeInfo": "付费方式两种：\n1  按时间付费（先充电后扣费，公众号钱包需预充值）\n2   按金额付费。 先付费，显示充电时间为二轮车最长时间。实际充电时间为机器自动检测功率后计算的时间，比显示时间要少。",
+        "stairid": 0,
+        "gather3": [
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 60,
+                "chargeQuantity": 100,
+                "remark": null,
+                "telephone": null,
+                "type": 3,
+                "common3": null,
+                "money": 1,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "1元",
+                "id": time-1,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 120,
+                "chargeQuantity": 200,
+                "remark": null,
+                "telephone": null,
+                "type": 3,
+                "common3": null,
+                "money": 2,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "2元",
+                "id": time-2,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 180,
+                "chargeQuantity": 300,
+                "remark": null,
+                "telephone": null,
+                "type": 3,
+                "common3": null,
+                "money": 3,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "3元",
+                "id": time-3,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 240,
+                "chargeQuantity": 400,
+                "remark": 0,
+                "telephone": null,
+                "type": 3,
+                "common3": null,
+                "money": 4,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "4元",
+                "id": time-4,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 300,
+                "chargeQuantity": 500,
+                "remark": 0,
+                "telephone": null,
+                "type": 3,
+                "common3": null,
+                "money": 5,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "5元",
+                "id": time-5,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 360,
+                "chargeQuantity": 600,
+                "remark": 0,
+                "telephone": null,
+                "type": 3,
+                "common3": null,
+                "money": 6,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "6元",
+                "id": time-6,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 420,
+                "chargeQuantity": 700,
+                "remark": null,
+                "telephone": null,
+                "type": 3,
+                "common3": null,
+                "money": 7,
+                "createTime": "2020-08-13T00:21:32.000+0000",
+                "name": "7元",
+                "id": time-7,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 480,
+                "chargeQuantity": 800,
+                "remark": null,
+                "telephone": null,
+                "type": 3,
+                "common3": null,
+                "money": 8,
+                "createTime": "2020-08-13T00:21:33.000+0000",
+                "name": "8元",
+                "id": time-8,
+                "status": null,
+                "tempparid": 281805
+            }
+        ],
+        "ifalipay": 1,
+        "remark": "",
+        "gather2": [
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 600,
+                "chargeQuantity": 0,
+                "remark": null,
+                "telephone": null,
+                "type": 2,
+                "common3": null,
+                "money": 0,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "充满自停",
+                "id": time-9,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 120,
+                "chargeQuantity": 0,
+                "remark": null,
+                "telephone": null,
+                "type": 2,
+                "common3": null,
+                "money": 0,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "2小时",
+                "id": time-10,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 240,
+                "chargeQuantity": 0,
+                "remark": null,
+                "telephone": null,
+                "type": 2,
+                "common3": null,
+                "money": 0,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "4小时",
+                "id": time-11,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 360,
+                "chargeQuantity": 0,
+                "remark": 0,
+                "telephone": null,
+                "type": 2,
+                "common3": null,
+                "money": 0,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "6小时",
+                "id": time-12,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 480,
+                "chargeQuantity": 0,
+                "remark": 0,
+                "telephone": null,
+                "type": 2,
+                "common3": null,
+                "money": 0,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "8小时",
+                "id": time-13,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 600,
+                "chargeQuantity": 0,
+                "remark": 0,
+                "telephone": null,
+                "type": 2,
+                "common3": null,
+                "money": 0,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "10小时",
+                "id": time-14,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": null,
+                "common2": null,
+                "brandName": null,
+                "chargeTime": 660,
+                "chargeQuantity": 0,
+                "remark": 0,
+                "telephone": null,
+                "type": 2,
+                "common3": null,
+                "money": 0,
+                "createTime": "2020-12-14T05:24:08.000+0000",
+                "name": "11小时",
+                "id": time-15,
+                "status": 0,
+                "tempparid": 281805
+            }
+        ],
+        "gather1": [
+            {
+                "common1": "0",
+                "common2": "210",
+                "brandName": null,
+                "chargeTime": 0,
+                "chargeQuantity": 0,
+                "remark": 0,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 0.25,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "1594286176395",
+                "id": time-16,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": "210",
+                "common2": "300",
+                "brandName": null,
+                "chargeTime": 0,
+                "chargeQuantity": 0,
+                "remark": 0,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 0.35,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "1594286177369",
+                "id": time-17,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": "300",
+                "common2": "500",
+                "brandName": null,
+                "chargeTime": 0,
+                "chargeQuantity": 0,
+                "remark": 0,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 0.45,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "1594286178002",
+                "id": time-18,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": "500",
+                "common2": "600",
+                "brandName": null,
+                "chargeTime": 0,
+                "chargeQuantity": 0,
+                "remark": 0,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 0.7,
+                "createTime": "2020-08-13T00:20:05.000+0000",
+                "name": "1594286178794",
+                "id": time-19,
+                "status": 0,
+                "tempparid": 281805
+            },
+            {
+                "common1": "600",
+                "common2": "800",
+                "brandName": null,
+                "chargeTime": 75,
+                "chargeQuantity": 0,
+                "remark": null,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 0.9,
+                "createTime": "2020-08-13T00:22:04.000+0000",
+                "name": "收费标准25177",
+                "id": time-20,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": "1000",
+                "common2": "1200",
+                "brandName": null,
+                "chargeTime": 90,
+                "chargeQuantity": 0,
+                "remark": null,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 1.2,
+                "createTime": "2020-08-13T00:22:05.000+0000",
+                "name": "收费标准26351",
+                "id": time-21,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": "1200",
+                "common2": "1400",
+                "brandName": null,
+                "chargeTime": 105,
+                "chargeQuantity": 0,
+                "remark": null,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 1.4,
+                "createTime": "2020-08-13T00:22:07.000+0000",
+                "name": "收费标准27934",
+                "id": time-22,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": "1400",
+                "common2": "1600",
+                "brandName": null,
+                "chargeTime": 120,
+                "chargeQuantity": 0,
+                "remark": null,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 1.6,
+                "createTime": "2020-08-13T00:22:07.000+0000",
+                "name": "收费标准28875",
+                "id": time-23,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": "1600",
+                "common2": "1800",
+                "brandName": null,
+                "chargeTime": 135,
+                "chargeQuantity": 0,
+                "remark": null,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 2,
+                "createTime": "2020-08-13T00:22:09.000+0000",
+                "name": "收费标准30223",
+                "id": time-24,
+                "status": null,
+                "tempparid": 281805
+            },
+            {
+                "common1": "1800",
+                "common2": "2100",
+                "brandName": null,
+                "chargeTime": 150,
+                "chargeQuantity": 0,
+                "remark": null,
+                "telephone": null,
+                "type": 1,
+                "common3": null,
+                "money": 2.1,
+                "createTime": "2020-08-13T00:22:11.000+0000",
+                "name": "收费标准31925",
+                "id": time-24,
+                "status": null,
+                "tempparid": 281805
+            }
+        ],
+        "temporaryc": 1,
+        "createTime": "2020-08-13 08:20:05.0",
+        "merchantid": 927,
+        "grade": 2,
+        "name": "智慧款v3模板"+time,
+        "permit": 1,
+        "rank": 600,
+        "id": -1,
+        "walletpay": 1,
+        "status": 6
+    }
+]
 import TemplateCharge from '@/components/common/Template'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateCoin from '@/components/common/TemplateCoin'
@@ -121,29 +572,7 @@ export default {
             rule1:{
                 name: [{required: true,message: '模板名称不能为空', trigger: 'change'}]
             }, // 表单1的校验
-            addV3Tem: [ //添加v3模板占位符
-                {
-                    id: -1,
-                    name: '',
-                    remark: '',
-                    common1: '',
-                    walletpay: 1,  //是否支持退费 1为支持，否则不支持
-                    permit: 1, //是否临时充电开启 1为开启，否则不开启
-                    ifalipay: 1,
-                    grade: 2, // 1、默认按时间充电  2、默认按金额充电
-                    rank: 720,
-                    gather1: [
-                        { id: -1, money: 1, common1: 0,common2: 200 }
-                    ],
-                    gather2: [
-                        { id: -1, name: '1小时', chargeTime: 60 }
-                    ],
-                    gather3: [
-                        { id: -1, name: '1元',money: 1 }
-                    ],
-                    chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
-                }
-            ],
+            addV3Tem: tempv3,
             getFrom: false //父组件时候向子组件获取值
         }
     },
@@ -216,29 +645,7 @@ export default {
         // 添加主模板
         handleAddTem(){
             if(this.$route.query.hw === '08'){
-                this.addV3Tem=[ //添加v3模板占位符
-                                    {
-                                        id: -1,
-                                        name: '',
-                                        remark: '',
-                                        common1: '',
-                                        walletpay: 1,  //是否支持退费 1为支持，否则不支持
-                                        permit: 1, //是否临时充电开启 1为开启，否则不开启,
-                                        ifalipay: 1,//是否支持支付宝充电
-                                        grade: 2,
-                                        rank: 720,
-                                        gather1: [
-                                            { id: -1, money: 1, common1: 0,common2: 200 }
-                                        ],
-                                        gather2: [
-                                            { id: -1, name: '1小时', chargeTime: 60 }
-                                        ],
-                                        gather3: [
-                                            { id: -1, name: '1元',money: 1 }
-                                        ],
-                                        chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
-                                    }
-                                ]
+                this.addV3Tem=tempv3
                 this.getFrom= false
             }
             this.visiblesHw01= true
@@ -319,29 +726,30 @@ export default {
                     }else{
                         messageTip('error','添加失败')
                     }
-                    this.addV3Tem=[ //添加v3模板占位符
-                        {
-                            id: -1,
-                            name: '',
-                            remark: '',
-                            common1: '',
-                            walletpay: 1,  //是否支持退费 1为支持，否则不支持
-                            permit: 1, //是否临时充电开启 1为开启，否则不开启
-                            ifalipay: 1,
-                            grade: 2, // 1、默认按时间充电  2、默认按金额充电
-                            rank: 720,
-                            gather1: [
-                                { id: -1, money: 1, common1: 0,common2: 200 }
-                            ],
-                            gather2: [
-                                { id: -1, name: '1小时', chargeTime: 60 }
-                            ],
-                            gather3: [
-                                { id: -1, name: '1元',money: 1 }
-                            ],
-                            chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
-                        }
-                    ]
+                    // this.addV3Tem=[ //添加v3模板占位符
+                    //     {
+                    //         id: -1,
+                    //         name: '',
+                    //         remark: '',
+                    //         common1: '',
+                    //         walletpay: 1,  //是否支持退费 1为支持，否则不支持
+                    //         permit: 1, //是否临时充电开启 1为开启，否则不开启
+                    //         ifalipay: 1,
+                    //         grade: 2, // 1、默认按时间充电  2、默认按金额充电
+                    //         rank: 720,
+                    //         gather1: [
+                    //             { id: -1, money: 1, common1: 0,common2: 200 }
+                    //         ],
+                    //         gather2: [
+                    //             { id: -1, name: '1小时', chargeTime: 60 }
+                    //         ],
+                    //         gather3: [
+                    //             { id: -1, name: '1元',money: 1 }
+                    //         ],
+                    //         chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
+                    //     }
+                    // ]
+                    this.addV3Tem = tempv3
                     this.getFrom= false
                     this.visiblesHw01= false
                 }else{

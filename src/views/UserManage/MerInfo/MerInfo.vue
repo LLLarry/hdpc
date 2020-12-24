@@ -236,6 +236,19 @@
                     {{ scope.row.create_time|fmtDate}}
                 </template>
                 </el-table-column>
+
+                <el-table-column
+                    prop="isplatform"
+                    label="所属公众号"
+                    min-width="120"
+                    >
+                    <template slot-scope="{row}">
+                        <el-button type="primary" size="mini" :plain="true" @click="handleChangePlat(row)">
+                            {{ row.isplatform == 1 ? '自助充电平台' :  row.isplatform == 2 ? '兴煌科技' : '— —'}}
+                        </el-button>
+                    </template>
+                </el-table-column>
+
                 <!-- 这个是代理商名下，查看商户详情的 -->
                 <el-table-column
                     prop="bankNum"
@@ -442,51 +455,88 @@
                 <el-button @click="payTemVisible = false">取 消</el-button>
                 <el-button type="primary" @click="submitPayTem">确 定</el-button>
             </div>
-            </el-dialog>
+        </el-dialog>
 
-            <!-- 修改商户的授权信息 -->
-             <el-dialog
-                :show-close="false"
-                :visible.sync="merRankVersion"
-                width="400px"
-                :modal="false"
-                title="修改商户授权信息"
-                custom-class="dialogHverson"
-            >    
-                <el-form label-position="top" :model="merRankVersionForm">
-                    <el-form-item label="商户名" class="form_right25">
-                        <el-input v-model="merRankVersionForm.username" placeholder="商户名" disabled clearable ></el-input>
-                    </el-form-item>
-                    <el-form-item label="商户电话" class="form_right25">
-                        <el-input v-model="merRankVersionForm.phone_num" placeholder="手机号" disabled clearable ></el-input>
-                    </el-form-item>
-                    <el-form-item label="商户权限" class="form_right25" style="width: 100%;">
-                        <el-select v-model="merRankVersionForm.rank"  placeholder="选择商户权限"  style="width: 100%;">
-                            <el-option label="商户" :value="2" ></el-option>
-                            <el-option label="代理商" :value="3" ></el-option>
-                            <!-- <el-option label="子账号" :value="6" ></el-option> -->
-                            <el-option label="普通用户" :value="1" ></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="merRankVersion = false" size="middle">取 消</el-button>
-                    <el-button type="primary" @click="HandlemerRankVersion" size="middle">确 定</el-button>
-                </span>
-                </el-dialog>
+        <!-- 修改商户的授权信息 -->
+        <el-dialog
+            :show-close="false"
+            :visible.sync="merRankVersion"
+            width="400px"
+            :modal="false"
+            title="修改商户授权信息"
+            custom-class="dialogHverson"
+        >    
+            <el-form label-position="top" :model="merRankVersionForm">
+                <el-form-item label="商户名" class="form_right25">
+                    <el-input v-model="merRankVersionForm.username" placeholder="商户名" disabled clearable ></el-input>
+                </el-form-item>
+                <el-form-item label="商户电话" class="form_right25">
+                    <el-input v-model="merRankVersionForm.phone_num" placeholder="手机号" disabled clearable ></el-input>
+                </el-form-item>
+                <el-form-item label="商户权限" class="form_right25" style="width: 100%;">
+                    <el-select v-model="merRankVersionForm.rank"  placeholder="选择商户权限"  style="width: 100%;">
+                        <el-option label="商户" :value="2" ></el-option>
+                        <el-option label="代理商" :value="3" ></el-option>
+                        <!-- <el-option label="子账号" :value="6" ></el-option> -->
+                        <el-option label="普通用户" :value="1" ></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="merRankVersion = false" size="middle">取 消</el-button>
+                <el-button type="primary" @click="HandlemerRankVersion" size="middle">确 定</el-button>
+            </span>
+        </el-dialog>
                 
-                <!-- 绑定代理商 -->
-                <BindMerToAgent :bindInfo="bindInfo" @backFn="backFn" />     
+        <!-- 绑定代理商 -->
+        <BindMerToAgent :bindInfo="bindInfo" @backFn="backFn" />   
+
+        <!-- 修改用户所属的公众号 -->
+        <DialogWrapper 
+            title="修改用户所属公众号"
+            width="450px"
+            :dialogVisible="dialogPlat"
+            :handleClose="handleClosePlat"
+            :handleCancen="handleClosePlat"
+            :handleSubmit="handleSubmitPlat"
+        >
+            <el-form :inline="true"  class="demo-form-inline platForm" :model="platForm" label-width="120px">
+                <el-form-item label="用户名" class="form_right25">
+                    <el-input v-model="platForm.username" disabled placeholder="用户名" ></el-input>
+                </el-form-item>
+                <el-form-item label="电话" class="form_right25">
+                    <el-input v-model="platForm.phone_num" disabled placeholder="用户电话" ></el-input>
+                </el-form-item>
+                <el-form-item label="所属公众号" class="form_right25">
+                    <el-select v-model="platForm.isplatform"  placeholder="金额排序">
+                        <el-option label="自助充电平台" :value="1" ></el-option>
+                        <el-option label="兴煌科技" :value="2" ></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+        </DialogWrapper>  
    </div>
 </template>
 
 <script>
 import MyPagination from '@/components/common/MyPagination'
-import { handleMerInfo,handleMerInfoSet,setMerInfoSetInfo,updataFeerate,updataRate,getMerPayTem,updateMerPayTem,updatesetAgent,setMername,verifyMerchIsUser,editAccountType} from '@/require/userManage'
+import { 
+    handleMerInfo,
+    handleMerInfoSet,
+    setMerInfoSetInfo,
+    updataFeerate,
+    updataRate,getMerPayTem,
+    updateMerPayTem,updatesetAgent,
+    setMername,
+    verifyMerchIsUser,
+    editAccountType,
+    editUserIsplatform
+    } from '@/require/userManage'
 import { messageTip , alertPassword , confirDelete} from '@/utils/ele'
 import { merUnbindAgent } from '@/require'
 import { mapState, mapMutations } from 'vuex'
 import BindMerToAgent from '@/components/common/bindMerToAgent'
+import DialogWrapper from '@/components/DialogWrapper'
 export default {
 
    data(){
@@ -545,11 +595,15 @@ export default {
             tipvisible: false, //展示未实名认证的用户，不能自动提现
             realname: '', //点击设置的时候获取用户的真实姓名
             merRealName: '', //用户输入的真实姓名
+            platForm: {}, //用户所属公众号
+            selectUserInfo: {}, //选择的用户信息
+            dialogPlat: false, //用户所属公众号修改弹框是否显示
        }
    },
     components: {
        MyPagination,
-       BindMerToAgent
+       BindMerToAgent,
+       DialogWrapper
     },
     beforeCreate(){
 
@@ -838,6 +892,36 @@ export default {
                 }
             })
             this.tipvisible= false
+        },
+        // 点击修改用户所属公众号，显示弹框
+        handleChangePlat(row){
+            this.selectUserInfo= row
+            this.platForm= {
+                id: row.id,
+                username: row.username,
+                phone_num: row.phone_num,
+                isplatform: row.isplatform
+            }
+            this.dialogPlat=true
+        },
+        // 管理用户所属公众号修改弹框
+        handleClosePlat(){
+            this.dialogPlat=false
+        },
+        // 提交修改用户所属公众号
+        async handleSubmitPlat(){
+            try {
+                let info= await editUserIsplatform({id: this.platForm.id,isplatform: this.platForm.isplatform})
+                if(info.code === 200){
+                    messageTip("success","修改成功")
+                    this.$set(this.selectUserInfo,"isplatform",this.platForm.isplatform)
+                }else{
+                    messageTip("error",info.message)
+                }
+            } catch (error) {
+                messageTip("error","修改失败")
+            }
+            this.dialogPlat=false
         }
     }
 }

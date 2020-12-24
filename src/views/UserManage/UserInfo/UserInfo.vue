@@ -161,14 +161,27 @@
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="arename"
-                label="归属小区"
-                min-width="120"
-                >
-                <template slot-scope="{row}">
-                    {{row.arename ? row.arename : '— —'}}
-                </template>
+                    prop="arename"
+                    label="归属小区"
+                    min-width="120"
+                    >
+                    <template slot-scope="{row}">
+                        {{row.arename ? row.arename : '— —'}}
+                    </template>
                 </el-table-column>
+
+                 <el-table-column
+                    prop="isplatform"
+                    label="所属公众号"
+                    min-width="120"
+                    >
+                    <template slot-scope="{row}">
+                        <el-button type="primary" size="mini" :plain="true" @click="handleChangePlat(row)">
+                            {{ row.isplatform == 1 ? '自助充电平台' :  row.isplatform == 2 ? '兴煌科技' : '— —'}}
+                        </el-button>
+                    </template>
+                </el-table-column>
+
                 <el-table-column
                 prop="handle"
                 label="操作"
@@ -200,6 +213,31 @@
                 <li><div class="left">到期时间</div><div class="right">{{ monthlyList.endTime | fmtDate }}</div></li>
             </ul>
         </el-dialog>
+        
+        <!-- 修改用户所属的公众号 -->
+        <DialogWrapper 
+            title="修改用户所属公众号"
+            width="450px"
+            :dialogVisible="dialogPlat"
+            :handleClose="handleClosePlat"
+            :handleCancen="handleClosePlat"
+            :handleSubmit="handleSubmitPlat"
+        >
+            <el-form :inline="true"  class="demo-form-inline platForm" :model="platForm" label-width="120px">
+                <el-form-item label="用户名" class="form_right25">
+                    <el-input v-model="platForm.username" disabled placeholder="用户名" ></el-input>
+                </el-form-item>
+                <el-form-item label="电话" class="form_right25">
+                    <el-input v-model="platForm.phone_num" disabled placeholder="用户电话" ></el-input>
+                </el-form-item>
+                <el-form-item label="所属公众号" class="form_right25">
+                    <el-select v-model="platForm.isplatform"  placeholder="金额排序">
+                        <el-option label="自助充电平台" :value="1" ></el-option>
+                        <el-option label="兴煌科技" :value="2" ></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+        </DialogWrapper>
     </div>
 </template>
 
@@ -208,8 +246,9 @@ import MyPagination from '@/components/common/MyPagination'
 import { getUserInfo } from '@/require/userManage'
 import { alertPassword,messageTip } from '@/utils/ele'
 import { userUnbindMer, userUnbindArea } from '@/require'
-import { getUserMonthlyInfo } from '@/require/userManage'
+import { getUserMonthlyInfo,editUserIsplatform } from '@/require/userManage'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
+import DialogWrapper from '@/components/DialogWrapper'
 import { mapState } from 'vuex'
 import Utils from '@/utils/util'
 
@@ -222,6 +261,9 @@ export default {
                 bindInfo: {show: false}, //绑定商户/小区弹框信息
                 dialogMonthly: false, //包月弹框
                 loading: false,
+                platForm: {}, //用户所属公众号
+                selectUserInfo: {}, //选择的用户信息
+                dialogPlat: false, //用户所属公众号修改弹框是否显示
                 totalPage: 1, //共1条数据
                 nowPage: 1, //当前页数   
         }
@@ -229,7 +271,7 @@ export default {
     computed: {
         ...mapState(['userInfo'])
     },
-    components: {MyPagination,bindMerOrArea},
+    components: {MyPagination,bindMerOrArea,DialogWrapper},
     created(){
         if(JSON.stringify(this.$route.query) != "{}"){
             this.userInfoDetailForm= {...this.$route.query}
@@ -328,6 +370,36 @@ export default {
         },
         backFn(data){ //绑定商户或小区回调，修改自己的值
            this.asyGetUserInfo(this.userInfoDetailForm)
+        },
+        // 点击修改用户所属公众号，显示弹框
+        handleChangePlat(row){
+            this.selectUserInfo= row
+            this.platForm= {
+                id: row.id,
+                username: row.username,
+                phone_num: row.phone_num,
+                isplatform: row.isplatform
+            }
+            this.dialogPlat=true
+        },
+        // 管理用户所属公众号修改弹框
+        handleClosePlat(){
+            this.dialogPlat=false
+        },
+        // 提交修改用户所属公众号
+        async handleSubmitPlat(){
+            try {
+                let info= await editUserIsplatform({id: this.platForm.id,isplatform: this.platForm.isplatform})
+                if(info.code === 200){
+                    messageTip("success","修改成功")
+                    this.$set(this.selectUserInfo,"isplatform",this.platForm.isplatform)
+                }else{
+                    messageTip("error",info.message)
+                }
+            } catch (error) {
+                messageTip("error","修改失败")
+            }
+            this.dialogPlat=false
         }
     }
 }
@@ -358,6 +430,10 @@ export default {
             }
         }
     }
+}
+
+.el-form--inline .el-form-item__content {
+    width: 217px;
 }
 
 </style>

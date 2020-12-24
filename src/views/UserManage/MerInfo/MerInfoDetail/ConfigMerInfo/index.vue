@@ -2,7 +2,7 @@
   <div class="configMerInfo">
     <el-row>
         <el-col :md="{span: 11}" :lg="{span: 9, offset: 2}">
-            <el-card class="box-card">
+            <el-card class="box-card" shadow="hover">
                 <div slot="header" class="clearfix">
                     <span>配置微信特约商户信息</span>
                     
@@ -54,53 +54,65 @@
             </el-card>
         </el-col>
         <el-col :md="{span: 11,offset: 2}" :lg="{span: 9, offset: 2}">
-            <!-- <el-card class="box-card">
+            <el-card class="box-card" shadow="hover">
                 <div slot="header" class="clearfix">
-                    <span>配置信息</span>
-                    
-                    <el-button style="float: right; padding: 3px 0" type="text" @click="()=>{ this.isEdit2= true }">编辑配置</el-button>
-                    <el-button style="float: right; padding: 3px 25px; color: #F56C6C;" type="text" >移除商户</el-button>
+                    <span>配特约合伙人</span>
+                    <el-button 
+                        style="float: right; padding: 3px 0" 
+                        type="text"
+                        @click="handleAddSubPartner"
+                        :disabled="subMerData.length <= 0"
+                    >新增配置</el-button>
                 </div>
-                <el-form ref="form" :model="form" label-width="80px">
-                    <el-form-item label="特约商户号">
-                        <el-input v-model="configMerInfoForm.submchid" v-if="isEdit2"></el-input>
-                        <div v-else>哒哒哒哒哒哒所多</div>
-                    </el-form-item>
-                    <el-form-item label="特约商户平台号">
-                        <el-input v-model="configMerInfoForm.smallappid" v-if="isEdit2"></el-input>
-                        <div v-else>哒哒哒哒哒哒所多</div>
-                    </el-form-item>
-                    <el-form-item label="秘钥">
-                        <el-input v-model="configMerInfoForm.keyword" v-if="isEdit2"></el-input>
-                        <div v-else>哒哒哒哒哒哒所多</div>
-                    </el-form-item>
-                    <el-form-item label="APP秘钥">
-                        <el-input v-model="configMerInfoForm.smallappsecret" v-if="isEdit2"></el-input>
-                        <div v-else>哒哒哒哒哒哒所多</div>
-                    </el-form-item>
-                     <el-form-item label="特约">
-                        <el-input v-model="configMerInfoForm.teyue" v-if="isEdit2"></el-input>
-                        <div v-else>哒哒哒哒哒哒所多</div>
-                    </el-form-item>
-                    <el-form-item>
-                        <transition name="el-zoom-in-top">
-                            <div class="submitBtn transition-box" v-show="isEdit2">
-                                <el-button type="primary" @click="onSubmit" size="small">确认修改</el-button>
-                                <el-button size="small">取消修改</el-button>
-                            </div>
-                        </transition>
-                    </el-form-item>
-                </el-form>
-            </el-card> -->
+                <el-table
+                    :data="subPartnerData"
+                    border
+                    style="width: 100%"
+                    max-height="303px"
+                    height="303px"
+                    >
+                    <el-table-column
+                        prop="username"
+                        label="商户昵称"
+                        min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                        prop="realname"
+                        label="真实姓名"
+                        min-width="100">
+                    </el-table-column>
+                    <el-table-column
+                        prop="phoneNum"
+                        label="电话"
+                        min-width="120"
+                    >
+                    </el-table-column>
+                    <el-table-column min-width="80">
+                        <template slot-scope="scope">
+                            <el-button type="danger" size="mini" @click="handleDeletePartter(scope.row.id)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                
+            </el-card>
         </el-col>
     </el-row>
+
+    <!-- 查询商户信息 弹框 -->
+    <QueryMerchant 
+        @handleSelectMerchant="handleSelectMerchant" 
+        ref="QueryMerchant"
+    />
   </div>
 </template>
 
 <script>
 import { messageTip,alertConfim} from "@/utils/ele";
-import { configMchidapi } from "@/require/userManage";
+import { configMchidapi,configSubPartner } from "@/require/userManage";
+import Template from '../../../../../components/common/Template.vue';
+import QueryMerchant from '@/components/common/QueryMerchant'
 export default {
+  components: { Template,QueryMerchant },
   data() {
     return {
       configMerInfoForm1: {},
@@ -111,10 +123,10 @@ export default {
       rules: {
           submchid: [{ required: true, message: '特约商户号为必填内容！', trigger: 'blur' }],
           subappid: [{ required: true, message: '特约商户平台号为必填内容！', trigger: 'blur' }]
-      }
+      },
     };
   },
-  props: ['subMerData','merid'],
+  props: ['subMerData','subPartnerData','merid'],
   computed:{
       configList(){  //长度大于2的数组，取数组前两项
           if(this.subMerData.length > 2){
@@ -187,6 +199,48 @@ export default {
             return false
         }
         return true
+    },
+    /* 点击配置新增特约合伙人，弹出查询商户弹框 */ 
+    handleAddSubPartner(){
+        // 初始化数据
+        const queryMerchantData= this.$refs['QueryMerchant'].$data 
+        queryMerchantData.gridData= []
+        queryMerchantData.searchFrom= {}
+        queryMerchantData.dialogVisible=true
+    },
+    /* 处理选中商户的操作 id为商户的id*/
+    handleSelectMerchant(id){
+        // 特约商户添加配置合伙人
+       this.handleAddAndDeletePartter(1,id,()=>{
+           this.$parent.asySelectAgentUnderMer({ merid:this.merid }) //成功之后掉员工父组件的重新加载方法
+       }) 
+    },
+    // 
+    handleDeletePartter(id){
+       alertConfim("确认删除配置的合伙人吗？",()=>{
+           // 特约商户添加配置合伙人
+           this.handleAddAndDeletePartter(2,id,()=>{
+               this.$parent.asySelectAgentUnderMer({ merid:this.merid }) //成功之后掉员工父组件的重新加载方法
+           }) 
+       }) 
+    },
+    /* 添加或删除配置的he惠人 */
+    async handleAddAndDeletePartter(type,id,callback){
+        try{
+            const info= await configSubPartner({
+                type, // 1: 添加 2：删除
+                subMerId: this.merid, // 特约商家ID
+                subPartnerId: id    // 特约合伙人ID
+            })
+            if(info.code === 200){
+                messageTip("success",type == 1 ?"配置成功" : type == 2 ? "删除成功" : "未知")
+                callback && callback()
+            }else{
+                messageTip("error",info.message)
+            }
+        }catch(e){
+            
+        }
     }
   }
 };

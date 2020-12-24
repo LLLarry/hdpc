@@ -41,13 +41,18 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
     .pagination_con {
         text-align: right;
         padding-right: 10%;
         margin-top: 20px;
         .el-pagination {
             display: inline-block;
+        }
+        .el-pagination button,
+        .el-pagination button:disabled,
+        .el-pager li {
+            background-color: transparent !important;
         }
     }
 </style>

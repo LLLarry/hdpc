@@ -1,6 +1,6 @@
 <template>
   <div class="merInfoDetail">
-    <el-card class="box-card" style="margin-bottom: 40px;">
+    <el-card class="box-card" style="margin-bottom: 40px;" shadow="never">
       <el-divider content-position="center">
         转移
         <span class="merName">{{ name }}</span>下的用户和设备
@@ -50,13 +50,24 @@
         <el-col :span="8">
           <div class="grid-content bg-purple">
             <div class="search">
-              <el-select v-model="merInfoDetailForm.type" size="small" placeholder="请选择">
-                <el-option label="商户电话" value="1"></el-option>
-                <el-option label="商户昵称" value="2"></el-option>
-                <el-option label="商户姓名" value="3"></el-option>
-              </el-select>
-              <el-input v-model="merInfoDetailForm.search" size="small" placeholder="请搜索商户" />
-              <el-button type="primary" size="small" @click="this.handleSearchMer">搜索</el-button>
+              <el-row :gutter="10">
+                <el-col :span="10">
+                    <el-select v-model="merInfoDetailForm.type" size="small" placeholder="请选择">
+                      <el-option label="商户电话" value="1"></el-option>
+                      <el-option label="商户昵称" value="2"></el-option>
+                      <el-option label="商户姓名" value="3"></el-option>
+                    </el-select>
+                </el-col>
+
+                <el-col :span="10">
+                    <el-input v-model="merInfoDetailForm.search" size="small" placeholder="请搜索商户" />
+                </el-col>
+
+                <el-col :span="4">
+                    <el-button type="primary" size="small" @click="this.handleSearchMer">搜索</el-button>
+                </el-col>
+                
+              </el-row>
             </div>
             <el-table :data="merInfo" style="width: 100%" border :show-header="false">
               <el-table-column prop="title" label="日期" min-width="180"></el-table-column>
@@ -69,13 +80,24 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card class="box-card">
+    <!-- <el-card class="box-card" shadow="never">
       <el-divider content-position="center">
         配置
         <span class="merName">{{ name }}</span>特约商户信息
       </el-divider>
       <ConfigMerInfo :subMerData="subMerData" :merid="dealer" @handleReReq="handleReReq" />
-    </el-card>
+    </el-card> -->
+
+      <el-divider content-position="center">
+        配置
+        <span class="merName">{{ name }}</span>特约商户信息
+      </el-divider>
+      <ConfigMerInfo 
+        :subMerData="subMerData" 
+        :subPartnerData="subPartnerData"
+        :merid="dealer"
+        @handleReReq="handleReReq" 
+      />
   </div>
 </template>
 
@@ -112,7 +134,8 @@ export default {
         type: "1"
       },
       multipleSelection: [],
-      subMerData: [] //特约商户配置
+      subMerData: [], //特约商户配置
+      subPartnerData: [],  //特约商户配置合伙人
     };
   },
   components:{
@@ -137,6 +160,7 @@ export default {
         if (areaInfo.code === 200) {
           this.tableData = areaInfo.listdata;
           this.subMerData= areaInfo.subMerData
+          this.subPartnerData= areaInfo.subPartnerData
         } else {
           messageTip("error", "请求出错！");
         }
@@ -262,18 +286,8 @@ export default {
   }
   .search {
     height: 60px;
-    padding: 12px 12px 18px 12px;
+    padding: 12px 0 18px 0;
     box-sizing: border-box;
-    .el-select {
-      width: 30%;
-      .el-input {
-        margin-right: 0;
-        width: 100%;
-      }
-    }
-    .el-input {
-      width: 50%;
-    }
   }
   .deleteBtn {
     padding: 18px 12px 12px 12px;

@@ -311,3 +311,15 @@ export const editUserIsplatform= function (data){
          })
 }
 
+
+/**
+ * 为特约商户配置合伙人
+ */
+export const configSubPartner= function (data){
+    return ajax({
+             url: '/AccountInfo/configSubPartner',
+             data: data,
+             method: 'post'
+         })
+}
+

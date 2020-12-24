@@ -37,7 +37,7 @@ import BreadCrumbNav from './BreadCrumbNav'
 <style lang="less" scoped>
 @import '../../../static/style/default.less';
 .main {
-    background-color: @colorB;
+    background-color: @colorC;
     height: calc(100%);
     overflow: auto;
     // scroll-behavior: smooth;

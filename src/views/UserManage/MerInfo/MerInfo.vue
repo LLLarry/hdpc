@@ -244,7 +244,7 @@
                     >
                     <template slot-scope="{row}">
                         <el-button type="primary" size="mini" :plain="true" @click="handleChangePlat(row)">
-                            {{ row.isplatform == 1 ? '自助充电平台' :  row.isplatform == 2 ? '兴煌科技' : '— —'}}
+                            {{ row.isplatform == 1 ? '自助充电平台' :  row.isplatform == 2 ? '兴煌科技' :  row.isplatform == 3 ? '易安居物联' :  row.isplatform == 4 ? '驰加科技' : '— —'}}
                         </el-button>
                     </template>
                 </el-table-column>
@@ -511,6 +511,8 @@
                     <el-select v-model="platForm.isplatform"  placeholder="金额排序">
                         <el-option label="自助充电平台" :value="1" ></el-option>
                         <el-option label="兴煌科技" :value="2" ></el-option>
+                        <el-option label="易安居物联" :value="3" ></el-option>
+                        <el-option label="驰加科技" :value="4" ></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>

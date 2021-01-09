@@ -95,6 +95,7 @@
                 >
                 <template slot-scope="{row}">
                     {{ row.realname && row.realname.length > 0 ? row.realname : '— —' }}
+                    <span v-if="row.type == 1" style="color: #F56C6C;">(特约合伙人)</span>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -196,9 +197,25 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <div v-if="scope.row.status != 0 && scope.row.status != 4"> 
-                        <el-button type="primary" size="mini" plain disabled>通过</el-button>
-                        <el-button type="danger" size="mini" plain disabled>拒绝</el-button>
+                    <div v-if="(scope.row.status != 0 && scope.row.status != 4) || scope.row.type === 1"> 
+                         <!-- 特约商户的提现，超级管理员不允许操作 -->
+                         <el-tooltip 
+                            class="item" 
+                            effect="dark" 
+                            content="此订单为特约商户提现订单，不允许操作" 
+                            placement="top"
+                            v-if="scope.row.type === 1"
+                        >
+                             <div>
+                                <el-button type="primary" size="mini" plain disabled>通过</el-button>
+                                <el-button type="danger" size="mini" plain disabled>拒绝</el-button>
+                             </div>
+                        </el-tooltip>
+                        <!-- 其他的情况 -->
+                        <div v-else>
+                            <el-button type="primary" size="mini" plain disabled>通过</el-button>
+                            <el-button type="danger" size="mini" plain disabled>拒绝</el-button>
+                        </div>
                     </div>
                     <div v-else> 
                         <el-button type="primary" size="mini" @click="handleRefBtn(scope.row,1)">通过</el-button>

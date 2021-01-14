@@ -1,8 +1,14 @@
 <template>
     <div class="breadCrumbNav">
         <el-breadcrumb separator-class="el-icon-arrow-right">
-            <!-- <el-breadcrumb-item >{{breadcrumbList[0].name}}</el-breadcrumb-item> -->
-            <el-breadcrumb-item v-for="(item,i) in breadcrumbList" :key="i" :to="item.path">{{item.name}}</el-breadcrumb-item>
+            <el-breadcrumb-item 
+                v-for="(item,i) in breadcrumbList" 
+                :key="i" 
+                :to="item.path"
+            >  
+                 <strong v-if="item.bread">{{ item.bread }}</strong>
+                {{item.name}}
+            </el-breadcrumb-item>
         </el-breadcrumb>
     </div>
 </template>

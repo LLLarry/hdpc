@@ -37,6 +37,10 @@ export default {
     props: {
         code: {
             type: String
+        },
+        deviceIp:{
+            type: String,
+            default: ''
         }
     },
     data(){
@@ -45,15 +49,15 @@ export default {
             isCanScroll: true, // 日志是否能够滚动
             autoScroll:false, //是否自动滚动
             isSetSCroll: true, //是否设置能滚动
-            
         }
     },
     mounted(){
+        console.log(this.deviceIp)
         let perEle=  this.$refs['perEle']
-        perEle.addEventListener('scroll',this.scrollFn) //绑定滚动事件
-        
-        this.initWebSoket()  /**初始化WebSoket*/
-    
+        perEle.addEventListener('scroll',this.scrollFn) //绑定滚动事件        
+
+        this.initWebSoket(this.deviceIp)  /**初始化WebSoket*/
+
         this.$once("hook:beforeDestroy",()=>{
             perEle.removeEventListener('scroll',this.scrollFn.bind(this)) //关闭监听
             ws && ws.close() //关闭webSocket
@@ -69,15 +73,19 @@ export default {
         });
     },
     methods: {
-        initWebSoket(){
+        initWebSoket(ip){
+            console.log(ip)
             let codeEle= this.$refs['codeEle'] 
             let perEle=  this.$refs['perEle']
             let perEleMaxHeight= clientHeight*0.75 //per元素最大高度
             //  ws= new WebSocket(`ws://140.143.36.205/devicewebsocket`)
-            ws= new WebSocket(`ws://www.he360.com.cn/devicewebsocket`)
+             ws= new WebSocket(`ws://${ip}/devicewebsocket`)
              ws.onopen= (e)=>{ /**连接成功回调*/
                 console.log(e)
                 ws.send(this.code) //发送设备号
+            }
+            ws.onerror = (e) => {
+                console.log('error', e)
             }
              ws.onmessage = (e)=>{   /**接收WebSoket发送的信息*/
                 let received_msg = e.data;

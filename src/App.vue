@@ -30,7 +30,7 @@ export default {
   height: 100%;
 }
  #nprogress .bar {
-      // background: #409eff !important; //自定义颜色
-       background: #67c23a !important;
-    }
+  // background: #409eff !important; //自定义颜色
+    background: #67c23a !important;
+}
 </style>

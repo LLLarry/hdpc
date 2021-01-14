@@ -40,6 +40,8 @@ import BreadCrumbNav from './BreadCrumbNav'
     background-color: @colorC;
     height: calc(100%);
     overflow: auto;
+    display: flex;
+    flex-direction: column;
     // scroll-behavior: smooth;
     // padding: 0 20px 20px 20px;
     // &::-webkit-scrollbar-track-piece {
@@ -57,10 +59,12 @@ import BreadCrumbNav from './BreadCrumbNav'
     // border-radius: 20px;
     // }
     .bottomBar {
-        color: #d7d7d7;
+        // color: #d7d7d7;
+        color: #cccccc;
         text-align: center;
         padding: 40px 0;
         line-height: 1.3;
+        margin-top: auto;
     }
     .list-item {
     display: inline-block;

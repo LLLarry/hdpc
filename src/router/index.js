@@ -33,7 +33,7 @@ const router= new VueRouter({
 //router.addRoutes(constantRouterMapSuperAdmin)
 let routesList= []
 router.beforeEach((to,from,next) => {
-  let newList= store.getters.transformList //路由降维数组 （菜单）
+  // let newList= store.getters.transformList //路由降维数组 （菜单）
   let menuList= store.state.menuList //导航菜单 （菜单）
 
   let asyRouterMapList= store.getters.transformAsyRouterMap //路由降维数组 （异步路由）
@@ -88,7 +88,11 @@ let navList=Util.slicePath(to.path).map((ktem,k)=>{
     })
     return ktem
   })
-  
+  // 将要显示的bread 设置到面包屑导航最后一项的bread属性中，如要显示名称，要将用户名设置到bread中
+  let bread
+  if (bread = to.query.bread) {
+    navList[navList.length-1].bread = bread 
+  }
   store.commit('updataBreadcrumbList',navList)
 })
 

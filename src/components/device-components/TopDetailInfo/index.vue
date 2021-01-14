@@ -81,7 +81,7 @@
                         <el-button type="primary" size="mini"  @click="handleDownloadIfram">下载</el-button>
                     </div>
                     <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
-                        查看日志：<el-button type="primary" size="mini"  @click="deviceLogShow= true">查看</el-button>
+                        查看日志：<el-button type="primary" size="mini"  @click="handleScanLog">查看</el-button>
                     </div>
                     
                     <div class="colCon" v-if="userInfo.classify== 'superAdmin' && fromType !== 2 ">
@@ -147,7 +147,7 @@
                 width="80%"
                 style="margin-top: -10vh;"
                 :before-close="handleCloseDeviceLog">
-                <DeviceLog v-if="deviceLogShow" :code="code" /> 
+                <DeviceLog v-if="deviceLogShow" :code="code" :deviceIp="deviceIp" /> 
             </el-dialog>
             <!-- 设备输出日志弹框 -->
     </div>
@@ -162,6 +162,7 @@ import {alertPassword,messageTip,confirDelete} from '@/utils/ele'
 import bindMerOrArea from '@/components/common/bindMerOrArea'
 import DialogWrapper from '@/components/DialogWrapper'
 import DeviceLog from '@/components/device-components/DeviceLog' 
+import { queryDeviceIP } from '@/require/deviceManage'
 export default {
     props: {
         bindtype: Number,
@@ -193,6 +194,7 @@ export default {
             iframeSrc: '',
             testval: '', //测试
             deviceLogShow: false , //设备日志是否显示
+            deviceIp: '' // 设备IP
         }
     },
     computed: {
@@ -356,6 +358,16 @@ export default {
                      messageTip("error",info.msg)
                 }
             })
+        },
+        async handleScanLog() { // 查看日志
+            const info = await queryDeviceIP({code: this.code})
+            console.log(info)
+            if (info.code === 200) {
+                this.deviceIp = info.code_ip
+                this.deviceLogShow = true
+            } else{
+                messageTip('error', info.message)
+            }
         }
 
     }

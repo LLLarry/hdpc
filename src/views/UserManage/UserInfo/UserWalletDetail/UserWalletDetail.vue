@@ -68,27 +68,7 @@
                     <router-link tag="li" :to="`/usermanage/userInfo/userOrderDetail`"><el-link type="primary" >{{scope.row.ordernum}}</el-link></router-link>
                   </template>
                 </el-table-column>
-                 <!-- <el-table-column
-                prop="money"
-                label="金额"
-                min-width="120"
-                >
-                 <template slot-scope="scope">
-                    <div>
-                        充值金额：
-                        <el-link type="success" :underline="false" v-if="[1,5].includes(scope.row.paysource)">+{{scope.row.money.toFixed(2)}}</el-link>
-                        <el-link :type="scope.row.money >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7].includes(scope.row.paysource)">{{(scope.row.money >= 0 ? '+' : '') + scope.row.money.toFixed(2)}}</el-link>
-                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">-{{scope.row.money.toFixed(2)}}</el-link>
-                    </div>
-                    <div>
-                        赠送金额：
-                        <el-link type="success" :underline="false" v-if="[1,5].includes(scope.row.paysource)">+{{scope.row.sendmoney.toFixed(2)}}</el-link>
-                        <el-link :type="scope.row.sendmoney >= 0 ? 'success' : 'danger'" :underline="false" v-if="[7].includes(scope.row.paysource)">{{(scope.row.sendmoney >= 0 ? '+' : '') + scope.row.sendmoney.toFixed(2)}}</el-link>
-                        <el-link type="danger" :underline="false" v-if="[2,3,4,6,8].includes(scope.row.paysource)">-{{scope.row.sendmoney.toFixed(2)}}</el-link>
-                    </div>
-                    
-                  </template>
-                </el-table-column> -->
+    
                 <el-table-column
                 prop="paysource"
                 label="充值金额"
@@ -163,14 +143,35 @@
                     </el-link>
                   </template>
                 </el-table-column>
+
                 <el-table-column
-                prop="create_time"
-                label="时间"
-                min-width="200"
+                  prop="create_time"
+                  label="时间"
+                  min-width="200"
                 >
-                 <template slot-scope="scope">
-                   {{ scope.row.create_time | fmtDate }}
-                </template>
+                  <template slot-scope="scope">
+                    {{ scope.row.create_time | fmtDate }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  prop="areaname"
+                  label="所属小区"
+                  min-width="120"
+                >
+                  <template slot-scope="scope">
+                    {{ scope.row.areaname === null ? '— —' : scope.row.areaname }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  prop="areaaddress"
+                  label="小区地址"
+                  min-width="200"
+                >
+                  <template slot-scope="scope">
+                    {{ scope.row.areaaddress === null ? '— —' : scope.row.areaaddress }}
+                  </template>
                 </el-table-column>
             </el-table>
          </el-card>
@@ -194,8 +195,8 @@ export default {
     }
   },
   created(){
-     if(JSON.stringify(this.$route.query) != "{}"){
-          this.userWalletDetail= {...this.$route.query}
+     if(Object.keys(this.$route.query).length !== 0){
+        this.userWalletDetail= {...this.$route.query}
       }
       this.asyGetUserWalletDetail(this.userWalletDetail)
   },

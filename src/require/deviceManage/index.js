@@ -458,11 +458,24 @@ export const queryAddrAllPortStatus= function (data){
  */
 export const removeDeviceClient= function (data){ 
     return ajax({
-             url: '/deviceData/removeClient  ',
+             url: '/deviceData/removeClient',
              data: data,
              method: 'post'
          })
 }
+
+/**
+ * 根据设备号查询设备IP
+ */
+export const queryDeviceIP= function (data){ 
+    return ajax({
+             url: '/deviceData/queryDeviceIP',
+             data: data,
+             method: 'post'
+         })
+}
+
+
 
 
 

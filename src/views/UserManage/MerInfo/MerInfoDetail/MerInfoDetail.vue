@@ -142,9 +142,9 @@ export default {
     ConfigMerInfo
   },
   created() {
-    const { dealer = 0, name = "" } = this.$route.query;
+    const { dealer = 0, bread = "" } = this.$route.query;
     this.dealer = dealer;
-    this.name = name == "" ? dealer : name;
+    this.name = bread == "" ? dealer : bread;
     this.asySelectAgentUnderMer({ merid: dealer });
   },
   mounted() {

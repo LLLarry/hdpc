@@ -102,20 +102,29 @@
                         <div>
                             充值余额：
                             <el-link type="primary" >
-                                <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${row.id}`" tag="span">
-                                    {{ row.balance != null ? row.balance.toFixed(2)  :  '— —'}}
+                                <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${row.id}&aid=${row.aid}&merid=${row.merid}&bread=${row.username ? row.username : row.realname ? row.realname : ''}`" tag="span">
+                                    {{ row.topupmoney != null ? row.topupmoney.toFixed(2)  :  '— —'}}
                                 </router-link>
                             </el-link>
                         </div>
                         <div>
                             赠送余额：
                             <el-link type="primary" >
-                                <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${row.id}`" tag="span">
+                                <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${row.id}&aid=${row.aid}&merid=${row.merid}&bread=${row.username ? row.username : row.realname ? row.realname : ''}`" tag="span">
                                     {{ row.sendmoney != null ? row.sendmoney.toFixed(2)  :  '— —'}}
                                 </router-link>
                             </el-link>
                         </div>
                 </template>
+                </el-table-column>
+                <el-table-column
+                    prop="wallerid"
+                    label="钱包ID"
+                    min-width="120"
+                >
+                    <template slot-scope="{row}">
+                        <span v-fmtnum="row.wallerid"></span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                 prop="onlineCard"
@@ -176,7 +185,7 @@
                     min-width="120"
                     >
                     <template slot-scope="{row}">
-                        <el-button type="primary" size="mini" :plain="true" @click="handleChangePlat(row)">
+                        <el-button :disabled="row.masteraccount != 1" type="primary" size="mini" :plain="true" @click="handleChangePlat(row)">
                             {{ row.isplatform == 1 ? '自助充电平台' :  row.isplatform == 2 ? '兴煌科技' :  row.isplatform == 3 ? '易安居物联' :  row.isplatform == 4 ? '驰加科技' : '— —'}}
                         </el-button>
                     </template>

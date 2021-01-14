@@ -95,7 +95,7 @@
                 >
                 <template slot-scope="{row}">
                     {{ row.realname && row.realname.length > 0 ? row.realname : '— —' }}
-                    <span v-if="row.type == 1" style="color: #F56C6C;">(特约合伙人)</span>
+                    <span v-if="row.wtype == 1" style="color: #F56C6C;">(特约合伙人)</span>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -197,7 +197,7 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <div v-if="(scope.row.status != 0 && scope.row.status != 4) || scope.row.type === 1"> 
+                    <div v-if="(scope.row.status != 0 && scope.row.status != 4) || scope.row.wtype === 1"> 
                          <!-- 特约商户的提现，超级管理员不允许操作 -->
                          <el-tooltip 
                             class="item" 

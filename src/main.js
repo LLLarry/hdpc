@@ -103,6 +103,23 @@ Vue.config.errorHandler= function(err, vm, info){
   console.log(err,vm, info)
 }
 
+/*
+  自定义左填充 补0指令
+  用法：
+  v-fmtnum:5="99" -> 00099
+  v-fmtnum="99" -> 00000099
+*/ 
+Vue.directive('fmtnum', {
+  bind (el, binding) {
+    let { arg = 8, value } = binding
+    // arg 是参数 value是值
+    if (typeof value === 'number' || (typeof value == 'string' && /^\d+$/.test(value)) ) {
+      value = value.toString().padStart(arg, 0)
+    } 
+    el.innerHTML = value
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

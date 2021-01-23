@@ -25,8 +25,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/api": {
-        target: "http://www.he360.cn",
-        // target: "http://www.tengfuchong.com.cn",
+        // target: "http://www.he360.cn",
+        target: "http://www.tengfuchong.com.cn",
         pathRewrite: {"^/api" : ""}
       }
     },

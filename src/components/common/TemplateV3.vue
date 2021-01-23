@@ -464,7 +464,7 @@ export default {
     data(){
         return{
             temForm: {},//存放编辑主模板的容器
-            isEditingTem: false, //是都正在编辑
+            isEditingTem: false, //是否正在编辑
             editId: 0, //正在编辑
             screenWidth: 0
         }

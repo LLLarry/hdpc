@@ -127,132 +127,14 @@ export default {
     data(){
         return {
             baseURL: 'http://www.he360.com.cn',
-            temChargeList: [
-                    // {   
-                    //     id: 1,
-                    //     name: '充电系统默认模板',
-                    //     remark: '和动充电站',
-                    //     common1: '1569365326',
-                    //     permit: 1, //是否支持退费 1是 2否
-                    //     walletpay: 2, //是否钱包支付 1是 2否
-                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
-                    //     gather: [
-                    //             {
-                    //                 name: '1元 4小时',
-                    //                 money:1.0,
-                    //                 chargeTime: 240,
-                    //                 chargeQuantity: 1,
-                    //                 temChildId: 11,
-                    //             },
-                    //             {
-                    //                 name: '8元 8小时',
-                    //                 money:2.0,
-                    //                 chargeTime: 480,
-                    //                 chargeQuantity: 2,
-                    //                 temChildId: 12,
-                    //             }
-                    //         ]
-                    // }
-            ],
+            temChargeList: [],
             temelectriccar: [], //电轿款系统模板
-            temCoinList: [ //模拟投币数据
-                    // {   
-                    //     id: 1,
-                    //     name: '充电系统默认模板',
-                    //     remark: '和动充电站',
-                    //     common1: '1569365326',
-                    //     permit: 1, //是否支持退费 1是 2否
-                    //     walletpay: 2, //是否钱包支付 1是 2否
-                    //     common2: 1, //退费标准  1时间电量， 2时间，3电量
-                    //     gather: [
-                    //             {
-                    //                 name: '1元 1个币',
-                    //                 remark: 1,
-                    //                 money:1, //付款金额
-                    //                 temChildId: 11,
-                    //             },
-                    //             {
-                    //                 name: '4元 2个币',
-                    //                 remark: 2,
-                    //                 money:4, //付款金额
-                    //                 temChildId: 12,
-                    //             }
-                    //         ]
-                    // }
-            ],
-             temOfflineList: [ //离线卡数据
-                    /*{   
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '10元',
-                                    remark: 10,
-                                    money:10, //付款金额
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '20元送5元',
-                                    remark: 25,
-                                    money:20, //付款金额
-                                    temChildId: 12,
-                                }
-                            ]
-                    }*/
-            ],
-            temWalletList: [ //钱包数据
-                   /* {   
-                        id: 1,
-                        name: '充电系统默认模板',
-                        remark: '和动充电站',
-                        common1: '1569365326',
-                        permit: 1, //是否支持退费 1是 2否
-                        walletpay: 2, //是否钱包支付 1是 2否
-                        common2: 1, //退费标准  1时间电量， 2时间，3电量
-                        gather: [
-                                {
-                                    name: '10元',
-                                    remark: 10,
-                                    money:10, //付款金额
-                                    temChildId: 11,
-                                },
-                                {
-                                    name: '20元送5元',
-                                    remark: 25,
-                                    money:20, //付款金额
-                                    temChildId: 12,
-                                }
-                            ]
-                    }*/
-            ],
-            templateV3: [
-                // {
-                //     id: 1,
-                //     name: '充电系统默认模板',
-                //     remark: '和动充电站',
-                //     common1: '1569365326',
-                //     walletpay: 2,  //是否支持退费 1为支持，否则不支持
-                //     permit: 2, //是否临时充电开启 1为开启，否则不开启
-                //     gather1: [
-                //         { id: 1, money: 1, common1: 0,common2: 200 },
-                //         { id: 2, money: 2, common1: 200,common2: 400 }
-                //     ],
-                //     gather2: [
-                //         { id: 3, name: '1小时', chargeTime: 60 },
-                //         { id: 4, name: '2小时', chargeTime: 120 }
-                //     ],
-                //     gather3: [
-                //         { id: 5, name: '1元',money: 1 },
-                //         { id: 6, name: '2元',money: 2 }
-                //     ],
-                // }
-            ],
+            temCoinList: [],//模拟投币模板
+             temOfflineList: [],//离线卡模板
+            temWalletList: [],//钱包模板
+            templateV3: [], // 智慧款v3模板
             temOnlineList: [], //在线卡模板
+            templateCart: [], // 汽车模板
             payTemData: { //商户缴费系统模板
                 '00': {},
                 '01': {}
@@ -342,6 +224,7 @@ export default {
                 }
 
             }catch(error){
+                console.log(error)
                 if(error == '拦截请求'){ 
                     _this.loading= true
                     return 

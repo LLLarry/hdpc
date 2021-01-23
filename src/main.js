@@ -13,7 +13,7 @@ Vue.use(Navigation, {router})
 import { Button,Checkbox,Col,Row,Progress,MessageBox,Message,Notification,Card,Table,Input,InputNumber,TableColumn,Form, FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker, Link,Dialog,Tag,Menu,Submenu, MenuItem,MenuItemGroup,TabPane,Tabs, Pagination,Radio,
   RadioGroup,ButtonGroup,
   RadioButton,Cascader,Switch,Loading,Breadcrumb,
-  BreadcrumbItem,Popover,Steps,Step,Upload,Divider,Tooltip} from 'element-ui'
+  BreadcrumbItem,Popover,Steps,Step,Upload,Divider,Tooltip,Collapse, CollapseItem} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import 'element-ui/lib/theme-chalk/display.css';
@@ -65,7 +65,8 @@ Vue.use(Steps)
 Vue.use(Upload)
 Vue.use(Divider)
 Vue.use(Tooltip)
-
+Vue.use(Collapse)
+Vue.use(CollapseItem)
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;

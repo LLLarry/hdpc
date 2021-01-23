@@ -20,7 +20,7 @@
                 <span>{{code}}设备使用的模板（{{hwVerson == '03' ? '脉冲模板': hwVerson== '04' ? '离线模板' : ['08','09','10','11'].includes(hwVerson) ? 'V3充电模板' :'充电模板'}}）</span>
             </div>
             <!-- 十路智慧款 -->
-            <div v-if=" hwVerson != '03' && hwVerson != '04' &&  !['08','09','10','11'].includes(hwVerson)" >
+            <div v-if=" hwVerson != '03' && hwVerson != '04' && hwVerson != '07' && !['08','09','10','11'].includes(hwVerson)" >
                 <!-- 正常模板 -->
                  <TemplateCharge :from="2" :list="temChargeList" v-if="!isGrade" :deviceInfo="{code:this.code,merid: this.merid, hwVerson: hwVerson}" /> 
                  <!-- 分等级模板 -->
@@ -34,6 +34,12 @@
             <div v-else-if="hwVerson == '04'">
                 <TemplateOffline :from="2" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
             </div>
+
+             <!-- 离线充值机模板 -->
+            <div v-else-if="hwVerson == '07'">
+                <template-cart :from="2"  @handleReLoad="handleReLoad" :list="temChargeList" :deviceInfo="{code:this.code,merid: this.merid , hwVerson: hwVerson}" />
+            </div>
+
             <!-- V3充电模板 -->
            
             <div v-else-if="['08','09','10','11'].indexOf(hwVerson) !== -1">
@@ -218,6 +224,7 @@
 
 <script>
 import TemplateCharge from '@/components/common/Template'
+import TemplateCart from '@/components/common/TemplateCart'
 import TemplateV3 from '@/components/common/TemplateV3'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
@@ -269,8 +276,8 @@ export default {
             portStatusList: [],
             isGrade: false, //默认分等级模板为false,当为分等级模板的时候 isGrade= true
             temChargeList: [], 
-             temCoinList: [], //模拟投币数据
-             temOfflineList: [], //离线卡数据
+            temCoinList: [], //模拟投币数据
+            temOfflineList: [], //离线卡数据
            
             remoteCharge: [], //远程充电
             scanTotalMoney: [ //查看总金额
@@ -350,6 +357,7 @@ export default {
     },
     components: {
         TemplateCharge,
+        TemplateCart,
         TemplateV3,
         TemplateCoin,
         TemplateOffline,
@@ -428,10 +436,10 @@ export default {
                 if(['03','04','08','09','10','11'].indexOf(hwVerson) === -1){
                     if(deviceInfo.temp != null){ //temp存在，说明此模板不是分等级模板
                         //十路智慧款
-                        let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo,ifalipay}= deviceInfo.temp //merchantid是模板所属商户的id，可以通过它来判断是否是系统模板
+                        let {id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo,ifalipay, rank}= deviceInfo.temp //merchantid是模板所属商户的id，可以通过它来判断是否是系统模板
                             common2= common2 == null ? 1 : common2
                             // console.log(id,name,remark,common1,permit,walletpay,common2,gather)
-                        _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo,ifalipay}]
+                        _this.temChargeList= [{id,name,remark,common1,permit,walletpay,common2,gather,merchantid,chargeInfo,ifalipay, rank}]
                 
                     }else{ //分等级模板
                         _this.isGrade= true  //将分等级设为true

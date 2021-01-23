@@ -95,7 +95,7 @@
                 >
                 <template slot-scope="{row}">
                     {{ row.realname && row.realname.length > 0 ? row.realname : '— —' }}
-                    <span v-if="row.wtype == 1" style="color: #F56C6C;">(特约合伙人)</span>
+                    <span v-if="userInfo.classify === 'superAdmin' && row.wtype == 1" style="color: #F56C6C;">(特约合伙人)</span>
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -197,14 +197,14 @@
                 fixed="right"
                 >
                 <template slot-scope="scope">
-                    <div v-if="(scope.row.status != 0 && scope.row.status != 4) || scope.row.wtype === 1"> 
+                    <div v-if="(scope.row.status != 0 && scope.row.status != 4) || (userInfo.classify === 'superAdmin' && scope.row.wtype === 1)"> 
                          <!-- 特约商户的提现，超级管理员不允许操作 -->
                          <el-tooltip 
                             class="item" 
                             effect="dark" 
                             content="此订单为特约商户提现订单，不允许操作" 
                             placement="top"
-                            v-if="scope.row.type === 1"
+                            v-if="userInfo.classify === 'superAdmin' && scope.row.wtype === 1"
                         >
                              <div>
                                 <el-button type="primary" size="mini" plain disabled>通过</el-button>
@@ -219,7 +219,8 @@
                     </div>
                     <div v-else> 
                         <el-button type="primary" size="mini" @click="handleRefBtn(scope.row,1)">通过</el-button>
-                        <el-button type="danger" size="mini" @click="handleRefBtn(scope.row,2)">拒绝</el-button>
+                        <!-- 超级管理员拒绝传 2 ， 特约商户拒绝特约合伙人提现传3 -->
+                        <el-button type="danger" size="mini" @click="handleRefBtn(scope.row, 2)">拒绝</el-button>
                     </div>
                 </template>
                 </el-table-column>
@@ -234,8 +235,9 @@
 import MyPagination from '@/components/common/MyPagination'
 import dateTimeJS from '@/utils/dateTime'
 import {alertConfim,messageTip} from '@/utils/ele'
-import { getWithDrawRecord,merWithdrawResolve } from '@/require/tradeRecord'
+import { getWithDrawRecord,merWithdrawResolve, getWithDrawRecordBySubmer } from '@/require/tradeRecord'
 import Util from '@/utils/util'
+import { mapState } from 'vuex'
 export default {
     data(){
         return {
@@ -250,6 +252,9 @@ export default {
     },
     components: {
         MyPagination
+    },
+    computed: {
+        ...mapState(['userInfo'])
     },
     created(){
          let {VNK,...routerKey}=  this.$route.query
@@ -272,9 +277,13 @@ export default {
         },
         async asyGetWithDrawRecord(data){
             let _this= this
+            // 动态获取请求函数
+            const getOrderFn = this.userInfo.classify === 'superAdmin' ? 
+                getWithDrawRecord :  this.userInfo.classify === 'subMer' ?
+                getWithDrawRecordBySubmer : Promise.reject('不是超级管理员或代理商，无权访问')
             try{
                  _this.loading= true
-                let drawRecordInfo= await getWithDrawRecord(data)
+                let drawRecordInfo= await getOrderFn(data)
                  _this.loading= false
                  if(drawRecordInfo.code === 200){
                     _this.tableData = drawRecordInfo.listdata
@@ -291,9 +300,10 @@ export default {
         handleRefBtn(row,status){
             this.row= row
             let title= status == 1 ? '确认通过提现吗？' : '确认拒绝提现吗？'
+            const subPartner = this.userInfo.classify === 'subMer' ? 1 : undefined // 拒绝特约商户合伙人提现的时候传这个字段
             let data= {}
             alertConfim(title,()=>{
-                merWithdrawResolve({id: this.row.id, status:status}).then(res=>{
+                merWithdrawResolve({id: this.row.id, status:status, subPartner}).then(res=>{
                     if(res.code == 200 ){
                         if(status == 1){
                             messageTip('success','提现已通过')

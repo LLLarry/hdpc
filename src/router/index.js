@@ -2,7 +2,8 @@
 
 import store from '../store' //引入store调用getters方法
 import Util from '@/utils/util'
-import {constantRouterMapSuperAdmin,constantRouterMapAdmin,constantRouterMapAgent} from './constantRouterMap' 
+// import {constantRouterMapSuperAdmin,constantRouterMapAdmin,constantRouterMapAgent} from './constantRouterMap' 
+import routerFn from './routerList'
 
 // import './routeMap'
 
@@ -44,13 +45,15 @@ router.beforeEach((to,from,next) => {
     next()
   }else if(userInfo){ //vuex中存在用户信息
     if(routes.length === 0){ //当moduleA中的路由不存在 （也可能当刷新消失）,刷新会使router中动态提添加的路由消失，所以加上这个
-      if(userInfo.classify === 'Admin'){  //根据权限过滤路由
-        routesList= constantRouterMapAdmin
-      }else if(userInfo.classify === 'superAdmin'){
-        routesList= constantRouterMapSuperAdmin
-      }else if(userInfo.classify === 'Agent'){
-        routesList= constantRouterMapAgent
-      }
+      // if(userInfo.classify === 'Admin'){  //根据权限过滤路由
+      //   routesList= constantRouterMapAdmin
+      // }else if(userInfo.classify === 'superAdmin'){
+      //   routesList= constantRouterMapSuperAdmin
+      // }else if(userInfo.classify === 'Agent'){
+      //   routesList= constantRouterMapAgent
+      // }
+      // 动态获取路由
+      routesList = routerFn(userInfo.classify)
       
       router.addRoutes(routesList)  //将过滤出来的路由添加到router中
       store.commit('storeAsyRouterMap',routesList) //将新添加的路由保存在vuex中 
@@ -91,7 +94,10 @@ let navList=Util.slicePath(to.path).map((ktem,k)=>{
   // 将要显示的bread 设置到面包屑导航最后一项的bread属性中，如要显示名称，要将用户名设置到bread中
   let bread
   if (bread = to.query.bread) {
-    navList[navList.length-1].bread = bread 
+    const lastItem = navList[navList.length-1]
+    if (lastItem.toString() === '[object Object]') {
+      lastItem.bread = bread 
+    }
   }
   store.commit('updataBreadcrumbList',navList)
 })

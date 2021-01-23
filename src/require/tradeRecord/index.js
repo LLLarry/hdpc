@@ -94,12 +94,23 @@ export const getMonthRecordInfo= function (data){
 }
 
 /**
- * 获取提现管理信息
+ * 超级管理员获取提现管理信息
  */
 export const getWithDrawRecord= function (data){ 
     return ajax({
              url: '/orderData/orderWithdrawRecordData',
              data: data
+         })
+}
+
+/**
+ * 特约商户获取提现管理信息
+ */
+export const getWithDrawRecordBySubmer= function (data){ 
+    return ajax({
+             url: '/orderData/partnerWithdrawRecode ',
+             data: data,
+             method: 'post'
          })
 }
 

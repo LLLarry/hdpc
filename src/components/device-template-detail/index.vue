@@ -1,24 +1,101 @@
 <template>
     <div class="templateDetail">
         <div class="topContent" ref="topContent">
-            <span class="title">{{$route.query.hw == '03' ? '模拟投币模板' : $route.query.hw == '04' ? '离线卡模板': $route.query.hw == '08' ? 'V3充电模板': '充电模板'}}</span>
+            <span class="title">
+                {{  
+                    $route.query.hw == '03' ? '模拟投币模板' : 
+                    $route.query.hw == '04' ? '离线卡模板' : 
+                    $route.query.hw == '07' ? '汽车桩模板' : 
+                    $route.query.hw == '08' ? 'V3充电模板': '充电模板'
+                }}
+            </span>
             <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddTem">添加主模板</el-button>
         </div>
-        <TemplateCharge :from="3" :list="temChargeList" v-if="$route.query.hw == '01' " :source="source" :arecode="arecode" /> <!--充电模板-->
-        <TemplateCoin :from="3" :list="temCoinList" v-else-if="$route.query.hw == '03' " :source="source" :arecode="arecode" /> <!--脉冲模板-->
-        <TemplateOffline :from="3" :list="temOfflineList" v-if="$route.query.hw == '04' "  :source="source" :arecode="arecode" /> <!--离线卡模板-->
-        <GradeTemplate :from="3" :list="tempgather" v-if="$route.query.hw == '01' " :source="source" :arecode="arecode" />
-        <TemplateV3   :from="3"  :list="temV3List" v-if="$route.query.hw == '08'" @handleReLoad="handleReLoad" :deviceNum="code"  ></TemplateV3>
+
+        <TemplateCharge 
+            :from="3" 
+            :list="temChargeList" 
+            v-if="$route.query.hw == '01' " 
+            :source="source" 
+            :arecode="arecode" 
+        /> <!--充电模板-->
+
+        <TemplateCoin 
+            :from="3" 
+            :list="temCoinList" 
+            v-else-if="$route.query.hw == '03' " 
+            :source="source" :arecode="arecode" 
+        /> <!--脉冲模板-->
+
+        <TemplateOffline 
+            :from="3" 
+            :list="temOfflineList" 
+            v-if="$route.query.hw == '04' "  
+            :source="source" 
+            :arecode="arecode" 
+        /> <!--离线卡模板-->
+
+        <TemplateCart 
+            :from="3" 
+            :list="temChargeList" 
+            v-if="$route.query.hw == '07' "  
+            :source="source" 
+            :arecode="arecode" 
+            @handleReLoad="handleReLoad" 
+        />
+        <!--
+        <GradeTemplate 
+            :from="3" 
+            :list="tempgather" 
+            v-if="$route.query.hw == '01' " 
+            :source="source" 
+            :arecode="arecode" 
+        />
+        -->
+
+        <TemplateV3   
+            :from="3"  
+            :list="temV3List" 
+            v-if="$route.query.hw == '08'" 
+            @handleReLoad="handleReLoad" 
+            :deviceNum="code"  
+        />
+        
         <el-dialog 
-            :title="$route.query.hw == '03' ? '新增模拟投币模板' : $route.query.hw == '04' ? '新增离线卡模板' : $route.query.hw == '08' ? '新增V3充电模板': '新增充电模板'" 
+            :title="
+                    $route.query.hw == '03' ? '新增模拟投币模板' : 
+                    $route.query.hw == '04' ? '新增离线卡模板' : 
+                    $route.query.hw == '07' ? '新增汽车桩充电模板' : 
+                    $route.query.hw == '08' ? '新增V3充电模板': '新增充电模板'
+                " 
             :visible.sync="visiblesHw01" 
-            :width="$route.query.hw == '08' ? '95vw' : '450px'" 
+            :width="['07', '08'].includes($route.query.hw) ? '95vw' : '450px'" 
             custom-class="dialog_form" 
-            validate="handleSubmit1">
+            validate="handleSubmit1"
+        >
+            <!-- 添加汽车桩模板 -->
+            <TemplateCart  
+                v-if="visiblesHw01 && $route.query.hw == '07'"  
+                :from="4"  
+                :list="addCartTem" 
+                ref="template-cart"
+            />
             <!-- 添加V3模板 -->
-            <TemplateV3  v-if="visiblesHw01 && $route.query.hw == '08'"  :from="4"  :list="addV3Tem" :getFrom="getFrom" @getDataFromTem="getDataFromTem"></TemplateV3>
+            <TemplateV3  
+                v-else-if="visiblesHw01 && $route.query.hw == '08'"  
+                :from="4"  
+                :list="addV3Tem" 
+                :getFrom="getFrom" 
+                @getDataFromTem="getDataFromTem"
+            ></TemplateV3>
             <!-- 添加V3以外的模板 -->
-            <el-form :model="hwForm" label-position="top" :rules="rule1" ref="hwForm1" v-if="visiblesHw01 && $route.query.hw != '08'">
+            <el-form 
+                :model="hwForm" 
+                label-position="top" 
+                :rules="rule1" 
+                ref="hwForm1" 
+                v-else-if="visiblesHw01 && $route.query.hw != '08' && $route.query.hw != '07'"
+            >
                 <el-form-item label="模板名称" label-width="120px" prop="name">
                     <el-input v-model="hwForm.name" autocomplete="off" placeholder="请输入模板名称"></el-input>
                 </el-form-item>
@@ -76,7 +153,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="visiblesHw01 = false">取 消</el-button>
-                <el-button type="primary" @click="()=>this.$route.query.hw === '08' ? this.handleSubmit08() : this.handleSubmit1() ">确 定</el-button>
+                <el-button type="primary" @click="handleSubmitAddTemp">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -524,7 +601,7 @@ const tempv3= [
         ],
         "temporaryc": 1,
         "createTime": "2020-08-13 08:20:05.0",
-        "merchantid": 927,
+        "merchantid": -1,
         "grade": 2,
         "name": "智慧款v3模板"+time,
         "permit": 1,
@@ -534,13 +611,84 @@ const tempv3= [
         "status": 6
     }
 ]
+const tempCart= [{
+  "common2": 1,
+  "chargeInfo": "本设备收费标准为：  1元 / 度电",
+  "stairid": 0,
+  "ifalipay": 1,
+  "gather": [
+    {
+      "common1": null,
+      "common2": null,
+      "brandName": null,
+      "chargeTime": 0,
+      "chargeQuantity": 5,
+      "remark": 0,
+      "telephone": null,
+      "type": 0,
+      "common3": null,
+      "money": 5,
+      "createTime": "2021-01-23T07:27:27.000+0000",
+      "name": "5元5度电",
+      "id": time-1,
+      "status": null,
+      "tempparid": 6593
+    },
+    {
+      "common1": null,
+      "common2": null,
+      "brandName": null,
+      "chargeTime": 0,
+      "chargeQuantity": 10,
+      "remark": 0,
+      "telephone": null,
+      "type": 0,
+      "common3": null,
+      "money": 10,
+      "createTime": "2021-01-23T07:27:27.000+0000",
+      "name": "10元10度电",
+      "id": time-2,
+      "status": null,
+      "tempparid": 6593
+    },
+    {
+      "common1": null,
+      "common2": null,
+      "brandName": null,
+      "chargeTime": 0,
+      "chargeQuantity": 15,
+      "remark": 0,
+      "telephone": null,
+      "type": 0,
+      "common3": null,
+      "money": 15,
+      "createTime": "2021-01-23T07:27:28.000+0000",
+      "name": "15元15度电",
+      "id": time-3,
+      "status": null,
+      "tempparid": 6593
+    }
+  ],
+  "common3": "0",
+  "ifmonth": 2,
+  "createTime": "2021-01-23 15:27:27.0",
+  "merchantid": -1,
+  "grade": 2,
+  "name": "汽车桩模板",
+  "permit": 1,
+  "rank": 1,
+  "id": -1,
+  "walletpay": 2,
+  "status": 7
+}]
 import TemplateCharge from '@/components/common/Template'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateCoin from '@/components/common/TemplateCoin'
+import TemplateCart from '@/components/common/TemplateCart'
 import GradeTemplate from '@/components/common/GradeTemplate'
 import TemplateV3 from '@/components/common/TemplateV3'
 import Util from '@/utils/util'
-import { getDeviceDetailTemInfo,addTemplate,changeV3ChargeTem } from '@/require/template'
+import { getDeviceDetailTemInfo,addTemplate,changeV3ChargeTem,disposeSyncTemplate } from '@/require/template'
 import {messageTip} from '@/utils/ele'
 import { mapState } from 'vuex'
 export default {
@@ -573,6 +721,7 @@ export default {
                 name: [{required: true,message: '模板名称不能为空', trigger: 'change'}]
             }, // 表单1的校验
             addV3Tem: tempv3,
+            addCartTem: tempCart, // 新增汽车桩模板
             getFrom: false //父组件时候向子组件获取值
         }
     },
@@ -581,7 +730,8 @@ export default {
         TemplateCoin,
         TemplateOffline,
         GradeTemplate,
-        TemplateV3
+        TemplateV3,
+        TemplateCart
     },
     created(){
         let {code,merid,hw}= this.$route.query
@@ -715,40 +865,17 @@ export default {
         handleSubmit08(){
             this.getFrom= true
         },
-        async getDataFromTem(v3Data){ //接收添加v3模板传过来的值
+        async getDataFromTem(data){ //接收添加v3模板传过来的值
             try {
-                if(v3Data.name.length > 0 ){
-                    v3Data.merid= this.merid
-                    let info= await changeV3ChargeTem({ paratem: JSON.stringify(v3Data) })
+                if(data.name.length > 0 ){
+                    data.merid= this.merid
+                    let info= await changeV3ChargeTem({ paratem: JSON.stringify(data) })
                     if(info.code === 200){
                         this.handleReLoad(()=>{})
                         messageTip('success','添加成功')  
                     }else{
                         messageTip('error','添加失败')
                     }
-                    // this.addV3Tem=[ //添加v3模板占位符
-                    //     {
-                    //         id: -1,
-                    //         name: '',
-                    //         remark: '',
-                    //         common1: '',
-                    //         walletpay: 1,  //是否支持退费 1为支持，否则不支持
-                    //         permit: 1, //是否临时充电开启 1为开启，否则不开启
-                    //         ifalipay: 1,
-                    //         grade: 2, // 1、默认按时间充电  2、默认按金额充电
-                    //         rank: 720,
-                    //         gather1: [
-                    //             { id: -1, money: 1, common1: 0,common2: 200 }
-                    //         ],
-                    //         gather2: [
-                    //             { id: -1, name: '1小时', chargeTime: 60 }
-                    //         ],
-                    //         gather3: [
-                    //             { id: -1, name: '1元',money: 1 }
-                    //         ],
-                    //         chargeInfo: '每小时收费：1元， 功率区间：0-200瓦'
-                    //     }
-                    // ]
                     this.addV3Tem = tempv3
                     this.getFrom= false
                     this.visiblesHw01= false
@@ -762,6 +889,36 @@ export default {
         },
         handleReLoad(callback){ //v3模板修改成功之后的回调
             this.$store.dispatch('asyGetDeviceDetailTemInfo',{devicenum: this.code,merid: this.merid,callback})
+        },
+        handleSubmitAddTemp() { // 点击确定，新增模板
+            switch(this.$route.query.hw){
+                case '07' :
+                    this.handleSubmit07()
+                    break
+                case '08' :
+                    this.handleSubmit08()
+                    break
+                default :
+                    this.handleSubmit1()
+                    break
+            }
+           
+        },
+        async handleSubmit07() { //新增07模板
+            const templateCart = this.$refs['template-cart']
+            if (templateCart.temForm.name.length <= 0) return messageTip('error', '模板名称不能为空')
+            try {
+                const info = await disposeSyncTemplate({param: JSON.stringify({...templateCart.temForm, merchantid: this.merid})})
+                if (info.code === 200) {
+                    this.$store.dispatch('asyGetDeviceDetailTemInfo',{devicenum: this.code,merid: this.merid})
+                    this.visiblesHw01= false
+                    messageTip('success', '新增成功')
+                } else {
+                    messageTip('error', info.messageTip)
+                }
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 }

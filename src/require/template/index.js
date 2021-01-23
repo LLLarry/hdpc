@@ -135,6 +135,29 @@ export const areaTempChoose= function (data){
 }
 
 
+/**
+ * 07汽车桩 保存主模板
+ */
+export const disposeSyncTemplate= function (data){ 
+    return ajax({
+             url: '/wctemplate/disposeSyncTemplate',
+             data: data,
+             method: 'post'
+         })
+}
+
+/**
+ * 07汽车桩 插入子模板
+ */
+export const insertSubSyncTemp= function (data){ 
+    return ajax({
+             url: '/wctemplate/insertSubSyncTemp',
+             data: data,
+             method: 'post'
+         })
+}
+
+
 
 
 

@@ -43,6 +43,13 @@
             <TemplateV3 :from="1" :list="templateV3" @handleReLoad="handleReLoad" />
         </el-card>
 
+        <el-card class="box-card card_content">
+            <div slot="header" class="clearfix">
+                <span>汽车桩充电模板</span>
+            </div>
+            <TemplateCart :from="1" :list="templateCart" @handleReLoad="handleReLoad" />
+        </el-card>
+
         <!-- <el-card class="box-card card_content">
             <div slot="header" class="clearfix">
                 <span>商户缴费系统模板</span>
@@ -115,6 +122,7 @@
 <script>
 import TemplateCharge from '@/components/common/Template'
 import TemplateV3 from '@/components/common/TemplateV3'
+import TemplateCart from '@/components/common/TemplateCart'
 import TemplateCoin from '@/components/common/TemplateCoin'
 import TemplateOffline from '@/components/common/TemplateOffline'
 import TemplateWallet from '@/components/common/TemplateWallet'
@@ -149,6 +157,7 @@ export default {
         TemplateWallet,
         UpLoadFile,
         TemplateV3,
+        TemplateCart,
         ConfigChangeParmars,
         PayTem
     },
@@ -212,6 +221,11 @@ export default {
                         // V3充电模板
                          _this.templateV3= [systemTemInfo.templatev3]
                 
+                    }
+
+                    {
+                        // 汽车桩模板
+                        this.templateCart = [systemTemInfo.temCarPile]
                     }
 
                     {

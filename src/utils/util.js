@@ -103,5 +103,24 @@ export default {
       }else {
         return {}
       }
+    },
+
+    /**
+     *  元素滚动动画
+     * @param {*} options 配置参数
+     *  el 滚动元素
+     *  position 滚动到的位置
+     *  time 滚动时间 ms
+     */
+    scrollTransition ({el = document.body, position = 0, time = 150} = options) {
+      const timer = setInterval(() => {
+         const move = (el.scrollTop - position) / (time /10)
+         if (el.scrollTop - position > 0) {
+           el.scrollTop -= move;
+         } else {
+           clearInterval(timer)
+         }
+      }, 10)
     }
 }
+

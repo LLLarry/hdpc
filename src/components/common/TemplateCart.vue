@@ -256,6 +256,13 @@
                         icon="el-icon-plus"
                         v-if="item.id === editId"
                     >添加模板</el-button>
+                    <!-- from == 2时展 “复用模板” -->
+                    <TemMulDevice 
+                         v-if="from == 2"
+                        :deviceInfo="deviceInfo" 
+                        :tempid="item.id"
+                    />
+
                     <!-- from == 2时展示 “查看更多” -->
                      <el-button 
                         type="primary" 
@@ -267,8 +274,7 @@
                             }
                         )" 
                         icon="el-icon-view" 
-                        v-if="from == 2" 
-                        :disabled="deviceInfo.merid== 0 || deviceInfo.merid== undefined || deviceInfo.merid == null"
+                        v-if="from == 2"
                     >查看更多</el-button>
 
                     <el-button 
@@ -307,6 +313,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import {confirDelete,messageTip} from '@/utils/ele'
+import Utils from '@/utils/util'
 import TemMulDevice from '@/components/common/TemMulDevice'
 import { insertSubSyncTemp,deleteTemplateChild,editTemplateChild,updateTemplate,setSelectTem,deleteTem,getChargeInfo, 
 
@@ -369,6 +376,12 @@ export default {
     methods: {
         // 删除子模板
        handleDeleteChildTem(id,temChildId){  //主模板id,子模板id
+        // 通过主模板的id 获取主模板   
+        const temp = this.arr.find(item => item.id == id)
+        if (Array.isArray(temp.gather) && temp.gather.length <= 1) {
+            return messageTip('warning', '至少保留一个子模板')
+        }
+
         //发送请求，成功之后删除子模板
          confirDelete('确认删除子模板吗？',()=>{
              deleteTemplateChild({id: temChildId}).then(res=>{
@@ -458,7 +471,7 @@ export default {
         confirDelete('确认删除主模板吗？',()=>{
             deleteTem({id:item.id}).then(res=>{
                 if(res.code == 200){
-                     this.arr.splice(i,1)
+                    this.$store.dispatch('asyGetDeviceDetailTemInfo',{devicenum: this.$route.query.code,merid: this.$route.query.merid}) //添加之后重新请求数据
                     messageTip('success','删除成功')
                 }else{
                     messageTip('warning',res.message)
@@ -469,7 +482,6 @@ export default {
       },
        //点击编辑主模板
        handleEditTem(item){ //主模板对象
-        console.log(JSON.stringify(item, null, 2))
             this.temForm = JSON.parse(JSON.stringify(item))
             this.temForm.gather = this.temForm.gather.map(item=>{
                 if (item && item.chargeQuantity) {
@@ -515,7 +527,7 @@ export default {
        },
        handleSetSelect(item,$event){ //设置选中模板
            let temid= item.id
-           setSelectTem({source:this.source,obj: this.arecode,temid: temid}).then(res=>{
+           setSelectTem({source:this.source,obj: this.arecode,temid: temid}).then( async res=>{
             if(res == 1){
                 for (const iterator of this.arr) {
                     if(iterator.id == item.id){
@@ -524,22 +536,23 @@ export default {
                         iterator.pitchon= undefined
                     }
                 }
-                this.$store.dispatch('asyGetDeviceDetailTemInfo',{devicenum: this.$route.query.code,merid: this.$route.query.merid}) //添加之后重新请求数据
+                await this.$store.dispatch('asyGetDeviceDetailTemInfo',{devicenum: this.$route.query.code,merid: this.$route.query.merid}) //添加之后重新请求数据
                 if(typeof gradeId == 'undefined'){ //普通模板设置后，自动滚动到顶部
-                    setTimeout(()=>{
-                        const offsetTop = document.querySelector('.selectedTem').offsetTop - 30
-                        document.getElementsByClassName('main')[0].scrollTop=  offsetTop 
-                    },400)
+                    this.$nextTick(()=>{
+                        const selectedTem = document.querySelector('.selectedTem')
+                        if (selectedTem) {
+                            const offsetTop = selectedTem.offsetTop - 30
+                            Utils.scrollTransition({el:document.getElementsByClassName('main')[0], position: offsetTop})
+                        }
+                    })
                 }
                 messageTip('success','选中成功（注： 选中成功会自动至于第一位）')
-
             }else{
                 messageTip('warning','选中失败')
             }
            }).catch(err=>{})
        },
        handleSetChargeInfo(info,item){ //点击设置默认模板或者功率模板 info 1分功率，2默认
-       console.log(item.rank)
          if(info == 1){
              try {
                  Vue.set(item,'loading',true)

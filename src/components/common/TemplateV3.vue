@@ -592,6 +592,11 @@ export default {
          * @param cid 子元素id
          */
         handleDeleteItem(item,index,from,cid){
+            // 【按时间充电】和 【按金额充电】至少保留一个子模板
+            if(['gather2', 'gather3'].includes(from) && item[from].length <= 1) {
+                return messageTip('warning', '至少保留一个子模板')
+            }
+
             let chargeInfo= ''
             let isUpdateChargeInfo
              if(from === 'gather1'){

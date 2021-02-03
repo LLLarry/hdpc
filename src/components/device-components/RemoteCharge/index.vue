@@ -231,7 +231,7 @@ export default {
                 Vue.set(row,'loading',true)
                 remoteChargeByPort({payport,time,elec,code: this.code}).then(res=>{
                     Vue.set(row,'loading',false)
-                    if(res.wolfcode == '1000'){
+                    if(res.wolferror == '1000' || res.wolfcode == '1000'){
                         messageTip('success',`远程充电设置成功`)
                         Vue.set(row,'portStatus',2)
                     }else{
@@ -262,7 +262,7 @@ export default {
                 Vue.set(row,'loading1',true)
                 remoteChargeBreakOff({port,code: this.code}).then(res=>{
                     Vue.set(row,'loading1',false)
-                    if(res.wolfcode == '1000'){
+                    if(res.wolferror == '1000' || res.wolfcode == '1000'){
                         messageTip('success',`远程断电设置成功`)
                         Vue.set(row,'portStatus',1)
                     }else{

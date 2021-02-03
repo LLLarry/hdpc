@@ -259,24 +259,52 @@
             </template>
             </el-table-column>
             </el-table>
-             <div style="margin-top: 20px; text-align: center;" class="clearfix"  v-if="from==1">
+
+            <div style="margin-top: 20px; text-align: center;" class="clearfix"  v-if="from==1">
                 <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus">添加模板</el-button>
-             </div>
-              <div style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" class="clearfix"  v-else-if="from==2">
-                <el-button v-if="[1,2].includes(grade)" style="visibility: hidden;" icon="el-icon-view" size="mini">查看更多</el-button> <!--加这个标签的目的是为了让现实的“查看更多相对于其他的对齐” -->
-                <el-button type="primary" size="mini" @click="$router.push({path: '/deviceManage/deviceList/templateDetail',query: {hw: '01',code: deviceInfo.code,merid: deviceInfo.merid }})" icon="el-icon-view" v-if="!([1,2].includes(grade))" 
-                :disabled="deviceInfo.merid== 0 || deviceInfo.merid== undefined || deviceInfo.merid == null"
+            </div>
+
+            <div 
+                style="margin-top: 20px; text-align: center;display:flex; justify-content: space-around;" 
+                class="clearfix"  
+                v-else-if="from==2"
+             >
+                <el-button 
+                    v-if="[1,2].includes(grade)" 
+                    style="visibility: hidden;" 
+                    icon="el-icon-view" 
+                    size="mini"
+                >查看更多</el-button> <!--加这个标签的目的是为了让现实的“查看更多相对于其他的对齐” -->
+
+                <el-button 
+                    type="primary" 
+                    size="mini" 
+                    @click="$router.push({path: '/deviceManage/deviceList/templateDetail',
+                    query: {hw: '01',code: deviceInfo.code,merid: deviceInfo.merid }})" 
+                    icon="el-icon-view" 
+                    v-if="!([1,2].includes(grade))" 
+                    :disabled="deviceInfo.merid== 0 || deviceInfo.merid== undefined || deviceInfo.merid == null"
                 >查看更多</el-button>
-                <div v-if="!([1,2,3].includes(grade))"><TemMulDevice v-if="!(from == 2 && (item.merchantid == 0 || item.merchantid == null))" :deviceInfo="deviceInfo" :tempid="item.id"/></div>
-                <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="(from == 2 && (item.merchantid == 0 || item.merchantid == null)) || (from !=1 && item.merchantid== 0)" >添加模板</el-button>
-             </div>
-             <div style="margin-top: 20px; text-align: center; " class="clearfix" v-else>
+                <div 
+                    v-if="!([1,2,3].includes(grade))"
+                >
+                     
+                    <TemMulDevice 
+                       
+                        :deviceInfo="deviceInfo" 
+                        :tempid="item.id"
+                    />
+                </div>
+                    <el-button type="primary" size="mini" @click="handleAddChildTem(item)" icon="el-icon-plus" :disabled="(from == 2 && (item.merchantid == 0 || item.merchantid == null)) || (from !=1 && item.merchantid== 0)" >添加模板</el-button>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center; " class="clearfix" v-else>
                 <el-button type="primary" size="mini" style="float:left;margin-left: 30%;" icon="el-icon-plus" @click="handleAddChildTem(item)" :disabled="(from !=1 && item.merchantid== 0)">添加模板</el-button>
                 <el-link type="danger" :underline="false" v-if="(item.pitchon ==1 && ![1,2,3].includes(grade)) || (item.pitchon ==1 && grade== 3) || (gradePitchon == 1 && ![1,2].includes(grade))"> {{source == 0 ? '默认模板' : '选中模板'}}</el-link>
                 
                 <!-- <el-button type="primary" size="mini" style="float:right;margin-right: 30%;" v-if="source == 0 && ![1,2].includes(grade)" :disabled="item.pitchon ==1" :plain="item.pitchon ==1" @click="handleSetDefault(item,gradeId)" >设为默认</el-button> -->
                 <el-button type="primary" icon="el-icon-check" size="mini" style="float:right;margin-right: 30%;" v-if="source != 0 && ![1,2].includes(grade)" :disabled="item.pitchon ==1 || gradePitchon == 1" :plain="item.pitchon ==1"   @click="handleSetSelect(item,gradeId)">选中模板</el-button>
-             </div>
+            </div>
              
         </el-card>
     </div>
@@ -333,6 +361,11 @@ export default {
     methods: {
         // 删除子模板
        handleDeleteChildTem(id,temChildId){  //主模板id,子模板id
+        // 通过主模板的id 获取主模板   
+        const temp = this.arr.find(item => item.id == id)
+        if (Array.isArray(temp.gather) && temp.gather.length <= 1) {
+            return messageTip('warning', '至少保留一个子模板')
+        }
         //发送请求，成功之后删除子模板
          confirDelete('确认删除子模板吗？',()=>{
              deleteTemplateChild({id: temChildId}).then(res=>{

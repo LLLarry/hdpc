@@ -57,6 +57,19 @@
                                         <span v-else class="top_span">{{item.rank}}</span>
                                         分钟
                                     </div> 
+                                    <div style="margin-top: 15px">
+                                        <strong>充电计费方式:</strong>
+                                        <el-select 
+                                            v-model="temForm.common2" 
+                                            placeholder="请选择计费方式"
+                                            v-if="editId === item.id"
+                                            size="mini"
+                                        >
+                                            <el-option label="按照实时功率计费" :value="1"></el-option>
+                                            <el-option label="按照最大功率计费" :value="2"></el-option>
+                                        </el-select>
+                                        <span v-else class="top_span">{{item.common2 == 1  ? '按照实时功率计费' : '按照最大功率计费'}}</span>
+                                    </div> 
                                 </div>
                             </div>
                            <div class="tem_text" style="margin-top: 15px">

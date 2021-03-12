@@ -164,6 +164,7 @@ const time= new Date().getTime() // 当前时间的时间戳
 const tempv3= [
     {
         "common1": "",
+        "common2": 1,
         "chargeInfo": "付费方式两种：\n1  按时间付费（先充电后扣费，公众号钱包需预充值）\n2   按金额付费。 先付费，显示充电时间为二轮车最长时间。实际充电时间为机器自动检测功率后计算的时间，比显示时间要少。",
         "stairid": 0,
         "gather3": [
@@ -430,7 +431,7 @@ const tempv3= [
         "gather1": [
             {
                 "common1": "0",
-                "common2": "210",
+                "common2": "200",
                 "brandName": null,
                 "chargeTime": 0,
                 "chargeQuantity": 0,
@@ -446,7 +447,7 @@ const tempv3= [
                 "tempparid": 281805
             },
             {
-                "common1": "210",
+                "common1": "200",
                 "common2": "300",
                 "brandName": null,
                 "chargeTime": 0,

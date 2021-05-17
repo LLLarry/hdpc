@@ -151,7 +151,7 @@
                 v-if="moneyShow"
                 >
                 <template slot-scope="{row}">
-                    {{ row.money == -1 ? '— —' : row.money.toFixed(2) }}
+                    {{ row.money == -1 ? '— —' : row.money }}
                 </template>
                 </el-table-column>
 

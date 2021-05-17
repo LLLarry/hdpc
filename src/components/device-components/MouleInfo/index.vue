@@ -25,7 +25,7 @@
             </span>
             <span v-else-if="row.title1 == '硬件版本号'">
               {{row.content1}}
-              <span>&nbsp;&nbsp;{{ row.content1 == '00' ? '2G模块' : row.content1 == '01' ? '4G模块': row.content1 == '02' ? '蓝牙模块' : row.content1 == '03' ? '合宙2G模块' : '' }}</span>
+              <span>&nbsp;&nbsp;{{ row.content1 == '00' ? '2G模块' : row.content1 == '01' ? '4G模块': row.content1 == '02' ? '蓝牙模块' : row.content1 == '03' ? '合宙2G模块' : row.content1 == '04' ? '724 4G模块': '' }}</span>
             </span>
             <span v-else>{{row.content1}}</span>
           </template>

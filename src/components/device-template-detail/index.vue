@@ -855,6 +855,8 @@ export default {
                                         // this.tempgather.push(res.data[0])
                                         this.$store.dispatch('asyGetDeviceDetailTemInfo',{devicenum: this.code,merid})
                                     }   
+                                } else {
+                                    messageTip("warning",res.message)
                                 }
                             }).catch(error=>{})
                     }

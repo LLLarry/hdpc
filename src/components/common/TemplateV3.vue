@@ -65,10 +65,24 @@
                                             v-if="editId === item.id"
                                             size="mini"
                                         >
-                                            <el-option label="按照实时功率计费" :value="1"></el-option>
-                                            <el-option label="按照最大功率计费" :value="2"></el-option>
+                                            <el-option label="按照最大功率计费" :value="1"></el-option>
+                                            <el-option label="按照实时功率计费" :value="2"></el-option>
                                         </el-select>
-                                        <span v-else class="top_span">{{item.common2 == 1  ? '按照实时功率计费' : '按照最大功率计费'}}</span>
+                                        <span v-else class="top_span">{{item.common2 == 1  ? '按照最大功率计费' : '按照实时功率计费'}}</span>
+                                        <el-popover
+                                            placement="bottom"
+                                            title="计费方式说明"
+                                            width="400"
+                                            trigger="click"
+                                        >
+                                            <div>
+                                                <p style="margin-bottom: 10px;"><strong>按照实时功率计费</strong> ：根据充电设备的实时功率，进行扣费; </p>
+                                                <p><strong>按照最大功率计费</strong> ：根据充电设备的最大功率，进行扣费;</p>
+                                            </div>
+                                            <el-button slot="reference" size="mini" type="primary" style="margin-left: 1rem;" class="el-icon-warning-outline icon_span" plain>说明</el-button>
+                                        </el-popover>
+
+                                   
                                     </div> 
                                 </div>
                             </div>

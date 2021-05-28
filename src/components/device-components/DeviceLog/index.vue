@@ -16,7 +16,7 @@
         </div>
         <pre v-myHighlightjs="sourcecode2" ref="perEle"><code class="javascript" ref="codeEle"></code></pre>
         <!-- 赋值按钮 -->
-            <button 
+        <button 
             ref="copyBtn" 
             class="copyBtn" 
             data-clipboard-text=""

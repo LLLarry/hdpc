@@ -202,6 +202,8 @@
                         :data="item.gather1"
                         border
                         fit
+                        row-key="id"
+                        :ref="`tem-table1-${item.id}`"
                         style="width: 100%"
                         :header-cell-style="{background:'rgba(245, 247, 250, 0.49)',color:'#666','font-size': '13px'}"
                         :cell-style="{'font-size': '13px',color: '#666'}"
@@ -221,6 +223,7 @@
                                     <div v-if="editId === item.id"> 
                                         <el-input-number 
                                             size="mini" 
+                                            :controls="false"
                                             v-model="temForm.gather1[scope.$index].money" 
                                             style="width: 80%;margin-right: 10px;" 
                                             placeholder="请输入每小时收费金额"
@@ -290,6 +293,8 @@
                         :data="item.gather2"
                         border
                         fit
+                        row-key="id"
+                        :ref="`tem-table2-${item.id}`"
                         style="width: 100%"
                         :header-cell-style="{background:'rgba(245, 247, 250, 0.49)',color:'#666','font-size': '13px'}"
                         :cell-style="{'font-size': '13px',color: '#666'}"
@@ -324,6 +329,7 @@
                                 <template slot-scope="scope">
                                     <div v-if="editId === item.id"> 
                                         <el-input-number 
+                                            :controls="false"
                                             size="mini"
                                             :step="10"
                                             :min="0"
@@ -400,6 +406,8 @@
                             :data="item.gather3"
                             border
                             fit
+                            row-key="id"
+                            :ref="`tem-table3-${item.id}`"
                             style="width: 100%"
                             :header-cell-style="{background:'rgba(245, 247, 250, 0.49)',color:'#666','font-size': '13px'}"
                             :cell-style="{'font-size': '13px',color: '#666'}"
@@ -429,6 +437,7 @@
                                     <div v-if="editId === item.id"> 
                                         <el-input-number 
                                             size="mini"
+                                            :controls="false"
                                             :step="1"
                                             :min="0"
                                             :precision="1" 
@@ -487,22 +496,34 @@
 import { confirDelete,messageTip } from '@/utils/ele'
 import { deleteTemplateChild,addTemplateChild,changeV3ChargeTem,setSelectTem,handleDeleteTem,deleteTem,selectV3ChargeTem } from '@/require/template'
 import TemMulDevice from '@/components/common/TemMulDevice'
+import Sortable from 'sortablejs'
 export default {
     data(){
         return{
             temForm: {},//存放编辑主模板的容器
             isEditingTem: false, //是否正在编辑
             editId: 0, //正在编辑
-            screenWidth: 0
+            screenWidth: 0,
+            sortable1: null,
+            sortable2: null,
+            sortable3: null
         }
     },
     props: ['from','list','deviceInfo','getFrom','deviceNum'],
     computed: {
         arr(){
             if(this.from === 4){
+                console.log(1)
                 return [this.temForm]
-            }else{
-                 return this.list
+            } else if (this.editId > 0 && Object.keys(this.temForm).length > 0) {
+                console.log(2)
+                const list = JSON.parse(JSON.stringify(this.list))
+                const index = list.findIndex(item => item.id === this.editId)
+                list.splice(index, 1, this.temForm)
+                return list
+            } else {
+                console.log(3)
+                return this.list
             } 
         }
     },
@@ -513,6 +534,13 @@ export default {
         this.editId= this.from === 4 ? -1 : 0 //当添加模板时，editId设置为-1，否则默认为0
         this.temForm= this.from === 4 ? JSON.parse(JSON.stringify(this.list[0])) : {}
         this.screenWidth= document.documentElement.offsetWidth || document.body.offsetWidth
+        this.$on('hook:mounted', () => {
+            if (this.from === 4) {
+                this.setSort(1)
+                this.setSort(2)
+                this.setSort(3)
+            }
+        })
     },
     watch: {
         getFrom(newVal){
@@ -522,9 +550,42 @@ export default {
         }
     },
     methods: {
+        setSort(type) {
+            const el = this.$refs[`tem-table${type}-${this.editId}`][0].$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+            this[`sortable${type}`] = Sortable.create(el, {
+                ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
+                direction: 'vertical',
+                setData: function(dataTransfer) {
+                // to avoid Firefox bug
+                // Detail see : https://github.com/RubaXa/Sortable/issues/1012
+                dataTransfer.setData('Text', '')
+                },
+                // 元素被选中
+                onEnd: ({ newIndex, oldIndex }) => {
+                    const gather = `gather${type}`
+                    const gathers = JSON.parse(JSON.stringify(this.temForm[gather]))
+                    const targetRow = gathers.splice(oldIndex, 1)[0]
+                    gathers.splice(newIndex, 0, targetRow)
+                    this.$set(this.temForm, [gather], gathers)
+                    if (type === 1) { // 说明移动的是收费标准，移动收费标准要改变收费说明 
+                        const chargeInfo = this.getChargeInfo(this.temForm[gather])
+                        this.temForm.chargeInfo = chargeInfo
+                    }
+
+                    // for show the changes, you can delete in you code
+                    // const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+                    // this.newList.splice(evt.newIndex, 0, tempIndex)
+                }
+            })
+        },
         handleEdit(item){ //点击编辑模板
             this.temForm = JSON.parse(JSON.stringify(item))
             this.editId= item.id
+            this.$nextTick(() => {
+                this.setSort(1)
+                this.setSort(2)
+                this.setSort(3)
+            })
         },
         handleSave(index){ //点击保存按钮
             changeV3ChargeTem({paratem: JSON.stringify(this.temForm)}).then(res=>{
@@ -548,26 +609,24 @@ export default {
             let isUpdateChargeInfo //是都更新充电信息，1 更新， 否则不更新
             let chargeInfo= ''
             if(from === 'gather1'){
-                if(item['gather1'].length > 0){ //根据最后一项数据计算
-                    let lastItem= item['gather1'][item['gather1'].length-1]
+                if(this.temForm['gather1'].length > 0){ //根据最后一项数据计算
+                    let lastItem= this.temForm['gather1'][this.temForm['gather1'].length-1]
                     let rate1= parseFloat(lastItem.common2)-parseFloat(lastItem.common1) //这个是获取功率间隔
                     let newPowerEnd= parseFloat(lastItem.common2)+rate1
                     let rate2= lastItem.money/parseFloat(lastItem.common2) //这个是1W多少钱
-                    let newMoney= rate1*rate2+lastItem.money//这个新收费钱数
+                    let newMoney= Number.parseFloat((rate1*rate2).toFixed(2)) + lastItem.money//这个新收费钱数
                     newItem= { name: new Date().getTime(), money:newMoney,common1: lastItem.common2,common2: newPowerEnd ,type: 1 }
                 }else{ //使用默默人的
                     newItem= {  name: new Date().getTime(), money:1,common1: 0,common2: 200 ,type: 1}
                 }
-                let newGather1= JSON.parse(JSON.stringify(item.gather1))
+                let newGather1= JSON.parse(JSON.stringify(this.temForm.gather1))
                 newGather1.push(newItem)
-                chargeInfo= newGather1.reduce((acc,item,index)=>{
-                   return acc+= `${item.money}元/小时，功率区间：${item.common1}-${item.common2}瓦\n`
-                },'').trim()
+                chargeInfo= this.getChargeInfo(newGather1)
                 isUpdateChargeInfo= 1
                 
             }else if(from === 'gather2'){
-                if(item['gather2'].length > 0){ //根据最后一项数据计算
-                    let lastItem= item['gather2'][item['gather2'].length-1]
+                if(this.temForm['gather2'].length > 0){ //根据最后一项数据计算
+                    let lastItem= this.temForm['gather2'][this.temForm['gather2'].length-1]
                     let newChargeTime= lastItem.chargeTime+60
                     let newName= `${newChargeTime/60}小时`
                     newItem= { name: newName, chargeTime: newChargeTime,type: 2 }
@@ -577,7 +636,7 @@ export default {
                 }  
             }else if(from === 'gather3'){
                 if(item['gather3'].length > 0){ //根据最后一项数据计算
-                    let lastItem= item['gather3'][item['gather3'].length-1]
+                    let lastItem= this.temForm['gather3'][this.temForm['gather3'].length-1]
                     let newMoney= lastItem.money+1
                     let newName= newMoney+'元'
                     newItem= { name: newName, money: newMoney,type: 3 }
@@ -594,16 +653,15 @@ export default {
                      this.$set(this.temForm,'chargeInfo',chargeInfo)
                  }
             }else{
-                addTemplateChild({...newItem,tempid: item.id,isUpdateChargeInfo,chargeInfo}).then(res=>{
+                addTemplateChild({...newItem,tempid: this.temForm.id,isUpdateChargeInfo,chargeInfo}).then(res=>{
                     if(res.code === 200){
-                        let itemCopy= JSON.parse(JSON.stringify(item))
+                        let itemCopy= JSON.parse(JSON.stringify(this.temForm))
                         itemCopy[from].push(res.tempson)
                         this.temForm= itemCopy
-                        this.$set(item,from,itemCopy[from])
+                        this.$set(this.temForm,from,itemCopy[from])
                         if(from === 'gather1'){
-                             this.$set(item,'chargeInfo',chargeInfo)
-                             this.$set(this.temForm,'chargeInfo',chargeInfo)
-
+                            this.$set(this.temForm,'chargeInfo',chargeInfo)
+                            // this.$set(this.temForm,'chargeInfo',chargeInfo)
                         }
                         messageTip('success','子模板添加成功！')
                     }else{
@@ -627,7 +685,7 @@ export default {
             let chargeInfo= ''
             let isUpdateChargeInfo
              if(from === 'gather1'){
-                chargeInfo= item[from].reduce((acc,item,i)=>{
+                chargeInfo= this.temForm[from].reduce((acc,item,i)=>{
                     if(item.id === cid){
                         return acc
                     }else{
@@ -649,15 +707,27 @@ export default {
                     return
                 }
                 
-                deleteTemplateChild({id:cid,chargeInfo,isUpdateChargeInfo,tempid: item.id}).then(res=>{
+                deleteTemplateChild({  
+                    id:cid, // 刪除的主模板的id
+                    chargeInfo, // 充電信息
+                    isUpdateChargeInfo, // 是否更新充電信息
+                    tempid: item.id, // 主模板id
+                    type: from.replace(/[a-z]+/g,'')
+                }).then(res=>{
                     if(res.code === 200){
                         let itemCopy= JSON.parse(JSON.stringify(item))
                         let newGather= itemCopy[from].filter((val)=> val.id !== cid )
                         // 深度设置值的，需要使用vue实例提供的方法来修改 this.$set || Vue.set
-                        this.$set(this.arr[index],from,newGather)
+                        // this.$set(this.arr[index],from,newGather)
+                        // if(from === 'gather1'){
+                        //     this.$set(this.arr[index],'chargeInfo',chargeInfo)
+                        // }
                         if(from === 'gather1'){
-                            this.$set(this.arr[index],'chargeInfo',chargeInfo)
+                            this.$set(this.temForm,'chargeInfo',chargeInfo)
                         }
+                        const findIndex = this.temForm[from].findIndex(item => item.id === cid)
+                        this.temForm[from].splice(findIndex, 1)
+
                         messageTip('success','子模板删除成功！')
                     }else{
                         messageTip('error','子模板删除失败！')
@@ -694,6 +764,11 @@ export default {
                     }
                 }).catch(error=>{})
             }) 
+        },
+        getChargeInfo(list) { // 生成并获取重新信息
+            return list.reduce((acc,item,index)=>{
+                return acc+= `${item.money}元/小时，功率区间：${item.common1}-${item.common2}瓦\n`
+            },'').trim()
         }
     }
 }
@@ -774,4 +849,12 @@ export default {
         text-overflow: ellipsis;
     }
 }
+</style>
+
+<style>
+    .sortable-ghost{
+        opacity: 0.7;
+        color: #fff!important;
+        background: #42b983!important;
+    }
 </style>

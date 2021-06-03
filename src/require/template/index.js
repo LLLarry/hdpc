@@ -158,6 +158,17 @@ export const insertSubSyncTemp= function (data){
 }
 
 
+/**
+ * 通过硬件版本号获取对应的系统模板
+ */
+ export const getSystemTempData= function (data){ 
+    return ajax({
+             url: '/deviceData/getSystemTempData',
+             data: data,
+             method: 'get'
+         })
+}
+
 
 
 

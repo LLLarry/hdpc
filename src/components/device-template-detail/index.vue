@@ -689,7 +689,7 @@ import TemplateCart from '@/components/common/TemplateCart'
 import GradeTemplate from '@/components/common/GradeTemplate'
 import TemplateV3 from '@/components/common/TemplateV3'
 import Util from '@/utils/util'
-import { getDeviceDetailTemInfo,addTemplate,changeV3ChargeTem,disposeSyncTemplate } from '@/require/template'
+import { getDeviceDetailTemInfo,addTemplate,changeV3ChargeTem,disposeSyncTemplate, getSystemTempData } from '@/require/template'
 import {messageTip} from '@/utils/ele'
 import { mapState } from 'vuex'
 export default {
@@ -723,7 +723,8 @@ export default {
             }, // 表单1的校验
             addV3Tem: tempv3,
             addCartTem: tempCart, // 新增汽车桩模板
-            getFrom: false //父组件时候向子组件获取值
+            getFrom: false, //父组件时候向子组件获取值
+            cteateId: new Date().getTime(), // 创建模板id
         }
     },
     components: {
@@ -794,9 +795,22 @@ export default {
             }
         },
         // 添加主模板
-        handleAddTem(){
+        async handleAddTem(){
             if(this.$route.query.hw === '08'){
-                this.addV3Tem=tempv3
+                const temp = await getSystemTempData({ value: this.hw })
+                const { gather: { tempower: gather1, temtime: gather2, temmoney: gather3 } } = temp
+                this.createId = new Date().getTime() // 使用最新的时间戳
+                const addV3Tem = [temp]
+                this.setIdVal(gather1)
+                this.setIdVal(gather2)
+                this.setIdVal(gather3)
+                temp.gather1 = gather1
+                temp.gather2 = gather2
+                temp.gather3 = gather3
+                temp.name = ''
+                temp.id = -1
+                temp.merchantid = -1
+                this.addV3Tem=addV3Tem
                 this.getFrom= false
             }
             this.visiblesHw01= true
@@ -921,6 +935,12 @@ export default {
                 }
             } catch (error) {
                 console.log(error)
+            }
+        },
+        // 设置id的值
+        setIdVal(list) {
+            for(let [index, item] of list.entries()) {
+                item.id = --this.cteateId
             }
         }
     }

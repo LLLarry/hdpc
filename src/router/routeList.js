@@ -49,7 +49,7 @@ export default  [
           name: '商户收益',
           component: ()=> import('@/views/DataStatis/MerEarn'),
           meta: {
-            role: ['superAdmin','admin']
+            role: ['superAdmin']
           }
         },
          // 用户管理==================>

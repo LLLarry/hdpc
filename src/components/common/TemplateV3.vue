@@ -67,8 +67,9 @@
                                         >
                                             <el-option label="按照最大功率计费" :value="1"></el-option>
                                             <el-option label="按照实时功率计费" :value="2"></el-option>
+                                            <el-option label="按照使用电量计费" :value="3"></el-option>
                                         </el-select>
-                                        <span v-else class="top_span">{{item.common2 == 1  ? '按照最大功率计费' : '按照实时功率计费'}}</span>
+                                        <span v-else class="top_span">{{item.common2 == 1  ? '按照最大功率计费' : item.common2 == 2 ?'按照实时功率计费' : item.common2 == 3  ? '按照使用电量计费' : ''}}</span>
                                         <el-popover
                                             placement="bottom"
                                             title="计费方式说明"
@@ -197,7 +198,47 @@
                 </el-table-column> -->
             </el-table>
             <el-row>
-                <el-col :span="8">
+                <el-col :span="3">
+                    <el-table
+                            :data="[{common3: item.common3}]"
+                            border
+                            fit
+                            row-key="id"
+                            style="width: 100%"
+                            :header-cell-style="{background:'rgba(245, 247, 250, 0.49)',color:'#666','font-size': '13px'}"
+                            :cell-style="{'font-size': '13px',color: '#666'}"
+                            v-mask:[tipInfo0]="!(editId === item.id ?  ((temForm.common2 === 3) ? true : false) : ((item.common2 === 3) ? true : false))"
+                        >
+                            <el-table-column
+                                prop="province"
+                                label="收费标准 (按电量)"
+                                width="120"
+                                label-class-name="chargeType"
+                            >
+                                <el-table-column
+                                    label="每度电收费"
+                                >
+                                    <template slot-scope="scope">
+                                        <div>
+                                            <div v-if="editId === item.id"> 
+                                                <el-input-number 
+                                                    size="mini" 
+                                                    :controls="false"
+                                                    v-model="temForm.common3" 
+                                                    style="width: 80%;margin-right: 10px;" 
+                                                    placeholder="每度电收费"
+                                                    :step="1"
+                                                    :precision="2"
+                                                    :min="0"
+                                                ></el-input-number>元</div>
+                                            <span v-else> {{scope.row.common3}}元</span>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                            </el-table-column>    
+                        </el-table>
+                </el-col>
+                <el-col :span="7">
                     <el-table
                         :data="item.gather1"
                         border
@@ -207,13 +248,14 @@
                         style="width: 100%"
                         :header-cell-style="{background:'rgba(245, 247, 250, 0.49)',color:'#666','font-size': '13px'}"
                         :cell-style="{'font-size': '13px',color: '#666'}"
+                        v-mask:[tipInfo1]="(editId === item.id ?  ((temForm.common2 === 3) ? true : false) : ((item.common2 === 3) ? true : false))"
                     >
                         <el-table-column
                             prop="province"
-                            label="收费标准"
+                            label="收费标准 (按功率)"
                             width="120"
                             label-class-name="chargeType"
-                        >
+                        >   
                             <el-table-column
                                 prop="money"
                                 label="每小时收费"
@@ -288,7 +330,7 @@
                         >添加</el-button>
                     </div>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="7">
                     <el-table
                         :data="item.gather2"
                         border
@@ -372,7 +414,7 @@
                         >添加</el-button>
                     </div>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="7">
                     <div class="v3MaskWrapper">
                         <div class="v3Mask" v-show="editId === item.id ? (temForm.walletpay === 1 ? false : true) : (item.walletpay === 1 ? false : true)">
                             暂未开启临时充电
@@ -506,7 +548,9 @@ export default {
             screenWidth: 0,
             sortable1: null,
             sortable2: null,
-            sortable3: null
+            sortable3: null,
+            tipInfo0: '未开启按电量计费',
+            tipInfo1: '未开启按功率计费'
         }
     },
     props: ['from','list','deviceInfo','getFrom','deviceNum'],
@@ -770,6 +814,36 @@ export default {
                 return acc+= `${item.money}元/小时，功率区间：${item.common1}-${item.common2}瓦\n`
             },'').trim()
         }
+    },
+    directives: {
+        /* 遮罩层指令 */
+        mask: {
+            inserted(el, { value, arg }){
+                setTimeout(()=>{
+                    el.classList.add('v3MaskWrapper')
+                })
+                
+                if (value && !el.bindMaskEl) {
+                    const div = document.createElement('div')
+                    div.innerText = arg
+                    div.classList.add('v3Mask')
+                    el.appendChild(div)
+                    el.bindMaskEl = div
+                }
+            },
+            update(el, { value, arg }){
+                if (value && !el.bindMaskEl) {
+                    const div = document.createElement('div')
+                    div.innerText = arg
+                    div.classList.add('v3Mask')
+                    el.appendChild(div)
+                    el.bindMaskEl = div
+                } else if (!value && el.bindMaskEl) {
+                    el.bindMaskEl.remove()
+                    delete el.bindMaskEl
+                }
+            }
+        }
     }
 }
 </script>
@@ -831,6 +905,7 @@ export default {
             }
         }
     }
+    
     .green {
         color: #6BD089;
     }

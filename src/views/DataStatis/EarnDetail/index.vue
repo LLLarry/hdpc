@@ -37,6 +37,8 @@
          <el-card class="box-card">
             <el-table
                 :data="tableData"
+                :summary-method="getSummaries" 
+                :show-summary="true"
                 border
                 style="width: 100%"
                 v-loading="loading"
@@ -100,6 +102,20 @@
                 </el-table-column>
 
                 <el-table-column
+                    prop="alipayincome"
+                    label="支付宝收益"
+                    min-width="100"
+                >
+                </el-table-column>
+
+                <el-table-column
+                    prop="wechatincome"
+                    label="微信收益"
+                    min-width="100"
+                >
+                </el-table-column>
+
+                <el-table-column
                     prop="consumetotalquantity"
                     label="消耗电量"
                     min-width="100"
@@ -119,12 +135,22 @@
 import MyPagination from '@/components/common/MyPagination'
 import { dealerIncomeDatainfo } from '@/require/datastatis'
 import Util from '@/utils/util'
+const columsMapData = {
+    '收益金额':  'incomemoney',
+    '退费金额':  'returnmoney',
+    '充值收益':  'topupincome',
+    '设备收益':  'deviceincome',
+    '支付宝收益': 'alipayincome',
+    '微信收益': 'wechatincome',
+    '消耗电量':  'onsumetotalquantity'
+}
 export default {
    data(){
        return {
            earnDetailForm: {},
            loading: false,
            tableData: [], //每条数据
+           totalData: [],
            totalPage: 1, //共500条数据
            nowPage: 1 //当前页数   
        }
@@ -157,8 +183,9 @@ export default {
                 let info= await dealerIncomeDatainfo({...data,usage:1,limit: 10,currentPage:this.nowPage })
                 this.loading= false
                 this.tableData= info.result
+                this.totalData = info.resultTotal
                 if(data.isFirst){ //第一次请求的时候才会有总条数
-                    this.totalPage= info.resultsize
+                    this.totalPage= info.tatolcount
                 }
             } catch (error) {
                 if(error == '拦截请求'){ //当访问出错时会error为字符串，当拦截器拦截时error为undefined,当拦截器拦截时继续加载
@@ -171,6 +198,21 @@ export default {
             this.$router.push({query: {...this.earnDetailForm,VNK: this.$route.query.VNK,currentPage: 1}})
             this.asySealerIncomeDatainfo({...this.earnDetailForm,isFirst: true})
             this.nowPage= 1 //搜索完之后将nowPage置为1
+        },
+        getSummaries (params) {
+            return params.columns.map(({ label }, index) => {
+                if (index === 0) {
+                    return '汇总'
+                }
+                const key = columsMapData[label]
+                if (key !== void 0) {
+                    const result = this.totalData[key]
+                    return result == null ? 0 : result
+                } else {
+                    return 'N/A'
+                }
+                
+            })
         }
     }
 }

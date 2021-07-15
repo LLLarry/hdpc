@@ -61,10 +61,13 @@
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="numerical"
+                prop="uid"
                 label="ID"
                 min-width="100"
                 >
+                <template slot-scope="{row}">
+                    {{row.uid.toString().padStart(8, '0')}}
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="username"
@@ -81,16 +84,16 @@
                 min-width="120"
                 >
                 <template slot-scope="{row}">
-                    {{row.realname ? row.realname : '— —'}}
+                    {{row.username ? row.realname : '— —'}}
                 </template>
                 </el-table-column>
                  <el-table-column
-                prop="phone_num"
+                prop="cellphone"
                 label="电话"
                 min-width="120"
                 >
                 <template slot-scope="{row}">
-                    {{row.phone_num ? row.phone_num : '— —'}}
+                    {{row.cellphone ? row.cellphone : '— —'}}
                 </template>
                 </el-table-column>
                  <el-table-column
@@ -102,7 +105,7 @@
                         <div>
                             充值余额：
                             <el-link type="primary" >
-                                <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${row.id}&aid=${row.aid}&merid=${row.merid}&bread=${row.username ? row.username : row.realname ? row.realname : ''}`" tag="span">
+                                <router-link :to="`/usermanage/userInfo/userWalletDetail?uid=${row.uid}&aid=${row.aid}&merid=${row.merid}&bread=${row.username ? row.username : row.realname ? row.realname : ''}`" tag="span">
                                     {{ row.topupmoney != null ? row.topupmoney.toFixed(2)  :  '— —'}}
                                 </router-link>
                             </el-link>
@@ -118,12 +121,12 @@
                 </template>
                 </el-table-column>
                 <el-table-column
-                    prop="wallerid"
+                    prop="walletid"
                     label="钱包ID"
                     min-width="120"
                 >
                     <template slot-scope="{row}">
-                        <span v-fmtnum="row.wallerid"></span>
+                        <span v-fmtnum="row.walletid"></span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -132,7 +135,7 @@
                 min-width="120"
                 >
                 <template slot-scope="{row}">
-                    <router-link tag="li" :to="`/usermanage/userInfo/userOnlineCardInfo?uid=${row.id}`">
+                    <router-link tag="li" :to="`/usermanage/userInfo/userOnlineCardInfo?uid=${row.uid}`">
                         <el-link type="primary" >查看在线卡</el-link>
                     </router-link>
                 </template>
@@ -148,23 +151,23 @@
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="murealname"
+                prop="mernick"
                 label="所属商户"
                 min-width="120"
                 >
                 <template slot-scope="{row}">
-                    {{row.murealname ? row.murealname : '— —'}}
+                    {{row.mernick ? row.mernick : '— —'}}
                 </template>
                 </el-table-column>
             
                 <el-table-column
-                prop="muphone_num"
+                prop="merphone"
                 label="商户电话"
                 min-width="120"
                 >
                 <template slot-scope="{row}">
-                    <router-link :to="`/usermanage/merInfo?phone=${row.muphone_num}`" v-if="row.muphone_num">
-                        <el-link type="primary" >{{row.muphone_num}}</el-link>
+                    <router-link :to="`/usermanage/merInfo?phone=${row.merphone}`" v-if="row.merphone">
+                        <el-link type="primary" >{{row.merphone}}</el-link>
                     </router-link>
                     <span v-else>— —</span>
                 </template>
@@ -175,7 +178,7 @@
                     min-width="120"
                     >
                     <template slot-scope="{row}">
-                        {{row.arename ? row.arename : '— —'}}
+                        {{row.areaname ? row.areaname : '— —'}}
                     </template>
                 </el-table-column>
 
@@ -198,10 +201,10 @@
                 >
                 <template slot-scope="{row}">
                     <!-- 注： handleIsBind(1,1,row.id)的三个参数 第一个参数，来源哪里 1、商户 2、小区 ，第二个参数：1绑定/ 2解绑，第三个参数是用户id -->
-                    <el-button v-if="row.merid != null && row.merid != 0 " type="danger" size="mini" @click="handleIsBind(1,2,{id: row.id,merid: row.merid})">解绑商户</el-button>
-                    <el-button v-else type="primary" size="mini" @click="handleIsBind(1,1,{id: row.id})">绑定商户</el-button>
-                    <el-button v-if="row.aid != null && row.aid != 0" type="danger" size="mini" @click="handleIsBind(2,2,{id: row.id,merid: row.merid})">解绑小区</el-button>
-                    <el-button v-else type="primary" size="mini" @click="handleIsBind(2,1,{id: row.id,merid: row.merid})" :disabled="row.merid == null">绑定小区</el-button>
+                    <el-button v-if="row.merid != null && row.merid != 0 " type="danger" size="mini" @click="handleIsBind(1,2,{id: row.uid,merid: row.merid})">解绑商户</el-button>
+                    <el-button v-else type="primary" size="mini" @click="handleIsBind(1,1,{id: row.uid})">绑定商户</el-button>
+                    <el-button v-if="row.aid != null && row.aid != 0" type="danger" size="mini" @click="handleIsBind(2,2,{id: row.uid,merid: row.merid})">解绑小区</el-button>
+                    <el-button v-else type="primary" size="mini" @click="handleIsBind(2,1,{id: row.uid,merid: row.merid})" :disabled="row.merid == null">绑定小区</el-button>
                 </template>
                 </el-table-column>
              </el-table>    
@@ -300,7 +303,7 @@ export default {
             this.nowPage = page
         },
       handleMonthly(row){
-        let {id:uid,montid}= row
+        let {uid,montid}= row
         this.asyGetUserMonthlyInfo({uid,montid})
       },
       handleIsBind(from,type,page){ //点击修改用户的绑定解绑...

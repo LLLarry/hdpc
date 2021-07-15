@@ -33,6 +33,11 @@ let timer= null
 let ws = null; 
 import {messageTip} from '@/utils/ele'
 import ClipboardJS  from 'clipboard'
+// 正式环境下，使用80端口，测试使用8080
+let port = ''
+if (window.location.hostname.includes('tengfuchong') || window.location.hostname.includes('47.93.203.50')) {
+    port = '8080'
+}
 export default {
     props: {
         code: {
@@ -79,7 +84,7 @@ export default {
             let perEle=  this.$refs['perEle']
             let perEleMaxHeight= clientHeight*0.75 //per元素最大高度
             //  ws= new WebSocket(`ws://140.143.36.205/devicewebsocket`)
-             ws= new WebSocket(`ws://${ip}:8081/devicewebsocket`)
+             ws= new WebSocket(`ws://${ip}${port}/devicewebsocket`)
              ws.onopen= (e)=>{ /**连接成功回调*/
                 console.log(e)
                 ws.send(this.code) //发送设备号

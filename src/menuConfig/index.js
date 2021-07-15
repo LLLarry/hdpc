@@ -36,6 +36,11 @@ export const superAdminMenuList= [
                 title: '收益明细',
                 link: '/datastatis/earndetail',
                 index: '0-5'
+            },
+            {
+                title: '小区统计',
+                link: '/datastatis/areastatis',
+                index: '0-6'
             }
         ]
     },
@@ -235,15 +240,20 @@ export const adminMenuList= [
                 link: '/datastatis/deviceearn',
                 index: '0-1'
             },
-            {
-                title: '商户收益',
-                link: '/datastatis/merearn',
-                index: '0-2'
-            },
+            // {
+            //     title: '商户收益',
+            //     link: '/datastatis/merearn',
+            //     index: '0-2'
+            // },
             {
                 title: '收益明细',
                 link: '/datastatis/earndetail',
                 index: '0-3'
+            },
+            {
+                title: '小区统计',
+                link: '/datastatis/areastatis',
+                index: '0-4'
             }
         ]
     },
@@ -395,15 +405,20 @@ export const agentMenuList= [
                 link: '/datastatis/deviceearn',
                 index: '0-1'
             },
-            {
-                title: '商户收益',
-                link: '/datastatis/merearn',
-                index: '0-2'
-            },
+            // {
+            //     title: '商户收益',
+            //     link: '/datastatis/merearn',
+            //     index: '0-2'
+            // },
             {
                 title: '收益明细',
                 link: '/datastatis/earndetail',
                 index: '0-3'
+            },
+            {
+                title: '小区统计',
+                link: '/datastatis/areastatis',
+                index: '0-4'
             }
         ]
     },
@@ -550,15 +565,20 @@ export const subMerMenuList= [
                 link: '/datastatis/deviceearn',
                 index: '0-1'
             },
-            {
-                title: '商户收益',
-                link: '/datastatis/merearn',
-                index: '0-2'
-            },
+            // {
+            //     title: '商户收益',
+            //     link: '/datastatis/merearn',
+            //     index: '0-2'
+            // },
             {
                 title: '收益明细',
                 link: '/datastatis/earndetail',
                 index: '0-3'
+            },
+            {
+                title: '小区统计',
+                link: '/datastatis/areastatis',
+                index: '0-4'
             }
         ]
     },

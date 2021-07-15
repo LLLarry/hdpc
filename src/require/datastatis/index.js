@@ -99,5 +99,16 @@ export const dealerIncomeDatainfo= function (data){
          })
 }
 
+/*小区统计*/ 
+export const areaIncomeData= function (data){ 
+    return ajax({
+             url: '/dataCollectInfo/areaIncomeData',
+             data: data,
+             method: 'get'
+         })
+}
+
+
+
 
 

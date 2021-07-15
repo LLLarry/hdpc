@@ -401,54 +401,35 @@
             :modal="false"
              custom-class="dialogStyle"
             >
-            <el-row class="payTemRow">
+             <el-row class="payTemRow">
                 <el-col :span="12" class="netWork">
                     <div class="title">网络设备模板</div>
-                     <el-row class="item" v-for="(val,key) in payTemData['00']" :key="key">
-                         <el-col :span="10">{{key}}{{ 
-                             key === '00' ? '出厂默认设置' : 
-                             key === '01' ? '十路智慧款' : 
-                             key === '02' ? '电轿款': 
-                             key === '03' ? '脉冲板子' : 
-                             key === '04' ? '离线充值机' : 
-                             key === '05' ? '十六路智慧款' : 
-                             key === '06' ? '二十路智慧款' : 
-                             key === '07' ? '单路交流桩' : 
-                             key === '08' ? '十路智慧款V3' : 
+                    <el-row class="item" v-for="(item) in netMap" :key="item.key">
+                         <el-col :span="10">{{item.key}}{{ 
+                             item.key === '00' ? '出厂默认设置' : 
+                             item.key === '01' ? '十路智慧款' : 
+                             item.key === '02' ? '电轿款': 
+                             item.key === '03' ? '脉冲板子' : 
+                             item.key === '04' ? '离线充值机' : 
+                             item.key === '05' ? '十六路智慧款' : 
+                             item.key === '06' ? '二十路智慧款' : 
+                             item.key === '07' ? '单路交流桩' : 
+                             item.key === '08' ? '十路智慧款V3' : 
+                             item.key === '09' ? '十六路智慧款V3' : 
+                             item.key === '10' ? '二十路智慧款V3' : 
+                             item.key === '11' ? '一拖二' : 
                              '— —'}}</el-col>
-                         <el-col :span="14"><el-input-number v-model="payTemData['00'][key]" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                         <el-col :span="14"><el-input-number v-model="item.value" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
                      </el-row>
                 </el-col>
                 <el-col :span="12" class="blueBooth">
                     <div class="title">蓝牙设备模板</div>
-                    <!-- <el-row class="item">
-                         <el-col :span="10">00出厂默认设置</el-col>
-                         <el-col :span="14"><el-input-number v-model="payTemData['01']['00']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
+                     <el-row class="item" v-for="(item) in blueMap" :key="item.key">
+                     <el-col :span="10">{{item.key}}{{ 
+                             item.key === '03' ? '脉冲板子' : 
+                             '— —'}}</el-col>
+                        <el-col :span="14"><el-input-number v-model="item.value" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
                      </el-row>
-                     <el-row class="item">
-                         <el-col :span="10">01十路智慧款</el-col>
-                        <el-col :span="14"><el-input-number v-model="payTemData['01']['01']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
-                     </el-row>
-                     <el-row class="item">
-                         <el-col :span="10">02电轿款</el-col>
-                        <el-col :span="14"><el-input-number v-model="payTemData['01']['02']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
-                     </el-row> -->
-                     <el-row class="item">
-                         <el-col :span="10">03脉冲板子</el-col>
-                        <el-col :span="14"><el-input-number v-model="payTemData['01']['03']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
-                     </el-row>
-                     <!-- <el-row class="item">
-                         <el-col :span="10">04离线充值机</el-col>
-                        <el-col :span="14"><el-input-number v-model="payTemData['01']['04']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
-                     </el-row>
-                     <el-row class="item">
-                         <el-col :span="10">05十六路智慧款</el-col>
-                        <el-col :span="14"><el-input-number v-model="payTemData['01']['05']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
-                     </el-row>
-                     <el-row class="item">
-                         <el-col :span="10">06二十路智慧款</el-col>
-                        <el-col :span="14"><el-input-number v-model="payTemData['01']['06']" size="small" :min="0" :step="10" :max="1000" ></el-input-number></el-col>
-                     </el-row> -->
                 </el-col>
             </el-row>
             <div slot="footer" class="dialog-footer">
@@ -620,7 +601,29 @@ export default {
     },
     computed: {
         //agentSelectMerId 代理商选择名下的商户的id
-        ...mapState(['userInfo','agentSelectMerInfo'])
+        ...mapState(['userInfo','agentSelectMerInfo']),
+        netMap () {
+            const map = this.payTemData["00"]
+            const keys = Object.keys(map).map(item => parseInt(item)).sort((a, b) => a-b).map(item => {
+                const key = item.toString().padStart(2, 0)
+                return {
+                    key,
+                    value: map[key]
+                }
+            })
+            return keys
+        },
+        blueMap () {
+            const map = this.payTemData["01"]
+            const keys = Object.keys(map).map(item => parseInt(item)).sort((a, b) => a-b).map(item => {
+                const key = item.toString().padStart(2, 0)
+                return {
+                    key,
+                    value: map[key]
+                }
+            })
+            return keys
+        }
     },
     methods: {
         ...mapMutations(['setAgentSelectMerInfo']),
@@ -765,15 +768,14 @@ export default {
         },
         submitPayTem(){ //提交修改商户的缴费模板
             let {username=null,id}= this.payTemRow
-            let {"00":netType,"01":equipmentType}= this.payTemData
             updateMerPayTem({
                id,
                username,     
                netType: {
-                   "00": this.payTemData["00"]
+                   "00": this.fmtData(this.netMap)
                },
                equipmentType: {
-                    "01": this.payTemData["01"]
+                    "01": this.fmtData(this.blueMap)
                }
             }).then(res=>{
                 this.payTemVisible= false
@@ -924,6 +926,12 @@ export default {
                 messageTip("error","修改失败")
             }
             this.dialogPlat=false
+        },
+        fmtData (list) {
+            return list.reduce((acc, item) => {
+                acc[item.key] = item.value
+                return acc
+            }, {})
         }
     }
 }

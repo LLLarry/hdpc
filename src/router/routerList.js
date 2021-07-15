@@ -62,7 +62,14 @@ const routerList = [
             role: ['superAdmin', 'Admin', 'Agent', 'subMer']
         }
       },
-
+      {
+        path: '/datastatis/areastatis',
+        name: '小区统计',
+        component: ()=> import('@/views/DataStatis/AreaStatis'),
+        meta: {
+            role: ['superAdmin', 'Admin', 'Agent', 'subMer']
+        }
+      },
        // 用户管理==================>
       {
         path: '/usermanage/merInfo',
